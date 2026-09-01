@@ -33,7 +33,6 @@ pub fn parse(input: &str) -> Result<Query, RuntimeError> {
             .find('{')
             .ok_or_else(|| RuntimeError::MalformedSparql("缺少 `{`".into()))?;
         let variables = compact[6..open]
-            .trim()
             .split_whitespace()
             .map(variable)
             .collect::<Result<Vec<_>, _>>()?;

@@ -119,3 +119,59 @@ fn evaluates_ask_construct_and_describe_against_facts() {
     };
     assert_eq!(graph.len(), 1);
 }
+
+#[test]
+fn loads_prefixed_and_continued_native_obda_mappings() {
+    let dir = tempfile::tempdir().unwrap();
+    let mapping = dir.path().join("x.obda");
+    std::fs::write(&mapping, "# 参考输入中的注释不应成为 mapping 内容\n[PrefixDeclaration]\nex: https://example.com/\n\n[MappingDeclaration]\nmappingId people\ntarget ex:person/{id} ex:type ex:Person .\nsource SELECT id\n       FROM people\n").unwrap();
+    let spec = KnowledgeGraphSpec {
+        mapping_file: mapping,
+        facts_file: None,
+        facts_format: None,
+        facts_base_iri: None,
+    };
+    let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
+    let result = runtime
+        .query(
+            "SELECT ?person { ?person <https://example.com/type> <https://example.com/Person> . }",
+        )
+        .unwrap();
+    assert_eq!(
+        format!("{result:?}"),
+        "Bindings([{\"person\": Iri(\"7\")}])"
+    );
+}
+
+#[test]
+fn rejects_deprecated_obda_source_declarations() {
+    let dir = tempfile::tempdir().unwrap();
+    let mapping = dir.path().join("x.obda");
+    std::fs::write(&mapping, "[SourceDeclaration]\nconnectionUrl jdbc:postgresql://example/db\n[MappingDeclaration]\ntarget <https://example.com/person/{id}> <https://example.com/type> <https://example.com/Person> .\nsource SELECT id FROM people\n").unwrap();
+    let spec = KnowledgeGraphSpec {
+        mapping_file: mapping,
+        facts_file: None,
+        facts_format: None,
+        facts_base_iri: None,
+    };
+    assert!(
+        matches!(VkgRuntime::new(spec, FakeSource { sql: String::new() }), Err(RuntimeError::Mapping(message)) if message.contains("SourceDeclaration"))
+    );
+}
+
+#[test]
+fn loads_a_turtle_r2rml_mapping_from_the_same_runtime_seam() {
+    let dir = tempfile::tempdir().unwrap();
+    let mapping = dir.path().join("x.ttl");
+    std::fs::write(&mapping, "@prefix rr: <http://www.w3.org/ns/r2rml#> .\n[] rr:logicalTable [ rr:sqlQuery \"SELECT id FROM people\" ];\n   rr:subjectMap [ rr:template \"https://example.com/person/{id}\" ];\n   rr:predicateObjectMap [ rr:predicate <https://example.com/type>; rr:objectMap [ rr:constant <https://example.com/Person> ] ] .\n").unwrap();
+    let spec = KnowledgeGraphSpec {
+        mapping_file: mapping,
+        facts_file: None,
+        facts_format: None,
+        facts_base_iri: None,
+    };
+    let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
+    assert!(
+        matches!(runtime.query("SELECT ?person { ?person <https://example.com/type> <https://example.com/Person> . }"), Ok(rtop::QueryResult::Bindings(rows)) if rows.len() == 1)
+    );
+}

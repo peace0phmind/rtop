@@ -28,10 +28,7 @@ pub struct VkgRuntime<D> {
 
 impl<D: DataSource> VkgRuntime<D> {
     pub fn new(spec: KnowledgeGraphSpec, source: D) -> Result<Self, RuntimeError> {
-        let mapping = Mapping::parse(
-            &std::fs::read_to_string(&spec.mapping_file)
-                .map_err(|e| RuntimeError::Config(format!("无法读取 mapping：{e}")))?,
-        )?;
+        let mapping = Mapping::parse_file(&spec.mapping_file)?;
         let facts = match &spec.facts_file {
             None => Vec::new(),
             Some(path) => {
