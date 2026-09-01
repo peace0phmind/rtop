@@ -96,6 +96,18 @@ impl<D: DataSource> VkgRuntime<D> {
         }
     }
 
+    /// 开发诊断：只暴露当前方言的 SQL 快照，不把它作为跨方言稳定契约。
+    pub fn reformulate(&self, sparql: &str) -> Result<String, RuntimeError> {
+        match parse_query(sparql)? {
+            Query::Select { variables, pattern } => {
+                Ok(self.mapping.reformulate(&pattern, &variables)?.sql)
+            }
+            _ => Err(RuntimeError::UnsupportedSparql(
+                "改写诊断目前仅支持 SELECT".into(),
+            )),
+        }
+    }
+
     fn select(
         &mut self,
         query: &TriplePattern,

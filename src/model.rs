@@ -41,6 +41,8 @@ pub enum RuntimeError {
     UnsupportedSparql(String),
     #[error("not-fully-translatable: {0}")]
     NotFullyTranslatable(String),
+    #[error("type-error: {0}")]
+    Type(String),
     #[error("datasource-failure: {0}")]
     DataSource(String),
     #[error("invalid-facts: {0}")]

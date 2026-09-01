@@ -58,11 +58,7 @@ fn handle(stream: &mut TcpStream, config: &str, development: bool) -> std::io::R
     };
     let response = match (target.split('?').next(), query) {
         (Some("/healthz"), _) => Ok(("200 OK", "text/plain", "ok".into())),
-        (Some("/ontop/reformulate"), Some(query)) if development => Ok((
-            "200 OK",
-            "text/plain",
-            format!("诊断请求已接受：{}", query.replace('\n', " ")),
-        )),
+        (Some("/ontop/reformulate"), Some(query)) if development => reformulate(config, &query),
         (Some("/sparql"), Some(query)) => execute(config, &query),
         (Some("/sparql"), None) => Err(RuntimeError::MalformedSparql("请求缺少 query 参数".into())),
         _ => Ok(("404 Not Found", "text/plain", "not found".into())),
@@ -101,6 +97,16 @@ fn execute(
             facts.iter().map(turtle).collect::<Vec<_>>().join("\n"),
         ),
     })
+}
+
+fn reformulate(
+    config: &str,
+    query: &str,
+) -> Result<(&'static str, &'static str, String), RuntimeError> {
+    let loaded = load_configuration(config)?;
+    let source = PostgresDataSource::connect(&loaded.postgres)?;
+    let runtime = VkgRuntime::new(loaded.spec, source)?;
+    Ok(("200 OK", "text/plain", runtime.reformulate(query)?))
 }
 
 fn turtle(fact: &RdfFact) -> String {
@@ -195,4 +201,20 @@ fn percent_decode(value: &str) -> String {
             }
             out
         })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::bindings_json;
+    use crate::{Binding, RdfTerm};
+
+    #[test]
+    fn serializes_sparql_json_bindings_with_rdf_terms() {
+        let mut row = Binding::new();
+        row.insert(
+            "person".into(),
+            RdfTerm::Iri("https://example.test/p".into()),
+        );
+        assert_eq!(bindings_json(&[row]), "{\"head\":{\"vars\":[\"person\"]},\"results\":{\"bindings\":[{\"person\":{\"type\":\"uri\",\"value\":\"https://example.test/p\"}}]}}");
+    }
 }
