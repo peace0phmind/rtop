@@ -9,6 +9,7 @@ struct FileConfig {
     facts: Option<String>,
     facts_format: Option<String>,
     facts_base_iri: Option<String>,
+    ontology: Option<String>,
     datasource: FileDataSource,
 }
 #[derive(Debug, Deserialize)]
@@ -28,6 +29,7 @@ pub struct KnowledgeGraphSpec {
     pub facts_file: Option<PathBuf>,
     pub facts_format: Option<String>,
     pub facts_base_iri: Option<String>,
+    pub ontology_file: Option<PathBuf>,
 }
 
 /// 配置 adapter 的产物；连接信息只交给 PostgreSQL adapter，不进入 `VkgRuntime`。
@@ -101,6 +103,7 @@ pub fn load_configuration(path: impl AsRef<Path>) -> Result<LoadedConfiguration,
             facts_file,
             facts_format: config.facts_format,
             facts_base_iri: config.facts_base_iri,
+            ontology_file: config.ontology.map(|file| base.join(file)),
         },
         postgres,
     })

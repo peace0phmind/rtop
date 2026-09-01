@@ -47,4 +47,6 @@ pub enum RuntimeError {
     DataSource(String),
     #[error("invalid-facts: {0}")]
     Facts(String),
+    #[error("invalid-ontology: {0}")]
+    Ontology(String),
 }

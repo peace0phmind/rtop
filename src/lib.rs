@@ -4,6 +4,7 @@ mod datasource;
 mod facts;
 mod mapping;
 mod model;
+mod ontology;
 mod rdf;
 mod server;
 mod sparql;
@@ -24,6 +25,7 @@ pub struct VkgRuntime<D> {
     source: D,
     mapping: Mapping,
     facts: Vec<RdfFact>,
+    ontology: ontology::Ontology,
 }
 
 impl<D: DataSource> VkgRuntime<D> {
@@ -54,11 +56,16 @@ impl<D: DataSource> VkgRuntime<D> {
                 }
             }
         };
+        let ontology = match &spec.ontology_file {
+            Some(path) => ontology::Ontology::load(path)?,
+            None => ontology::Ontology::default(),
+        };
         Ok(Self {
             spec,
             source,
             mapping,
             facts,
+            ontology,
         })
     }
 
@@ -130,9 +137,9 @@ impl<D: DataSource> VkgRuntime<D> {
         bindings.extend(self.facts.iter().filter_map(|fact| {
             if fact.graph.is_none()
                 && fact.predicate == query.predicate.trim_matches(['<', '>'])
-                && matches!(&fact.object, RdfTerm::Iri(value) if query.object == format!("<{value}>"))
+                && fact_matches(query, fact, &self.ontology)
             {
-                fact_binding(query, fact)
+                fact_binding(query, fact, &self.ontology)
             } else {
                 None
             }
@@ -145,7 +152,30 @@ impl<D: DataSource> VkgRuntime<D> {
     }
 }
 
-fn fact_binding(pattern: &TriplePattern, fact: &RdfFact) -> Option<Binding> {
+fn fact_matches(query: &TriplePattern, fact: &RdfFact, ontology: &ontology::Ontology) -> bool {
+    match (
+        &fact.object,
+        query
+            .object
+            .strip_prefix('<')
+            .and_then(|value| value.strip_suffix('>')),
+    ) {
+        (_, None) if query.object.starts_with('?') => true,
+        (RdfTerm::Iri(actual), Some(expected)) if actual == expected => true,
+        (RdfTerm::Iri(actual), Some(expected))
+            if fact.predicate == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" =>
+        {
+            ontology.is_subclass_of(actual, expected)
+        }
+        _ => false,
+    }
+}
+
+fn fact_binding(
+    pattern: &TriplePattern,
+    fact: &RdfFact,
+    ontology: &ontology::Ontology,
+) -> Option<Binding> {
     let mut binding = Binding::new();
     for (token, term) in [
         (&pattern.subject, &fact.subject),
@@ -153,12 +183,27 @@ fn fact_binding(pattern: &TriplePattern, fact: &RdfFact) -> Option<Binding> {
     ] {
         if let Some(name) = token.strip_prefix('?') {
             binding.insert(name.into(), term.clone());
-        } else if matches!(term, RdfTerm::Iri(value) if token == &format!("<{value}>")) {
+        } else if constant_matches(token, term, pattern, fact, ontology) {
         } else {
             return None;
         }
     }
     Some(binding)
+}
+
+fn constant_matches(
+    token: &str,
+    term: &RdfTerm,
+    pattern: &TriplePattern,
+    fact: &RdfFact,
+    ontology: &ontology::Ontology,
+) -> bool {
+    matches!(term, RdfTerm::Iri(value) if token == format!("<{value}>"))
+        || (token == pattern.object
+            && fact.predicate == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+            && token.starts_with('<')
+            && token.ends_with('>')
+            && matches!(term, RdfTerm::Iri(value) if ontology.is_subclass_of(value, token.trim_matches(['<', '>']))))
 }
 
 fn variables(pattern: &TriplePattern) -> Vec<String> {
