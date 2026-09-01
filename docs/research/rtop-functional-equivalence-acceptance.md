@@ -20,7 +20,7 @@
 
 ## 五层证据与通过条件
 
-| 层 | 从 Ontop 取得的 oracle | `rtop` 的通过证据 | 禁止的替代证据 |
+| 层 | 从 Ontop 取得的对照结果 | `rtop` 的通过证据 | 禁止的替代证据 |
 | --- | --- | --- | --- |
 | 1. 输入归一化 | `.obda`、Turtle R2RML、facts、OWL/imports 的成功模型或分类失败 | Rust 自有 Ontology/RDFFact/SQLPPMapping/prefix 模型，或同一错误代码与输入位置 | “所选 parser 能读取该标准格式”或 Java AST 序列化。 |
 | 2. 查询语义 | SPARQL compliance manifest 和小型 VKG fixture 的 tuple/boolean/graph 结果 | 规范化后相同 RDF terms、binding、多重性和 ASK 值；无支持时同类失败 | 只比较是否返回 200 或只比较 SQL。 |
@@ -34,7 +34,7 @@
 ## fixture 与结果的可复现格式
 
 每个迁移的参考 fixture 在 `tests/compat/<id>/`（实现阶段创建）保存：`case.toml`、输入
-文件、服务端初始化、原始 Ontop 输出、规范化 oracle、`rtop` 期望和 provenance。`case.toml`
+文件、服务端初始化、原始 Ontop 输出、规范化对照结果、`rtop` 期望和 provenance。`case.toml`
 至少有 `id`、`scope`（input/query/rewrite/adapter/delivery）、`ontop_commit`、`jdk`、
 `database_image_digest`（若有）、`dialect`、`adapter`、`normalization`、`expected` 与
 `source_paths`。
@@ -46,10 +46,10 @@
 2. graph/quad 用 canonical N-Quads（或明确的 blank-node 同构比较），保留语言标签、
    datatype 和 context；
 3. SQL 只记录为诊断/同方言回归快照：规范化空白与生成 alias 后可比较，不作跨方言
-   oracle；参数的值和类型另记录；
+   对照结果；参数的值和类型另记录；
 4. 错误比较稳定 `ErrorCode`、HTTP status/CLI exit category、输入 span 和主要原因，不将
    Java 类名、路径前缀或 stack trace 固化；
-5. 日志和 query ID 不作结果 oracle，除非协议明确返回并且有格式约束。
+5. 日志和 query ID 不作对照结果，除非协议明确返回并且有格式约束。
 
 ## 参考执行与采集
 
@@ -66,7 +66,7 @@ docker run --rm -v "$PWD/../ontop:/src:ro" -w /src \
 ```
 
 实际采集应先运行最小关联模块（`test/sparql-compliance`、`test/rdb2rdf-compliance`、
-目标 docker/lightweight group），把 XML/JUnit 结果、请求与响应保存为 oracle；随后用
+目标 docker/lightweight group），把 XML/JUnit 结果、请求与响应保存为对照结果；随后用
 **独立服务端数据库**启动 `rtop`。绝不把 Ontop 进程、JDBC driver 或 H2 嵌入 `rtop`
 测试运行时来取得“通过”。含私密数据库凭证、闭源 driver 或未获 Docker 再分发权的案例
 留为 adapter 的受控验收，不能阻断核心层 1–3。
@@ -77,17 +77,17 @@ docker run --rm -v "$PWD/../ontop:/src:ro" -w /src \
 
 ## 失败、范围与发布规则
 
-- 每个 Ontop 成功情景必须有一个 `rtop` 成功 oracle；每个明确不支持、解析、类型、
-  本体不一致、数据源和协议失败也必须有分类 oracle。
+- 每个 Ontop 成功情景必须有一个 `rtop` 成功对照结果；每个明确不支持、解析、类型、
+  本体不一致、数据源和协议失败也必须有分类对照结果。
 - 遇到参考行为不确定、依赖 Java 宿主或需要未获许可的 driver 时，case 标为
   `excluded`/`deferred` 并引用路线图决定；它不计入通过率，也不能默默跳过。
 - 一项新 dialect 或 adapter 的发布声明，至少要求该服务端容器上的连接/认证、metadata、
   参数、NULL、数值、日期/时区、取消、流式读取和代表性 SPARQL 语料均通过层 4。
 - 发布 gate 输出 `compatibility-report.json`：全部 case ID、层级、环境 digest、状态、
-  oracle hash、失败差异、scope/exclusion 理由。报告缺失或任何 in-scope case 未通过即为
+  对照结果 hash、失败差异、scope/exclusion 理由。报告缺失或任何 in-scope case 未通过即为
   失败，不允许以总通过百分比覆盖。
 - 变更 Ontop baseline、Docker image、Rust parser、dialect 或 adapter 版本，必须重采集
-  受影响 oracle 并经评审；不能覆盖旧证据。
+  受影响对照结果并经评审；不能覆盖旧证据。
 
 ## 进入 Rust 实现阶段的工作包
 
