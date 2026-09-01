@@ -4,6 +4,7 @@ mod datasource;
 mod facts;
 mod mapping;
 mod model;
+mod rdf;
 mod server;
 mod sparql;
 
@@ -11,6 +12,7 @@ pub use config::{load_configuration, KnowledgeGraphSpec, LoadedConfiguration};
 pub use datasource::{DataSource, PostgresConnectionConfig, PostgresDataSource};
 pub use facts::{parse_nquads, parse_turtle};
 pub use model::{Binding, QueryResult, RdfFact, RdfTerm, RuntimeError};
+pub use rdf::format_rdf_term;
 pub use server::serve;
 
 use mapping::Mapping;

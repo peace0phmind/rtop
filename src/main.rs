@@ -1,4 +1,7 @@
-use rtop::{load_configuration, serve, PostgresDataSource, QueryResult, RdfTerm, VkgRuntime};
+use rtop::{
+    format_rdf_term, load_configuration, serve, PostgresDataSource, QueryResult, RdfTerm,
+    VkgRuntime,
+};
 use std::io::Read;
 
 fn main() {
@@ -58,8 +61,8 @@ fn main() {
         Ok(QueryResult::Boolean(value)) => println!("{value}"),
         Ok(QueryResult::Graph(facts)) => {
             for fact in facts {
-                let subject = term(&fact.subject);
-                let object = term(&fact.object);
+                let subject = format_rdf_term(&fact.subject);
+                let object = format_rdf_term(&fact.object);
                 println!("{subject} <{}> {object} .", fact.predicate);
             }
         }
@@ -67,23 +70,5 @@ fn main() {
             eprintln!("{error}");
             std::process::exit(2);
         }
-    }
-}
-
-fn term(term: &RdfTerm) -> String {
-    match term {
-        RdfTerm::Iri(value) => format!("<{value}>"),
-        RdfTerm::BlankNode(value) => format!("_:{value}"),
-        RdfTerm::Literal {
-            value,
-            language: Some(language),
-            ..
-        } => format!("\"{value}\"@{language}"),
-        RdfTerm::Literal {
-            value,
-            datatype: Some(datatype),
-            ..
-        } => format!("\"{value}\"^^<{datatype}>"),
-        RdfTerm::Literal { value, .. } => format!("\"{value}\""),
     }
 }

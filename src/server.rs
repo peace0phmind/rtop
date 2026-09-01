@@ -1,5 +1,6 @@
 use crate::{
-    load_configuration, PostgresDataSource, QueryResult, RdfFact, RdfTerm, RuntimeError, VkgRuntime,
+    format_rdf_term, load_configuration, Binding, PostgresDataSource, QueryResult, RdfFact,
+    RdfTerm, RuntimeError, VkgRuntime,
 };
 use std::io::{BufRead, BufReader, Read, Write};
 use std::net::{TcpListener, TcpStream};
@@ -87,10 +88,7 @@ fn execute(
         QueryResult::Bindings(rows) => (
             "200 OK",
             "application/sparql-results+json",
-            format!(
-                "{{\"head\":{{\"vars\":[]}},\"results\":{{\"bindings\":{}}}}}",
-                rows.len()
-            ),
+            bindings_json(&rows),
         ),
         QueryResult::Boolean(value) => (
             "200 OK",
@@ -108,27 +106,71 @@ fn execute(
 fn turtle(fact: &RdfFact) -> String {
     format!(
         "{} <{}> {} .",
-        term(&fact.subject),
+        format_rdf_term(&fact.subject),
         fact.predicate,
-        term(&fact.object)
+        format_rdf_term(&fact.object)
     )
 }
-fn term(value: &RdfTerm) -> String {
-    match value {
-        RdfTerm::Iri(value) => format!("<{value}>"),
-        RdfTerm::BlankNode(value) => format!("_:{value}"),
+
+fn bindings_json(rows: &[Binding]) -> String {
+    let variables = rows
+        .first()
+        .map(|row| row.keys().cloned().collect::<Vec<_>>())
+        .unwrap_or_default();
+    let head = variables
+        .iter()
+        .map(|name| format!("\"{}\"", json(name)))
+        .collect::<Vec<_>>()
+        .join(",");
+    let rows = rows
+        .iter()
+        .map(|row| {
+            let values = row
+                .iter()
+                .map(|(name, value)| format!("\"{}\":{}", json(name), term_json(value)))
+                .collect::<Vec<_>>()
+                .join(",");
+            format!("{{{values}}}")
+        })
+        .collect::<Vec<_>>()
+        .join(",");
+    format!("{{\"head\":{{\"vars\":[{head}]}},\"results\":{{\"bindings\":[{rows}]}}}}")
+}
+
+fn term_json(term: &RdfTerm) -> String {
+    match term {
+        RdfTerm::Iri(value) => format!("{{\"type\":\"uri\",\"value\":\"{}\"}}", json(value)),
+        RdfTerm::BlankNode(value) => {
+            format!("{{\"type\":\"bnode\",\"value\":\"{}\"}}", json(value))
+        }
         RdfTerm::Literal {
             value,
-            language: Some(language),
-            ..
-        } => format!("\"{value}\"@{language}"),
-        RdfTerm::Literal {
-            value,
-            datatype: Some(datatype),
-            ..
-        } => format!("\"{value}\"^^<{datatype}>"),
-        RdfTerm::Literal { value, .. } => format!("\"{value}\""),
+            datatype,
+            language,
+        } => {
+            let suffix = language
+                .as_ref()
+                .map(|value| format!(",\"xml:lang\":\"{}\"", json(value)))
+                .or_else(|| {
+                    datatype
+                        .as_ref()
+                        .map(|value| format!(",\"datatype\":\"{}\"", json(value)))
+                })
+                .unwrap_or_default();
+            format!(
+                "{{\"type\":\"literal\",\"value\":\"{}\"{suffix}}}",
+                json(value)
+            )
+        }
     }
+}
+
+fn json(value: &str) -> String {
+    value
+        .replace('\\', "\\\\")
+        .replace('"', "\\\"")
+        .replace('\n', "\\n")
+        .replace('\r', "\\r")
 }
 fn form_value(input: &str, key: &str) -> Option<String> {
     input.split('&').find_map(|part| {
