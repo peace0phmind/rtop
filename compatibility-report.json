@@ -7,7 +7,8 @@
       "status": "pending-server-verification",
       "adapter": "postgres-native",
       "dialect": "postgresql",
-      "difference": "Awaiting Docker PostgreSQL execution in CI; fixture provenance is recorded."
+      "server_environment": "postgres:16-alpine；digest 待 CI 解析；本地 Docker 验证待 Rust 工具链可用后执行",
+      "difference": "尚未执行对照：当前环境无法拉取 Rust 构建镜像；fixture provenance 已记录。"
     }
   ]
 }

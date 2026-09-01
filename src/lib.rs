@@ -5,8 +5,8 @@ mod mapping;
 mod model;
 mod sparql;
 
-pub use config::{load_spec, KnowledgeGraphSpec};
-pub use datasource::{DataSource, PostgresDataSource};
+pub use config::{load_configuration, KnowledgeGraphSpec, LoadedConfiguration};
+pub use datasource::{DataSource, PostgresConnectionConfig, PostgresDataSource};
 pub use model::{Binding, QueryResult, RdfTerm, RuntimeError};
 
 use mapping::Mapping;

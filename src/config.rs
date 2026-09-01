@@ -1,4 +1,5 @@
 use crate::RuntimeError;
+use crate::datasource::PostgresConnectionConfig;
 use serde::Deserialize;
 use std::path::{Path, PathBuf};
 
@@ -8,12 +9,17 @@ struct FileConfig { mapping: String, datasource: FileDataSource }
 struct FileDataSource { kind: String, host: String, port: Option<u16>, database: String, user: String, password: Option<String>, password_file: Option<String> }
 
 #[derive(Debug, Clone)]
-pub struct KnowledgeGraphSpec { pub mapping_file: PathBuf, pub database_url: String }
+pub struct KnowledgeGraphSpec { pub mapping_file: PathBuf }
 
-pub fn load_spec(path: impl AsRef<Path>) -> Result<KnowledgeGraphSpec, RuntimeError> {
+/// 配置 adapter 的产物；连接信息只交给 PostgreSQL adapter，不进入 `VkgRuntime`。
+#[derive(Debug, Clone)]
+pub struct LoadedConfiguration { pub spec: KnowledgeGraphSpec, pub postgres: PostgresConnectionConfig }
+
+pub fn load_configuration(path: impl AsRef<Path>) -> Result<LoadedConfiguration, RuntimeError> {
     let path = path.as_ref();
     let text = std::fs::read_to_string(path).map_err(|e| RuntimeError::Config(format!("cannot read config: {e}")))?;
-    if text.contains("jdbc:") || text.contains("driver") || text.contains("DataSource") {
+    let lower = text.to_ascii_lowercase();
+    if lower.contains("jdbc:") || lower.contains("jdbc.") || lower.contains("driver") || lower.contains("datasource") {
         return Err(RuntimeError::Config("JDBC URL, driver class and Java DataSource are not supported".into()));
     }
     let config: FileConfig = toml::from_str(&text).map_err(|e| RuntimeError::Config(e.to_string()))?;
@@ -28,6 +34,6 @@ pub fn load_spec(path: impl AsRef<Path>) -> Result<KnowledgeGraphSpec, RuntimeEr
     let base = path.parent().unwrap_or(Path::new("."));
     let mapping_file = base.join(config.mapping);
     let port = config.datasource.port.unwrap_or(5432);
-    let database_url = format!("host={} port={} dbname={} user={} password={}", config.datasource.host, port, config.datasource.database, config.datasource.user, password);
-    Ok(KnowledgeGraphSpec { mapping_file, database_url })
+    let postgres = PostgresConnectionConfig { host: config.datasource.host, port, database: config.datasource.database, user: config.datasource.user, password };
+    Ok(LoadedConfiguration { spec: KnowledgeGraphSpec { mapping_file }, postgres })
 }
