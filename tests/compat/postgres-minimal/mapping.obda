@@ -1,0 +1,7 @@
+[PrefixDeclaration]
+:	https://example.com/
+
+[MappingDeclaration]
+mappingId	person-type
+target		<https://example.com/person/{id}> <https://example.com/type> <https://example.com/Person> .
+source		SELECT id FROM people

@@ -1,0 +1,10 @@
+id = "postgres-minimal-select-bgp"
+scope = "query"
+ontop_commit = "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd"
+jdk = "17"
+database_image_digest = "postgres:16-alpine (digest resolved by CI)"
+dialect = "postgresql"
+adapter = "postgres-native"
+normalization = "tuple terms and multiplicity; no ordering without ORDER BY"
+expected = "?person=<https://example.com/person/1>"
+source_paths = ["Ontop PostgreSQL lightweight/Docker minimal mapping scenario"]

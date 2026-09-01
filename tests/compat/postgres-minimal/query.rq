@@ -1,0 +1,1 @@
+SELECT ?person { ?person <https://example.com/type> <https://example.com/Person> . }

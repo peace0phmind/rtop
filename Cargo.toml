@@ -1,0 +1,23 @@
+[package]
+name = "rtop"
+version = "0.1.0"
+edition = "2021"
+description = "A native Rust virtual knowledge graph runtime"
+license = "Apache-2.0"
+
+[lib]
+name = "rtop"
+path = "src/lib.rs"
+
+[[bin]]
+name = "rtop"
+path = "src/main.rs"
+
+[dependencies]
+postgres = "0.19"
+serde = { version = "1", features = ["derive"] }
+thiserror = "2"
+toml = "0.8"
+
+[dev-dependencies]
+tempfile = "3"

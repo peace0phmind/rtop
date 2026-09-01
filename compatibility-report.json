@@ -1,0 +1,13 @@
+{
+  "ontop_baseline": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "cases": [
+    {
+      "id": "postgres-minimal-select-bgp",
+      "scope": "query",
+      "status": "pending-server-verification",
+      "adapter": "postgres-native",
+      "dialect": "postgresql",
+      "difference": "Awaiting Docker PostgreSQL execution in CI; fixture provenance is recorded."
+    }
+  ]
+}
