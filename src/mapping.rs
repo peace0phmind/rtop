@@ -1,4 +1,4 @@
-use crate::{sparql::SelectQuery, RuntimeError};
+use crate::{sparql::TriplePattern, RuntimeError};
 
 pub struct Mapping {
     subject_template: String,
@@ -40,7 +40,11 @@ impl Mapping {
             source: source.to_owned(),
         })
     }
-    pub fn reformulate(&self, query: &SelectQuery) -> Result<Plan, RuntimeError> {
+    pub fn reformulate(
+        &self,
+        query: &TriplePattern,
+        variables: &[String],
+    ) -> Result<Plan, RuntimeError> {
         if self.predicate != query.predicate || self.object != query.object {
             return Err(RuntimeError::NotFullyTranslatable(
                 "三元组模式不匹配最小 mapping".into(),
@@ -56,8 +60,7 @@ impl Mapping {
             .ok_or_else(|| {
                 RuntimeError::Mapping("target subject 必须包含一个 {column} 模板".into())
             })?;
-        if query.variables.len() != 1 || query.variables[0] != query.subject.trim_start_matches('?')
-        {
+        if variables.len() != 1 || variables[0] != query.subject.trim_start_matches('?') {
             return Err(RuntimeError::NotFullyTranslatable(
                 "最小切片只投影 subject 变量".into(),
             ));
@@ -76,7 +79,7 @@ impl Mapping {
                 self.source
             ),
             parameters: vec![prefix.into(), suffix.into()],
-            variables: query.variables.clone(),
+            variables: variables.to_vec(),
         })
     }
 }

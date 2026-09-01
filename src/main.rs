@@ -1,12 +1,34 @@
-use rtop::{load_configuration, PostgresDataSource, QueryResult, RdfTerm, VkgRuntime};
+use rtop::{load_configuration, serve, PostgresDataSource, QueryResult, RdfTerm, VkgRuntime};
 use std::io::Read;
 
 fn main() {
     let mut args = std::env::args().skip(1);
     let command = args.next().unwrap_or_default();
     let config = args.next().unwrap_or_default();
-    if command != "query" || config.is_empty() {
-        eprintln!("用法：rtop query <config.toml> [query-file|-]");
+    if config.is_empty() {
+        eprintln!("用法：rtop <query|validate|endpoint> <config.toml> [query-file|-|bind-address]");
+        std::process::exit(64);
+    }
+    if command == "validate" {
+        match load_configuration(&config) {
+            Ok(_) => return,
+            Err(error) => {
+                eprintln!("{error}");
+                std::process::exit(2);
+            }
+        }
+    }
+    if command == "endpoint" {
+        let bind = args.next().unwrap_or_else(|| "0.0.0.0:8080".into());
+        let development = std::env::var_os("RTOP_DEVELOPMENT").is_some();
+        if let Err(error) = serve(&config, &bind, development) {
+            eprintln!("{error}");
+            std::process::exit(2);
+        }
+        return;
+    }
+    if command != "query" {
+        eprintln!("未知命令：{command}");
         std::process::exit(64);
     }
     let query_path = args.next().unwrap_or_else(|| "-".into());
@@ -33,9 +55,35 @@ fn main() {
                 }
             }
         }
+        Ok(QueryResult::Boolean(value)) => println!("{value}"),
+        Ok(QueryResult::Graph(facts)) => {
+            for fact in facts {
+                let subject = term(&fact.subject);
+                let object = term(&fact.object);
+                println!("{subject} <{}> {object} .", fact.predicate);
+            }
+        }
         Err(error) => {
             eprintln!("{error}");
             std::process::exit(2);
         }
+    }
+}
+
+fn term(term: &RdfTerm) -> String {
+    match term {
+        RdfTerm::Iri(value) => format!("<{value}>"),
+        RdfTerm::BlankNode(value) => format!("_:{value}"),
+        RdfTerm::Literal {
+            value,
+            language: Some(language),
+            ..
+        } => format!("\"{value}\"@{language}"),
+        RdfTerm::Literal {
+            value,
+            datatype: Some(datatype),
+            ..
+        } => format!("\"{value}\"^^<{datatype}>"),
+        RdfTerm::Literal { value, .. } => format!("\"{value}\""),
     }
 }

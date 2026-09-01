@@ -18,6 +18,9 @@ fn runs_a_select_bgp_through_the_datasource_port() {
     let source = FakeSource { sql: String::new() };
     let spec = KnowledgeGraphSpec {
         mapping_file: mapping,
+        facts_file: None,
+        facts_format: None,
+        facts_base_iri: None,
     };
     let mut runtime = VkgRuntime::new(spec, source).unwrap();
     let result = runtime
@@ -38,6 +41,9 @@ fn distinguishes_invalid_and_unsupported_sparql() {
     std::fs::write(&mapping, "[MappingDeclaration]\ntarget <https://example.com/person/{id}> <https://example.com/type> <https://example.com/Person> .\nsource SELECT id FROM people\n").unwrap();
     let spec = KnowledgeGraphSpec {
         mapping_file: mapping,
+        facts_file: None,
+        facts_format: None,
+        facts_base_iri: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     assert!(matches!(
@@ -48,4 +54,68 @@ fn distinguishes_invalid_and_unsupported_sparql() {
         runtime.query("ASK { ?s ?p ?o }"),
         Err(RuntimeError::UnsupportedSparql(_))
     ));
+}
+
+#[test]
+fn queries_facts_together_with_mapping_results() {
+    let dir = tempfile::tempdir().unwrap();
+    let mapping = dir.path().join("x.obda");
+    let facts = dir.path().join("extra.ttl");
+    std::fs::write(&mapping, "[MappingDeclaration]\ntarget <https://example.com/person/{id}> <https://example.com/type> <https://example.com/Person> .\nsource SELECT id FROM people\n").unwrap();
+    std::fs::write(
+        &facts,
+        "<https://example.com/person/8> <https://example.com/type> <https://example.com/Person> .",
+    )
+    .unwrap();
+    let spec = KnowledgeGraphSpec {
+        mapping_file: mapping,
+        facts_file: Some(facts),
+        facts_format: None,
+        facts_base_iri: None,
+    };
+    let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
+    let result = runtime
+        .query(
+            "SELECT ?person { ?person <https://example.com/type> <https://example.com/Person> . }",
+        )
+        .unwrap();
+    let rtop::QueryResult::Bindings(rows) = result else {
+        panic!("expected bindings")
+    };
+    assert_eq!(rows.len(), 2);
+}
+
+#[test]
+fn evaluates_ask_construct_and_describe_against_facts() {
+    let dir = tempfile::tempdir().unwrap();
+    let mapping = dir.path().join("x.obda");
+    let facts = dir.path().join("extra.ttl");
+    std::fs::write(&mapping, "[MappingDeclaration]\ntarget <https://example.com/person/{id}> <https://example.com/type> <https://example.com/Person> .\nsource SELECT id FROM people\n").unwrap();
+    std::fs::write(
+        &facts,
+        "<https://example.com/person/8> <https://example.com/type> <https://example.com/Person> .",
+    )
+    .unwrap();
+    let spec = KnowledgeGraphSpec {
+        mapping_file: mapping,
+        facts_file: Some(facts),
+        facts_format: None,
+        facts_base_iri: None,
+    };
+    let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
+    assert_eq!(
+        runtime
+            .query("ASK { ?person <https://example.com/type> <https://example.com/Person> }")
+            .unwrap(),
+        rtop::QueryResult::Boolean(true)
+    );
+    let rtop::QueryResult::Graph(graph) = runtime.query("CONSTRUCT { ?person <https://example.com/type> <https://example.com/Person> } WHERE { ?person <https://example.com/type> <https://example.com/Person> }").unwrap() else { panic!("expected graph") };
+    assert_eq!(graph.len(), 2);
+    let rtop::QueryResult::Graph(graph) = runtime
+        .query("DESCRIBE <https://example.com/person/8>")
+        .unwrap()
+    else {
+        panic!("expected graph")
+    };
+    assert_eq!(graph.len(), 1);
 }

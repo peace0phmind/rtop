@@ -6,6 +6,9 @@ use std::path::{Path, PathBuf};
 #[derive(Debug, Deserialize)]
 struct FileConfig {
     mapping: String,
+    facts: Option<String>,
+    facts_format: Option<String>,
+    facts_base_iri: Option<String>,
     datasource: FileDataSource,
 }
 #[derive(Debug, Deserialize)]
@@ -22,6 +25,9 @@ struct FileDataSource {
 #[derive(Debug, Clone)]
 pub struct KnowledgeGraphSpec {
     pub mapping_file: PathBuf,
+    pub facts_file: Option<PathBuf>,
+    pub facts_format: Option<String>,
+    pub facts_base_iri: Option<String>,
 }
 
 /// 配置 adapter 的产物；连接信息只交给 PostgreSQL adapter，不进入 `VkgRuntime`。
@@ -73,6 +79,14 @@ pub fn load_configuration(path: impl AsRef<Path>) -> Result<LoadedConfiguration,
     };
     let base = path.parent().unwrap_or(Path::new("."));
     let mapping_file = base.join(config.mapping);
+    let facts_file = config.facts.map(|file| base.join(file));
+    if let Some(format) = &config.facts_format {
+        if !matches!(format.as_str(), "turtle" | "ttl" | "nquads" | "nq") {
+            return Err(RuntimeError::Config(format!(
+                "不支持的 facts_format：{format}"
+            )));
+        }
+    }
     let port = config.datasource.port.unwrap_or(5432);
     let postgres = PostgresConnectionConfig {
         host: config.datasource.host,
@@ -82,7 +96,12 @@ pub fn load_configuration(path: impl AsRef<Path>) -> Result<LoadedConfiguration,
         password,
     };
     Ok(LoadedConfiguration {
-        spec: KnowledgeGraphSpec { mapping_file },
+        spec: KnowledgeGraphSpec {
+            mapping_file,
+            facts_file,
+            facts_format: config.facts_format,
+            facts_base_iri: config.facts_base_iri,
+        },
         postgres,
     })
 }

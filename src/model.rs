@@ -6,6 +6,7 @@ pub type Binding = BTreeMap<String, RdfTerm>;
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RdfTerm {
     Iri(String),
+    BlankNode(String),
     Literal {
         value: String,
         datatype: Option<String>,
@@ -14,8 +15,18 @@ pub enum RdfTerm {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RdfFact {
+    pub subject: RdfTerm,
+    pub predicate: String,
+    pub object: RdfTerm,
+    pub graph: Option<RdfTerm>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum QueryResult {
     Bindings(Vec<Binding>),
+    Boolean(bool),
+    Graph(Vec<RdfFact>),
 }
 
 #[derive(Debug, Error, PartialEq, Eq)]
@@ -32,4 +43,6 @@ pub enum RuntimeError {
     NotFullyTranslatable(String),
     #[error("datasource-failure: {0}")]
     DataSource(String),
+    #[error("invalid-facts: {0}")]
+    Facts(String),
 }
