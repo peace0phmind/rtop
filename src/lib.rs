@@ -21,9 +21,15 @@ pub struct VkgRuntime<D> {
 
 impl<D: DataSource> VkgRuntime<D> {
     pub fn new(spec: KnowledgeGraphSpec, source: D) -> Result<Self, RuntimeError> {
-        let mapping = Mapping::parse(&std::fs::read_to_string(&spec.mapping_file)
-            .map_err(|e| RuntimeError::Config(format!("cannot read mapping: {e}")))?)?;
-        Ok(Self { spec, source, mapping })
+        let mapping = Mapping::parse(
+            &std::fs::read_to_string(&spec.mapping_file)
+                .map_err(|e| RuntimeError::Config(format!("无法读取 mapping：{e}")))?,
+        )?;
+        Ok(Self {
+            spec,
+            source,
+            mapping,
+        })
     }
 
     /// 目前交付 SELECT 基本图模式；其余语法会得到稳定的 `unsupported-sparql`。
@@ -31,13 +37,20 @@ impl<D: DataSource> VkgRuntime<D> {
         let query = SelectQuery::parse(sparql)?;
         let plan = self.mapping.reformulate(&query)?;
         let rows = self.source.execute(&plan.sql, &plan.parameters)?;
-        let bindings = rows.into_iter().map(|row| {
-            plan.variables.iter().enumerate().map(|(index, name)| {
-                (name.clone(), RdfTerm::Iri(row[index].clone()))
-            }).collect::<Binding>()
-        }).collect();
+        let bindings = rows
+            .into_iter()
+            .map(|row| {
+                plan.variables
+                    .iter()
+                    .enumerate()
+                    .map(|(index, name)| (name.clone(), RdfTerm::Iri(row[index].clone())))
+                    .collect::<Binding>()
+            })
+            .collect();
         Ok(QueryResult::Bindings(bindings))
     }
 
-    pub fn spec(&self) -> &KnowledgeGraphSpec { &self.spec }
+    pub fn spec(&self) -> &KnowledgeGraphSpec {
+        &self.spec
+    }
 }

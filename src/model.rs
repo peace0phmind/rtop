@@ -4,10 +4,19 @@ use thiserror::Error;
 pub type Binding = BTreeMap<String, RdfTerm>;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub enum RdfTerm { Iri(String), Literal { value: String, datatype: Option<String>, language: Option<String> } }
+pub enum RdfTerm {
+    Iri(String),
+    Literal {
+        value: String,
+        datatype: Option<String>,
+        language: Option<String>,
+    },
+}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub enum QueryResult { Bindings(Vec<Binding>) }
+pub enum QueryResult {
+    Bindings(Vec<Binding>),
+}
 
 #[derive(Debug, Error, PartialEq, Eq)]
 pub enum RuntimeError {

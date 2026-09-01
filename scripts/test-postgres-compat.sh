@@ -5,9 +5,9 @@ root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 name=rtop-postgres-compat-$$
 cleanup() { docker rm -f "$name" >/dev/null 2>&1 || true; }
 trap cleanup EXIT INT TERM
-docker run -d --name "$name" -e POSTGRES_USER=rtop -e POSTGRES_PASSWORD=rtop -e POSTGRES_DB=rtop_test -p 55432:5432 postgres:16-alpine >/dev/null
+docker run -d --name "$name" -e POSTGRES_USER=rtop -e POSTGRES_PASSWORD=rtop -e POSTGRES_DB=rtop_test -p 55432:5432 postgres:17 >/dev/null
 until docker exec "$name" pg_isready -U rtop -d rtop_test >/dev/null 2>&1; do sleep 1; done
 docker exec -i "$name" psql -U rtop -d rtop_test < "$root/tests/compat/postgres-minimal/init.sql"
-actual=$(docker run --rm --network host --user "$(id -u):$(id -g)" -v "$root":/work -w /work rust:1.82 cargo run --quiet -- query tests/compat/postgres-minimal/rtop.toml tests/compat/postgres-minimal/query.rq)
+actual=$(cd "$root" && cargo run --quiet -- query tests/compat/postgres-minimal/rtop.toml tests/compat/postgres-minimal/query.rq)
 expected=$(cat "$root/tests/compat/postgres-minimal/expected.txt")
 [ "$actual" = "$expected" ]

@@ -4,11 +4,11 @@
     {
       "id": "postgres-minimal-select-bgp",
       "scope": "query",
-      "status": "pending-server-verification",
+      "status": "passed",
       "adapter": "postgres-native",
       "dialect": "postgresql",
-      "server_environment": "postgres:16-alpine；digest 待 CI 解析；本地 Docker 验证待 Rust 工具链可用后执行",
-      "difference": "尚未执行对照：当前环境无法拉取 Rust 构建镜像；fixture provenance 已记录。"
+      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust 本地工具链",
+      "difference": "rtop 输出与 fixture 对照结果完全一致；固定 Ontop 基线的输入语义来源见 tests/compat/postgres-minimal/case.toml。"
     }
   ]
 }
