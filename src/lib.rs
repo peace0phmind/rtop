@@ -162,7 +162,9 @@ impl<D: DataSource> VkgRuntime<D> {
         };
         bindings.extend(self.facts.iter().filter_map(|fact| {
             if fact.graph.is_none()
-                && fact.predicate == query.predicate.trim_matches(['<', '>'])
+                && self
+                    .ontology
+                    .is_subproperty_of(&fact.predicate, query.predicate.trim_matches(['<', '>']))
                 && fact_matches(query, fact, &self.ontology)
             {
                 fact_binding(query, fact, &self.ontology)
