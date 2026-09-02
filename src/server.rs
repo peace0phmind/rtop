@@ -36,14 +36,14 @@ fn handle(stream: &mut TcpStream, config: &str, development: bool) -> std::io::R
         if line == "\r\n" || line.is_empty() {
             break;
         }
-        if let Some(value) = line.strip_prefix("Content-Type:") {
-            content_type = value.trim().into();
-        }
-        if let Some(value) = line.strip_prefix("Accept:") {
-            accept = value.trim().into();
-        }
-        if let Some(value) = line.strip_prefix("Content-Length:") {
-            content_length = value.trim().parse().unwrap_or(0);
+        if let Some((name, value)) = line.split_once(':') {
+            if name.eq_ignore_ascii_case("content-type") {
+                content_type = value.trim().into();
+            } else if name.eq_ignore_ascii_case("accept") {
+                accept = value.trim().into();
+            } else if name.eq_ignore_ascii_case("content-length") {
+                content_length = value.trim().parse().unwrap_or(0);
+            }
         }
     }
     let mut body = vec![0; content_length];
