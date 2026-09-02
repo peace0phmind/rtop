@@ -82,12 +82,16 @@ impl<D: DataSource> VkgRuntime<D> {
                     .select_bgp(&patterns, &variables(&patterns[0]))?
                     .is_empty(),
             )),
-            Query::Construct { template, pattern } => {
-                let variables = variables(&pattern);
-                let rows = self.select(&pattern, &variables)?;
+            Query::Construct { template, patterns } => {
+                let variables = patterns.iter().flat_map(variables).collect::<Vec<_>>();
+                let rows = self.select_bgp(&patterns, &variables)?;
                 Ok(QueryResult::Graph(
                     rows.into_iter()
-                        .filter_map(|row| instantiate(&template, &row))
+                        .flat_map(|row| {
+                            template
+                                .iter()
+                                .filter_map(move |pattern| instantiate(pattern, &row))
+                        })
                         .collect(),
                 ))
             }

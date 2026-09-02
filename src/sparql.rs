@@ -17,8 +17,8 @@ pub enum Query {
         patterns: Vec<TriplePattern>,
     },
     Construct {
-        template: TriplePattern,
-        pattern: TriplePattern,
+        template: Vec<TriplePattern>,
+        patterns: Vec<TriplePattern>,
     },
     Describe {
         resource: String,
@@ -67,13 +67,10 @@ pub fn parse(input: &str) -> Result<Query, RuntimeError> {
         let where_at = upper
             .find(" WHERE ")
             .ok_or_else(|| RuntimeError::MalformedSparql("CONSTRUCT 缺少 WHERE".into()))?;
-        let template = group(compact[9..where_at].trim())?
-            .into_iter()
-            .next()
-            .unwrap();
+        let template = group(compact[9..where_at].trim())?;
         return Ok(Query::Construct {
             template,
-            pattern: group(&compact[where_at + 7..])?.into_iter().next().unwrap(),
+            patterns: group(&compact[where_at + 7..])?,
         });
     }
     Err(RuntimeError::UnsupportedSparql(
