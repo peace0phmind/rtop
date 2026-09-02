@@ -51,14 +51,45 @@ impl DataSource for PostgresDataSource {
             .query(sql, &values)
             .map_err(|e| RuntimeError::DataSource(e.to_string()))?;
         rows.into_iter()
-            .map(|row| {
-                (0..row.len())
-                    .map(|i| {
-                        row.try_get::<_, Option<String>>(i)
-                            .map_err(|e| RuntimeError::DataSource(e.to_string()))
-                    })
-                    .collect()
-            })
+            .map(|row| (0..row.len()).map(|i| value(&row, i)).collect())
             .collect()
     }
+}
+
+fn value(row: &postgres::Row, index: usize) -> Result<Option<String>, RuntimeError> {
+    use postgres::types::Type;
+    let ty = row.columns()[index].type_();
+    match *ty {
+        Type::BOOL => row
+            .try_get::<_, Option<bool>>(index)
+            .map(|value| value.map(|value| value.to_string()))
+            .map_err(datasource_error),
+        Type::INT2 => row
+            .try_get::<_, Option<i16>>(index)
+            .map(|value| value.map(|value| value.to_string()))
+            .map_err(datasource_error),
+        Type::INT4 => row
+            .try_get::<_, Option<i32>>(index)
+            .map(|value| value.map(|value| value.to_string()))
+            .map_err(datasource_error),
+        Type::INT8 => row
+            .try_get::<_, Option<i64>>(index)
+            .map(|value| value.map(|value| value.to_string()))
+            .map_err(datasource_error),
+        Type::FLOAT4 => row
+            .try_get::<_, Option<f32>>(index)
+            .map(|value| value.map(|value| value.to_string()))
+            .map_err(datasource_error),
+        Type::FLOAT8 => row
+            .try_get::<_, Option<f64>>(index)
+            .map(|value| value.map(|value| value.to_string()))
+            .map_err(datasource_error),
+        _ => row
+            .try_get::<_, Option<String>>(index)
+            .map_err(datasource_error),
+    }
+}
+
+fn datasource_error(error: postgres::Error) -> RuntimeError {
+    RuntimeError::DataSource(error.to_string())
 }
