@@ -7,6 +7,10 @@ pub trait DataSource {
         sql: &str,
         parameters: &[String],
     ) -> Result<Vec<Vec<Option<String>>>, RuntimeError>;
+
+    fn cancel(&mut self) -> Result<(), RuntimeError> {
+        Ok(())
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -53,6 +57,13 @@ impl DataSource for PostgresDataSource {
         rows.into_iter()
             .map(|row| (0..row.len()).map(|i| value(&row, i)).collect())
             .collect()
+    }
+
+    fn cancel(&mut self) -> Result<(), RuntimeError> {
+        self.client
+            .cancel_token()
+            .cancel_query(postgres::NoTls)
+            .map_err(datasource_error)
     }
 }
 
