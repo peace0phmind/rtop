@@ -1,4 +1,4 @@
-use crate::{sparql::TriplePattern, RuntimeError};
+use crate::{sparql::TriplePattern, RdfFact, RdfTerm, RuntimeError};
 use rio_api::parser::TriplesParser;
 use rio_turtle::TurtleParser;
 use std::collections::BTreeMap;
@@ -17,6 +17,25 @@ pub struct Plan {
     pub variables: Vec<String>,
 }
 impl Mapping {
+    pub fn describe(&self) -> Result<Plan, RuntimeError> {
+        self.reformulate(
+            &TriplePattern {
+                subject: "?resource".into(),
+                predicate: self.predicate.clone(),
+                object: self.object.clone(),
+            },
+            &["resource".into()],
+        )
+    }
+
+    pub fn mapped_fact(&self, subject: String) -> RdfFact {
+        RdfFact {
+            subject: RdfTerm::Iri(subject),
+            predicate: self.predicate.trim_matches(['<', '>']).into(),
+            object: RdfTerm::Iri(self.object.trim_matches(['<', '>']).into()),
+            graph: None,
+        }
+    }
     pub fn parse_file(path: &Path) -> Result<Self, RuntimeError> {
         let text = std::fs::read_to_string(path)
             .map_err(|error| RuntimeError::Mapping(format!("无法读取 mapping：{error}")))?;

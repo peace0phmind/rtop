@@ -259,3 +259,21 @@ fn joins_basic_graph_patterns_on_shared_variables() {
     let result = runtime.query("SELECT ?person ?label { ?person <https://example.test/knows> ?friend . ?friend <https://example.test/label> ?label . }").unwrap();
     assert_eq!(format!("{result:?}"), "Bindings([{\"label\": Literal { value: \"B\", datatype: None, language: None }, \"person\": Iri(\"https://example.test/a\")}])");
 }
+
+#[test]
+fn describes_facts_produced_by_a_mapping() {
+    let dir = tempfile::tempdir().unwrap();
+    let mapping = dir.path().join("x.obda");
+    std::fs::write(&mapping, "[MappingDeclaration]\ntarget <https://example.test/person/{id}> <https://example.test/type> <https://example.test/Person> .\nsource SELECT id FROM people\n").unwrap();
+    let spec = KnowledgeGraphSpec {
+        mapping_file: mapping,
+        facts_file: None,
+        facts_format: None,
+        facts_base_iri: None,
+        ontology_file: None,
+    };
+    let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
+    assert!(
+        matches!(runtime.query("DESCRIBE <7>"), Ok(rtop::QueryResult::Graph(facts)) if facts.len() == 1)
+    );
+}

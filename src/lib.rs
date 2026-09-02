@@ -91,15 +91,26 @@ impl<D: DataSource> VkgRuntime<D> {
                         .collect(),
                 ))
             }
-            Query::Describe { resource } => Ok(QueryResult::Graph(
-                self.facts
+            Query::Describe { resource } => {
+                let mut graph = self
+                    .facts
                     .iter()
                     .filter(
                         |fact| matches!(&fact.subject, RdfTerm::Iri(value) if value == &resource),
                     )
                     .cloned()
-                    .collect(),
-            )),
+                    .collect::<Vec<_>>();
+                let plan = self.mapping.describe()?;
+                graph.extend(
+                    self.source
+                        .execute(&plan.sql, &plan.parameters)?
+                        .into_iter()
+                        .filter_map(|row| row.into_iter().next())
+                        .filter(|subject| subject == &resource)
+                        .map(|subject| self.mapping.mapped_fact(subject)),
+                );
+                Ok(QueryResult::Graph(graph))
+            }
         }
     }
 
