@@ -172,23 +172,14 @@ impl<D: DataSource> VkgRuntime<D> {
     fn select_bgp(
         &mut self,
         patterns: &[TriplePattern],
-        variables: &[String],
+        projections: &[String],
     ) -> Result<Vec<Binding>, RuntimeError> {
         if patterns.len() == 1 {
-            return self.select(&patterns[0], variables);
+            return self.select(&patterns[0], projections);
         }
         let mut rows = vec![Binding::new()];
         for pattern in patterns {
-            let matches = self
-                .facts
-                .iter()
-                .filter(|fact| {
-                    fact.graph.is_none()
-                        && fact.predicate == pattern.predicate.trim_matches(['<', '>'])
-                        && fact_matches(pattern, fact, &self.ontology)
-                })
-                .filter_map(|fact| fact_binding(pattern, fact, &self.ontology))
-                .collect::<Vec<_>>();
+            let matches = self.select(pattern, &variables(pattern))?;
             rows = rows
                 .into_iter()
                 .flat_map(|row| matches.iter().filter_map(move |next| join(&row, next)))
@@ -197,7 +188,7 @@ impl<D: DataSource> VkgRuntime<D> {
         Ok(rows
             .into_iter()
             .map(|row| {
-                variables
+                projections
                     .iter()
                     .filter_map(|name| row.get(name).cloned().map(|value| (name.clone(), value)))
                     .collect()
