@@ -4,6 +4,13 @@ use rtop::{
 };
 use std::io::Read;
 
+struct ValidationSource;
+impl rtop::DataSource for ValidationSource {
+    fn execute(&mut self, _: &str, _: &[String]) -> Result<Vec<Vec<String>>, rtop::RuntimeError> {
+        Err(rtop::RuntimeError::DataSource("validate 不执行查询".into()))
+    }
+}
+
 fn main() {
     let mut args = std::env::args().skip(1);
     let command = args.next().unwrap_or_default();
@@ -13,7 +20,9 @@ fn main() {
         std::process::exit(64);
     }
     if command == "validate" {
-        match load_configuration(&config) {
+        match load_configuration(&config)
+            .and_then(|loaded| VkgRuntime::new(loaded.spec, ValidationSource))
+        {
             Ok(_) => return,
             Err(error) => {
                 eprintln!("{error}");
