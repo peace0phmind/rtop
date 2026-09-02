@@ -51,11 +51,13 @@ fn main() {
     let query = if query_path == "-" {
         let mut s = String::new();
         std::io::stdin().read_to_string(&mut s).unwrap();
-        s
+        Ok(s)
     } else {
-        std::fs::read_to_string(query_path).unwrap_or_default()
+        std::fs::read_to_string(&query_path)
+            .map_err(|error| rtop::RuntimeError::Config(format!("无法读取查询文件：{error}")))
     };
     let outcome = (|| {
+        let query = query?;
         let loaded = load_configuration(config)?;
         let source = PostgresDataSource::connect(&loaded.postgres)?;
         let mut runtime = VkgRuntime::new(loaded.spec, source)?;

@@ -12,3 +12,13 @@ fn validate_rejects_an_unreadable_mapping() {
     assert_eq!(output.status.code(), Some(2));
     assert!(String::from_utf8_lossy(&output.stderr).contains("invalid-mapping"));
 }
+
+#[test]
+fn query_rejects_an_unreadable_query_file() {
+    let output = Command::new(env!("CARGO_BIN_EXE_rtop"))
+        .args(["query", "missing-config.toml", "missing-query.rq"])
+        .output()
+        .unwrap();
+    assert_eq!(output.status.code(), Some(2));
+    assert!(String::from_utf8_lossy(&output.stderr).contains("invalid-config: 无法读取查询文件"));
+}
