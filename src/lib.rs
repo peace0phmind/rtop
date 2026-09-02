@@ -71,12 +71,15 @@ impl<D: DataSource> VkgRuntime<D> {
 
     pub fn query(&mut self, sparql: &str) -> Result<QueryResult, RuntimeError> {
         match parse_query(sparql)? {
-            Query::Select { variables, pattern } => {
-                Ok(QueryResult::Bindings(self.select(&pattern, &variables)?))
-            }
-            Query::Ask { pattern } => Ok(QueryResult::Boolean(
+            Query::Select {
+                variables,
+                patterns,
+            } => Ok(QueryResult::Bindings(
+                self.select_bgp(&patterns, &variables)?,
+            )),
+            Query::Ask { patterns } => Ok(QueryResult::Boolean(
                 !self
-                    .select(&pattern, &[pattern.subject.trim_start_matches('?').into()])?
+                    .select_bgp(&patterns, &variables(&patterns[0]))?
                     .is_empty(),
             )),
             Query::Construct { template, pattern } => {
@@ -103,9 +106,13 @@ impl<D: DataSource> VkgRuntime<D> {
     /// 开发诊断：只暴露当前方言的 SQL 快照，不把它作为跨方言稳定契约。
     pub fn reformulate(&self, sparql: &str) -> Result<String, RuntimeError> {
         match parse_query(sparql)? {
-            Query::Select { variables, pattern } => {
-                Ok(self.mapping.reformulate(&pattern, &variables)?.sql)
-            }
+            Query::Select {
+                variables,
+                patterns,
+            } if patterns.len() == 1 => Ok(self.mapping.reformulate(&patterns[0], &variables)?.sql),
+            Query::Select { .. } => Err(RuntimeError::NotFullyTranslatable(
+                "BGP 改写诊断尚未支持".into(),
+            )),
             _ => Err(RuntimeError::UnsupportedSparql(
                 "改写诊断目前仅支持 SELECT".into(),
             )),
@@ -147,9 +154,59 @@ impl<D: DataSource> VkgRuntime<D> {
         Ok(bindings)
     }
 
+    fn select_bgp(
+        &mut self,
+        patterns: &[TriplePattern],
+        variables: &[String],
+    ) -> Result<Vec<Binding>, RuntimeError> {
+        if patterns.len() == 1 {
+            return self.select(&patterns[0], variables);
+        }
+        let mut rows = vec![Binding::new()];
+        for pattern in patterns {
+            let matches = self
+                .facts
+                .iter()
+                .filter(|fact| {
+                    fact.graph.is_none()
+                        && fact.predicate == pattern.predicate.trim_matches(['<', '>'])
+                        && fact_matches(pattern, fact, &self.ontology)
+                })
+                .filter_map(|fact| fact_binding(pattern, fact, &self.ontology))
+                .collect::<Vec<_>>();
+            rows = rows
+                .into_iter()
+                .flat_map(|row| matches.iter().filter_map(move |next| join(&row, next)))
+                .collect();
+        }
+        Ok(rows
+            .into_iter()
+            .map(|row| {
+                variables
+                    .iter()
+                    .filter_map(|name| row.get(name).cloned().map(|value| (name.clone(), value)))
+                    .collect()
+            })
+            .collect())
+    }
+
     pub fn spec(&self) -> &KnowledgeGraphSpec {
         &self.spec
     }
+}
+
+fn join(left: &Binding, right: &Binding) -> Option<Binding> {
+    let mut merged = left.clone();
+    for (name, value) in right {
+        if let Some(existing) = merged.get(name) {
+            if existing != value {
+                return None;
+            }
+        } else {
+            merged.insert(name.clone(), value.clone());
+        }
+    }
+    Some(merged)
 }
 
 fn fact_matches(query: &TriplePattern, fact: &RdfFact, ontology: &ontology::Ontology) -> bool {

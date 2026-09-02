@@ -240,3 +240,22 @@ fn queries_literal_and_blank_node_facts_without_losing_term_identity() {
         "Bindings([{\"subject\": BlankNode(\"b\")}])"
     );
 }
+
+#[test]
+fn joins_basic_graph_patterns_on_shared_variables() {
+    let dir = tempfile::tempdir().unwrap();
+    let mapping = dir.path().join("x.obda");
+    let facts = dir.path().join("facts.ttl");
+    std::fs::write(&mapping, "[MappingDeclaration]\ntarget <https://example.test/person/{id}> <https://example.test/type> <https://example.test/Person> .\nsource SELECT id FROM people\n").unwrap();
+    std::fs::write(&facts, "@prefix ex: <https://example.test/> . ex:a ex:knows ex:b . ex:b ex:label \"B\" . ex:c ex:label \"C\" .").unwrap();
+    let spec = KnowledgeGraphSpec {
+        mapping_file: mapping,
+        facts_file: Some(facts),
+        facts_format: None,
+        facts_base_iri: None,
+        ontology_file: None,
+    };
+    let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
+    let result = runtime.query("SELECT ?person ?label { ?person <https://example.test/knows> ?friend . ?friend <https://example.test/label> ?label . }").unwrap();
+    assert_eq!(format!("{result:?}"), "Bindings([{\"label\": Literal { value: \"B\", datatype: None, language: None }, \"person\": Iri(\"https://example.test/a\")}])");
+}

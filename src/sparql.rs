@@ -11,10 +11,10 @@ pub struct TriplePattern {
 pub enum Query {
     Select {
         variables: Vec<String>,
-        pattern: TriplePattern,
+        patterns: Vec<TriplePattern>,
     },
     Ask {
-        pattern: TriplePattern,
+        patterns: Vec<TriplePattern>,
     },
     Construct {
         template: TriplePattern,
@@ -41,7 +41,7 @@ pub fn parse(input: &str) -> Result<Query, RuntimeError> {
         }
         return Ok(Query::Select {
             variables,
-            pattern: group(&compact[open..])?,
+            patterns: group(&compact[open..])?,
         });
     }
     if upper.starts_with("ASK") {
@@ -49,7 +49,7 @@ pub fn parse(input: &str) -> Result<Query, RuntimeError> {
             .find('{')
             .ok_or_else(|| RuntimeError::MalformedSparql("缺少 `{`".into()))?;
         return Ok(Query::Ask {
-            pattern: group(&compact[open..])?,
+            patterns: group(&compact[open..])?,
         });
     }
     if upper.starts_with("DESCRIBE ") {
@@ -67,10 +67,13 @@ pub fn parse(input: &str) -> Result<Query, RuntimeError> {
         let where_at = upper
             .find(" WHERE ")
             .ok_or_else(|| RuntimeError::MalformedSparql("CONSTRUCT 缺少 WHERE".into()))?;
-        let template = group(compact[9..where_at].trim())?;
+        let template = group(compact[9..where_at].trim())?
+            .into_iter()
+            .next()
+            .unwrap();
         return Ok(Query::Construct {
             template,
-            pattern: group(&compact[where_at + 7..])?,
+            pattern: group(&compact[where_at + 7..])?.into_iter().next().unwrap(),
         });
     }
     Err(RuntimeError::UnsupportedSparql(
@@ -85,7 +88,7 @@ fn variable(token: &str) -> Result<String, RuntimeError> {
         .ok_or_else(|| RuntimeError::MalformedSparql("SELECT 变量必须以 ? 开头".into()))
 }
 
-fn group(input: &str) -> Result<TriplePattern, RuntimeError> {
+fn group(input: &str) -> Result<Vec<TriplePattern>, RuntimeError> {
     let open = input
         .find('{')
         .ok_or_else(|| RuntimeError::MalformedSparql("缺少 `{`".into()))?;
@@ -96,21 +99,24 @@ fn group(input: &str) -> Result<TriplePattern, RuntimeError> {
         return Err(RuntimeError::MalformedSparql("图模式分隔符为空".into()));
     }
     let terms: Vec<_> = input[open + 1..close]
-        .trim()
-        .trim_end_matches('.')
         .split_whitespace()
+        .filter(|term| *term != ".")
         .collect();
-    if terms.len() != 3 {
+    if terms.is_empty() || terms.len() % 3 != 0 {
         return Err(RuntimeError::UnsupportedSparql(
-            "目前只支持一个三元组模式".into(),
+            "图模式必须由完整三元组组成".into(),
         ));
     }
-    if terms[1].starts_with('?') {
+    let (triples, _) = terms.as_chunks::<3>();
+    if triples.iter().any(|terms| terms[1].starts_with('?')) {
         return Err(RuntimeError::UnsupportedSparql("目前不支持谓词变量".into()));
     }
-    Ok(TriplePattern {
-        subject: terms[0].into(),
-        predicate: terms[1].into(),
-        object: terms[2].into(),
-    })
+    Ok(triples
+        .iter()
+        .map(|terms| TriplePattern {
+            subject: terms[0].into(),
+            predicate: terms[1].into(),
+            object: terms[2].into(),
+        })
+        .collect())
 }
