@@ -95,6 +95,28 @@ fn value(row: &postgres::Row, index: usize) -> Result<Option<String>, RuntimeErr
             .try_get::<_, Option<f64>>(index)
             .map(|value| value.map(|value| value.to_string()))
             .map_err(datasource_error),
+        Type::DATE => row
+            .try_get::<_, Option<chrono::NaiveDate>>(index)
+            .map(|value| value.map(|value| value.to_string()))
+            .map_err(datasource_error),
+        Type::TIMESTAMP => row
+            .try_get::<_, Option<chrono::NaiveDateTime>>(index)
+            .map(|value| {
+                value.and_then(|value| {
+                    value
+                        .and_utc()
+                        .to_rfc3339_opts(chrono::SecondsFormat::Micros, true)
+                        .strip_suffix('Z')
+                        .map(str::to_owned)
+                })
+            })
+            .map_err(datasource_error),
+        Type::TIMESTAMPTZ => row
+            .try_get::<_, Option<chrono::DateTime<chrono::Utc>>>(index)
+            .map(|value| {
+                value.map(|value| value.to_rfc3339_opts(chrono::SecondsFormat::Micros, true))
+            })
+            .map_err(datasource_error),
         _ => row
             .try_get::<_, Option<String>>(index)
             .map_err(datasource_error),

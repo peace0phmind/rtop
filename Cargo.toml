@@ -14,7 +14,8 @@ name = "rtop"
 path = "src/main.rs"
 
 [dependencies]
-postgres = "0.19"
+postgres = { version = "0.19", features = ["with-chrono-0_4"] }
+chrono = "0.4"
 oxiri = "0.2"
 rio_api = "0.8"
 rio_turtle = "0.8"
