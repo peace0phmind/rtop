@@ -304,3 +304,27 @@ fn describes_facts_produced_by_a_mapping() {
         matches!(runtime.query("DESCRIBE <7>"), Ok(rtop::QueryResult::Graph(facts)) if facts.len() == 1)
     );
 }
+
+#[test]
+fn constructs_every_template_triple_from_a_basic_graph_pattern() {
+    let dir = tempfile::tempdir().unwrap();
+    let mapping = dir.path().join("x.obda");
+    let facts = dir.path().join("facts.ttl");
+    std::fs::write(&mapping, "[MappingDeclaration]\ntarget <https://example.test/person/{id}> <https://example.test/type> <https://example.test/Person> .\nsource SELECT id FROM people\n").unwrap();
+    std::fs::write(
+        &facts,
+        "@prefix ex: <https://example.test/> . ex:a ex:knows ex:b . ex:b ex:label \"B\" .",
+    )
+    .unwrap();
+    let spec = KnowledgeGraphSpec {
+        mapping_file: mapping,
+        facts_file: Some(facts),
+        facts_format: None,
+        facts_base_iri: None,
+        ontology_file: None,
+    };
+    let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
+    assert!(
+        matches!(runtime.query("CONSTRUCT { ?person <https://example.test/knows> ?friend . ?friend <https://example.test/label> ?label . } WHERE { ?person <https://example.test/knows> ?friend . ?friend <https://example.test/label> ?label . }"), Ok(rtop::QueryResult::Graph(graph)) if graph.len() == 2)
+    );
+}
