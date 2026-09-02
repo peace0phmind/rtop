@@ -63,8 +63,17 @@ fn handle(stream: &mut TcpStream, config: &str, development: bool) -> std::io::R
     let response = match (target.split('?').next(), query) {
         (Some("/healthz"), _) => Ok(("200 OK", "text/plain", "ok".into())),
         (Some("/ontop/reformulate"), Some(query)) if development => reformulate(config, &query),
-        (Some("/sparql"), Some(query)) => execute(config, &query),
-        (Some("/sparql"), None) => Err(RuntimeError::MalformedSparql("请求缺少 query 参数".into())),
+        (Some("/sparql"), Some(query)) if method == "GET" || method == "POST" => {
+            execute(config, &query)
+        }
+        (Some("/sparql"), None) if method == "GET" || method == "POST" => {
+            Err(RuntimeError::MalformedSparql("请求缺少 query 参数".into()))
+        }
+        (Some("/sparql"), _) => Ok((
+            "405 Method Not Allowed",
+            "text/plain",
+            "method not allowed".into(),
+        )),
         _ => Ok(("404 Not Found", "text/plain", "not found".into())),
     };
     let (status, content_type, body) = match response
