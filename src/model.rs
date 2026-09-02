@@ -39,6 +39,8 @@ pub enum RuntimeError {
     MalformedSparql(String),
     #[error("unsupported-sparql: {0}")]
     UnsupportedSparql(String),
+    #[error("not-acceptable: {0}")]
+    NotAcceptable(String),
     #[error("not-fully-translatable: {0}")]
     NotFullyTranslatable(String),
     #[error("type-error: {0}")]

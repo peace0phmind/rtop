@@ -28,6 +28,7 @@ fn handle(stream: &mut TcpStream, config: &str, development: bool) -> std::io::R
     let method = parts.next().unwrap_or_default();
     let target = parts.next().unwrap_or_default();
     let mut content_type = String::new();
+    let mut accept = String::new();
     let mut content_length = 0;
     loop {
         let mut line = String::new();
@@ -37,6 +38,9 @@ fn handle(stream: &mut TcpStream, config: &str, development: bool) -> std::io::R
         }
         if let Some(value) = line.strip_prefix("Content-Type:") {
             content_type = value.trim().into();
+        }
+        if let Some(value) = line.strip_prefix("Accept:") {
+            accept = value.trim().into();
         }
         if let Some(value) = line.strip_prefix("Content-Length:") {
             content_length = value.trim().parse().unwrap_or(0);
@@ -63,14 +67,35 @@ fn handle(stream: &mut TcpStream, config: &str, development: bool) -> std::io::R
         (Some("/sparql"), None) => Err(RuntimeError::MalformedSparql("请求缺少 query 参数".into())),
         _ => Ok(("404 Not Found", "text/plain", "not found".into())),
     };
-    let (status, content_type, body) = match response {
+    let (status, content_type, body) = match response
+        .and_then(|response| negotiate(&accept, response))
+    {
         Ok(response) => response,
+        Err(RuntimeError::NotAcceptable(error)) => ("406 Not Acceptable", "text/plain", error),
         Err(
             error @ RuntimeError::MalformedSparql(_) | error @ RuntimeError::UnsupportedSparql(_),
         ) => ("400 Bad Request", "text/plain", error.to_string()),
         Err(error) => ("500 Internal Server Error", "text/plain", error.to_string()),
     };
     write!(stream, "HTTP/1.1 {status}\r\nContent-Type: {content_type}; charset=utf-8\r\nCache-Control: no-store\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}", body.len())
+}
+
+fn negotiate(
+    accept: &str,
+    response: (&'static str, &'static str, String),
+) -> Result<(&'static str, &'static str, String), RuntimeError> {
+    if accept.is_empty()
+        || accept.contains("*/*")
+        || accept
+            .split(',')
+            .any(|value| value.trim().split(';').next() == Some(response.1))
+    {
+        Ok(response)
+    } else {
+        Err(RuntimeError::NotAcceptable(
+            "请求的 Accept 不支持该结果格式".into(),
+        ))
+    }
 }
 
 fn execute(
@@ -205,7 +230,7 @@ fn percent_decode(value: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::bindings_json;
+    use super::{bindings_json, negotiate};
     use crate::{Binding, RdfTerm};
 
     #[test]
@@ -216,5 +241,19 @@ mod tests {
             RdfTerm::Iri("https://example.test/p".into()),
         );
         assert_eq!(bindings_json(&[row]), "{\"head\":{\"vars\":[\"person\"]},\"results\":{\"bindings\":[{\"person\":{\"type\":\"uri\",\"value\":\"https://example.test/p\"}}]}}");
+    }
+
+    #[test]
+    fn negotiates_an_accepted_sparql_result_format() {
+        assert!(negotiate(
+            "application/sparql-results+json",
+            ("200 OK", "application/sparql-results+json", "{}".into())
+        )
+        .is_ok());
+        assert!(negotiate(
+            "text/turtle",
+            ("200 OK", "application/sparql-results+json", "{}".into())
+        )
+        .is_err());
     }
 }
