@@ -10,3 +10,4 @@ COPY --from=build /src/target/release/rtop /usr/local/bin/rtop
 EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=3s CMD wget -qO- http://127.0.0.1:8080/healthz || exit 1
 ENTRYPOINT ["rtop", "endpoint"]
+CMD ["/etc/rtop/rtop.toml"]
