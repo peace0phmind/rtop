@@ -153,22 +153,14 @@ impl<D: DataSource> VkgRuntime<D> {
 }
 
 fn fact_matches(query: &TriplePattern, fact: &RdfFact, ontology: &ontology::Ontology) -> bool {
-    match (
-        &fact.object,
-        query
-            .object
-            .strip_prefix('<')
-            .and_then(|value| value.strip_suffix('>')),
-    ) {
-        (_, None) if query.object.starts_with('?') => true,
-        (RdfTerm::Iri(actual), Some(expected)) if actual == expected => true,
-        (RdfTerm::Iri(actual), Some(expected))
-            if fact.predicate == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type" =>
-        {
-            ontology.is_subclass_of(actual, expected)
-        }
-        _ => false,
+    if query.object.starts_with('?') || rdf_term_matches(&fact.object, &query.object) {
+        return true;
     }
+    matches!(&fact.object, RdfTerm::Iri(actual)
+        if fact.predicate == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        && query.object.starts_with('<')
+        && query.object.ends_with('>')
+        && ontology.is_subclass_of(actual, query.object.trim_matches(['<', '>'])))
 }
 
 fn fact_binding(
@@ -198,12 +190,40 @@ fn constant_matches(
     fact: &RdfFact,
     ontology: &ontology::Ontology,
 ) -> bool {
-    matches!(term, RdfTerm::Iri(value) if token == format!("<{value}>"))
+    rdf_term_matches(term, token)
         || (token == pattern.object
             && fact.predicate == "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
             && token.starts_with('<')
             && token.ends_with('>')
             && matches!(term, RdfTerm::Iri(value) if ontology.is_subclass_of(value, token.trim_matches(['<', '>']))))
+}
+
+fn rdf_term_matches(term: &RdfTerm, token: &str) -> bool {
+    match term {
+        RdfTerm::Iri(value) => token == format!("<{value}>"),
+        RdfTerm::BlankNode(value) => token == format!("_:{value}"),
+        RdfTerm::Literal {
+            value,
+            datatype,
+            language,
+        } => {
+            let Some(rest) = token.strip_prefix('"') else {
+                return false;
+            };
+            let Some((literal, suffix)) = rest.rsplit_once('"') else {
+                return false;
+            };
+            literal == value
+                && match suffix {
+                    "" => datatype.is_none() && language.is_none(),
+                    suffix if suffix.starts_with('@') => language.as_deref() == Some(&suffix[1..]),
+                    suffix if suffix.starts_with("^^<") && suffix.ends_with('>') => {
+                        datatype.as_deref() == Some(&suffix[3..suffix.len() - 1])
+                    }
+                    _ => false,
+                }
+        }
+    }
 }
 
 fn variables(pattern: &TriplePattern) -> Vec<String> {

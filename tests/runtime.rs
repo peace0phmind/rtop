@@ -212,3 +212,31 @@ fn applies_imported_subclass_axioms_when_querying_facts() {
         "{result:?}"
     );
 }
+
+#[test]
+fn queries_literal_and_blank_node_facts_without_losing_term_identity() {
+    let dir = tempfile::tempdir().unwrap();
+    let mapping = dir.path().join("x.obda");
+    let facts = dir.path().join("facts.ttl");
+    std::fs::write(&mapping, "[MappingDeclaration]\ntarget <https://example.test/person/{id}> <https://example.test/type> <https://example.test/Person> .\nsource SELECT id FROM people\n").unwrap();
+    std::fs::write(
+        &facts,
+        "@prefix ex: <https://example.test/> . _:b ex:label \"bonjour\"@fr .",
+    )
+    .unwrap();
+    let spec = KnowledgeGraphSpec {
+        mapping_file: mapping,
+        facts_file: Some(facts),
+        facts_format: None,
+        facts_base_iri: None,
+        ontology_file: None,
+    };
+    let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
+    let result = runtime
+        .query("SELECT ?subject { ?subject <https://example.test/label> \"bonjour\"@fr . }")
+        .unwrap();
+    assert_eq!(
+        format!("{result:?}"),
+        "Bindings([{\"subject\": BlankNode(\"b\")}])"
+    );
+}
