@@ -4,9 +4,13 @@ struct FakeSource {
     sql: String,
 }
 impl DataSource for FakeSource {
-    fn execute(&mut self, sql: &str, _: &[String]) -> Result<Vec<Vec<String>>, RuntimeError> {
+    fn execute(
+        &mut self,
+        sql: &str,
+        _: &[String],
+    ) -> Result<Vec<Vec<Option<String>>>, RuntimeError> {
         self.sql = sql.into();
-        Ok(vec![vec!["7".into()]])
+        Ok(vec![vec![Some("7".into())]])
     }
 }
 

@@ -6,7 +6,11 @@ use std::io::Read;
 
 struct ValidationSource;
 impl rtop::DataSource for ValidationSource {
-    fn execute(&mut self, _: &str, _: &[String]) -> Result<Vec<Vec<String>>, rtop::RuntimeError> {
+    fn execute(
+        &mut self,
+        _: &str,
+        _: &[String],
+    ) -> Result<Vec<Vec<Option<String>>>, rtop::RuntimeError> {
         Err(rtop::RuntimeError::DataSource("validate 不执行查询".into()))
     }
 }

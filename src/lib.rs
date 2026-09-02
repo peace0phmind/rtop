@@ -105,7 +105,7 @@ impl<D: DataSource> VkgRuntime<D> {
                     self.source
                         .execute(&plan.sql, &plan.parameters)?
                         .into_iter()
-                        .filter_map(|row| row.into_iter().next())
+                        .filter_map(|row| row.into_iter().next().flatten())
                         .filter(|subject| subject == &resource)
                         .map(|subject| self.mapping.mapped_fact(subject)),
                 );
@@ -145,7 +145,11 @@ impl<D: DataSource> VkgRuntime<D> {
                     plan.variables
                         .iter()
                         .enumerate()
-                        .map(|(index, name)| (name.clone(), RdfTerm::Iri(row[index].clone())))
+                        .filter_map(|(index, name)| {
+                            row[index]
+                                .as_ref()
+                                .map(|value| (name.clone(), RdfTerm::Iri(value.clone())))
+                        })
                         .collect::<Binding>()
                 })
                 .collect::<Vec<_>>(),

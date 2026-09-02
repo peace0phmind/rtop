@@ -6,7 +6,7 @@ pub trait DataSource {
         &mut self,
         sql: &str,
         parameters: &[String],
-    ) -> Result<Vec<Vec<String>>, RuntimeError>;
+    ) -> Result<Vec<Vec<Option<String>>>, RuntimeError>;
 }
 
 #[derive(Debug, Clone)]
@@ -41,7 +41,7 @@ impl DataSource for PostgresDataSource {
         &mut self,
         sql: &str,
         parameters: &[String],
-    ) -> Result<Vec<Vec<String>>, RuntimeError> {
+    ) -> Result<Vec<Vec<Option<String>>>, RuntimeError> {
         let values: Vec<&(dyn postgres::types::ToSql + Sync)> = parameters
             .iter()
             .map(|p| p as &(dyn postgres::types::ToSql + Sync))
@@ -56,7 +56,6 @@ impl DataSource for PostgresDataSource {
                     .map(|i| {
                         row.try_get::<_, Option<String>>(i)
                             .map_err(|e| RuntimeError::DataSource(e.to_string()))
-                            .map(|value| value.unwrap_or_default())
                     })
                     .collect()
             })
