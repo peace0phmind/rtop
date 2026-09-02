@@ -3,6 +3,13 @@ use rtop::{DataSource, KnowledgeGraphSpec, RuntimeError, VkgRuntime};
 struct FakeSource {
     sql: String,
 }
+
+struct NullSource;
+impl DataSource for NullSource {
+    fn execute(&mut self, _: &str, _: &[String]) -> Result<Vec<Vec<Option<String>>>, RuntimeError> {
+        Ok(vec![vec![None]])
+    }
+}
 impl DataSource for FakeSource {
     fn execute(
         &mut self,
@@ -37,6 +44,22 @@ fn runs_a_select_bgp_through_the_datasource_port() {
         format!("{result:?}"),
         "Bindings([{\"person\": Iri(\"7\")}])"
     );
+}
+
+#[test]
+fn keeps_sql_null_as_an_unbound_sparql_variable() {
+    let dir = tempfile::tempdir().unwrap();
+    let mapping = dir.path().join("x.obda");
+    std::fs::write(&mapping, "[MappingDeclaration]\ntarget <https://example.com/person/{id}> <https://example.com/type> <https://example.com/Person> .\nsource SELECT id FROM people\n").unwrap();
+    let spec = KnowledgeGraphSpec {
+        mapping_file: mapping,
+        facts_file: None,
+        facts_format: None,
+        facts_base_iri: None,
+        ontology_file: None,
+    };
+    let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
+    assert_eq!(format!("{:?}", runtime.query("SELECT ?person { ?person <https://example.com/type> <https://example.com/Person> . }").unwrap()), "Bindings([{}])");
 }
 
 #[test]
