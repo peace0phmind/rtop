@@ -16,7 +16,7 @@ pub use model::{Binding, QueryResult, RdfFact, RdfTerm, RuntimeError};
 pub use rdf::format_rdf_term;
 pub use server::serve;
 
-use mapping::Mapping;
+use mapping::{BindingTerm, Mapping};
 use sparql::{parse as parse_query, Query, TriplePattern};
 
 /// VKG 的唯一高层 seam：加载配置并执行查询。
@@ -150,9 +150,17 @@ impl<D: DataSource> VkgRuntime<D> {
                         .iter()
                         .enumerate()
                         .filter_map(|(index, name)| {
-                            row[index]
-                                .as_ref()
-                                .map(|value| (name.clone(), RdfTerm::Iri(value.clone())))
+                            row[index].as_ref().map(|value| {
+                                let term = match plan.terms[index] {
+                                    BindingTerm::Iri => RdfTerm::Iri(value.clone()),
+                                    BindingTerm::Literal => RdfTerm::Literal {
+                                        value: value.clone(),
+                                        datatype: None,
+                                        language: None,
+                                    },
+                                };
+                                (name.clone(), term)
+                            })
                         })
                         .collect::<Binding>()
                 })

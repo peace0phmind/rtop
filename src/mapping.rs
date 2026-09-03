@@ -15,6 +15,12 @@ pub struct Plan {
     pub sql: String,
     pub parameters: Vec<String>,
     pub variables: Vec<String>,
+    pub terms: Vec<BindingTerm>,
+}
+#[derive(Clone, Copy)]
+pub enum BindingTerm {
+    Iri,
+    Literal,
 }
 impl Mapping {
     pub fn describe(&self) -> Result<Plan, RuntimeError> {
@@ -134,7 +140,7 @@ impl Mapping {
         let predicate = iri_or_prefixed_after(text, "rr:predicate ")
             .ok_or_else(|| RuntimeError::Mapping("R2RML 结构错误：缺少 rr:predicate".into()))?;
         let object = iri_or_prefixed_after(text, "rr:constant ")
-            .or_else(|| quoted_after(text, "rr:column"))
+            .or_else(|| quoted_after(text, "rr:column").map(|column| format!("{{{column}}}")))
             .ok_or_else(|| {
                 RuntimeError::Mapping("R2RML 结构错误：缺少 rr:constant 或 rr:column".into())
             })?;
@@ -163,7 +169,9 @@ impl Mapping {
         query: &TriplePattern,
         variables: &[String],
     ) -> Result<Plan, RuntimeError> {
-        if self.predicate != query.predicate || self.object != query.object {
+        if self.predicate != query.predicate
+            || (!query.object.starts_with('?') && self.object != query.object)
+        {
             return Err(RuntimeError::NotFullyTranslatable(
                 "三元组模式不匹配最小 mapping".into(),
             ));
@@ -178,7 +186,10 @@ impl Mapping {
             .ok_or_else(|| {
                 RuntimeError::Mapping("target subject 必须包含一个 {column} 模板".into())
             })?;
-        if variables.len() != 1 || variables[0] != query.subject.trim_start_matches('?') {
+        if variables.is_empty()
+            || variables.len() > 2
+            || variables[0] != query.subject.trim_start_matches('?')
+        {
             return Err(RuntimeError::NotFullyTranslatable(
                 "最小切片只投影 subject 变量".into(),
             ));
@@ -191,13 +202,22 @@ impl Mapping {
             .split_once('}')
             .map(|(_, s)| s)
             .ok_or_else(|| RuntimeError::Mapping("无效的 subject 模板".into()))?;
+        let mut projections = vec![format!("$1 || CAST({column} AS text) || $2")];
+        let mut terms = vec![BindingTerm::Iri];
+        if variables.len() == 2 {
+            let object_column = self.object.trim_matches(['{', '}']);
+            projections.push(format!("CAST({object_column} AS text)"));
+            terms.push(BindingTerm::Literal);
+        }
         Ok(Plan {
             sql: format!(
-                "SELECT $1 || CAST({column} AS text) || $2 FROM ({}) AS rtop_mapping",
+                "SELECT {} FROM ({}) AS rtop_mapping",
+                projections.join(", "),
                 self.source
             ),
             parameters: vec![prefix.into(), suffix.into()],
             variables: variables.to_vec(),
+            terms,
         })
     }
 }
@@ -217,7 +237,13 @@ fn quoted_after(text: &str, marker: &str) -> Option<String> {
     } else {
         "\""
     };
-    Some(tail.split_once(end)?.0.into())
+    if end == "\"\"\"" {
+        return Some(tail.split_once(end)?.0.into());
+    }
+    let end_at = tail.char_indices().find_map(|(index, character)| {
+        (character == '"' && !tail[..index].ends_with('\\')).then_some(index)
+    })?;
+    Some(tail[..end_at].replace("\\\"", "\""))
 }
 
 fn iri_after(text: &str, marker: &str) -> Option<String> {

@@ -10,6 +10,13 @@ impl DataSource for NullSource {
         Ok(vec![vec![None]])
     }
 }
+
+struct PairSource;
+impl DataSource for PairSource {
+    fn execute(&mut self, _: &str, _: &[String]) -> Result<Vec<Vec<Option<String>>>, RuntimeError> {
+        Ok(vec![vec![Some("7".into()), Some("7".into())]])
+    }
+}
 impl DataSource for FakeSource {
     fn execute(
         &mut self,
@@ -74,7 +81,7 @@ fn distinguishes_invalid_and_unsupported_sparql() {
         facts_base_iri: None,
         ontology_file: None,
     };
-    let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
+    let mut runtime = VkgRuntime::new(spec, PairSource).unwrap();
     assert!(matches!(
         runtime.query("SELECT ?person"),
         Err(RuntimeError::MalformedSparql(_))
@@ -225,6 +232,25 @@ fn loads_ontop_r2rml_d000_table_and_column_mapping() {
     if let Err(error) = VkgRuntime::new(spec, FakeSource { sql: String::new() }) {
         panic!("{error}");
     }
+}
+
+#[test]
+fn queries_ontop_r2rml_d000_table_and_column_mapping() {
+    let dir = tempfile::tempdir().unwrap();
+    let mapping = dir.path().join("d000.ttl");
+    std::fs::write(&mapping, "@prefix rr: <http://www.w3.org/ns/r2rml#> .\n@prefix foaf: <http://xmlns.com/foaf/0.1/> .\n<TriplesMap1> a rr:TriplesMap; rr:logicalTable [ rr:tableName \"\\\"Student\\\"\" ]; rr:subjectMap [ rr:template \"http://example.com/{\\\"Name\\\"}\" ]; rr:predicateObjectMap [ rr:predicate foaf:name; rr:objectMap [ rr:column \"\\\"Name\\\"\" ] ] .").unwrap();
+    let spec = KnowledgeGraphSpec {
+        mapping_file: mapping,
+        facts_file: None,
+        facts_format: None,
+        facts_base_iri: None,
+        ontology_file: None,
+    };
+    let mut runtime = VkgRuntime::new(spec, PairSource).unwrap();
+    let result = runtime
+        .query("SELECT ?person ?name { ?person <http://xmlns.com/foaf/0.1/name> ?name . }")
+        .unwrap();
+    assert_eq!(format!("{result:?}"), "Bindings([{\"name\": Literal { value: \"7\", datatype: None, language: None }, \"person\": Iri(\"7\")}])");
 }
 
 #[test]
