@@ -112,17 +112,32 @@ impl Mapping {
     }
 
     fn parse_r2rml(text: &str, path: &Path) -> Result<Self, RuntimeError> {
-        TurtleParser::new(Cursor::new(text), None)
+        let base_iri = oxiri::Iri::parse(format!(
+            "file://{}",
+            path.canonicalize()
+                .unwrap_or_else(|_| path.to_path_buf())
+                .display()
+        ))
+        .map_err(|error| RuntimeError::Mapping(format!("无效 R2RML base IRI：{error}")))?;
+        TurtleParser::new(Cursor::new(text), Some(base_iri))
             .parse_all(&mut |_| Ok(()) as Result<(), rio_turtle::TurtleError>)
             .map_err(|error| RuntimeError::Mapping(format!("R2RML RDF 语法错误：{error}")))?;
         let source = quoted_after(text, "rr:sqlQuery")
-            .ok_or_else(|| RuntimeError::Mapping("R2RML 结构错误：缺少 rr:sqlQuery".into()))?;
+            .or_else(|| {
+                quoted_after(text, "rr:tableName").map(|table| format!("SELECT * FROM {table}"))
+            })
+            .ok_or_else(|| {
+                RuntimeError::Mapping("R2RML 结构错误：缺少 rr:sqlQuery 或 rr:tableName".into())
+            })?;
         let template = quoted_after(text, "rr:template")
             .ok_or_else(|| RuntimeError::Mapping("R2RML 结构错误：缺少 rr:template".into()))?;
-        let predicate = iri_after(text, "rr:predicate ")
+        let predicate = iri_or_prefixed_after(text, "rr:predicate ")
             .ok_or_else(|| RuntimeError::Mapping("R2RML 结构错误：缺少 rr:predicate".into()))?;
-        let object = iri_after(text, "rr:constant ")
-            .ok_or_else(|| RuntimeError::Mapping("R2RML 结构错误：缺少 IRI rr:constant".into()))?;
+        let object = iri_or_prefixed_after(text, "rr:constant ")
+            .or_else(|| quoted_after(text, "rr:column"))
+            .ok_or_else(|| {
+                RuntimeError::Mapping("R2RML 结构错误：缺少 rr:constant 或 rr:column".into())
+            })?;
         if !source.to_ascii_uppercase().starts_with("SELECT ") {
             return Err(RuntimeError::Mapping(
                 "R2RML rr:sqlQuery 必须是 SELECT 语句".into(),
@@ -209,6 +224,22 @@ fn iri_after(text: &str, marker: &str) -> Option<String> {
     let tail = text.split_once(marker)?.1.trim_start();
     let iri = tail.strip_prefix('<')?.split_once('>')?.0;
     Some(iri.into())
+}
+
+fn iri_or_prefixed_after(text: &str, marker: &str) -> Option<String> {
+    iri_after(text, marker).or_else(|| {
+        let term = text.split_once(marker)?.1.split_whitespace().next()?;
+        let (prefix, local) = term.trim_end_matches([';', '.']).split_once(':')?;
+        let declaration = format!("@prefix {prefix}:");
+        let iri = text
+            .split_once(&declaration)?
+            .1
+            .trim_start()
+            .strip_prefix('<')?
+            .split_once('>')?
+            .0;
+        Some(format!("{iri}{local}"))
+    })
 }
 
 fn prefixes(lines: &[&str]) -> Result<BTreeMap<String, String>, RuntimeError> {

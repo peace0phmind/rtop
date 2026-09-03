@@ -211,6 +211,23 @@ fn loads_a_turtle_r2rml_mapping_from_the_same_runtime_seam() {
 }
 
 #[test]
+fn loads_ontop_r2rml_d000_table_and_column_mapping() {
+    let dir = tempfile::tempdir().unwrap();
+    let mapping = dir.path().join("d000.ttl");
+    std::fs::write(&mapping, "@prefix rr: <http://www.w3.org/ns/r2rml#> .\n@prefix foaf: <http://xmlns.com/foaf/0.1/> .\n<TriplesMap1> a rr:TriplesMap; rr:logicalTable [ rr:tableName \"\\\"Student\\\"\" ]; rr:subjectMap [ rr:template \"http://example.com/{\\\"Name\\\"}\" ]; rr:predicateObjectMap [ rr:predicate foaf:name; rr:objectMap [ rr:column \"\\\"Name\\\"\" ] ] .").unwrap();
+    let spec = KnowledgeGraphSpec {
+        mapping_file: mapping,
+        facts_file: None,
+        facts_format: None,
+        facts_base_iri: None,
+        ontology_file: None,
+    };
+    if let Err(error) = VkgRuntime::new(spec, FakeSource { sql: String::new() }) {
+        panic!("{error}");
+    }
+}
+
+#[test]
 fn applies_imported_subclass_axioms_when_querying_facts() {
     let dir = tempfile::tempdir().unwrap();
     let mapping = dir.path().join("x.obda");
