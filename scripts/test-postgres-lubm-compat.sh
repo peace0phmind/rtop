@@ -46,6 +46,15 @@ until docker exec "$name" psql -U rtop -d rtop_test -c 'SELECT 1' >/dev/null 2>&
 done
 docker exec -i "$name" psql -U rtop -d rtop_test < "$fixture" >/dev/null
 
+# 先构建一次，再直接执行固定二进制。这样既避免每条查询重复启动 Cargo，
+# 也能保留失败诊断；先前的管道会吞掉 `cargo run` 的退出状态和 stderr。
+cargo build --quiet
+rtop_binary=$root/target/debug/rtop
+[ -x "$rtop_binary" ] || {
+  echo "LUBM gate 缺少已构建的 rtop 二进制：$rtop_binary" >&2
+  exit 1
+}
+
 for query_name in $query_names; do
   number=${query_name#query-}
   query=$baseline/$query_name.rq
@@ -55,8 +64,18 @@ for query_name in $query_names; do
     echo "$query_name 缺少原始 rsi:size" >&2
     exit 1
   }
-  actual=$(RTOP_POSTGRES_PORT="$postgres_port" cargo run --quiet -- \
-    query "$root/tests/compat/postgres-lubm/rtop.toml" "$query" 2>/dev/null | wc -l | tr -d ' ')
+  output_file=$(mktemp "${TMPDIR:-/tmp}/rtop-lubm-output.XXXXXX")
+  error_file=$(mktemp "${TMPDIR:-/tmp}/rtop-lubm-error.XXXXXX")
+  if ! RTOP_POSTGRES_PORT="$postgres_port" "$rtop_binary" \
+    query "$root/tests/compat/postgres-lubm/rtop.toml" "$query" \
+    >"$output_file" 2>"$error_file"; then
+    echo "$query_name 执行失败：" >&2
+    sed -n '1,120p' "$error_file" >&2
+    rm -f "$output_file" "$error_file"
+    exit 1
+  fi
+  actual=$(wc -l < "$output_file" | tr -d ' ')
+  rm -f "$output_file" "$error_file"
   [ "$actual" = "$expected" ] || {
     echo "$query_name 行数不匹配：actual=$actual expected=$expected" >&2
     exit 1
