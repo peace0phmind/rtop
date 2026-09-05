@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-[ "${RTOP_TRACE:-}" = 1 ] && set -x
-
 root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 name=rtop-postgres-compat-$$
 scratch=$(mktemp -d)
@@ -673,8 +671,9 @@ actual=$(cd "$root" && cargo run --quiet -- query tests/compat/postgres-annotati
 rows=$(printf '%s\n' "$actual" | rg -c '^\?x=<http://purl\.obolibrary\.org/obo/DOID_0060309>$' || true)
 [ "$rows" = "76" ]
 # DOID fixture 的 tb_books 与后续 LowercaseIdentifier fixture 共用表名；DOID
-# 断言完成后移除其 76 条专属输入，恢复后续场景的独立初始状态。
+# 断言完成后移除其 76 条专属输入，并恢复后者所需的唯一 seed。
 docker exec "$name" psql -U rtop -d rtop_test -c "DELETE FROM tb_books WHERE bk_title = 'NT MGI.'" >/dev/null
+docker exec "$name" psql -U rtop -d rtop_test -c "INSERT INTO tb_books (bk_title) VALUES ('a')" >/dev/null
 
 # 固定 Ontop DistinctInAggregatePostgresTest 的四个 GROUP BY/DISTINCT aggregate 查询。
 for query in sum-distinct avg-distinct count-distinct group-concat-distinct; do
