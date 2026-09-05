@@ -28,6 +28,8 @@ jobs:
         uses: dtolnay/rust-toolchain@1.85.1
         with:
           components: rustfmt
+      - name: 安装 gate 工具
+        run: sudo apt-get update && sudo apt-get install --yes ripgrep
       - name: 运行 PostgreSQL 17 最终 gate
         shell: bash
         run: |
