@@ -1205,6 +1205,9 @@ while [ "$stable" -lt 2 ]; do
   fi
   sleep 2
 done
+# PostGIS entrypoint 会在扩展加载后重启一次 PostgreSQL；两次探针后再跨越该
+# 窗口，避免初始化 SQL 与服务重启竞争。
+sleep 5
 docker exec -i "$postgis_name" psql -U rtop -d rtop_test < "$root/tests/compat/postgres-geospatial/init.sql"
 actual=$(cd "$root" && cargo run --quiet -- query tests/compat/postgres-geospatial/rtop-postgis.toml tests/compat/postgres-geospatial/intersects.rq)
 rows=$(printf '%s\n' "$actual" | sed '/^$/d' | wc -l | tr -d ' ')
