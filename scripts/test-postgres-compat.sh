@@ -9,6 +9,7 @@ cleanup() {
   rm -rf "$scratch"
 }
 trap cleanup EXIT INT TERM
+trap 'status=$?; printf "postgres-compat failure: line=%s status=%s command=%s\\n" "$LINENO" "$status" "$BASH_COMMAND" >&2' ERR
 assert_output() {
   actual_normalized=$(printf '%s\n' "$1" | tr '\t' ' ' | tr -d '\r' | sed '/^[[:space:]]*$/d')
   expected_normalized=$(printf '%s\n' "$2" | tr '\t' ' ' | tr -d '\r' | sed '/^[[:space:]]*$/d')
