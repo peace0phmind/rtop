@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+[ "${RTOP_TRACE:-}" = 1 ] && set -x
+
 root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 name=rtop-postgres-compat-$$
 scratch=$(mktemp -d)

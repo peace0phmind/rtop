@@ -20,7 +20,7 @@ run_gate method-audits ./scripts/validate-postgres-method-audits.sh
 run_gate coverage-ledger ./scripts/validate-coverage-ledger.sh
 run_gate report-json jq empty compatibility-report.json
 run_gate diff-check git diff --check
-run_gate postgres-compat ./scripts/test-postgres-compat.sh
+run_gate postgres-compat env RTOP_TRACE=1 ./scripts/test-postgres-compat.sh
 run_gate postgres-suite ./scripts/test-postgres-suite-compat.sh
 run_gate postgres-lubm ./scripts/test-postgres-lubm-compat.sh
 run_gate delivery ./scripts/test-delivery-compat.sh
