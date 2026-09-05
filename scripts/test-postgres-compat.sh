@@ -1108,6 +1108,9 @@ done
 actual=$(cd "$root" && cargo run --quiet -- query tests/compat/postgres-identifiers/baseline-prefix-source.toml tests/compat/postgres-identifiers/prefix-source.rq)
 expected=$(cat "$root/tests/compat/postgres-identifiers/prefix-source.expected")
 assert_output "$actual" "$expected"
+# facts 场景会删除同名 company；NPD quoted-alias 对照需要恢复其固定的最小笛卡尔输入。
+docker exec "$name" psql -U rtop -d rtop_test -c 'CREATE TABLE company ("cmpNpdidCompany" text NOT NULL)' >/dev/null
+docker exec "$name" psql -U rtop -d rtop_test -c "INSERT INTO company VALUES ('acme')" >/dev/null
 actual=$(cd "$root" && cargo run --quiet -- query tests/compat/postgres-identifiers/baseline-npd.toml tests/compat/postgres-identifiers/quoted-alias.rq)
 expected=$(cat "$root/tests/compat/postgres-identifiers/quoted-alias.expected")
 assert_output "$actual" "$expected"
