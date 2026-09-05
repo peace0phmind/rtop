@@ -34,7 +34,8 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          ./scripts/test-final-gate.sh | tee final-gate.log
+          # 合并 stderr，保证脚本诊断按发生顺序进入日志和 artifact。
+          ./scripts/test-final-gate.sh 2>&1 | tee final-gate.log
           ./scripts/collect-final-gate-provenance.sh > final-gate-provenance.json
       - name: 保存对照证据
         if: always()
