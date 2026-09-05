@@ -15,7 +15,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D001/mappeda.nq",
         "test/rdb2rdf-compliance/src/test/resources/D001/mappedb.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "原始 D001 create.sql 的带引号 Student/Name 在 PostgreSQL 上产生 <http://example.com/Venus> foaf:name \"Venus\"，以及 _:Venus foaf:name \"Venus\"。",
       "difference": "D001 direct mapping asset 仍由独立 direct-mapping 范围分类；本 case 只证明两个 R2RML mapping entry 的可观察结果。"
     },
@@ -32,7 +32,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D004/r2rmlb.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D004/mappeda.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "两个 TriplesMap 在 Student_Sport 单行上分别返回 Venus/Student 与 Tennis/Sport 的 name 和 rdf:type triples；rr:subjectMap 的 rr:termType rr:Literal 被 validate 稳定拒绝。",
       "difference": "D004 direct mapping asset 仍由独立 direct-mapping 范围分类；失败比较 Rust 的 invalid mapping 类别，不复制 Java error 文本。"
     },
@@ -45,7 +45,7 @@
       "source_paths": [
         "client/cli/src/test/resources/test/simplemapping.obda"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust 本地工具链",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust 本地工具链",
       "difference": "rtop 输出与 fixture 对照结果完全一致；固定 Ontop 基线的输入语义来源见 tests/compat/postgres-minimal/case.toml。"
     },
     {
@@ -57,7 +57,7 @@
       "source_paths": [
         "mapping/sql/all/src/test/resources/it/unibz/inf/ontop/io/SchoolRegularFile.obda"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "difference": "覆盖原生 .obda 的 prefix、注释、source 续行和废弃 SourceDeclaration 的稳定拒绝；对照入口见 tests/runtime.rs。"
     },
     {
@@ -69,7 +69,7 @@
       "source_paths": [
         "test/rdb2rdf-compliance/src/test/resources/D000/r2rml.ttl"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "difference": "覆盖 Turtle R2RML 最小 logical table、template、predicate 与 IRI constant，并通过 VkgRuntime 执行。"
     },
     {
@@ -81,7 +81,7 @@
       "source_paths": [
         "test/rdb2rdf-compliance/src/test/resources/D000/{create.sql,r2rml.ttl,mapped.nq,manifest.ttl}"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D000 空 Student relation 的 r2rml.ttl CONSTRUCT 返回零 triples，与 mapped.nq 的空图一致。",
       "difference": "空数据库不物化 mapping schema triple。"
     },
@@ -95,7 +95,7 @@
         "binding/rdf4j/src/test/java/it/unibz/inf/ontop/rdf4j/repository/FactsFileTestNQuads.java",
         "binding/rdf4j/src/test/resources/facts/facts.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "默认图与 <https://example.test/extra> 具名图隔离；GRAPH IRI 模式只返回具名图中的 \"2022\"，并保留 N-Quads graph term。",
       "difference": "将参考 RDF4J binding 的可观察 GRAPH 语义落实在 VkgRuntime；不迁移 RDF4J Java API。"
     },
@@ -109,7 +109,7 @@
         "binding/rdf4j/src/test/java/it/unibz/inf/ontop/rdf4j/repository/FactsFileTestRDF.java",
         "binding/rdf4j/src/test/resources/facts/facts.rdf"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "RDF/XML facts 使用显式 facts_base_iri 解析相对 rdf:about，并通过 VkgRuntime 查询含空格的 literal 值。",
       "difference": "将参考 RDF4J binding 的 facts 文件与 base IRI 行为迁移到 Rust 原生 parser；不迁移 RDF4J Java API。"
     },
@@ -123,7 +123,7 @@
         "mapping/sql/all/src/test/java/it/unibz/inf/ontop/spec/mapping/parser/BasicR2RMLMappingMistakeTest.java",
         "mapping/sql/all/src/test/resources/mistake/invalid-predicate-object1-r2rml.ttl"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "R2RML 以 Turtle 已解析 RDF 三元组提取 TripleMap；相对 IRI 依据 mapping 文件 base 解析，RDF 语法错误与缺失 ObjectMap 的结构错误分类稳定。",
       "difference": "采用 Rust 原生 RDF parser 和结构检查；不迁移 Ontop Java mapping object 或其错误文本。"
     },
@@ -245,7 +245,7 @@
         "binding/rdf4j/src/test/java/it/unibz/inf/ontop/rdf4j/repository/RDF4JR2RMLConstantLangTagTest.java",
         "binding/rdf4j/src/test/resources/prof/prof-cst-langtag.mapping.ttl"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "R2RML rr:constant 的语言标签在 MappingRule、参数化 PostgreSQL SQL 投影和 VkgRuntime binding 中均保留；Professor 的 :label 结果是 \"Professore\"@it。",
       "difference": "实现 Rust 自有 RDF term 与参数化 SQL，不迁移 RDF4J binding API 或 FILTER(lang()) 表达式执行器。"
     },
@@ -275,7 +275,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D015/r2rmlb.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D015/mappeda.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D015 create.sql 与 r2rmla.ttl 在 PostgreSQL 17 上生成 BO/IE 的四条 @en/@es label graph，并与 mappeda.nq 一致；r2rmlb.ttl 的 english/spanish 值在 mapping 加载期稳定归类为 invalid-mapping。",
       "difference": "采用 Rust 原生 BCP47 结构校验与 MappingRule 集合；不迁移 Java R2RML processor。"
     },
@@ -365,7 +365,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D002/r2rmlj.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D002/{mappedd,mappedi,mappedj}.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "原始 D002 SQL logical table mapping 在 PostgreSQL 17 上完整对照通过：SQL expression 投影生成 blank node、rr:sqlVersion rr:SQL2008 声明、以及 qualified column SELECT 都产生各自基线 N-Quads 图。",
       "difference": "原始 c/e/f/h 的未知 identifier、表名和 duplicate alias 经 PostgreSQL 17 语义解析后稳定为 datasource-failure: db error（非连接失败）；g 的无效 SQL 在 mapping 解析期为 invalid-mapping。"
     },
@@ -393,7 +393,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D016/r2rmla.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D016/mappeda.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D016 r2rmla.ttl 在等价 PostgreSQL 17 Patient schema 上生成 string/integer 15 条完整 graph，与 mappeda.nq 一致。",
       "difference": "基线 VARBINARY/X literal 仅影响 Photo，不参与此 mapping。"
     },
@@ -407,7 +407,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D016/r2rmlb.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D016/mappedb.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D016 r2rmlb.ttl 在 PostgreSQL 17 上将 REAL/FLOAT 输出为 xsd:double scientific lexical，完整 graph 与 mappedb.nq 一致。",
       "difference": "使用 PostgreSQL DOUBLE PRECISION 表示基线 FLOAT；Photo 不参与此 mapping。"
     },
@@ -421,7 +421,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D016/r2rmle.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D016/mappede.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "原始 r2rmle.ttl 在 PostgreSQL bytea Photo 上产生 IRI object；data:*;hex 模板使用 upper(encode(bytea, hex)) 投影，完整图与 mappede.nq 一致。",
       "difference": "仅对 data:*;hex 二进制 IRI 模板使用 PostgreSQL bytea hex projection；其他 IRI template 仍按 RFC3986 component encoding。"
     },
@@ -438,7 +438,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D016/mappedc.nq",
         "test/rdb2rdf-compliance/src/test/resources/D016/mappedd.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D016 r2rmlc/r2rmld 在等价 PostgreSQL 17 Patient schema 上分别生成完整 DATE/TIMESTAMP 与 BOOLEAN graph，与 mappedc.nq/mappedd.nq 一致。",
       "difference": "本情景不声明 REAL/FLOAT 的科学计数法 canonicalization 或二进制 bytea 编码；它们仍需按固定 fixture 单独验收。"
     },
@@ -488,7 +488,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D007/r2rmlh.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D007/{mappeda,mappedb,mappedc,mappedd,mappede,mappedf,mappedg}.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "PostgreSQL 17 上 D007a–g 的原始映射均与对应基线 N-Quads 完整一致：包括 rr:class、多 rdf:type POM、直接 rr:graph 具名图与显式 rr:defaultGraph；r2rmlh.ttl 的 rr:graphMap column + rr:termType rr:Literal 在 validate 加载期以 invalid-mapping 拒绝。",
       "difference": "D007 已覆盖全部 manifest mapping entry；动态 graphMap 的其他构造仍由独立语料覆盖。"
     },
@@ -506,7 +506,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D003/mappedb.nq",
         "test/rdb2rdf-compliance/src/test/resources/D003/mappedc.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "D003b 的原始 SQL concatenation literal 与 D003c 的 template literal 分别和基线 N-Quads 完整一致；D003a 的非标准 rr:SQL1979 在 mapping 解析期稳定拒绝。",
       "difference": "rr:sqlVersion 只接受 R2RML 标准 rr:SQL2008；不将其他声明静默降级为 PostgreSQL 方言。"
     },
@@ -536,7 +536,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D005/mappeda.nq",
         "test/rdb2rdf-compliance/src/test/resources/D005/mappedb.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D005 create.sql 与 r2rmla.ttl 在 PostgreSQL 17 上生成 template IRI、rr:class 和 amount 的完整默认图，与 mappeda.nq 一致；r2rmlb.ttl 生成两个 IOUs blank node、type/fname/lname/amount 共八个 RDF triples，并与 mappedb.nq 按空白节点同构比较通过。",
       "difference": "RDF blank node 标签不是跨运行时稳定标识；gate 在排序后按首次出现顺序 canonicalize labels，比较完整 graph 的同构与 RDF term，而不要求 Ontop 的内部标签字符串。"
     },
@@ -551,7 +551,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D008/r2rmla.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D008/mappeda.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D008 create.sql 与 r2rmla.ttl 在指定 GRAPH IRI 中返回 type/id/name/Sport 四个完整 RDF triples，与 mappeda.nq 的同一 graph 内容一致。",
       "difference": "当前 SPARQL 子集仅支持固定 IRI GRAPH，未声明图变量投影；gate 通过固定图模式验证 named-graph 隔离，而非将 N-Quads context 当成 CONSTRUCT 输出 term。"
     },
@@ -566,7 +566,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D008/r2rmlb.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D008/mappedb.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D008 r2rmlb.ttl 在 PostgreSQL 17 上生成完整五条默认图，Student 的 ex:Sport object 为 http://example.com/Tennis，与 mappedb.nq 一致。",
       "difference": "无 rr:joinCondition 使用 child 与 parent source 的 CROSS JOIN；复合 parent template 与多个 joinCondition 由独立 R2RML 对照覆盖。"
     },
@@ -581,7 +581,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D008/r2rmlc.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D008/mappedc.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D008 r2rmlc.ttl 在 PostgreSQL 17 上生成 foaf:name 与 ex:name 两条完整 RDF triples，与 mappedc.nq 一致。",
       "difference": "当前 predicateMap 仅支持 IRI rr:constant；column/template predicateMap 仍需单独取证。"
     },
@@ -597,7 +597,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D009/r2rmla.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D009/mappeda.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D009 r2rmla.ttl 在 PostgreSQL 17 上将 Student.Sport 与 Sport.ID 通过 rr:joinCondition 关联，生成 Venus 的 practises sport_100 triple；Sport=NULL 的 Demi 不生成该 triple，完整图与 mappeda.nq 一致。",
       "difference": "验收比较可观察 RDF graph，不将 Ontop 的 SQL join 计划文本作为跨语言契约。"
     },
@@ -613,7 +613,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D009/r2rmlc.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D009/mappedc.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D009 r2rmlc.ttl 的未命名 COUNT(\"Sport\") SQL projection 在 PostgreSQL 17 上不干扰按 Name GROUP BY 的两条 foaf:name RDF triples，与 mappedc.nq 全图一致。",
       "difference": "未命名聚合列未被 R2RML term map 引用，因此不把其 SQL 列名暴露为 Rust 外部契约。"
     },
@@ -628,7 +628,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D009/r2rmld.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D009/mappedd.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D009 r2rmld.ttl 的 COUNT(\"Sport\") AS SPORTCOUNT 在 PostgreSQL 17 上产生 Venus=1、Demi=0 的 xsd:integer numSport 及两条 name triples，与 mappedd.nq 全图一致。",
       "difference": "此场景验证命名聚合 SQL projection；未命名聚合列不会作为 R2RML column 的稳定外部契约。"
     },
@@ -643,7 +643,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D009/r2rmlb.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D009/mappedb.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D009 r2rmlb.ttl 在 PostgreSQL 17 上分别从 students、practise、sports 三个固定 GRAPH IRI 读取 5、1、2 条完整 RDF triples，并与 mappedb.nq 对应子图一致。",
       "difference": "覆盖直接 IRI rr:graph 的 subjectMap/POM 图并集；predicate-object map 的 graphMap constant/template 仍需独立取证。"
     },
@@ -660,7 +660,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D010/mappeda.nq",
         "test/rdb2rdf-compliance/src/test/resources/D010/mappedb.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D010 r2rmla.ttl 在 PostgreSQL 17 上以带空格的 quoted Country Code 生成三个单列 subject，完整 graph 与 mappeda.nq 一致；r2rmlb.ttl 将 Country Code/Name 映射为 http://example.com/1/Bolivia%2C%20Plurinational%20State%20of 等完整 IRI，完整 graph 与 mappedb.nq 一致。",
       "difference": "覆盖 D010 所需的空格、逗号、括号和百分号等 IRI 保留字符编码；转义花括号 literal template 由 D010c 独立覆盖。"
     },
@@ -675,7 +675,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D010/r2rmlc.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D010/mappedc.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D010 r2rmlc.ttl 在 PostgreSQL 17 上将 \\{ 和 \\} 解释为 literal 花括号；ISO 3166 BO 生成 '{{{ BO }}}'，完整 graph 与 mappedc.nq 一致。",
       "difference": "实现 D010c 所需的模板花括号转义；更广泛的 R2RML 字符串转义仍按基线情景逐项验收。"
     },
@@ -690,7 +690,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D011/r2rmlb.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D011/mappedb.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D011 r2rmlb.ttl 在 PostgreSQL 17 上从 Student、Sport、Student_Sport 三张表生成 16 条完整 RDF triples，含四条多对多 ex:plays 边，与 mappedb.nq 一致。",
       "difference": "覆盖 D011b 的额外 TriplesMap M:N 链接边；D011a SQL join view 由独立情景继续取证。"
     },
@@ -705,7 +705,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D011/r2rmla.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D011/mappeda.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D011 r2rmla.ttl 在 PostgreSQL 17 上执行三表 Student/Sport/Student_Sport SQL view；剥离嵌入 FROM (...) 前的末尾 statement terminator 后，完整 RDF graph 与 mappeda.nq 一致。",
       "difference": "覆盖 D011a 的多表 SQL logicalTable；仅归一化末尾 statement terminator，不改变原始 SQL 主体或复制参考实现的关系代数计划。"
     },
@@ -734,7 +734,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D012/r2rmlb.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D012/mappedb.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D012 r2rmlb.ttl 在 PostgreSQL 17 上使 IOUs 与 Lives 的相同 fname/lname blank-node template 产生等价 term，完整图与 mappedb.nq 按同构一致。",
       "difference": "以 Rust RDF blank node value 表达同图内可观察身份；不复刻参考实现的序列化 label 分配策略。"
     },
@@ -749,7 +749,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D012/r2rmla.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D012/mappeda.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D012 r2rmla.ttl 在 PostgreSQL 17 上将重复 Bob/Smith/30 IOUs row 合并为同一 blank node，完整图与 mappeda.nq 按同构一致。",
       "difference": "按同图同 template 值的 blank-node identity 比较，不依赖序列化标签。"
     },
@@ -763,7 +763,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D012/manifest.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D012/r2rmlc.ttl"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D012 r2rmlc.ttl 在 PostgreSQL 17 gate 的 mapping 加载期稳定拒绝为缺少 rr:subjectMap。",
       "difference": "保持 Rust mapping 错误类别，不复制 Java exception 文本。"
     },
@@ -778,7 +778,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D012/r2rmle.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D012/mappede.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D012 r2rmle.ttl 在 PostgreSQL 17 上从无主键 IOUs/Lives 生成默认 blank-node 图，完整输出与 mappede.nq 按同构一致。",
       "difference": "重复 source row 的映射结果按 RDF graph 语义去重。"
     },
@@ -793,7 +793,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D013/r2rmla.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D013/mappeda.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D013 create.sql 与 r2rmla.ttl 在 PostgreSQL 17 上执行；DateOfBirth 为 NULL 的 Person/1 不产生不完整 subject 或 BirthDay triple，仅 Person/2 的完整 RDF graph 与 mappeda.nq 一致。",
       "difference": "在 VkgRuntime 的 typed datasource 结果边界过滤 NULL 行，不产生部分 SPARQL binding。"
     },
@@ -808,7 +808,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D014/r2rmla.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D014/mappeda.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D014 r2rmla.ttl 在 PostgreSQL 17 上从 DEPT SQL logicalTable 生成 Department10 blank node 的 dept:location；与 mappeda.nq 按图同构一致。",
       "difference": "此全图情景验证 inverseExpression 所在 subject map 的可观察输出；不将 inverseExpression 作为反向更新接口实现。"
     },
@@ -823,7 +823,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D014/r2rmld.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D014/mappedd.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D014 r2rmld.ttl 在 PostgreSQL 17 上执行 CASE job SQL logicalTable；CLERK 映射为 general-office，完整 graph 与 mappedd.nq 一致。",
       "difference": "保留 PostgreSQL 执行原始 CASE SQL 的可观察 mapping 输出，不内建职位翻译表。"
     },
@@ -838,7 +838,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D014/r2rmlb.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D014/mappedb.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D014 r2rmlb.ttl 在 PostgreSQL 17 上生成 EMP/DEPT 14 条完整 RDF triples；RefObjectMap join 指向同一 Department10 blank node，inline IRI column、literal constant 与整数 term 均同 mappedb.nq 一致。",
       "difference": "以 Rust 原生 mapping rule 和 PostgreSQL JOIN 生成可观察图，不复刻 Ontop 的 Java 关系代数计划。"
     },
@@ -853,7 +853,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D014/r2rmlc.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D014/mappedc.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D014 r2rmlc.ttl 在 PostgreSQL 17 上将命名 jobtype/emptype ObjectMap、positiveInteger datatype 与 RefObjectMap join 合成为完整 14 条 RDF graph，并与 mappedc.nq 按图同构一致。",
       "difference": "保留命名 ObjectMap 的跨 POM 引用与 datatype term 语义；不扩大 inverseExpression 为写回承诺。"
     },
@@ -868,7 +868,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D019/r2rmla.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D019/mappeda.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D019 create.sql 与 r2rmla.ttl 在 PostgreSQL 17 上将相对 Carlos 按 @base 解析为 http://example.com/base/Carlos，absolute Jhon IRI 保持原样；完整 graph 与 mappeda.nq 一致。",
       "difference": "base 信息作为 R2RML IRI binding plan 元数据传递；当前覆盖基线的绝对/简单相对 column 值。"
     },
@@ -882,7 +882,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D019/manifest.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D019/r2rmlb.ttl"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D019 r2rmlb.ttl 的 tableName variant 读取到 FirstName='Juan Daniel' 后，在 PostgreSQL 17 服务端查询中稳定返回 R2RML data error IRI 值无效。",
       "difference": "对 conforming mapping 的运行时数据错误保持稳定类别，不复刻 Ontop Java 异常文本。"
     },
@@ -897,7 +897,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D020/r2rmla.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D020/mappeda.nq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D020 create.sql 与 r2rmla.ttl 在 PostgreSQL 17 上对 :、/、空格等 Name template component percent-encode 后再按 @base 解析；完整五条 graph 与 mappeda.nq 一致。",
       "difference": "编码只作用于 template column component，不作用于固定 @base。"
     },
@@ -911,7 +911,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D020/manifest.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D020/r2rmlb.ttl"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D020 r2rmlb.ttl 的 rr:column rr:IRI 从 PostgreSQL 读取未转义的路径或空格值后，稳定返回 R2RML data error，不生成无效 RDF term。",
       "difference": "在携带 R2RML @base 的 IRI binding plan 上验证 runtime 数据；不扩大原生 .obda 既有值契约。"
     },
@@ -925,7 +925,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D026/manifest.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D026/r2rmla.ttl"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "result": "原始 D026 create.sql 与 r2rmla.ttl 在 PostgreSQL 17 上执行 Student→Sport→SportType 两级 RefObjectMap join；完整六条 RDF graph 与 mappeda.nq 一致，NULL Student.Sport 不产生 practises edge。",
       "difference": "覆盖 D026 不同命名 child/parent column 的第二层外键边；RefObjectMap 复合 join 仍需单独覆盖。"
     },
@@ -2341,7 +2341,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D000/directGraph.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D000/manifest.ttl"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "空 Student relation 的 Direct Mapping CONSTRUCT 返回零条 RDF triples，与空基线 directGraph.ttl 一致。",
       "difference": "仍经 PostgreSQL metadata planner 构建规则；没有 row 时不物化 class 或 column schema triples。"
     },
@@ -2354,7 +2354,7 @@
       "source_paths": [
         "test/rdb2rdf-compliance/src/test/resources/D001/{create.sql,directGraph.ttl,manifest.ttl}"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "无主键 Student relation 的 type 与 Name triples 以 canonical blank-node 全图比较通过。",
       "difference": "Rust blank-node 标签由 PostgreSQL ctid 派生；比较时与基线标签一致重命名。"
     },
@@ -2367,7 +2367,7 @@
       "source_paths": [
         "test/rdb2rdf-compliance/src/test/resources/D002/{create.sql,directGraph.ttl,manifest.ttl}"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "Student 单行的 type、ID、Name 三条完整 RDF terms 与基线图一致。",
       "difference": "blank-node 标签经一致重命名比较。"
     },
@@ -2380,7 +2380,7 @@
       "source_paths": [
         "test/rdb2rdf-compliance/src/test/resources/D003/{create.sql,directGraph.ttl,manifest.ttl}"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "Student 单行的 4 条完整 Direct graph terms 与基线一致。",
       "difference": "blank-node 标签经一致重命名比较。"
     },
@@ -2393,7 +2393,7 @@
       "source_paths": [
         "test/rdb2rdf-compliance/src/test/resources/D004/{create.sql,directGraph.ttl,manifest.ttl}"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "无主键 Student_Sport relation 的 type、Student 与 Sport triples 以 canonical blank-node 全图比较通过。",
       "difference": "Rust blank-node 标签由 PostgreSQL ctid 派生；比较时与基线标签一致重命名。"
     },
@@ -2406,7 +2406,7 @@
       "source_paths": [
         "test/rdb2rdf-compliance/src/test/resources/D005/{create.sql,directGraph.ttl,manifest.ttl}"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "三行 IOUs（含重复 Bob/Smith）保留三个不同 blank node，FLOAT lexical canonical 为基线的 xsd:double scientific form。",
       "difference": "全图比较对 blank node 做双射 canonicalization，保留同一 row 的跨 triple identity 与重复行的区分。"
     },
@@ -2419,7 +2419,7 @@
       "source_paths": [
         "test/rdb2rdf-compliance/src/test/resources/D006/{create.sql,directGraph.ttl,manifest.ttl}"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "Student primary key Name 生成 relation/Name=value row IRI，完整 Direct Graph 对照通过。",
       "difference": "PostgreSQL metadata 中主键顺序决定 IRI template；不导出或手写 R2RML。"
     },
@@ -2432,7 +2432,7 @@
       "source_paths": [
         "test/rdb2rdf-compliance/src/test/resources/D010/{create.sql,directGraph.ttl,manifest.ttl}"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "带空格的 Country Info/Country Code PostgreSQL identifier 生成 percent-encoded Direct Mapping IRI，12 条全图 term 对照通过。",
       "difference": "SQL/catalog 使用原始 quoted identifier；仅 RDF IRI 固定片段 percent-encode。"
     },
@@ -2445,7 +2445,7 @@
       "source_paths": [
         "test/rdb2rdf-compliance/src/test/resources/D007/{create.sql,directGraph.ttl,manifest.ttl}"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "Student 的三条完整 Direct graph terms 与基线一致，subject 为 Student/ID=10。",
       "difference": "主键 IRI 从 PostgreSQL catalog 原生生成。"
     },
@@ -2458,7 +2458,7 @@
       "source_paths": [
         "test/rdb2rdf-compliance/src/test/resources/D008/{create.sql,directGraph.ttl,manifest.ttl}"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "Student 的四条完整 Direct graph terms 与基线一致，Name key component 的空格为 %20。",
       "difference": "复合 key 次序来自 PostgreSQL catalog。"
     },
@@ -2473,7 +2473,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D009/directGraph.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D009/manifest.ttl"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "Student/Sport 的 11 条完整 Direct graph terms 对照通过；Student 10 的 ref-Sport 指向 Sport/ID=100，Student 20 的 NULL Sport 完全省略关联 column 与 reference triple。",
       "difference": "以 PostgreSQL INNER JOIN 的 NULL 语义实现 reference omission，不额外物化 RDF 图。"
     },
@@ -2488,7 +2488,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D011/directGraph.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D011/manifest.ttl"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "Student、Sport 和 Student_Sport 的 41 条完整 Direct graph terms 对照通过；四个复合主键 link rows 分别保留两个 parent reference，且 IRI 分量顺序与基线一致。",
       "difference": "由 PostgreSQL catalog 的主键/外键顺序原生构建规则，不导出或手写 R2RML。"
     },
@@ -2501,7 +2501,7 @@
       "source_paths": [
         "test/rdb2rdf-compliance/src/test/resources/D013/{create.sql,directGraph.ttl,manifest.ttl}"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "Person.DateOfBirth 的 NULL 值不产生 property triple；同一 row 的 primary-key IRI、type 与其他列保持完整。",
       "difference": "由 Mapping SQL projection 的 NULL row filtering 实现，不引入旁路 RDF 存储。"
     },
@@ -2516,7 +2516,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D014/directGraph.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D014/manifest.ttl"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "EMP.deptno 的 foreign key 通过 PostgreSQL JOIN 投影 DEPT 的 ctid，EMP ref-deptno object 与无 primary key 的 DEPT row 是同一 blank node；两个无主键 LIKES row 仍保持不同 blank nodes，19 条全图 term 对照通过。",
       "difference": "允许显式 direct_mapping.relations 内 parent 无 primary key；只在 Direct Mapping rule 中使用 ctid 作为进程内稳定的 blank-node identity，不导出或手写 R2RML。"
     },
@@ -2531,7 +2531,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D018/directGraph.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D018/manifest.ttl"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "Student 的三行无主键 Direct graph 全部通过；CHAR(15) Name 分别精确保留 10、7、10 个尾部空格，9 条完整 RDF terms 对照通过。",
       "difference": "blank-node 标签经一致重命名比较，保留 PostgreSQL fixed-width 字符串的实际词法值。"
     },
@@ -2546,7 +2546,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D021/directGraph.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D021/manifest.ttl"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "Source.attrA/attrB 的完整复合键生成 <Target/PK=1010> reference；1101 的 attrB 与 1102 的整组键为 NULL 时均无 ref-attrA;attrB triple，25 条全图 term 对照通过。",
       "difference": "通过 PostgreSQL INNER JOIN 的 NULL 语义实现 Direct Mapping reference omission，不额外物化 RDF 图。"
     },
@@ -2559,7 +2559,7 @@
       "source_paths": [
         "test/rdb2rdf-compliance/src/test/resources/D024/{create.sql,directGraph.ttl,manifest.ttl}"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "19 条完整 Direct graph terms 对照通过；Source 1100 指向 Target/PK=1010，Source 1101 的 partial-NULL foreign key 无 reference。",
       "difference": "采用 PostgreSQL INNER JOIN 的 NULL 语义。"
     },
@@ -2574,7 +2574,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D025/directGraph.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D025/manifest.ttl"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "Addresses、Department、People、Projects、TaskAssignments 的 43 条完整 Direct graph terms 对照通过；TaskAssignments 的复合外键指向与 Projects 自身一致的 blank node，其他外键均指向 parent primary-key IRI。",
       "difference": "使用 explicit relation allow-list 及 PostgreSQL metadata planner；blank-node 标签经一致重命名比较，不导出或手写 R2RML。"
     },
@@ -2589,7 +2589,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D022/directGraph.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D022/manifest.ttl"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "Source.attrA/attrB 经 Target.key2attr2/key2attr1 的复合 UNIQUE key 指向无主键 Target row；reference object 与 Target 的 6 条 row triples 使用同一 blank node，11 条全图 term 对照通过。",
       "difference": "使用 PostgreSQL JOIN 和 parent ctid 形成只在 Direct Mapping 中使用的 blank-node identity；不导出或手写 R2RML。"
     },
@@ -2604,7 +2604,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D023/directGraph.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D023/manifest.ttl"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "Source.attrA/attrB 的 foreign key 引用 Target.key2attr2/key2attr1（非主键 UNIQUE key），Direct Mapping JOIN 投影 Target.PK 并生成 <Target/PK=1010>；11 条全图 term 对照通过。",
       "difference": "外键连接键与生成 object IRI 的 primary key 分离；保持 native PostgreSQL metadata planner，不导出或手写 R2RML。"
     },
@@ -2619,7 +2619,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D015/directGraph.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D015/manifest.ttl"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "Country 四行的 16 条完整 Direct graph terms 对照通过；Code/Lan 复合 primary key IRI 的顺序与基线完全一致。",
       "difference": "主键次序完全由 PostgreSQL catalog constraint ordinal position 决定，不导出或手写 R2RML。"
     },
@@ -2634,7 +2634,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D016/directGraph.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D016/manifest.ttl"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "Patient 三行的 33 条完整 Direct graph terms 与基线相符，覆盖 integer、REAL/FLOAT 的 xsd:double scientific lexical、date、dateTime、boolean 和 uppercase xsd:hexBinary。",
       "difference": "为 PostgreSQL 服务端将基线 VARBINARY(200) 等价改为 bytea、X'HEX' 改为 decode('HEX', 'hex')；该方言转换及哈希记录在 fixture 与覆盖台账。"
     },
@@ -2649,7 +2649,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D017/directGraph.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D017/manifest.ttl"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "原生 PostgreSQL metadata planner 的 D017 查询与 canonical blank-node 全图对照均返回 Unicode relation/column、植物复合主键 IRI、成分无主键 blank node 与复合外键 reference 的完整 RDF terms。",
       "difference": "使用显式 direct_mapping.relations allow-list；基线与 Rust 的 blank-node 标签以单 relation 的一致重命名后作全图比较，不导出或手写 R2RML。"
     },
@@ -2665,7 +2665,7 @@
         "test/rdb2rdf-compliance/src/test/resources/D012/directGraph-modified.ttl",
         "test/rdb2rdf-compliance/src/test/resources/D012/manifest.ttl"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "IOUs 与 Lives 六行各产生独立 blank node，重复 Bob/Smith 行不合并；24 条完整 RDF terms 与 dg0012 的 directGraph.ttl 一致。",
       "difference": "dg0012-modified 仅将 FLOAT 的 xsd:double lexical 从 3.0E1/2.0E1 改为语义等价的 30.0/20.0；PostgreSQL adapter 采用 dg0012 标准图的 scientific lexical，并以 blank-node 一致重命名作全图比较。"
     },
@@ -3491,7 +3491,7 @@
         "test/docker-tests/src/test/resources/testcases-docker/virtual-mode/stockexchange/simplecq/transaction-stock-type.rq",
         "test/docker-tests/src/test/resources/testcases-docker/virtual-mode/stockexchange/simplecq/transaction-offer-stock.rq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "固定 DockerPostgresTestSuite 的 ASK、filters、datatypes、modifiers 与 simplecq 五份 PostgreSQL manifest 共 122 条 qt:query 均逐条执行；108 条 cardinality、13 条基线预期错误及 1 条 ASK 均符合各自原始结果资产。",
       "difference": "每条 query 均有独立 ledger asset 和 reference_result 哈希；gate 从固定 manifest 动态发现，拒绝手工列表漏项。"
     },
@@ -3537,7 +3537,7 @@
         "test/docker-tests/src/test/resources/testcases-docker/numeric/serial.rq",
         "test/docker-tests/src/test/resources/testcases-docker/numeric/bigserial.rq"
       ],
-      "server_environment": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e；Docker 本地服务端；Rust CLI",
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "boolean、character、datetime、numeric 四份 PostgreSQL manifest 共 34 条 qt:query 均逐条执行，行数与原始 Turtle rsi:size 一致。",
       "difference": "每条 query 均有独立 ledger asset 和 reference_result 哈希；general Type: all 仍按 Java IGNORE 基线排除。"
     }
