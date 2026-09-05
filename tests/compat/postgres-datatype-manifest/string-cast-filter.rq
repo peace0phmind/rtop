@@ -1,0 +1,7 @@
+PREFIX : <https://example.test/datatypes#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?row ?date ?time ?timestamp
+WHERE {
+  ?row :dateString ?date ; :timeString ?time ; :timestampString ?timestamp
+  FILTER (?date = "2013-03-18"^^xsd:string) .
+}

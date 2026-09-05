@@ -1,0 +1,1 @@
+?abs="1.5"^^<http://www.w3.org/2001/XMLSchema#decimal> ?ceil="1"^^<http://www.w3.org/2001/XMLSchema#decimal> ?floor="0"^^<http://www.w3.org/2001/XMLSchema#decimal> ?round="2"^^<http://www.w3.org/2001/XMLSchema#decimal>

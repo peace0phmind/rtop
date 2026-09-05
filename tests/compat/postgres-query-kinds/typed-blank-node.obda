@@ -1,0 +1,9 @@
+[PrefixDeclaration]
+:       https://example.test/
+xsd:     http://www.w3.org/2001/XMLSchema#
+
+[MappingDeclaration] @collection [[
+mappingId       typed-blank-node
+target          BNODE(person-{id}) :rank {id}^^xsd:integer .
+source          SELECT id FROM query_people
+]]

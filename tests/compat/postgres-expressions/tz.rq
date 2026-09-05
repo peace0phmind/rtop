@@ -1,0 +1,10 @@
+SELECT ?utc ?east ?west ?naive WHERE {
+  VALUES ?a { "2020-01-01T00:00:00Z"^^xsd:dateTime }
+  VALUES ?b { "2020-01-01T09:00:00+08:00"^^xsd:dateTime }
+  VALUES ?c { "2020-01-01T00:00:00-01:30"^^xsd:dateTime }
+  VALUES ?d { "2020-01-01T00:00:00"^^xsd:dateTime }
+  BIND(TZ(?a) AS ?utc)
+  BIND(TZ(?b) AS ?east)
+  BIND(TZ(?c) AS ?west)
+  BIND(TZ(?d) AS ?naive)
+}

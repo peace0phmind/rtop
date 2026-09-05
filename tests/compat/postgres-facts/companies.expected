@@ -1,0 +1,3 @@
+?company=<http://www.semanticweb.org/ontop-facts#Company/1> ?name="Big Company"
+?company=<http://www.semanticweb.org/ontop-facts#Company/2> ?name="Some Factory"
+?company=<http://www.semanticweb.org/ontop-facts#factCompany> ?name="The Fact Company"^^<http://www.w3.org/2001/XMLSchema#string>

@@ -1,0 +1,7 @@
+SELECT ?exact ?subtag ?wildcard ?miss WHERE {
+  VALUES ?title { "Title"@en-gb }
+  BIND(langMatches(lang(?title), "EN-GB") AS ?exact)
+  BIND(langMatches(lang(?title), "en") AS ?subtag)
+  BIND(langMatches(lang(?title), "*") AS ?wildcard)
+  BIND(langMatches(lang(?title), "fr") AS ?miss)
+}

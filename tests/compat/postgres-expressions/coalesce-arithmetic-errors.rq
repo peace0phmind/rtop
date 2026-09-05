@@ -1,0 +1,9 @@
+SELECT ?div_zero ?decimal_div_zero ?invalid_div_left ?invalid_div_right ?invalid_add ?invalid_sub ?invalid_mul WHERE {
+  BIND(COALESCE("1"^^xsd:integer / "0"^^xsd:integer, "other") AS ?div_zero)
+  BIND(COALESCE("1"^^xsd:decimal / "0"^^xsd:decimal, "other") AS ?decimal_div_zero)
+  BIND(COALESCE("rrr" / "2"^^xsd:integer, "other") AS ?invalid_div_left)
+  BIND(COALESCE("2"^^xsd:integer / "rrr", "other") AS ?invalid_div_right)
+  BIND(COALESCE("rrr" + "2"^^xsd:integer, "other") AS ?invalid_add)
+  BIND(COALESCE("rrr" - "2"^^xsd:integer, "other") AS ?invalid_sub)
+  BIND(COALESCE("rrr" * "2"^^xsd:integer, "other") AS ?invalid_mul)
+}

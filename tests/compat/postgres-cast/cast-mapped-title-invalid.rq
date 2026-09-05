@@ -1,0 +1,9 @@
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?boolean ?decimal ?float ?integer WHERE {
+  ?book dc:title ?title .
+  BIND(xsd:boolean(?title) AS ?boolean)
+  BIND(xsd:decimal(?title) AS ?decimal)
+  BIND(xsd:float(?title) AS ?float)
+  BIND(xsd:integer(?title) AS ?integer)
+}

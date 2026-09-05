@@ -1,0 +1,9 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+
+<https://example.test/map/legacy-r2rml> a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery "SELECT left_person.id, right_person.id FROM query_people AS left_person CROSS JOIN query_people AS right_person" ] ;
+  rr:subjectMap [ rr:template "https://example.test/person/{left_person.id}" ] ;
+  rr:predicateObjectMap [
+    rr:predicate <https://example.test/related> ;
+    rr:objectMap [ rr:template "https://example.test/person/{right_person.id}" ]
+  ] .

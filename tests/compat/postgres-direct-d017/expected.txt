@@ -1,0 +1,1 @@
+?component=_:成分-(0,1) ?dish="しそのとまと" ?plant=<http://example.com/base/植物/名=しそ;使用部=葉>

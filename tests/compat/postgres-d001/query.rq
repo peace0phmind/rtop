@@ -1,0 +1,3 @@
+SELECT ?student ?name WHERE {
+  ?student <http://xmlns.com/foaf/0.1/name> ?name .
+}

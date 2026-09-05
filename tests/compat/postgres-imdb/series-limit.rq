@@ -1,0 +1,2 @@
+PREFIX : <http://www.seriology.org/seriology#>
+SELECT DISTINCT ?p WHERE { ?p a :Series . } LIMIT 10

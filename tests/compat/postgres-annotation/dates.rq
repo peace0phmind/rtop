@@ -1,0 +1,2 @@
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+SELECT ?r ?movie WHERE { ?movie dc:date ?r . }

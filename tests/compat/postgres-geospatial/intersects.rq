@@ -1,0 +1,8 @@
+PREFIX : <http://ex.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+SELECT ?v WHERE {
+  ?x a :Geom ; geo:asWKT ?xWkt .
+  ?y a :Geog ; geo:asWKT ?yWkt .
+  BIND(geof:sfIntersects(?xWkt, ?yWkt) AS ?v)
+}

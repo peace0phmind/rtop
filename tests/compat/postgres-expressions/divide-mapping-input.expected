@@ -1,0 +1,4 @@
+?half="17"^^<http://www.w3.org/2001/XMLSchema#decimal> ?title="Crime and Punishment"@en
+?half="21.5"^^<http://www.w3.org/2001/XMLSchema#decimal> ?title="SPARQL Tutorial"@en
+?half="5"^^<http://www.w3.org/2001/XMLSchema#decimal> ?title="The Logic Book: Introduction, Second Edition"@en
+?half="11.5"^^<http://www.w3.org/2001/XMLSchema#decimal> ?title="The Semantic Web"@en

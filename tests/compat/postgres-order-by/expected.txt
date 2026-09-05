@@ -1,0 +1,5 @@
+?address=<https://example.test/address/991>	?country="Italy"	?number="1"^^<http://www.w3.org/2001/XMLSchema#integer>	?street="Via Milano"
+?address=<https://example.test/address/993>	?country="Italy"	?number="2"^^<http://www.w3.org/2001/XMLSchema#integer>	?street="Via Roma"
+?address=<https://example.test/address/995>	?country="Germany"	?number="1"^^<http://www.w3.org/2001/XMLSchema#integer>	?street="Straße B"
+?address=<https://example.test/address/992>	?country="Germany"	?number="2"^^<http://www.w3.org/2001/XMLSchema#integer>	?street="Straße Z"
+?address=<https://example.test/address/997>	?country="Germany"	?number="9"^^<http://www.w3.org/2001/XMLSchema#integer>	?street="Straße A"

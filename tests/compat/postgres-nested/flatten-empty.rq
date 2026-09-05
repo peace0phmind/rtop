@@ -1,0 +1,2 @@
+PREFIX : <http://nested.example.org/>
+SELECT ?v WHERE { ?p :id ?id . ?p :hasWorker ?w . ?w :name ?v . FILTER(?id = 2) }

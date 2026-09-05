@@ -1,0 +1,11 @@
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX ns: <http://example.org/ns#>
+
+SELECT ?value WHERE {
+  ?x ns:price ?price .
+  ?x dc:title ?title .
+  ?x dc:description ?description .
+  ?x ns:pubYear ?year .
+  BIND(REPLACE(?title, "Second", "First") AS ?value)
+}
+ORDER BY ?title

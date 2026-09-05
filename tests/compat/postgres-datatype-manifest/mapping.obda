@@ -1,0 +1,8 @@
+[PrefixDeclaration]
+: https://example.test/datatypes#
+xsd: http://www.w3.org/2001/XMLSchema#
+
+[MappingDeclaration]
+mappingId manifest-scalars
+target :row-{id} :boolean {boolean_value} ; :character {char_value} ; :manifestChar {manifest_char} ; :varchar {varchar_value} ; :text {text_value} ; :manifestCharacter {character_value} ; :name {name_value} ; :smallint {smallint_value} ; :integer {integer_value} ; :bigint {bigint_value} ; :serial {serial_value} ; :bigserial {bigserial_value} ; :numeric {numeric_value} ; :real {real_value} ; :double {double_value} ; :date {date_value} ; :dateString {date_value}^^xsd:string ; :time {time_value} ; :timeString {time_value}^^xsd:string ; :timetz {timetz_value} ; :timestamp {timestamp_value} ; :timestampString {timestamp_value}^^xsd:string ; :timestamptz {timestamptz_value} ; :timestamptzString {timestamptz_value}^^xsd:string ; :intervalString {interval_value}^^xsd:string .
+source SELECT id, boolean_value, char_value, manifest_char, varchar_value, text_value, character_value, name_value, smallint_value, integer_value, bigint_value, serial_value, bigserial_value, numeric_value, real_value, double_value, date_value, time_value, timetz_value, timestamp_value, timestamptz_value, interval_value FROM datatype_manifest_values

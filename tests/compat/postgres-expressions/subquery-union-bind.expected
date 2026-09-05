@@ -1,0 +1,2 @@
+?b="2"^^<http://www.w3.org/2001/XMLSchema#integer> ?v="yy"^^<http://www.w3.org/2001/XMLSchema#string>
+?b="aa"

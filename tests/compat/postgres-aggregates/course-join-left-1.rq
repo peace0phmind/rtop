@@ -1,0 +1,3 @@
+PREFIX : <http://www.semanticweb.org/user/ontologies/2016/8/untitled-ontology-84#>
+SELECT DISTINCT ?v WHERE { ?p :firstName ?f ; :teaches ?c . OPTIONAL { ?p :lastName ?v } FILTER (BOUND(?f)) }
+ORDER BY DESC(?v)

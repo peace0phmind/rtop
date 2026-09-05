@@ -1,0 +1,12 @@
+mapping = "../../../../ontop/binding/rdf4j/src/test/resources/facts/mapping.obda"
+facts = "../../../../ontop/binding/rdf4j/src/test/resources/facts/facts.nq"
+facts_format = "nquads"
+ontology = "../../../../ontop/binding/rdf4j/src/test/resources/facts/ontology.ttl"
+
+[datasource]
+kind = "postgres"
+host = "127.0.0.1"
+port = 55432
+database = "rtop_test"
+user = "rtop"
+password = "rtop"

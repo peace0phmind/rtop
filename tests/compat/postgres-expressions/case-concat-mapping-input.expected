@@ -1,0 +1,4 @@
+?lower="Crime and Punishment crime and punishment"^^<http://www.w3.org/2001/XMLSchema#string> ?upper="Crime and Punishment CRIME AND PUNISHMENT"^^<http://www.w3.org/2001/XMLSchema#string>
+?lower="SPARQL Tutorial sparql tutorial"^^<http://www.w3.org/2001/XMLSchema#string> ?upper="SPARQL Tutorial SPARQL TUTORIAL"^^<http://www.w3.org/2001/XMLSchema#string>
+?lower="The Logic Book: Introduction, Second Edition the logic book: introduction, second edition"^^<http://www.w3.org/2001/XMLSchema#string> ?upper="The Logic Book: Introduction, Second Edition THE LOGIC BOOK: INTRODUCTION, SECOND EDITION"^^<http://www.w3.org/2001/XMLSchema#string>
+?lower="The Semantic Web the semantic web"^^<http://www.w3.org/2001/XMLSchema#string> ?upper="The Semantic Web THE SEMANTIC WEB"^^<http://www.w3.org/2001/XMLSchema#string>

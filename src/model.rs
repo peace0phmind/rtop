@@ -3,7 +3,7 @@ use thiserror::Error;
 
 pub type Binding = BTreeMap<String, RdfTerm>;
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
 pub enum RdfTerm {
     Iri(String),
     BlankNode(String),

@@ -1,0 +1,4 @@
+?dateDays="17743"^^<http://www.w3.org/2001/XMLSchema#long> ?dateTimeDays="17743"^^<http://www.w3.org/2001/XMLSchema#long> ?seconds="1532998386"^^<http://www.w3.org/2001/XMLSchema#long> ?title="Crime and Punishment"@en
+?dateDays="17309"^^<http://www.w3.org/2001/XMLSchema#long> ?dateTimeDays="17309"^^<http://www.w3.org/2001/XMLSchema#long> ?seconds="1495505872"^^<http://www.w3.org/2001/XMLSchema#long> ?title="SPARQL Tutorial"@en
+?dateDays="256"^^<http://www.w3.org/2001/XMLSchema#long> ?dateTimeDays="255"^^<http://www.w3.org/2001/XMLSchema#long> ?seconds="22112400"^^<http://www.w3.org/2001/XMLSchema#long> ?title="The Logic Book: Introduction, Second Edition"@en
+?dateDays="16360"^^<http://www.w3.org/2001/XMLSchema#long> ?dateTimeDays="16360"^^<http://www.w3.org/2001/XMLSchema#long> ?seconds="1413514800"^^<http://www.w3.org/2001/XMLSchema#long> ?title="The Semantic Web"@en

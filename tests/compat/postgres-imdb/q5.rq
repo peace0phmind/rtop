@@ -1,0 +1,10 @@
+PREFIX mo: <http://www.movieontology.org/2009/10/01/movieontology.owl#>
+PREFIX dbpedia: <http://dbpedia.org/ontology/>
+SELECT DISTINCT $x $title $actor_name ?prod_year ?rating WHERE {
+  $m a mo:Movie; mo:title ?title; mo:imdbrating ?rating;
+     dbpedia:productionStartYear ?prod_year; mo:hasActor ?x; mo:hasDirector ?x .
+  $x dbpedia:birthName $actor_name .
+  FILTER ( ?rating > '7.0' && ?prod_year >= 2000 && ?prod_year <= 2010 )
+}
+ORDER BY DESC(?rating) ?prod_year
+LIMIT 25

@@ -1,0 +1,1 @@
+?double_double="0.5"^^<http://www.w3.org/2001/XMLSchema#double> ?float_decimal="0.5"^^<http://www.w3.org/2001/XMLSchema#float> ?float_double="0.5"^^<http://www.w3.org/2001/XMLSchema#double> ?float_float="0.5"^^<http://www.w3.org/2001/XMLSchema#float> ?float_integer="0.5"^^<http://www.w3.org/2001/XMLSchema#float> ?integer_integer="0.5"^^<http://www.w3.org/2001/XMLSchema#decimal>

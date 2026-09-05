@@ -1,0 +1,2 @@
+?string="2"^^<http://www.w3.org/2001/XMLSchema#string> ?value="2"^^<http://www.w3.org/2001/XMLSchema#integer>
+?string="aa"^^<http://www.w3.org/2001/XMLSchema#string> ?value="aa"

@@ -1,0 +1,5 @@
+PREFIX : <http://www.semanticweb.org/ontop-facts#>
+SELECT DISTINCT ?company ?name WHERE {
+  ?company a :Company ; :name ?name .
+}
+ORDER BY ?name

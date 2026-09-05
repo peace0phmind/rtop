@@ -1,0 +1,1 @@
+?iri="http://www.w3.org/2001/XMLSchema#string"^^<http://www.w3.org/2001/XMLSchema#string> ?literal="abc"^^<http://www.w3.org/2001/XMLSchema#string>

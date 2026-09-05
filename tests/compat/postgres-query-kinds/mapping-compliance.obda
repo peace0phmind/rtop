@@ -1,0 +1,4 @@
+[MappingDeclaration]
+mappingId compliance-ask-7
+target <http://example/x> <http://example/p> <http://example/o> .
+source SELECT id FROM query_people

@@ -1,0 +1,12 @@
+[MappingDeclaration]
+mappingId country
+target <https://example.test/address/{id}> <https://example.test/country> {country} .
+source SELECT id, country FROM order_addresses
+
+mappingId number
+target <https://example.test/address/{id}> <https://example.test/number> {number}^^<http://www.w3.org/2001/XMLSchema#integer> .
+source SELECT id, number FROM order_addresses
+
+mappingId street
+target <https://example.test/address/{id}> <https://example.test/street> {street} .
+source SELECT id, street FROM order_addresses

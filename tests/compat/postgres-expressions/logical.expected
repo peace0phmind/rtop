@@ -1,0 +1,3 @@
+?and="true"^^<http://www.w3.org/2001/XMLSchema#boolean> ?or="true"^^<http://www.w3.org/2001/XMLSchema#boolean> ?title="Semantic Web"
+?and="false"^^<http://www.w3.org/2001/XMLSchema#boolean> ?or="true"^^<http://www.w3.org/2001/XMLSchema#boolean> ?title="Semantic Book"
+?and="false"^^<http://www.w3.org/2001/XMLSchema#boolean> ?or="false"^^<http://www.w3.org/2001/XMLSchema#boolean> ?title="Other"

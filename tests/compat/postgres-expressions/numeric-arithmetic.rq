@@ -1,0 +1,4 @@
+SELECT ?abs ?half WHERE {
+  BIND(ABS((10 - 0.15 * 10) - 10) AS ?abs)
+  BIND(10 / 2 AS ?half)
+}

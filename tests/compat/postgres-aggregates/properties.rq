@@ -1,0 +1,11 @@
+PREFIX : <http://www.semanticweb.org/user/ontologies/2016/8/untitled-ontology-84#>
+SELECT DISTINCT ?v WHERE {
+  { [] ?p1 "Frankie" }
+  UNION
+  {
+    [] ?p2 ?n
+    FILTER (?n = 10)
+  }
+  BIND(str(coalesce(?p1, ?p2)) AS ?v)
+}
+ORDER BY ?v

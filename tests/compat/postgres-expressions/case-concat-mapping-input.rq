@@ -1,0 +1,13 @@
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX ns: <http://example.org/ns#>
+
+SELECT ?upper ?lower WHERE {
+  ?x ns:price ?price .
+  ?x ns:discount ?discount .
+  ?x dc:title ?title .
+  BIND(UCASE(?title) AS ?upperTitle)
+  BIND(LCASE(?title) AS ?lowerTitle)
+  BIND(CONCAT(?title, " ", ?upperTitle) AS ?upper)
+  BIND(CONCAT(?title, " ", ?lowerTitle) AS ?lower)
+}
+ORDER BY ?title

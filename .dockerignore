@@ -1,0 +1,8 @@
+.git
+target
+tests
+docs
+scripts
+workflows
+*.md
+compatibility-report.json

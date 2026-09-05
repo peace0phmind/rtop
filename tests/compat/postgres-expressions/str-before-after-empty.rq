@@ -1,0 +1,5 @@
+SELECT ?before ?after WHERE {
+  VALUES ?title { "The Semantic Web"@en }
+  BIND(STRBEFORE(?title, "") AS ?before)
+  BIND(STRAFTER(?title, "") AS ?after)
+}

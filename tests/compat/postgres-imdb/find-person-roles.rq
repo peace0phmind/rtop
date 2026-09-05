@@ -1,0 +1,14 @@
+PREFIX : <http://www.movieontology.org/2009/11/09/movieontology.owl#>
+PREFIX dbpedia: <http://dbpedia.org/ontology/>
+PREFIX mo: <http://www.movieontology.org/2009/10/01/movieontology.owl#>
+PREFIX page: <http://dbpedia.org/page/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT $actress $actor $writer $producer $director $editor
+WHERE {
+  $actress a :Actress; dbpedia:birthName "Pfeiffer, Michelle"^^xsd:string .
+  $actor a dbpedia:Actor; dbpedia:birthName "Aaker, Lee"^^xsd:string .
+  $writer a dbpedia:Writer; dbpedia:birthName "Barker, Clive"^^xsd:string .
+  $producer a mo:Producer; dbpedia:birthName "Silver, Joel"^^xsd:string .
+  $director a page:Film_Director; dbpedia:birthName "Tarantino, Quentin"^^xsd:string .
+  $editor a mo:Editor; dbpedia:birthName "Rawlings, Terry"^^xsd:string .
+}

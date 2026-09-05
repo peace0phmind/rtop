@@ -1,0 +1,13 @@
+PREFIX : <http://www.semanticweb.org/user/ontologies/2016/8/untitled-ontology-84#>
+
+SELECT ?p (COALESCE(GROUP_CONCAT(?n),'nothing') AS ?v)
+WHERE {
+  ?p a :Professor .
+  OPTIONAL {
+    { ?p :nickname ?n }
+    UNION
+    { ?p :teaches ?c . ?c :nbStudents ?n }
+  }
+}
+GROUP BY ?p
+ORDER BY ?p

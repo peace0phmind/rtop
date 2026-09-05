@@ -1,0 +1,5 @@
+PREFIX : <http://example.org/voc#>
+SELECT ?course ?teacher WHERE {
+  ?course :isTaughtBy ?teacher .
+}
+ORDER BY ?course

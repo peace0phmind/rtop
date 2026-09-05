@@ -1,0 +1,13 @@
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX ns: <http://example.org/ns#>
+
+SELECT ?title ?before ?after ?beforeEmpty ?afterEmpty WHERE {
+  ?x ns:price ?price .
+  ?x ns:discount ?discount .
+  ?x dc:title ?title .
+  BIND(STRBEFORE(?title, "ti") AS ?before)
+  BIND(STRAFTER(?title, "The") AS ?after)
+  BIND(STRBEFORE(?title, "") AS ?beforeEmpty)
+  BIND(STRAFTER(?title, "") AS ?afterEmpty)
+}
+ORDER BY ?title

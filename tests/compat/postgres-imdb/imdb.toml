@@ -1,0 +1,10 @@
+mapping = "../../../../ontop/test/docker-tests/src/test/resources/pgsql/imdb/movieontology.obda"
+ontology = "../../../../ontop/test/docker-tests/src/test/resources/pgsql/imdb/movieontology.owl"
+
+[datasource]
+kind = "postgres"
+host = "127.0.0.1"
+port = 55432
+database = "rtop_test"
+user = "rtop"
+password = "rtop"

@@ -1,0 +1,1 @@
+?decimal="0"^^<http://www.w3.org/2001/XMLSchema#integer> ?double="0"^^<http://www.w3.org/2001/XMLSchema#integer> ?floatA="2"^^<http://www.w3.org/2001/XMLSchema#integer> ?floatB="2"^^<http://www.w3.org/2001/XMLSchema#integer> ?integer="19991214"^^<http://www.w3.org/2001/XMLSchema#integer> ?string="2"^^<http://www.w3.org/2001/XMLSchema#integer>

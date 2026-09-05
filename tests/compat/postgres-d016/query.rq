@@ -1,0 +1,10 @@
+CONSTRUCT {
+  ?patient <http://example.com/birthdate> ?birth .
+  ?patient <http://example.com/entrancedate> ?entrance .
+  ?patient <http://example.com/paid> ?paid .
+}
+WHERE {
+  ?patient <http://example.com/birthdate> ?birth .
+  ?patient <http://example.com/entrancedate> ?entrance .
+  ?patient <http://example.com/paid> ?paid .
+}

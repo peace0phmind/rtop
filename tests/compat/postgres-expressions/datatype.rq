@@ -1,0 +1,4 @@
+SELECT ?value ?type WHERE {
+  VALUES ?value { 2 "plain" "english"@en }
+  BIND(DATATYPE(?value) AS ?type)
+}

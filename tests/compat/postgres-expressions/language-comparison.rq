@@ -1,0 +1,8 @@
+SELECT ?term_equal ?term_not_equal ?string_not_equal ?same WHERE {
+  VALUES ?left { "Crime and Punishment"@en }
+  VALUES ?right { "SPARQL Tutorial"@en }
+  BIND(?left = ?right AS ?term_equal)
+  BIND(?left != ?right AS ?term_not_equal)
+  BIND(str(?left) != str(?right) AS ?string_not_equal)
+  BIND(sameTerm(?left, ?right) AS ?same)
+}

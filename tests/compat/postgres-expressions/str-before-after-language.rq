@@ -1,0 +1,7 @@
+SELECT ?before ?after ?missingBefore ?missingAfter WHERE {
+  VALUES ?title { "The Semantic Web"@en }
+  BIND(STRBEFORE(?title, "Semantic") AS ?before)
+  BIND(STRAFTER(?title, "The ") AS ?after)
+  BIND(STRBEFORE(?title, "missing") AS ?missingBefore)
+  BIND(STRAFTER(?title, "missing") AS ?missingAfter)
+}

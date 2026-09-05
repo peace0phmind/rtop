@@ -1,0 +1,9 @@
+mapping = "../../../../ontop/test/rdb2rdf-compliance/src/test/resources/D012/r2rmlb.ttl"
+
+[datasource]
+kind = "postgres"
+host = "127.0.0.1"
+port = 55432
+database = "rtop_test"
+user = "rtop"
+password = "rtop"

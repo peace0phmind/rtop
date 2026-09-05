@@ -1,0 +1,1 @@
+ASK { ?person <https://bootstrap.example/query_people#id> 1 }

@@ -1,0 +1,8 @@
+[PrefixDeclaration]
+:       https://example.test/
+
+[MappingDeclaration] @collection [[
+mappingId       named-person-type
+target          GRAPH <https://example.test/graph/people> { :person/{id} :type :Person . }
+source          SELECT id FROM query_people
+]]

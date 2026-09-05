@@ -1,0 +1,11 @@
+mapping = "../../../../ontop/binding/rdf4j/src/test/resources/tbox-facts/university.obda"
+facts = "facts.ttl"
+ontology = "imports-university.ttl"
+
+[datasource]
+kind = "postgres"
+host = "127.0.0.1"
+port = 55432
+database = "rtop_test"
+user = "rtop"
+password = "rtop"

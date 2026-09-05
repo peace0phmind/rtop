@@ -1,0 +1,15 @@
+mapping = "../postgres-query-kinds/mapping.obda"
+ontology = "ontology.ttl"
+
+[endpoint]
+enable_download_ontology = true
+predefined_config = "predefined.json"
+predefined_queries = "predefined.toml"
+
+[datasource]
+kind = "postgres"
+host = "127.0.0.1"
+port = 55432
+database = "rtop_test"
+user = "rtop"
+password = "rtop"

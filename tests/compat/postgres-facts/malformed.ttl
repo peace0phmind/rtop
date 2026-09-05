@@ -1,0 +1,2 @@
+@prefix : <http://example.test/> .
+<https://example.test/unterminated> :name "broken .

@@ -1,0 +1,3 @@
+ASK {
+  <https://example.test/person/1> <https://example.test/related> <https://example.test/person/1>
+}

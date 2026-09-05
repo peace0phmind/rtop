@@ -1,0 +1,6 @@
+PREFIX : <https://example.test/datatypes#>
+SELECT ?row ?value
+WHERE {
+  ?row :numeric ?value
+  FILTER (?value = 1.0) .
+}

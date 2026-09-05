@@ -1,0 +1,4 @@
+PREFIX : <http://www.semanticweb.org/user/ontologies/2016/8/untitled-ontology-84#>
+SELECT (SUM(?nb) AS ?v) WHERE {
+  ?c a :Course ; :nbStudents ?nb .
+}

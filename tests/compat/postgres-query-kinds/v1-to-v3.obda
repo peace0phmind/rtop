@@ -1,0 +1,15 @@
+[PrefixDeclaration]
+:       https://example.test/
+
+[SourceDeclaration]
+sourceUri       legacy-query-people
+connectionUrl   jdbc:postgresql://legacy.invalid/rtop_test
+username        legacy-user
+password        legacy-password
+driverClass     org.postgresql.Driver
+
+[MappingDeclaration] @collection [[
+mappingId       legacy-query-people
+target          :person/{query_people.id} :type :Person .
+source          SELECT query_people.id FROM query_people
+]]

@@ -1,0 +1,5 @@
+SELECT ?iri ?literal WHERE {
+  VALUES ?input { "hello"@en }
+  BIND(STR(<https://example.test/resource>) AS ?iri)
+  BIND(STR(?input) AS ?literal)
+}

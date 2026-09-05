@@ -1,0 +1,1 @@
+?date="2013-03-18"^^<http://www.w3.org/2001/XMLSchema#string>	?row=<https://example.test/datatypes#row-1>	?time="10:12:10"^^<http://www.w3.org/2001/XMLSchema#string>	?timestamp="2013-03-18T10:12:10"^^<http://www.w3.org/2001/XMLSchema#string>

@@ -1,0 +1,1 @@
+?boolean="true"^^<http://www.w3.org/2001/XMLSchema#boolean> ?double="false"^^<http://www.w3.org/2001/XMLSchema#boolean> ?float="true"^^<http://www.w3.org/2001/XMLSchema#boolean> ?integer="true"^^<http://www.w3.org/2001/XMLSchema#boolean> ?stringFalse="false"^^<http://www.w3.org/2001/XMLSchema#boolean> ?stringTrue="true"^^<http://www.w3.org/2001/XMLSchema#boolean>

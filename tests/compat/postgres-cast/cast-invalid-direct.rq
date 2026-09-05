@@ -1,0 +1,18 @@
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?booleanDate ?booleanDateTime ?booleanString ?dateDouble ?dateInteger ?dateTimeDouble ?dateTimeInteger ?decimalDate ?decimalDateTime ?decimalString ?doubleDate ?doubleDateTime ?doubleString ?floatDate ?floatDateTime WHERE {
+  BIND(xsd:boolean("1999-12-14"^^xsd:date) AS ?booleanDate)
+  BIND(xsd:boolean("1999-12-14T09:30:00"^^xsd:dateTime) AS ?booleanDateTime)
+  BIND(xsd:boolean("2.0654"^^xsd:string) AS ?booleanString)
+  BIND(xsd:date("19991214.12"^^xsd:double) AS ?dateDouble)
+  BIND(xsd:date("19991214"^^xsd:integer) AS ?dateInteger)
+  BIND(xsd:dateTime("19991214.12"^^xsd:double) AS ?dateTimeDouble)
+  BIND(xsd:dateTime("19991214"^^xsd:integer) AS ?dateTimeInteger)
+  BIND(xsd:decimal("1999-12-14"^^xsd:date) AS ?decimalDate)
+  BIND(xsd:decimal("1999-12-14T09:30:00"^^xsd:dateTime) AS ?decimalDateTime)
+  BIND(xsd:decimal("abc"^^xsd:string) AS ?decimalString)
+  BIND(xsd:double("1999-12-14"^^xsd:date) AS ?doubleDate)
+  BIND(xsd:double("1999-12-14T09:30:00"^^xsd:dateTime) AS ?doubleDateTime)
+  BIND(xsd:double("abc"^^xsd:string) AS ?doubleString)
+  BIND(xsd:float("1999-12-14"^^xsd:date) AS ?floatDate)
+  BIND(xsd:float("1999-12-14T09:30:00"^^xsd:dateTime) AS ?floatDateTime)
+}

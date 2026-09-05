@@ -1,0 +1,9 @@
+PREFIX : <http://www.semanticweb.org/user/ontologies/2016/8/untitled-ontology-84#>
+SELECT ?p1 ?v WHERE {
+  ?p :teaches ?c .
+  OPTIONAL {
+    ?p :lastName ?v .
+    ?p1 :lastName ?v .
+  }
+}
+ORDER BY ?v

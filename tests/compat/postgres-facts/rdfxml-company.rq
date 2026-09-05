@@ -1,0 +1,5 @@
+PREFIX : <http://www.semanticweb.org/ontop-facts#>
+SELECT ?company ?year WHERE {
+  ?company a :Company ; :foundingYear ?year .
+  FILTER(?company = :factCompany)
+}

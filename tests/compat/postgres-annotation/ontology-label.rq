@@ -1,0 +1,5 @@
+PREFIX dbpedia: <http://dbpedia.org/ontology/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?r WHERE {
+  <http://dbpedia.org/ontology/birthDate> rdfs:label ?r .
+}

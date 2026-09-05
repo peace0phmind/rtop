@@ -1,0 +1,14 @@
+{
+  "queries": {
+    "person": {
+      "queryType": "GRAPH",
+      "parameters": {
+        "person": {
+          "type": "IRI",
+          "safeForRandomGeneration": false,
+          "required": true
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,3 @@
+SELECT ?encoded WHERE {
+  BIND(ENCODE_FOR_URI("The Logic Book: Introduction, Second Edition") AS ?encoded)
+}

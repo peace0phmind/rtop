@@ -1,0 +1,5 @@
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?date ?string WHERE {
+  BIND(xsd:date("1999-12-14"^^xsd:date) AS ?date)
+  BIND(xsd:date("1999-12-14"^^xsd:string) AS ?string)
+}

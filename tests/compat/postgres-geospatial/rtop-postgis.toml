@@ -1,0 +1,9 @@
+mapping = "geospatial.obda"
+
+[datasource]
+kind = "postgres"
+host = "127.0.0.1"
+port = 55433
+database = "rtop_test"
+user = "rtop"
+password = "rtop"

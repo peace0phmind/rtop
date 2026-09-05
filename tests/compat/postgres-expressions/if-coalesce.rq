@@ -1,0 +1,7 @@
+SELECT ?first ?second ?fallback ?short ?error_branch WHERE {
+  BIND(IF(1 < 2, "first", "second") AS ?first)
+  BIND(IF(1 > 2, "first", "second") AS ?second)
+  BIND(COALESCE(IF("rrr" * "2"^^xsd:integer, "1", "2"), "other") AS ?fallback)
+  BIND(COALESCE(IF(1 > 2, "rrr" * "2"^^xsd:integer, "second"), "other") AS ?short)
+  BIND(COALESCE(IF(1 > 2, "first", "rrr" * "2"^^xsd:integer), "other") AS ?error_branch)
+}

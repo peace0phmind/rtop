@@ -1,0 +1,5 @@
+SELECT ?two ?three WHERE {
+  VALUES ?title { "SPARQL Tutorial"@en }
+  BIND(SUBSTR(?title, 3) AS ?two)
+  BIND(SUBSTR(?title, 3, 6) AS ?three)
+}

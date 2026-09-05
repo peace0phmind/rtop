@@ -1,0 +1,2 @@
+PREFIX mo: <http://www.movieontology.org/2009/10/01/movieontology.owl#>
+SELECT ?x WHERE { <http://www.imdb.com/title/97263> mo:title ?x . }

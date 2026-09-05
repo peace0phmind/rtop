@@ -1,0 +1,6 @@
+SELECT ?value ?string WHERE {
+  { VALUES ?value { 2 } }
+  UNION
+  { VALUES ?value { "aa" } }
+  BIND(STR(?value) AS ?string)
+}

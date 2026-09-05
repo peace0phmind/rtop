@@ -1,0 +1,10 @@
+mapping = "../../../../ontop/binding/rdf4j/src/test/resources/facts/mapping.obda"
+facts = "malformed.ttl"
+
+[datasource]
+kind = "postgres"
+host = "127.0.0.1"
+port = 55432
+database = "rtop_test"
+user = "rtop"
+password = "rtop"

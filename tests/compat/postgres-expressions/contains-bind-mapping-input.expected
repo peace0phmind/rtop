@@ -1,0 +1,4 @@
+?contains="false"^^<http://www.w3.org/2001/XMLSchema#boolean> ?title="Crime and Punishment"@en
+?contains="false"^^<http://www.w3.org/2001/XMLSchema#boolean> ?title="SPARQL Tutorial"@en
+?contains="false"^^<http://www.w3.org/2001/XMLSchema#boolean> ?title="The Logic Book: Introduction, Second Edition"@en
+?contains="true"^^<http://www.w3.org/2001/XMLSchema#boolean> ?title="The Semantic Web"@en

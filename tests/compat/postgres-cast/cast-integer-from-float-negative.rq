@@ -1,0 +1,4 @@
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?v WHERE {
+  BIND(xsd:integer("-2.6"^^xsd:float) AS ?v)
+}

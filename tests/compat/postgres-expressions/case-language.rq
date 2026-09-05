@@ -1,0 +1,5 @@
+SELECT ?upper ?lower WHERE {
+  VALUES ?value { "MiXeD"@en }
+  BIND(UCASE(?value) AS ?upper)
+  BIND(LCASE(?value) AS ?lower)
+}

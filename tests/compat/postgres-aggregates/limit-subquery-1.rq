@@ -1,0 +1,12 @@
+PREFIX : <http://www.semanticweb.org/user/ontologies/2016/8/untitled-ontology-84#>
+SELECT ?v {
+  ?p a :Professor ; :lastName ?v .
+  {
+    SELECT ?p {
+      ?p :teaches [ :duration ?d ]
+      FILTER ((?d < 21) && (?d > 19))
+    }
+    ORDER BY ?d
+    LIMIT 1
+  }
+}

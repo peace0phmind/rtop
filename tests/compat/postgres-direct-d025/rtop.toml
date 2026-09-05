@@ -1,0 +1,11 @@
+[direct_mapping]
+base_iri = "http://example.com/base/"
+relations = ["Addresses", "Department", "People", "Projects", "TaskAssignments"]
+
+[datasource]
+kind = "postgres"
+host = "127.0.0.1"
+port = 55432
+database = "rtop_test"
+user = "rtop"
+password = "rtop"

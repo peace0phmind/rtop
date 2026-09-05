@@ -1,0 +1,5 @@
+PREFIX ex: <http://example.test/>
+SELECT ?person ?name ?ssn WHERE {
+  ?person ex:name ?name .
+  OPTIONAL { ?person ex:ssn ?ssn . }
+}

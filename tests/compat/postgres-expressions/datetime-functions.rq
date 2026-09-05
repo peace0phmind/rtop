@@ -1,0 +1,8 @@
+SELECT ?year ?month ?day ?hours ?minutes ?seconds WHERE {
+  BIND(YEAR("2014-06-05T18:47:52") AS ?year)
+  BIND(MONTH("2014-06-05T18:47:52") AS ?month)
+  BIND(DAY("2014-06-05T18:47:52") AS ?day)
+  BIND(HOURS("2014-06-05T18:47:52") AS ?hours)
+  BIND(MINUTES("2014-06-05T18:47:52") AS ?minutes)
+  BIND(SECONDS("2014-06-05T18:47:52") AS ?seconds)
+}

@@ -1,0 +1,4 @@
+PREFIX ex: <ex:>
+SELECT (GROUP_CONCAT(DISTINCT ?name; separator="; ") AS ?value) WHERE {
+  ex:tom ex:hasName ?name
+}

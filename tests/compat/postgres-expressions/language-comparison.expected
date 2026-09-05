@@ -1,0 +1,1 @@
+?same="false"^^<http://www.w3.org/2001/XMLSchema#boolean> ?string_not_equal="true"^^<http://www.w3.org/2001/XMLSchema#boolean> ?term_equal="true"^^<http://www.w3.org/2001/XMLSchema#boolean> ?term_not_equal="false"^^<http://www.w3.org/2001/XMLSchema#boolean>

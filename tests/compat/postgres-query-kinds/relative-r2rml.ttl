@@ -1,0 +1,10 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@base <https://example.test/base/> .
+
+<legacy-map> a rr:TriplesMap ;
+  rr:logicalTable [ rr:sqlQuery "SELECT id FROM query_people" ] ;
+  rr:subjectMap [ rr:template "person/{id}" ] ;
+  rr:predicateObjectMap [
+    rr:predicate <kind> ;
+    rr:objectMap [ rr:constant <Person> ]
+  ] .

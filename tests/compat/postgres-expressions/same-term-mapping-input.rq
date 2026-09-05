@@ -1,0 +1,11 @@
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX ns: <http://example.org/ns#>
+
+SELECT (CONCAT(?title, " | ", ?title2) AS ?value) WHERE {
+  ?x ns:discount ?discount .
+  ?x dc:title ?title .
+  ?y ns:discount ?discount2 .
+  ?y dc:title ?title2 .
+  FILTER(sameTerm(?discount, ?discount2) && !sameTerm(?title, ?title2))
+}
+ORDER BY ?title

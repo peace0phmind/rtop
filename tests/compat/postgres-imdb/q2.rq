@@ -1,0 +1,5 @@
+PREFIX mo: <http://www.movieontology.org/2009/10/01/movieontology.owl#>
+SELECT $x $title WHERE {
+  $x mo:belongsToGenre $y; mo:title ?title .
+  $y a mo:Actionreach .
+}

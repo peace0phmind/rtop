@@ -1,0 +1,12 @@
+[PrefixDeclaration]
+:       https://example.test/
+
+[MappingDeclaration] @collection [[
+mappingId       duplicate-person
+target          :person/{id} :type :Person .
+source          SELECT id FROM query_people
+
+mappingId       duplicate-person
+target          :person/{id} :label "person" .
+source          SELECT id FROM query_people
+]]

@@ -1,0 +1,8 @@
+[PrefixDeclaration]
+:       https://example.test/
+
+[MappingDeclaration] @collection [[
+mappingId       legacy-simplify-projection
+target          :person/{id} :type :Person .
+source          SELECT id FROM query_people WHERE id = 1
+]]

@@ -1,0 +1,6 @@
+SELECT ?abs ?ceil ?floor ?round WHERE {
+  BIND(ABS(-1.5) AS ?abs)
+  BIND(CEIL(0.2) AS ?ceil)
+  BIND(FLOOR(0.8) AS ?floor)
+  BIND(ROUND(1.6) AS ?round)
+}

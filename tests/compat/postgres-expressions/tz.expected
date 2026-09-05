@@ -1,0 +1,1 @@
+?east="08:00"^^<http://www.w3.org/2001/XMLSchema#string> ?naive=""^^<http://www.w3.org/2001/XMLSchema#string> ?utc="00:00"^^<http://www.w3.org/2001/XMLSchema#string> ?west="-01:30"^^<http://www.w3.org/2001/XMLSchema#string>

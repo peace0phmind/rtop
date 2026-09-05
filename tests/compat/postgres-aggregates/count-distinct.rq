@@ -1,0 +1,7 @@
+PREFIX : <http://www.example.org/test#>
+SELECT ?p (COUNT(DISTINCT ?s) AS ?cd)
+WHERE {
+  ?p :teaches ?c .
+  ?c :numberOfStudents ?s .
+}
+GROUP BY ?p

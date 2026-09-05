@@ -1,0 +1,6 @@
+SELECT ?address ?country ?number ?street {
+  ?address <https://example.test/country> ?country .
+  ?address <https://example.test/number> ?number .
+  ?address <https://example.test/street> ?street .
+}
+ORDER BY DESC(?country) ?number DESC(?street)

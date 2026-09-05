@@ -1,0 +1,4 @@
+SELECT ?dish ?plant ?component WHERE {
+  ?component <http://example.com/base/成分#皿> ?dish .
+  ?component <http://example.com/base/成分#ref-植物名;使用部> ?plant .
+}

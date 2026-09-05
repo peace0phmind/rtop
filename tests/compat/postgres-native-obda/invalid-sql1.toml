@@ -1,0 +1,9 @@
+mapping = "../../../../ontop/mapping/sql/all/src/test/resources/mistake/invalid-sql1.obda"
+
+[datasource]
+kind = "postgres"
+host = "127.0.0.1"
+port = 5432
+database = "rtop_test"
+user = "rtop"
+password = "rtop"

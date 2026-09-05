@@ -1,0 +1,5 @@
+SELECT ?different ?same WHERE {
+  VALUES (?left ?right) { ("one" "two") }
+  BIND(!(?left = ?right) AS ?different)
+  BIND(!(?left != ?right) AS ?same)
+}

@@ -1,0 +1,6 @@
+PREFIX ub: <http://swat.cse.lehigh.edu/onto/univ-bench.owl#>
+
+SELECT ?X WHERE {
+  ?X a ub:GraduateStudent .
+  ?X ub:takesCourse <http://www.Department0.University0.edu/GraduateCourse0>
+}

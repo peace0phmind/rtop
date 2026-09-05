@@ -1,0 +1,10 @@
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX ns: <http://example.org/ns#>
+
+SELECT ?length WHERE {
+  ?x ns:price ?price .
+  ?x ns:discount ?discount .
+  ?x dc:title ?title .
+  BIND(STRLEN(?title) AS ?length)
+}
+ORDER BY ?title

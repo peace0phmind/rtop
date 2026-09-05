@@ -5,12 +5,25 @@ use std::path::{Path, PathBuf};
 
 #[derive(Debug, Deserialize)]
 struct FileConfig {
-    mapping: String,
+    mapping: Option<String>,
+    direct_mapping: Option<FileDirectMapping>,
     facts: Option<String>,
     facts_format: Option<String>,
     facts_base_iri: Option<String>,
     ontology: Option<String>,
+    endpoint: Option<FileEndpoint>,
     datasource: FileDataSource,
+}
+#[derive(Debug, Deserialize)]
+struct FileEndpoint {
+    enable_download_ontology: Option<bool>,
+    predefined_config: Option<String>,
+    predefined_queries: Option<String>,
+}
+#[derive(Debug, Deserialize)]
+struct FileDirectMapping {
+    base_iri: String,
+    relations: Vec<String>,
 }
 #[derive(Debug, Deserialize)]
 struct FileDataSource {
@@ -21,6 +34,7 @@ struct FileDataSource {
     user: String,
     password: Option<String>,
     password_file: Option<String>,
+    timestamp_timezone: Option<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -37,6 +51,23 @@ pub struct KnowledgeGraphSpec {
 pub struct LoadedConfiguration {
     pub spec: KnowledgeGraphSpec,
     pub postgres: PostgresConnectionConfig,
+    pub direct_mapping: Option<DirectMappingConfiguration>,
+    pub endpoint: EndpointConfiguration,
+}
+
+/// endpoint adapter 的可选交付配置。两个预定义查询文件必须成对提供。
+#[derive(Debug, Clone, Default)]
+pub struct EndpointConfiguration {
+    pub enable_download_ontology: bool,
+    pub predefined_config: Option<PathBuf>,
+    pub predefined_queries: Option<PathBuf>,
+}
+
+/// 配置文件中 Direct Mapping 的显式 relation allow-list。
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DirectMappingConfiguration {
+    pub base_iri: String,
+    pub relations: Vec<String>,
 }
 
 pub fn load_configuration(path: impl AsRef<Path>) -> Result<LoadedConfiguration, RuntimeError> {
@@ -80,22 +111,74 @@ pub fn load_configuration(path: impl AsRef<Path>) -> Result<LoadedConfiguration,
         }
     };
     let base = path.parent().unwrap_or(Path::new("."));
-    let mapping_file = base.join(config.mapping);
+    let endpoint = config.endpoint.unwrap_or(FileEndpoint {
+        enable_download_ontology: None,
+        predefined_config: None,
+        predefined_queries: None,
+    });
+    if endpoint.predefined_config.is_some() != endpoint.predefined_queries.is_some() {
+        return Err(RuntimeError::Config(
+            "endpoint.predefined_config 与 endpoint.predefined_queries 必须同时指定".into(),
+        ));
+    }
+    let direct_mapping = config
+        .direct_mapping
+        .map(|direct| DirectMappingConfiguration {
+            base_iri: direct.base_iri,
+            relations: direct.relations,
+        });
+    if config.mapping.is_some() == direct_mapping.is_some() {
+        return Err(RuntimeError::Config(
+            "必须且只能指定 mapping 或 direct_mapping".into(),
+        ));
+    }
+    if let Some(direct) = &direct_mapping {
+        if direct.relations.is_empty() {
+            return Err(RuntimeError::Config(
+                "direct_mapping.relations 不能为空".into(),
+            ));
+        }
+        let _iri = oxiri::Iri::parse(direct.base_iri.clone())
+            .map_err(|e| RuntimeError::Config(format!("无效 direct_mapping.base_iri：{e}")))?;
+        if !direct.base_iri.contains(':') {
+            return Err(RuntimeError::Config(
+                "direct_mapping.base_iri 必须是绝对 IRI".into(),
+            ));
+        }
+    }
+    let mapping_file = config
+        .mapping
+        .map(|mapping| base.join(mapping))
+        .unwrap_or_default();
     let facts_file = config.facts.map(|file| base.join(file));
     if let Some(format) = &config.facts_format {
-        if !matches!(format.as_str(), "turtle" | "ttl" | "nquads" | "nq") {
+        if !matches!(
+            format.as_str(),
+            "turtle" | "ttl" | "nquads" | "nq" | "rdf" | "xml" | "rdfxml"
+        ) {
             return Err(RuntimeError::Config(format!(
                 "不支持的 facts_format：{format}"
             )));
         }
     }
-    let port = config.datasource.port.unwrap_or(5432);
+    // 集成 gate 可让 Docker 自动分配宿主端口，避免多个 PostgreSQL 情景竞争 55432。
+    // 显式环境变量只覆盖端口；配置文件仍是 host、database、凭据等连接语义的唯一来源。
+    let port = std::env::var("RTOP_POSTGRES_PORT")
+        .ok()
+        .map(|value| {
+            value.parse::<u16>().map_err(|_| {
+                RuntimeError::Config("RTOP_POSTGRES_PORT 必须是 1 到 65535 的端口号".into())
+            })
+        })
+        .transpose()?
+        .unwrap_or_else(|| config.datasource.port.unwrap_or(5432));
     let postgres = PostgresConnectionConfig {
         host: config.datasource.host,
         port,
         database: config.datasource.database,
         user: config.datasource.user,
         password,
+        timestamp_timezone: config.datasource.timestamp_timezone,
     };
     Ok(LoadedConfiguration {
         spec: KnowledgeGraphSpec {
@@ -106,5 +189,11 @@ pub fn load_configuration(path: impl AsRef<Path>) -> Result<LoadedConfiguration,
             ontology_file: config.ontology.map(|file| base.join(file)),
         },
         postgres,
+        direct_mapping,
+        endpoint: EndpointConfiguration {
+            enable_download_ontology: endpoint.enable_download_ontology.unwrap_or(false),
+            predefined_config: endpoint.predefined_config.map(|file| base.join(file)),
+            predefined_queries: endpoint.predefined_queries.map(|file| base.join(file)),
+        },
     })
 }

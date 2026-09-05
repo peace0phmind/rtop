@@ -1,0 +1,5 @@
+SELECT ?title ?and ?or WHERE {
+  VALUES ?title { "Semantic Web" "Semantic Book" "Other" }
+  BIND((CONTAINS(?title, "Semantic") && CONTAINS(?title, "Web")) AS ?and)
+  BIND(CONTAINS(?title, "Semantic") && CONTAINS(?title, "Book") || CONTAINS(?title, "Web") AS ?or)
+}

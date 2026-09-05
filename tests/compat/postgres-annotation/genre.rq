@@ -1,0 +1,2 @@
+PREFIX mo: <http://www.movieontology.org/2009/10/01/movieontology.owl#>
+SELECT ?r ?movie WHERE { ?movie mo:belongsToGenre ?r . }

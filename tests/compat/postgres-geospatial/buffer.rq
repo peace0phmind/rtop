@@ -1,0 +1,8 @@
+PREFIX : <http://ex.org/>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/>
+PREFIX uom: <http://www.opengis.net/def/uom/OGC/1.0/>
+SELECT ?v WHERE {
+  ?x a :Geom ; geo:asWKT ?wkt .
+  BIND(geof:buffer(?wkt, 20, uom:metre) AS ?v)
+} LIMIT 1

@@ -1,0 +1,25 @@
+[PrefixDeclaration]
+:       http://nested.example.org/
+xsd:    http://www.w3.org/2001/XMLSchema#
+
+[MappingDeclaration] @collection [[
+mappingId period-date
+target :period/{id}/{index} a :Period ; :invoiceDate {invoice_date} ; :id {id} ; :index {index}^^xsd:integer .
+source SELECT c.id, item.ordinality::integer AS index, item.value::text::timestamp AS invoice_date FROM nested_company_data AS c CROSS JOIN LATERAL jsonb_array_elements_text(c.days) WITH ORDINALITY AS item(value, ordinality)
+
+mappingId period-income
+target :period/{id}/{index} a :Period ; :invoiceAmount {period_income} .
+source SELECT c.id, item.ordinality::integer AS index, item.value::integer AS period_income FROM nested_company_data AS c CROSS JOIN LATERAL jsonb_array_elements_text(c.income) WITH ORDINALITY AS item(value, ordinality)
+
+mappingId period-worker
+target :period/{id}/{index} a :Period ; :hasWorker :worker/{name} .
+source SELECT c.id, outer_item.ordinality::integer AS index, inner_item.value::text AS name FROM nested_company_data AS c CROSS JOIN LATERAL jsonb_array_elements(c.workers) WITH ORDINALITY AS outer_item(value, ordinality) CROSS JOIN LATERAL jsonb_array_elements_text(outer_item.value) AS inner_item(value)
+
+mappingId worker-name
+target :worker/{name} a :Worker ; :name {name} .
+source SELECT DISTINCT inner_item.value::text AS name FROM nested_company_data AS c CROSS JOIN LATERAL jsonb_array_elements(c.workers) AS outer_item(value) CROSS JOIN LATERAL jsonb_array_elements_text(outer_item.value) AS inner_item(value)
+
+mappingId period-manager
+target :period/{id}/{index} a :Period ; :hasManager :manager/{firstname}/{lastname} . :manager/{firstname}/{lastname} a :Manager ; :firstName {firstname} ; :lastName {lastname} ; :age {age} .
+source SELECT c.id, item.ordinality::integer AS index, item.value ->> 'firstName' AS firstname, item.value ->> 'lastName' AS lastname, (item.value ->> 'age')::integer AS age FROM nested_company_data AS c CROSS JOIN LATERAL jsonb_array_elements(c.managers) WITH ORDINALITY AS item(value, ordinality)
+]]

@@ -1,0 +1,7 @@
+SELECT ?value ?bound ?iri ?literal ?numeric WHERE {
+  VALUES ?value { <https://example.test/a> "text" 2 }
+  BIND(BOUND(?missing) AS ?bound)
+  BIND(isIRI(?value) AS ?iri)
+  BIND(isLiteral(?value) AS ?literal)
+  BIND(isNumeric(?value) AS ?numeric)
+}

@@ -1,0 +1,7 @@
+PREFIX : <http://www.semanticweb.org/user/ontologies/2016/8/untitled-ontology-84#>
+SELECT ?p (SUM(?nb) AS ?s) (CONCAT(?fName, ": ", str(?s)) AS ?v) WHERE {
+  ?p :teaches ?c ; :firstName ?fName .
+  ?c :nbStudents ?nb .
+}
+GROUP BY ?p ?fName
+ORDER BY ?s

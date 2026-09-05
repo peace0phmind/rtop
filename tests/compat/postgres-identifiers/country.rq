@@ -1,0 +1,2 @@
+PREFIX : <http://www.semanticweb.org/ontologies/2013/7/untitled-ontology-150#>
+SELECT ?x WHERE { ?x a :Country } ORDER BY ?x

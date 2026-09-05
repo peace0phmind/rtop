@@ -1,0 +1,5 @@
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?double ?float WHERE {
+  BIND(xsd:double("2.0654"^^xsd:string) AS ?double)
+  BIND(xsd:float("2"^^xsd:string) AS ?float)
+}

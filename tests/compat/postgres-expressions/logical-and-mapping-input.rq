@@ -1,0 +1,10 @@
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX ns: <http://example.org/ns#>
+
+SELECT ?value WHERE {
+  ?x ns:price ?price .
+  ?x ns:discount ?discount .
+  ?x dc:title ?title .
+  BIND((CONTAINS(?title, "Semantic") && CONTAINS(?title, "Web")) AS ?value)
+}
+ORDER BY ?value

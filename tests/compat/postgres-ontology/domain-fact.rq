@@ -1,0 +1,4 @@
+PREFIX : <http://example.org/voc#>
+SELECT ?teacher WHERE {
+  ?teacher a :Teacher .
+}

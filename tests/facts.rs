@@ -1,4 +1,4 @@
-use rtop::{parse_nquads, parse_turtle, RdfTerm};
+use rtop::{parse_nquads, parse_rdf_xml, parse_turtle, RdfTerm};
 
 #[test]
 fn preserves_blank_nodes_languages_and_datatypes_from_turtle_facts() {
@@ -38,4 +38,26 @@ fn classifies_malformed_turtle_facts() {
         format!("{}", parse_turtle(b"@prefix : <bad", None).unwrap_err())
             .starts_with("invalid-facts:")
     );
+}
+
+#[test]
+fn resolves_rdfxml_relative_iris_against_the_explicit_facts_base_iri() {
+    let facts = parse_rdf_xml(
+        br#"<?xml version="1.0"?>
+        <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                 xmlns:ex="https://example.test/">
+          <rdf:Description rdf:about="person/7"><ex:name>Seven</ex:name></rdf:Description>
+        </rdf:RDF>"#,
+        Some(
+            oxiri::Iri::parse("https://data.example.test/base/")
+                .unwrap()
+                .into(),
+        ),
+    )
+    .unwrap();
+    assert_eq!(
+        facts[0].subject,
+        RdfTerm::Iri("https://data.example.test/base/person/7".into())
+    );
+    assert_eq!(facts[0].predicate, "https://example.test/name");
 }

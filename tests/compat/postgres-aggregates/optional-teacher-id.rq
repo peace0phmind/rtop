@@ -1,0 +1,7 @@
+PREFIX : <http://www.semanticweb.org/user/ontologies/2016/8/untitled-ontology-84#>
+SELECT DISTINCT ?v ?id WHERE {
+  ?p a :Professor ; :lastName ?v .
+  OPTIONAL { ?p :teacherID ?id . }
+  FILTER (BOUND(?id))
+}
+ORDER BY ?v

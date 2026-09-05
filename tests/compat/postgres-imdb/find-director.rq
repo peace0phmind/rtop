@@ -1,0 +1,4 @@
+PREFIX page: <http://dbpedia.org/page/>
+PREFIX dbpedia: <http://dbpedia.org/ontology/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT $x WHERE { $x a page:Film_Director. $x dbpedia:birthName "Tarantino, Quentin"^^xsd:string }

@@ -1,0 +1,7 @@
+PREFIX ns: <http://example.org/ns#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?v WHERE {
+  ?book ns:discount ?discount .
+  BIND(xsd:decimal(?discount) AS ?v)
+}
+ORDER BY ?v

@@ -1,0 +1,7 @@
+PREFIX : <http://www.semanticweb.org/user/ontologies/2016/8/untitled-ontology-84#>
+SELECT ?p (SUM(?nb) AS ?sum) (AVG(?nb) AS ?avg) (COUNT(?nb) AS ?count) WHERE {
+  ?p a :Professor .
+  OPTIONAL { ?p :nonExistingProperty ?nb }
+}
+GROUP BY ?p
+ORDER BY ?p

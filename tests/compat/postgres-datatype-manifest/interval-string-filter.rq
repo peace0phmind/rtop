@@ -1,0 +1,7 @@
+PREFIX : <https://example.test/datatypes#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?row ?value
+WHERE {
+  ?row :intervalString ?value
+  FILTER (?value = "00:01:40"^^xsd:string) .
+}

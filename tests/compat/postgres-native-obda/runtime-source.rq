@@ -1,0 +1,3 @@
+SELECT ?person ?name {
+  ?person <http://example.org/voc#firstName> ?name
+}

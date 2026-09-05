@@ -1,0 +1,7 @@
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?double ?float ?integer ?string WHERE {
+  BIND(xsd:decimal("2.0654"^^xsd:double) AS ?double)
+  BIND(xsd:decimal("2.6"^^xsd:float) AS ?float)
+  BIND(xsd:decimal("19991214"^^xsd:integer) AS ?integer)
+  BIND(xsd:decimal("2.0654"^^xsd:string) AS ?string)
+}

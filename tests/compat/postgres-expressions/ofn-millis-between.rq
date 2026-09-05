@@ -1,0 +1,7 @@
+PREFIX ofn: <http://www.ontotext.com/sparql/functions/>
+
+SELECT ?millis WHERE {
+  BIND("1999-12-14T09:00:00"^^xsd:dateTime AS ?end)
+  BIND("1999-12-13T09:30:00"^^xsd:dateTime AS ?start)
+  BIND(ofn:millisBetween(?start, ?end) AS ?millis)
+}

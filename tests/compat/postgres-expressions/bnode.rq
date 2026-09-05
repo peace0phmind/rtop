@@ -1,0 +1,7 @@
+SELECT ?label ?same WHERE {
+  VALUES ?v { 1 2 }
+  BIND(BNODE() AS ?fresh)
+  BIND(BNODE("b1") AS ?named)
+  BIND(isBlank(?fresh) AS ?label)
+  BIND(sameTerm(?named, BNODE("b1")) AS ?same)
+}

@@ -1,0 +1,4 @@
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX mo: <http://www.movieontology.org/2009/10/01/movieontology.owl#>
+SELECT ?r ?movie
+WHERE { ?movie dc:date ?r . }

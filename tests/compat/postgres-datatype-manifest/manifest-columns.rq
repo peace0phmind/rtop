@@ -1,0 +1,5 @@
+PREFIX : <https://example.test/datatypes#>
+SELECT ?manifestChar ?varchar ?text ?manifestCharacter ?name ?smallint ?integer ?bigint ?serial ?bigserial ?numeric ?real ?double
+WHERE {
+  :row-1 :manifestChar ?manifestChar ; :varchar ?varchar ; :text ?text ; :manifestCharacter ?manifestCharacter ; :name ?name ; :smallint ?smallint ; :integer ?integer ; :bigint ?bigint ; :serial ?serial ; :bigserial ?bigserial ; :numeric ?numeric ; :real ?real ; :double ?double .
+}

@@ -1,0 +1,9 @@
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix ex: <http://example.com/> .
+
+[] a rr:TriplesMap;
+   rr:logicalTable [ rr:tableName "patient_types" ];
+   rr:subjectMap [ rr:template "http://example.com/Patient{id}" ];
+   rr:predicateObjectMap [ rr:predicate ex:birthdate; rr:objectMap [ rr:column "birthdate" ] ];
+   rr:predicateObjectMap [ rr:predicate ex:entrancedate; rr:objectMap [ rr:column "entrancedate" ] ];
+   rr:predicateObjectMap [ rr:predicate ex:paid; rr:objectMap [ rr:column "paid" ] ] .

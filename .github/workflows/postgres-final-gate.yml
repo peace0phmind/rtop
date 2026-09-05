@@ -1,0 +1,46 @@
+name: PostgreSQL 17 final gate
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  compatibility:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: 检出固定 Ontop 基线
+        uses: actions/checkout@v4
+        with:
+          repository: ontop/ontop
+          ref: 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd
+          path: ontop
+      - name: 提供只读基线路径
+        run: |
+          chmod -R a-w "$GITHUB_WORKSPACE/ontop"
+          ln -s "$GITHUB_WORKSPACE/ontop" "$GITHUB_WORKSPACE/../ontop"
+      - name: 安装 Rust
+        uses: dtolnay/rust-toolchain@1.85.1
+      - name: 运行 PostgreSQL 17 最终 gate
+        shell: bash
+        run: |
+          set -o pipefail
+          ./scripts/test-final-gate.sh | tee final-gate.log
+          ./scripts/collect-final-gate-provenance.sh > final-gate-provenance.json
+      - name: 保存对照证据
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: postgres-17-compatibility-evidence
+          path: |
+            final-gate.log
+            compatibility-report.json
+            docs/research/postgres-only-coverage-ledger.json
+            Cargo.lock
+            Dockerfile
+            final-gate-provenance.json

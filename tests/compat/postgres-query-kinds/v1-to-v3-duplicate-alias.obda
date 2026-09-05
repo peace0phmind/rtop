@@ -1,0 +1,14 @@
+[PrefixDeclaration]
+:       https://example.test/
+
+[SourceDeclaration]
+connectionUrl   jdbc:postgresql://legacy.invalid/rtop_test
+username        legacy-user
+password        legacy-password
+driverClass     org.postgresql.Driver
+
+[MappingDeclaration] @collection [[
+mappingId       legacy-duplicate-qualified-columns
+target          :person/{left_person.id} :related :person/{right_person.id} .
+source          SELECT left_person.id, right_person.id FROM query_people AS left_person CROSS JOIN query_people AS right_person
+]]

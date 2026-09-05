@@ -1,0 +1,14 @@
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX ns: <http://example.org/ns#>
+PREFIX ofn: <http://www.ontotext.com/sparql/functions/>
+
+SELECT ?title ?dateDays ?dateTimeDays ?seconds WHERE {
+  ?x dc:title ?title .
+  ?x ns:pubYear ?year .
+  BIND("1967-02-22"^^<http://www.w3.org/2001/XMLSchema#date> AS ?dateStart)
+  BIND("1967-02-22T09:30:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> AS ?dateTimeStart)
+  BIND(ofn:daysBetween(?dateStart, ?year) AS ?dateDays)
+  BIND(ofn:daysBetween(?dateTimeStart, ?year) AS ?dateTimeDays)
+  BIND(ofn:secondsBetween(?dateTimeStart, ?year) AS ?seconds)
+}
+ORDER BY ?title

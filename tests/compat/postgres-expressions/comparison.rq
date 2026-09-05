@@ -1,0 +1,6 @@
+SELECT ?ok WHERE {
+  VALUES ?left { "same" }
+  VALUES ?right { "same" }
+  VALUES ?other { "other" }
+  BIND(?left = ?right && ?left != ?other AS ?ok)
+}

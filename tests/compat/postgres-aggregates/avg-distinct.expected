@@ -1,0 +1,3 @@
+?ad="10.5"^^<http://www.w3.org/2001/XMLSchema#decimal> ?p=<http://www.example.org/test#1>
+?ad="12"^^<http://www.w3.org/2001/XMLSchema#decimal> ?p=<http://www.example.org/test#3>
+?ad="13"^^<http://www.w3.org/2001/XMLSchema#decimal> ?p=<http://www.example.org/test#8>

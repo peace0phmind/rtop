@@ -1,0 +1,4 @@
+[MappingDeclaration]
+mappingId compliance-construct-subgraph
+target <http://example.test/person/{id}> <http://xmlns.com/foaf/0.1/name> {name} .
+source SELECT id, name FROM query_named_people

@@ -1,0 +1,12 @@
+PREFIX : <http://www.semanticweb.org/user/ontologies/2016/8/untitled-ontology-84#>
+
+SELECT ?p (GROUP_CONCAT(?name) AS ?value) WHERE {
+  ?p a :Professor .
+  OPTIONAL {
+    { ?p :nickname ?name }
+    UNION
+    { ?p :nickname ?name }
+  }
+}
+GROUP BY ?p
+ORDER BY ?p

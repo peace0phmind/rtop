@@ -1,0 +1,1 @@
+?day="5"^^<http://www.w3.org/2001/XMLSchema#integer> ?hours="18"^^<http://www.w3.org/2001/XMLSchema#integer> ?minutes="47"^^<http://www.w3.org/2001/XMLSchema#integer> ?month="6"^^<http://www.w3.org/2001/XMLSchema#integer> ?seconds="52"^^<http://www.w3.org/2001/XMLSchema#decimal> ?year="2014"^^<http://www.w3.org/2001/XMLSchema#integer>

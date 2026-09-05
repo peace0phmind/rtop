@@ -1,0 +1,4 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+<urn:rtop:postgres-ontology-root>
+  owl:imports <../../../../ontop/binding/rdf4j/src/test/resources/tbox-facts/university-complete.ttl> .

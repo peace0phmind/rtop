@@ -1,0 +1,4 @@
+SELECT ?value ?string WHERE {
+  VALUES ?value { 2 "aa" }
+  BIND(STR(?value) AS ?string)
+}

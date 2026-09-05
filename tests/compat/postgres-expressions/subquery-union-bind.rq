@@ -1,0 +1,10 @@
+SELECT ?b ?v WHERE {
+  {
+    SELECT DISTINCT ?b {
+      { SELECT * { VALUES ?b { 2 } } }
+      UNION
+      { SELECT * { VALUES ?b { "aa" "aa" } } }
+    }
+  }
+  BIND(SUBSTR("yyy", ?b) AS ?v)
+}

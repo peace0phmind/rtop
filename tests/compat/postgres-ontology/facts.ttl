@@ -1,0 +1,3 @@
+@prefix : <http://example.org/voc#> .
+
+<https://example.test/alice> :teaches <https://example.test/course> .

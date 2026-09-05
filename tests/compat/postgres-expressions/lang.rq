@@ -1,0 +1,4 @@
+SELECT ?language WHERE {
+  VALUES ?title { "title"@en "plain" }
+  BIND(LANG(?title) AS ?language)
+}

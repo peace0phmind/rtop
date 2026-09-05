@@ -1,0 +1,8 @@
+PREFIX : <http://nested.example.org/>
+SELECT (CONCAT(?name, ": ", STR(AVG(?value))) AS ?v)
+WHERE {
+  ?p :hasWorker ?w .
+  ?w :name ?name .
+  ?p :invoiceAmount ?value .
+}
+GROUP BY ?name

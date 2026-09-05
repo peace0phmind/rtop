@@ -1,0 +1,6 @@
+CONSTRUCT { ?subject ?predicate ?object }
+WHERE {
+  GRAPH <http://example.com/graph/Student/10/Venus%20Williams> {
+    ?subject ?predicate ?object
+  }
+}

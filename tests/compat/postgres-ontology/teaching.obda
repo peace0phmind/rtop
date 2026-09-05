@@ -1,0 +1,8 @@
+[PrefixDeclaration]
+:		http://example.org/voc#
+
+[MappingDeclaration] @collection [[
+mappingId	postgres-university-gives-lab
+target		<https://example.test/teacher/{s_id}> :givesLab <https://example.test/course/{s_id}> .
+source		SELECT s_id FROM "uni1"."student"
+]]

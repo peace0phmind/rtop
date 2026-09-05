@@ -1,0 +1,5 @@
+PREFIX ex: <http://example.test/>
+SELECT ?person WHERE {
+  ?person ex:name ?name .
+  FILTER(REGEX(?name, "walter", "i"))
+}

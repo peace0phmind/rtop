@@ -1,0 +1,9 @@
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?boolean ?double ?float ?integer ?stringFalse ?stringTrue WHERE {
+  BIND(xsd:boolean("true"^^xsd:boolean) AS ?boolean)
+  BIND(xsd:boolean("0.0"^^xsd:double) AS ?double)
+  BIND(xsd:boolean("2.0654"^^xsd:float) AS ?float)
+  BIND(xsd:boolean("19991214"^^xsd:integer) AS ?integer)
+  BIND(xsd:boolean("false"^^xsd:string) AS ?stringFalse)
+  BIND(xsd:boolean("1"^^xsd:string) AS ?stringTrue)
+}

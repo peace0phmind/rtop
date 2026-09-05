@@ -1,0 +1,8 @@
+PREFIX : <http://www.semanticweb.org/user/ontologies/2016/8/untitled-ontology-84#>
+SELECT ?v WHERE {
+  ?p :firstName ?v ; :lastName ?last .
+  FILTER(CONTAINS(?v, "a"))
+  OPTIONAL { ?p :nickname ?nickname . BIND(true AS ?w) }
+  FILTER (!BOUND(?w))
+}
+ORDER BY ?v

@@ -4,6 +4,7 @@ use rio_api::{
     parser::{QuadsParser, TriplesParser},
 };
 use rio_turtle::{NQuadsParser, TurtleParser};
+use rio_xml::RdfXmlParser;
 use std::io::Cursor;
 
 /// 从 Turtle reader 读取 RDF facts。调用者负责提供显式 base IRI（如需要）。
@@ -46,6 +47,26 @@ pub fn parse_nquads(reader: impl AsRef<[u8]>) -> Result<Vec<RdfFact>, RuntimeErr
             Ok(()) as Result<(), rio_turtle::TurtleError>
         })
         .map_err(|error| RuntimeError::Facts(format!("N-Quads facts 解析失败：{error}")))?;
+    Ok(facts)
+}
+
+/// 从 RDF/XML reader 读取 RDF facts。调用者负责提供显式 base IRI（如需要）。
+pub fn parse_rdf_xml(
+    reader: impl AsRef<[u8]>,
+    base_iri: Option<oxiri::Iri<String>>,
+) -> Result<Vec<RdfFact>, RuntimeError> {
+    let mut facts = Vec::new();
+    RdfXmlParser::new(Cursor::new(reader.as_ref()), base_iri)
+        .parse_all(&mut |triple| {
+            facts.push(RdfFact {
+                subject: subject(triple.subject),
+                predicate: triple.predicate.iri.to_owned(),
+                object: term(triple.object),
+                graph: None,
+            });
+            Ok(()) as Result<(), rio_xml::RdfXmlError>
+        })
+        .map_err(|error| RuntimeError::Facts(format!("RDF/XML facts 解析失败：{error}")))?;
     Ok(facts)
 }
 

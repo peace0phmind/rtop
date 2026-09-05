@@ -1,0 +1,12 @@
+PREFIX ofn: <http://www.ontotext.com/sparql/functions/>
+
+SELECT ?days ?weeks ?hours ?minutes ?seconds ?millis WHERE {
+  BIND("1932-02-22T09:30:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> AS ?start)
+  BIND("1999-12-14T09:00:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> AS ?end)
+  BIND(ofn:daysBetween(?start, ?end) AS ?days)
+  BIND(ofn:weeksBetween(?start, ?end) AS ?weeks)
+  BIND(ofn:hoursBetween(?start, ?end) AS ?hours)
+  BIND(ofn:minutesBetween(?start, ?end) AS ?minutes)
+  BIND(ofn:secondsBetween(?start, ?end) AS ?seconds)
+  BIND(ofn:millisBetween(?end, ?end) AS ?millis)
+}

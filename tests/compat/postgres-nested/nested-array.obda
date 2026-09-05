@@ -1,0 +1,25 @@
+[PrefixDeclaration]
+:       http://nested.example.org/
+xsd:    http://www.w3.org/2001/XMLSchema#
+
+[MappingDeclaration] @collection [[
+mappingId period-date
+target :period/{id}/{index} a :Period ; :invoiceDate {invoice_date} ; :id {id} ; :index {index}^^xsd:integer .
+source SELECT c.id, item.ordinality::integer AS index, item.value AS invoice_date FROM nested_company_data_arrays AS c CROSS JOIN LATERAL unnest(c.days) WITH ORDINALITY AS item(value, ordinality)
+
+mappingId period-income
+target :period/{id}/{index} a :Period ; :invoiceAmount {period_income} .
+source SELECT c.id, item.ordinality::integer AS index, item.value AS period_income FROM nested_company_data_arrays AS c CROSS JOIN LATERAL unnest(c.income) WITH ORDINALITY AS item(value, ordinality)
+
+mappingId period-worker
+target :period/{id}/{index} a :Period ; :hasWorker :worker/{name} .
+source SELECT c.id, outer_index::integer AS index, c.workers[outer_index][inner_index] AS name FROM nested_company_data_arrays AS c CROSS JOIN LATERAL generate_subscripts(c.workers, 1) AS outer_index CROSS JOIN LATERAL generate_subscripts(c.workers, 2) AS inner_index WHERE c.workers[outer_index][inner_index] IS NOT NULL
+
+mappingId worker-name
+target :worker/{name} a :Worker ; :name {name} .
+source SELECT DISTINCT c.workers[outer_index][inner_index] AS name FROM nested_company_data_arrays AS c CROSS JOIN LATERAL generate_subscripts(c.workers, 1) AS outer_index CROSS JOIN LATERAL generate_subscripts(c.workers, 2) AS inner_index WHERE c.workers[outer_index][inner_index] IS NOT NULL
+
+mappingId period-manager
+target :period/{id}/{index} a :Period ; :hasManager :manager/{firstname}/{lastname} . :manager/{firstname}/{lastname} a :Manager ; :firstName {firstname} ; :lastName {lastname} ; :age {age} .
+source SELECT c.id, item.ordinality::integer AS index, item.value ->> 'firstName' AS firstname, item.value ->> 'lastName' AS lastname, (item.value ->> 'age')::integer AS age FROM nested_company_data_arrays AS c CROSS JOIN LATERAL unnest(c.managers) WITH ORDINALITY AS item(value, ordinality)
+]]

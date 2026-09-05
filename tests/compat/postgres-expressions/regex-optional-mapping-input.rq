@@ -1,0 +1,12 @@
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX ns: <http://example.org/ns#>
+
+SELECT (BOUND(?title) AS ?bound) WHERE {
+  ?x ns:price ?price .
+  ?x ns:discount ?discount .
+  OPTIONAL {
+    ?x dc:title ?title .
+    FILTER(REGEX(?title, "Semantic"))
+  }
+}
+ORDER BY ?title

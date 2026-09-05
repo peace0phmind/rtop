@@ -1,0 +1,3 @@
+SELECT ?v WHERE {
+  BIND(REPLACE('ABC AA', 'A', 'Z') AS ?v)
+}

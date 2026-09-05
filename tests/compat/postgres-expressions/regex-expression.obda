@@ -1,0 +1,12 @@
+[PrefixDeclaration]
+ex: http://example.test/
+
+[MappingDeclaration] @collection [[
+mappingId regex-expression-person
+target ex:person/{id} ex:name {name} .
+source SELECT id, name FROM person
+
+mappingId regex-expression-optional-ssn
+target ex:person/{id} ex:ssn {ssn} .
+source SELECT id, ssn FROM person WHERE id = 2
+]]

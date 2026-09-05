@@ -1,0 +1,7 @@
+PREFIX : <http://www.semanticweb.org/user/ontologies/2016/8/untitled-ontology-84#>
+
+SELECT (CONCAT(?fName, ".") AS ?v) ((1+1) AS ?y) WHERE {
+  ?p :firstName ?fName .
+}
+GROUP BY ?p ?fName
+ORDER BY ?fName

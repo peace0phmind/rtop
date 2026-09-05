@@ -1,0 +1,5 @@
+ASK {
+  GRAPH <https://example.test/graph/people/1> {
+    ?person <https://example.test/type> <https://example.test/Person>
+  }
+}

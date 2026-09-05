@@ -1,0 +1,8 @@
+SELECT ?float_float ?float_integer ?float_decimal ?float_double ?double_double ?integer_integer WHERE {
+  BIND("0.5"^^xsd:float / "1.0"^^xsd:float AS ?float_float)
+  BIND("0.5"^^xsd:float / "1"^^xsd:integer AS ?float_integer)
+  BIND("0.5"^^xsd:float / "1.0"^^xsd:decimal AS ?float_decimal)
+  BIND("1.0"^^xsd:float / "2.0"^^xsd:double AS ?float_double)
+  BIND("1.0"^^xsd:double / "2.0"^^xsd:double AS ?double_double)
+  BIND("1"^^xsd:integer / "2"^^xsd:integer AS ?integer_integer)
+}

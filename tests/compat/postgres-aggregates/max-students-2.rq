@@ -1,0 +1,7 @@
+PREFIX : <http://www.semanticweb.org/user/ontologies/2016/8/untitled-ontology-84#>
+SELECT ?p (MAX(?nb) AS ?v) WHERE {
+  ?p :teaches ?c .
+  ?c :nbStudents ?nb .
+}
+GROUP BY ?p
+ORDER BY ?v

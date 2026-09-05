@@ -1,0 +1,3 @@
+SELECT ?hash WHERE {
+  BIND(SHA256(STR("The Semantic Web")) AS ?hash)
+}

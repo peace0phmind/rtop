@@ -1,0 +1,4 @@
+?timezone="02:00"^^<http://www.w3.org/2001/XMLSchema#string> ?title="Crime and Punishment"@en
+?timezone="02:00"^^<http://www.w3.org/2001/XMLSchema#string> ?title="SPARQL Tutorial"@en
+?timezone="01:00"^^<http://www.w3.org/2001/XMLSchema#string> ?title="The Logic Book: Introduction, Second Edition"@en
+?timezone="01:00"^^<http://www.w3.org/2001/XMLSchema#string> ?title="The Semantic Web"@en

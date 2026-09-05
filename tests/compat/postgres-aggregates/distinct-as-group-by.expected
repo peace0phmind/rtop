@@ -1,0 +1,8 @@
+?v="Barbara."^^<http://www.w3.org/2001/XMLSchema#string> ?y="2"^^<http://www.w3.org/2001/XMLSchema#decimal>
+?v="Diego."^^<http://www.w3.org/2001/XMLSchema#string> ?y="2"^^<http://www.w3.org/2001/XMLSchema#decimal>
+?v="Frank."^^<http://www.w3.org/2001/XMLSchema#string> ?y="2"^^<http://www.w3.org/2001/XMLSchema#decimal>
+?v="Johann."^^<http://www.w3.org/2001/XMLSchema#string> ?y="2"^^<http://www.w3.org/2001/XMLSchema#decimal>
+?v="John."^^<http://www.w3.org/2001/XMLSchema#string> ?y="2"^^<http://www.w3.org/2001/XMLSchema#decimal>
+?v="Mary."^^<http://www.w3.org/2001/XMLSchema#string> ?y="2"^^<http://www.w3.org/2001/XMLSchema#decimal>
+?v="Michael."^^<http://www.w3.org/2001/XMLSchema#string> ?y="2"^^<http://www.w3.org/2001/XMLSchema#decimal>
+?v="Roger."^^<http://www.w3.org/2001/XMLSchema#string> ?y="2"^^<http://www.w3.org/2001/XMLSchema#decimal>

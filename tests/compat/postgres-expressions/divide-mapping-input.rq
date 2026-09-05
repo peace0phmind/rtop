@@ -1,0 +1,9 @@
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX ns: <http://example.org/ns#>
+
+SELECT ?title ?half WHERE {
+  ?x dc:title ?title .
+  ?x ns:price ?price .
+  BIND(?price / 2 AS ?half)
+}
+ORDER BY ?title

@@ -1,0 +1,3 @@
+SELECT ?value WHERE {
+  { SELECT DISTINCT ?value WHERE { VALUES ?value { 2 2 "aa" } } LIMIT 1 }
+}

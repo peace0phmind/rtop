@@ -1,0 +1,8 @@
+PREFIX ofn: <http://www.ontotext.com/sparql/functions/>
+
+SELECT ?days ?weeks WHERE {
+  BIND("1932-02-22"^^xsd:date AS ?start)
+  BIND("1999-12-14"^^xsd:date AS ?end)
+  BIND(ofn:daysBetween(?start, ?end) AS ?days)
+  BIND(ofn:weeksBetween(?start, ?end) AS ?weeks)
+}

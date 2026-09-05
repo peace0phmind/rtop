@@ -1,0 +1,4 @@
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?v WHERE {
+  BIND(xsd:date("1999-12-14T09:30:00"^^xsd:dateTime) AS ?v)
+}

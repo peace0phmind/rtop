@@ -1,0 +1,2 @@
+PREFIX : <http://nested.example.org/>
+SELECT ?p ?v WHERE { ?p :invoiceAmount ?v . }

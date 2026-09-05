@@ -1,0 +1,4 @@
+SELECT ?iri ?uri WHERE {
+  BIND(IRI("urn:john") AS ?iri)
+  BIND(URI("mailto:a@example.test") AS ?uri)
+}

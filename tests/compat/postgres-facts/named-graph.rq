@@ -1,0 +1,4 @@
+PREFIX : <http://www.semanticweb.org/ontop-facts#>
+SELECT ?value WHERE {
+  GRAPH :extra { ?subject ?predicate ?value . }
+}

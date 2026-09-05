@@ -1,0 +1,13 @@
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX ns: <http://example.org/ns#>
+
+SELECT ?iri ?literal ?numeric WHERE {
+  ?x ns:price ?price .
+  ?x ns:discount ?discount .
+  ?x ns:pubYear ?year .
+  ?x dc:title ?title .
+  BIND(isIRI(?title) AS ?iri)
+  BIND(isLiteral(?discount) AS ?literal)
+  BIND(isNumeric(?discount) AS ?numeric)
+}
+ORDER BY ?title

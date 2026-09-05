@@ -1,0 +1,5 @@
+PREFIX : <https://example.test/datatypes#>
+SELECT ?row
+WHERE {
+  ?row :character "Ada   " .
+}

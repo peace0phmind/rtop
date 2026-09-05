@@ -1,0 +1,2 @@
+PREFIX dbpedia: <http://dbpedia.org/ontology/>
+SELECT ?x WHERE { <http://www.imdb.com/name/222> dbpedia:birthName ?x . }

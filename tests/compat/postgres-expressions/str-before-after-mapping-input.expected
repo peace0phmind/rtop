@@ -1,0 +1,4 @@
+?after=""^^<http://www.w3.org/2001/XMLSchema#string> ?afterEmpty="Crime and Punishment"@en ?before=""^^<http://www.w3.org/2001/XMLSchema#string> ?beforeEmpty=""@en ?title="Crime and Punishment"@en
+?after=""^^<http://www.w3.org/2001/XMLSchema#string> ?afterEmpty="SPARQL Tutorial"@en ?before=""^^<http://www.w3.org/2001/XMLSchema#string> ?beforeEmpty=""@en ?title="SPARQL Tutorial"@en
+?after=" Logic Book: Introduction, Second Edition"@en ?afterEmpty="The Logic Book: Introduction, Second Edition"@en ?before="The Logic Book: Introduc"@en ?beforeEmpty=""@en ?title="The Logic Book: Introduction, Second Edition"@en
+?after=" Semantic Web"@en ?afterEmpty="The Semantic Web"@en ?before="The Seman"@en ?beforeEmpty=""@en ?title="The Semantic Web"@en

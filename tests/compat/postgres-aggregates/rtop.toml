@@ -1,0 +1,9 @@
+mapping = "../../../../ontop/test/docker-tests/src/test/resources/distinctInAggregates/university.obda"
+
+[datasource]
+kind = "postgres"
+host = "127.0.0.1"
+port = 55432
+database = "rtop_test"
+user = "rtop"
+password = "rtop"

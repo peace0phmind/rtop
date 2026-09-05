@@ -1,0 +1,11 @@
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?boolean ?date ?decimal ?double ?float ?integer ?string ?stringNumeric WHERE {
+  BIND(xsd:string("true"^^xsd:boolean) AS ?boolean)
+  BIND(xsd:string("1999-12-14"^^xsd:date) AS ?date)
+  BIND(xsd:string("2.0"^^xsd:decimal) AS ?decimal)
+  BIND(xsd:string("0.0"^^xsd:double) AS ?double)
+  BIND(xsd:string("2.0654"^^xsd:float) AS ?float)
+  BIND(xsd:string("19991214"^^xsd:integer) AS ?integer)
+  BIND(xsd:string("abc"^^xsd:string) AS ?string)
+  BIND(xsd:string("2.0654"^^xsd:string) AS ?stringNumeric)
+}

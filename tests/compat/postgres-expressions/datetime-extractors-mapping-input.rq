@@ -1,0 +1,16 @@
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX ns: <http://example.org/ns#>
+
+SELECT ?title ?year ?month ?day ?hours ?minutes ?seconds WHERE {
+  ?x ns:price ?price .
+  ?x ns:discount ?discount .
+  ?x dc:title ?title .
+  ?x ns:pubYear ?publicationDate .
+  BIND(YEAR(?publicationDate) AS ?year)
+  BIND(MONTH(?publicationDate) AS ?month)
+  BIND(DAY(?publicationDate) AS ?day)
+  BIND(HOURS(?publicationDate) AS ?hours)
+  BIND(MINUTES(?publicationDate) AS ?minutes)
+  BIND(SECONDS(?publicationDate) AS ?seconds)
+}
+ORDER BY ?title

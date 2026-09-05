@@ -1,0 +1,6 @@
+PREFIX ex: <http://example.test/>
+SELECT DISTINCT ?person WHERE {
+  { ?person ex:name ?value }
+  UNION
+  { ?person ex:ssn ?value }
+}

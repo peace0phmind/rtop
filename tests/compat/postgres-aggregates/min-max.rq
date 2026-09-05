@@ -1,0 +1,4 @@
+PREFIX : <http://www.semanticweb.org/user/ontologies/2016/8/untitled-ontology-84#>
+SELECT (MIN(?nb) AS ?min) (MAX(?nb) AS ?max) WHERE {
+  ?course a :Course ; :nbStudents ?nb .
+}

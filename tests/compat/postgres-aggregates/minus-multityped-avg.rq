@@ -1,0 +1,15 @@
+PREFIX : <http://www.semanticweb.org/user/ontologies/2016/8/untitled-ontology-84#>
+
+SELECT ?p ?v
+WHERE {
+  ?p a :Professor ;
+     :lastName ?v .
+  MINUS {
+    SELECT ?p (AVG(?n) AS ?v) {
+      { ?p :teaches ?c . ?c :duration ?n }
+      UNION
+      { ?p :teaches ?c . ?p :lastName ?n }
+    } GROUP BY ?p
+  }
+}
+ORDER BY ?v
