@@ -6,7 +6,7 @@ use rtop::{
     VkgRuntime,
 };
 use sqlparser::{
-    ast::{SelectItem, SetExpr, Statement},
+    ast::{Expr, SelectItem, SetExpr, Statement},
     dialect::PostgreSqlDialect,
     parser::Parser,
 };
@@ -453,6 +453,19 @@ fn migrate_v1_rule(
         .map(|capture| capture[1].to_owned())
         .collect::<Vec<_>>();
     if columns.is_empty() {
+        // 没有 qualified placeholder 时不需要重命名绑定，但 --simplify-projection
+        // 仍是 v1-to-v3 的独立转换承诺，不能被提前返回跳过。
+        if simplify_projection {
+            let query = source
+                .trim_start()
+                .strip_prefix("source")
+                .unwrap_or(source)
+                .trim_start();
+            return Ok((
+                target.to_owned(),
+                format!("source\t\t{}", simplify_v1_projection(query)),
+            ));
+        }
         return Ok((target.to_owned(), source.to_owned()));
     }
     let mut aliases = std::collections::BTreeMap::new();
@@ -495,7 +508,11 @@ fn migrate_v1_rule(
     let projection = captures.name("projection").expect("具名捕获存在").as_str();
     let mut rewritten = projection.to_owned();
     for (column, alias) in aliases {
-        rewritten = rewritten.replace(&column, &format!("{column} AS {alias}"));
+        // 同名裸列已经是稳定投影，保留它才能让 --simplify-projection 安全地
+        // 缩为 SELECT *；不同名的 target binding 则仍必须显式 alias。
+        if column != alias {
+            rewritten = rewritten.replace(&column, &format!("{column} AS {alias}"));
+        }
     }
     let start = captures.get(0).expect("完整匹配存在");
     let prefix = &query[..start.start()];
@@ -512,6 +529,17 @@ fn migrate_v1_rule(
 /// 仅在 PostgreSQL parser 确认 projection 是无别名表达式且 source 没有 join 时才改成 `*`。
 /// 与 Ontop v1-to-v3 相同，这保留 WHERE 等 tail；带 alias 的全限定列重命名绝不会被简化。
 fn simplify_v1_projection(query: &str) -> String {
+    // 保守的 fast path：单个裸列既不会改变列名，也不涉及表达式或 JOIN，允许
+    // 直接收敛为 `*`，即使 sqlparser 对遗留 source 的细节无法建立 AST。
+    let simple_projection =
+        Regex::new(r"(?is)^(?P<prefix>\s*select)\s+[A-Za-z_][A-Za-z0-9_]*\s+(?P<from>from\b)");
+    if !query.to_ascii_lowercase().contains(" join ") {
+        if let Ok(pattern) = simple_projection {
+            if pattern.is_match(query) {
+                return pattern.replace(query, "${prefix} * ${from}").into_owned();
+            }
+        }
+    }
     let Ok(statements) = Parser::parse_sql(&PostgreSqlDialect {}, query) else {
         return query.to_owned();
     };
@@ -522,10 +550,11 @@ fn simplify_v1_projection(query: &str) -> String {
         return query.to_owned();
     };
     if select.from.iter().any(|table| !table.joins.is_empty())
-        || !select
-            .projection
-            .iter()
-            .all(|item| matches!(item, SelectItem::UnnamedExpr(_)))
+        || !select.projection.iter().all(|item| {
+            matches!(item, SelectItem::UnnamedExpr(_))
+                || matches!(item, SelectItem::ExprWithAlias { expr: Expr::Identifier(column), alias }
+                    if column.value == alias.value)
+        })
     {
         return query.to_owned();
     }

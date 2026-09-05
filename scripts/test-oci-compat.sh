@@ -75,6 +75,8 @@ docker rm -f "$endpoint" >/dev/null
 sed '/password_file = "secret"/d' "$tmp/rtop.toml" > "$tmp/invalid.toml"
 docker run -d --name "$endpoint" --network "$network" -p "$published_port" \
   -v "$tmp:/etc/rtop:ro" "$image" /etc/rtop/invalid.toml >/dev/null
+port=$(docker port "$endpoint" 8080/tcp | sed -n 's/.*:\([0-9][0-9]*\)$/\1/p')
+[ -n "$port" ]
 until curl -fsS "http://127.0.0.1:$port/healthz" >/dev/null 2>&1; do sleep 1; done
 actual=$(curl -sSG --data-urlencode "query=$ask" "http://127.0.0.1:$port/sparql")
 printf '%s\n' "$actual" | grep -q '^invalid-config:'
@@ -83,6 +85,8 @@ docker rm -f "$endpoint" >/dev/null
 sed 's/host = "postgres"/host = "postgres-unreachable"/' "$tmp/rtop.toml" > "$tmp/unreachable.toml"
 docker run -d --name "$endpoint" --network "$network" -p "$published_port" \
   -v "$tmp:/etc/rtop:ro" "$image" /etc/rtop/unreachable.toml >/dev/null
+port=$(docker port "$endpoint" 8080/tcp | sed -n 's/.*:\([0-9][0-9]*\)$/\1/p')
+[ -n "$port" ]
 until curl -fsS "http://127.0.0.1:$port/healthz" >/dev/null 2>&1; do sleep 1; done
 actual=$(curl -sSG --data-urlencode "query=$ask" "http://127.0.0.1:$port/sparql")
 printf '%s\n' "$actual" | grep -q '^datasource-failure:'

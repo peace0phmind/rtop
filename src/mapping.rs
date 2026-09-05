@@ -1059,10 +1059,37 @@ impl MappingRule {
                 object_validation: None,
             });
         }
-        if variables.is_empty()
-            || variables.len() > 2
-            || variables[0] != query.subject.trim_start_matches('?')
-        {
+        if variables.is_empty() {
+            let mut parameters = Vec::new();
+            let subject_filter = if subject_template.contains('{') {
+                let iri = subject_template.trim_matches('<').trim_matches('>');
+                let projection =
+                    if matches!(&self.subject_term, BindingTerm::Iri) && !self.subject_is_column {
+                        iri_template_projection(iri, &mut parameters)?
+                    } else {
+                        template_projection(iri, &mut parameters)?
+                    };
+                parameters.push(query.subject.trim_matches(['<', '>']).into());
+                Some(format!("{projection} = ${}", parameters.len()))
+            } else {
+                None
+            };
+            return Ok(Plan {
+                sql: format!(
+                    "SELECT 1 FROM ({}) AS rtop_mapping{}",
+                    self.source,
+                    subject_filter
+                        .map(|filter| format!(" WHERE {filter}"))
+                        .unwrap_or_default()
+                ),
+                parameters,
+                variables: Vec::new(),
+                terms: Vec::new(),
+                iri_bases: Vec::new(),
+                object_validation: None,
+            });
+        }
+        if variables.len() > 2 || variables[0] != query.subject.trim_start_matches('?') {
             return Err(RuntimeError::NotFullyTranslatable(
                 "最小切片只投影 subject 变量".into(),
             ));

@@ -474,7 +474,6 @@ docker exec -i "$name" psql -U rtop -d rtop_test < "$root/tests/compat/postgres-
 docker exec -i "$name" psql -U rtop -d rtop_test < "$root/tests/compat/postgres-constraints/init.sql"
 docker exec -i "$name" psql -U rtop -d rtop_test < "$root/tests/compat/postgres-metamapping/epnet-init.sql"
 docker exec -i "$name" psql -U rtop -d rtop_test < "$root/tests/compat/postgres-annotation/movie-init.sql"
-docker exec -i "$name" psql -U rtop -d rtop_test < "$root/tests/compat/postgres-annotation/doid-init.sql"
 docker exec -i "$name" psql -U rtop -d rtop_test < "$root/tests/compat/postgres-nested/init.sql"
 (
   cd "$root"
@@ -487,7 +486,7 @@ docker exec -i "$name" psql -U rtop -d rtop_test < "$root/tests/compat/postgres-
 # TBox。subclass、facts 的 domain/range、mapping subProperty 与 inverse 都必须在
 # 同一 PostgreSQL 17 runtime 中给出 RDF term；互斥 type 则在构建期稳定拒绝。
 docker exec -i "$name" psql -U rtop -d rtop_test < "$root/../ontop/binding/rdf4j/src/test/resources/tbox-facts/university.sql"
-actual=$(cd "$root" && cargo run --quiet -- query tests/compat/postgres-ontology/university.toml tests/compat/postgres-ontology/subclass-imported.rq)
+actual=$(cd "$root" && cargo run --quiet -- query tests/compat/postgres-ontology/university-mapping.toml tests/compat/postgres-ontology/subclass-imported.rq)
 expected=$(cat "$root/tests/compat/postgres-ontology/subclass-imported.expected")
 assert_output "$actual" "$expected"
 for query in domain-fact range-fact; do
@@ -664,6 +663,10 @@ done
 actual=$(cd "$root" && cargo run --quiet -- query tests/compat/postgres-annotation/movie-ontology.toml tests/compat/postgres-annotation/ontology-label.rq)
 rows=$(printf '%s\n' "$actual" | rg -c '^\?r=' || true)
 [ "$rows" = "4" ]
+# `postgres-datatype-manifest` 已用同名表验证标识符语义；DOID fixture 需要其
+# 自己的 NOT NULL schema 和 76 行输入，因而在两项独立断言之间清除该表。
+docker exec "$name" psql -U rtop -d rtop_test -c 'DROP TABLE tb_books' >/dev/null
+docker exec -i "$name" psql -U rtop -d rtop_test < "$root/tests/compat/postgres-annotation/doid-init.sql"
 actual=$(cd "$root" && cargo run --quiet -- query tests/compat/postgres-annotation/doid.toml tests/compat/postgres-annotation/doid-comment.rq)
 rows=$(printf '%s\n' "$actual" | rg -c '^\?x=<http://purl\.obolibrary\.org/obo/DOID_0060309>$' || true)
 [ "$rows" = "76" ]

@@ -26,6 +26,8 @@ jobs:
           ln -s "$GITHUB_WORKSPACE/ontop" "$GITHUB_WORKSPACE/../ontop"
       - name: 安装 Rust
         uses: dtolnay/rust-toolchain@1.85.1
+        with:
+          components: rustfmt
       - name: 运行 PostgreSQL 17 最终 gate
         shell: bash
         run: |

@@ -262,7 +262,7 @@ fn bind_predefined_query(
     definitions: &BTreeMap<String, PredefinedParameter>,
     values: &BTreeMap<String, String>,
 ) -> Result<String, RuntimeError> {
-    let mut bindings = String::new();
+    let mut bound_query = query.to_owned();
     for (name, definition) in definitions {
         let Some(value) = values.get(name) else {
             if definition.required {
@@ -288,17 +288,15 @@ fn bind_predefined_query(
                 value.replace('\\', "\\\\").replace('"', "\\\"")
             )
         };
-        bindings.push_str(&format!(" VALUES ?{name} {{ {term} }}"));
+        // 预定义查询的参数是服务端已验证的常量。直接替换变量可同时作用于
+        // CONSTRUCT template 与 WHERE，避免把 VALUES 注入 template 边界而改变
+        // 查询代数；此 endpoint 的固定参数名不允许变量名前缀歧义。
+        bound_query = bound_query.replace(&format!("?{name}"), &term);
     }
-    let Some(position) = query.find('{') else {
+    if !bound_query.contains('{') {
         return Err(RuntimeError::MalformedSparql("预定义查询缺少图模式".into()));
-    };
-    Ok(format!(
-        "{}{}{}",
-        &query[..position + 1],
-        bindings,
-        &query[position + 1..]
-    ))
+    }
+    Ok(bound_query)
 }
 
 fn reformulate(
@@ -422,8 +420,29 @@ fn percent_decode(value: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::{bindings_json, negotiate};
+    use super::{bind_predefined_query, bindings_json, negotiate, PredefinedParameter};
     use crate::{Binding, RdfTerm};
+    use std::collections::BTreeMap;
+
+    #[test]
+    fn binds_predefined_iri_in_construct_template_and_where() {
+        let definitions = BTreeMap::from([(
+            "person".into(),
+            PredefinedParameter {
+                kind: "IRI".into(),
+                required: true,
+            },
+        )]);
+        let values = BTreeMap::from([("person".into(), "https://example.test/person/1".into())]);
+        let query = bind_predefined_query(
+            "CONSTRUCT { ?person <https://example.test/type> <https://example.test/Person> } WHERE { ?person <https://example.test/type> <https://example.test/Person> }",
+            &definitions,
+            &values,
+        )
+        .unwrap();
+        assert!(!query.contains("?person"));
+        assert_eq!(query.matches("<https://example.test/person/1>").count(), 2);
+    }
 
     #[test]
     fn serializes_sparql_json_bindings_with_rdf_terms() {

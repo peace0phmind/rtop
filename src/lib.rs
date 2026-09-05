@@ -506,10 +506,14 @@ impl<D: DataSource> VkgRuntime<D> {
                     }
                     candidates.into_iter().filter_map(|candidate| {
                         (graph_matches(query.graph.as_deref(), candidate.graph.as_ref())
-                            && self.ontology.is_subproperty_of(
-                                &candidate.predicate,
-                                query.predicate.trim_matches(['<', '>']),
-                            )
+                            // 变量谓词由 `fact_matches` 绑定；它不是要参与 TBox
+                            // 子属性比较的常量 IRI。否则 `GRAPH { ?s ?p ?o }`
+                            // 会错误丢弃所有 facts（含 N-Quads 的具名图）。
+                            && (query.predicate.starts_with('?')
+                                || self.ontology.is_subproperty_of(
+                                    &candidate.predicate,
+                                    query.predicate.trim_matches(['<', '>']),
+                                ))
                             && fact_matches(query, &candidate, &self.ontology))
                         .then(|| fact_binding(query, &candidate, &self.ontology))
                         .flatten()
@@ -2308,6 +2312,9 @@ fn fact_binding(
         } else {
             return None;
         }
+    }
+    if let Some(name) = pattern.predicate.strip_prefix('?') {
+        binding.insert(name.into(), RdfTerm::Iri(fact.predicate.clone()));
     }
     Some(binding)
 }

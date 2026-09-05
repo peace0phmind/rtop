@@ -155,7 +155,9 @@ request() {
 
 [ "$(request "http://127.0.0.1:$port/ontology")" = 200 ]
 grep -qi '^Content-Type: text/plain; charset=utf-8' "$tmp/headers"
-grep -q 'example.test/Person' "$tmp/body"
+# `/ontology` 下载的是固定 ontology 文件本身；该资产用 ex: 前缀表达 Person，
+# 因而不能把 serializer 未承诺的 IRI 展开当作 HTTP 契约。
+grep -q '^ex:Person a <http://www.w3.org/2002/07/owl#Class> \.$' "$tmp/body"
 [ "$(request -X POST "http://127.0.0.1:$port/ontology")" = 200 ]
 
 [ "$(request -H 'Accept: text/turtle' "http://127.0.0.1:$port/predefined/person?person=https%3A%2F%2Fexample.test%2Fperson%2F1")" = 200 ]

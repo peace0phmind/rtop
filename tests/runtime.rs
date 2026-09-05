@@ -2775,6 +2775,49 @@ fn queries_nquads_facts_in_a_named_graph_without_mixing_the_default_graph() {
 }
 
 #[test]
+fn binds_a_variable_predicate_for_nquads_facts_in_a_named_graph() {
+    let dir = tempfile::tempdir().unwrap();
+    let mapping = dir.path().join("x.obda");
+    let facts = dir.path().join("facts.nq");
+    std::fs::write(&mapping, "[MappingDeclaration]\ntarget <https://example.test/person/{id}> <https://example.test/type> <https://example.test/Person> .\nsource SELECT id FROM people\n").unwrap();
+    std::fs::write(&facts, "<https://example.test/s> <https://example.test/p> \"2022\" <https://example.test/extra> .\n").unwrap();
+    let spec = KnowledgeGraphSpec {
+        mapping_file: mapping,
+        facts_file: Some(facts),
+        facts_format: None,
+        facts_base_iri: None,
+        ontology_file: None,
+    };
+    let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
+    let result = runtime
+        .query("SELECT ?predicate ?value { GRAPH <https://example.test/extra> { ?subject ?predicate ?value } }")
+        .unwrap();
+    assert_eq!(
+        format!("{result:?}"),
+        "Bindings([{\"predicate\": Iri(\"https://example.test/p\"), \"value\": Literal { value: \"2022\", datatype: None, language: None }}])"
+    );
+}
+
+#[test]
+fn answers_a_fully_bound_ask_against_a_template_mapping() {
+    let dir = tempfile::tempdir().unwrap();
+    let mapping = dir.path().join("x.obda");
+    std::fs::write(&mapping, "[MappingDeclaration]\ntarget <https://example.test/person/{id}> <https://example.test/type> <https://example.test/Person> .\nsource SELECT id FROM people\n").unwrap();
+    let spec = KnowledgeGraphSpec {
+        mapping_file: mapping,
+        facts_file: None,
+        facts_format: None,
+        facts_base_iri: None,
+        ontology_file: None,
+    };
+    let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
+    let result = runtime
+        .query("ASK { <https://example.test/person/1> <https://example.test/type> <https://example.test/Person> }")
+        .unwrap();
+    assert_eq!(format!("{result:?}"), "Boolean(true)");
+}
+
+#[test]
 fn queries_rdfxml_facts_with_the_explicit_base_iri_from_the_ontop_facts_case() {
     let dir = tempfile::tempdir().unwrap();
     let mapping = dir.path().join("x.obda");
