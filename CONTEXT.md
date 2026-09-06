@@ -78,3 +78,15 @@ _Avoid_: 串行可用, 进程级取消
 
 **结果顺序断言**：未含 `ORDER BY` 的 tuple 结果按 SPARQL bag 语义比较，含 `ORDER BY` 的结果按规范化序列比较；不将偶然数据库返回顺序视为兼容契约。
 _Avoid_: 总是逐行序列比较, 忽略多重性
+
+**三层功能分母**：固定 Ontop 基线中可由 PostgreSQL VKG 外部观察的 OWL 2 QL 本体、原生 OBDA 映射与 SPARQL 功能原子；由源码入口、启用测试、manifest、fixture 及明确 ignore 行为共同导出。Java 对象 API 不在分母，但其承载的三层语义不得遗漏。
+_Avoid_: Rust 已有分支, 当前业务查询子集, Java API 数量
+
+**闭合矩阵**：每个三层功能原子到 Ontop 来源、行为定义、rtop 函数、Ontop-vs-rtop 差分用例、结果 provenance、代码覆盖和 Issue 的完整映射；任何空字段均表示该原子未完成。
+_Avoid_: 单独的测试数量, 单独的覆盖账本, 硬编码预期
+
+**差分证据**：Ontop 与 rtop 在同一固定 PostgreSQL 夹具上，对成功、失败、拒绝、ignore、边界及资源行为进行规范化比较的结果；tuple 保留 RDF term、bag、多重性和必要的顺序。
+_Avoid_: 仅 SQL oracle, 仅 rtop 预期值
+
+**层代码覆盖率**：闭合矩阵用例对本体、映射、SPARQL 与运行时层实现路径的行/分支覆盖度；它辅助证明测试经过实现路径，但不能替代差分证据。
+_Avoid_: 语义等价证明, 全仓库测试数量
