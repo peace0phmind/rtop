@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-suite-manifest-filters-boolean-eq",
+  "mapping_behavior": "DockerPostgresTestSuite stockexchange filters boolean-eq manifest query 的 SPARQL JSON bindings",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/docker-tests/src/test/resources/testcases-docker/virtual-mode/stockexchange/filters/{stockexchange-pgsql.obda,stockexchange.owl,boolean-eq.rq}; test/docker-tests/src/test/resources/dump/stockexchange-create-pgsql.sql",
+  "query": "../ontop/test/docker-tests/src/test/resources/testcases-docker/virtual-mode/stockexchange/filters/boolean-eq.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "c939b25586a2313aff1f6ee07c0154e064c927c5e787d0ee88a29360f3aaeeef",
+    "rtop_raw": "dd569a202bd26bc551835b9799f264588dc855e910bf562d5697bf25adb62aa8",
+    "normalized": "e69d789bbe0619af463d253e2ef0b796451e0753d7c50ebe15428d5cbe1d4fdf"
+  }
+}

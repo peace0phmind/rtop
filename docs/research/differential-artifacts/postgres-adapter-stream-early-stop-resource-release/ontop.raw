@@ -1,0 +1,1 @@
+{"baseline":"5ec07573b18513f33dfcd59ac45fe26a81f9cdbd","scope":"PostgreSQL driver stream lifecycle","result":"Ontop Java adapter exposes no Rust-equivalent PostgresDataSource stream-control API; this replacement driver contract is independently exercised against PostgreSQL 17 rather than falsely compared as an API match."}

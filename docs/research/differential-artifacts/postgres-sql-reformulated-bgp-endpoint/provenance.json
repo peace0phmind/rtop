@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-sql-reformulated-bgp-endpoint",
+  "mapping_behavior": "native OBDA two-triple shared-variable BGP with projection and LIMIT over PostgreSQL endpoint",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "client/endpoint/src/main/java/it/unibz/inf/ontop/endpoint/controllers/SparqlQueryController.java; tests/compat/{postgres-query-kinds/init.sql,postgres-http/mapping-sql-seam.obda,postgres-http/sql-seam.rq}",
+  "query": "tests/compat/postgres-http/sql-seam.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "d924627502575c2d93bc9b86fe6a884a8866403d08fd6ff85b179d1f4df4e4f4",
+    "rtop_raw": "35c6dd1b47692e71a53eb6a81cd6cb23917790eea2811a4c9560c4eee09b48c6",
+    "normalized": "47a2f4f52e252e1b4a55ded65703531db746ea07244f74b513273637f15dfae8"
+  }
+}

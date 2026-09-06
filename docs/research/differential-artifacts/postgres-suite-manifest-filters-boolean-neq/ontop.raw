@@ -1,0 +1,67 @@
+{
+  "head" : {
+    "vars" : [
+      "x",
+      "amount"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-661"
+        },
+        "amount" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-660"
+        },
+        "amount" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-662"
+        },
+        "amount" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-663"
+        },
+        "amount" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-664"
+        },
+        "amount" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        }
+      }
+    ]
+  }
+}

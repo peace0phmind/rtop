@@ -1,0 +1,80 @@
+{
+  "head": {
+    "vars": [
+      "amount",
+      "negativeHalf",
+      "rounded",
+      "sum"
+    ]
+  },
+  "results": {
+    "bindings": [
+      {
+        "amount": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "-1.50"
+        },
+        "negativeHalf": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "-3"
+        },
+        "rounded": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "-2"
+        },
+        "sum": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "-1.30"
+        }
+      },
+      {
+        "amount": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "0.10"
+        },
+        "negativeHalf": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "-3"
+        },
+        "rounded": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "0"
+        },
+        "sum": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "0.30"
+        }
+      },
+      {
+        "amount": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "2.50"
+        },
+        "negativeHalf": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "-3"
+        },
+        "rounded": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "3"
+        },
+        "sum": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "2.70"
+        }
+      }
+    ]
+  }
+}

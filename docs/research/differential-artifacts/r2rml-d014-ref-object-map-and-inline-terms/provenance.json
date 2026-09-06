@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d014-ref-object-map-and-inline-terms",
+  "mapping_behavior": "RefObjectMap join with inline IRI and literal terms",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D014/{create.sql,r2rmlb.ttl}",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "d118d50a2d83227849634ee960eeec050a4fda426810e06f80149b83d164f0b8",
+    "rtop_raw": "53346b4815b9eb6b89fb6cee000bbb22ca37071695873ce03c20a56dc09c77a6",
+    "normalized": "b2d6d1933bc46dd60f9d30facfda6aa5d73115bc563ecd3b5724ee59a06ad3de"
+  }
+}

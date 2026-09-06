@@ -1,0 +1,26 @@
+{
+  "json": {
+    "status": "200",
+    "body": "{\"head\":{\"vars\":[\"person\",\"name\"]},\"results\":{\"bindings\":[{\"name\":{\"type\":\"literal\",\"value\":\"Ada\"},\"person\":{\"type\":\"uri\",\"value\":\"https://example.test/person/1\"}}]}}"
+  },
+  "xml": {
+    "status": "200",
+    "body": "<?xml version=\"1.0\"?><sparql xmlns=\"http://www.w3.org/2005/sparql-results#\"><head><variable name=\"person\"/><variable name=\"name\"/></head><results><result><binding name=\"name\"><literal>Ada</literal></binding><binding name=\"person\"><uri>https://example.test/person/1</uri></binding></result></results></sparql>"
+  },
+  "csv": {
+    "status": "200",
+    "body": "person,name\nhttps://example.test/person/1,Ada\n"
+  },
+  "tsv": {
+    "status": "200",
+    "body": "?person\t?name\n<https://example.test/person/1>\t\"Ada\"\n"
+  },
+  "ntriples": {
+    "status": "200",
+    "body": "<https://example.test/person/1> <https://example.test/name> \"Ada\" ."
+  },
+  "unsupported": {
+    "status": "406",
+    "body": "请求的 Accept 不支持该结果格式"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-facts-nquads-named-graph-endpoint",
+  "mapping_behavior": "N-Quads facts preserve the named graph and typed integer binding alongside PostgreSQL mapping input",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "binding/rdf4j/src/test/{java/it/unibz/inf/ontop/rdf4j/repository/FactsFileTest{,NQuads}.java,resources/facts/{mapping.obda,ontology.ttl,facts.nq}}; tests/compat/postgres-facts/{init.sql,named-graph.rq}",
+  "query": "tests/compat/postgres-facts/named-graph.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "920d84ee3269824a7b0bf6d426ef9e0eb5c235ddd65475127accc8e101e78d24",
+    "rtop_raw": "12e88e4aa86cd58ed1bdcc816941501567ce1ba33decaf394db178383a6bf47f",
+    "normalized": "6f812e8739ea19a182bb5041f9c58a01025a90f322f7d04eb5a4929043c3d2f2"
+  }
+}

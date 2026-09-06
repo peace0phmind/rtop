@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-property-path-exists-endpoint",
+  "mapping_behavior": "PostgreSQL bounded property path and correlated EXISTS/NOT EXISTS",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边 HTTP JSON 结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "tests/compat/postgres-http/{algebra-init.sql,mapping-algebra-bag.obda,property-path-exists.rq,not-exists-correlation.rq}",
+  "query": "property path EXISTS and correlated NOT EXISTS",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container endpoint",
+    "rtop": "Rust host endpoint"
+  },
+  "sha256": {
+    "ontop_raw": "22bd9ad1fa7ed0a3fbd18154836045785b4f48557cd0590b3a53c97b514f63fb",
+    "rtop_raw": "db6b5f8e60e65ba7c51974f57aabc603cb11827af3d815d58afae902db8bb6d0",
+    "normalized": "2b195eee0cee9db1549b976606d85226819e3781cae94a5987a56842ab46e9fc"
+  }
+}

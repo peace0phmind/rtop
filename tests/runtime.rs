@@ -19,6 +19,17 @@ impl DataSource for PairSource {
     }
 }
 
+struct NamedGraphMappingSource;
+impl DataSource for NamedGraphMappingSource {
+    fn execute(&mut self, _: &str, _: &[String]) -> Result<Vec<Vec<Option<String>>>, RuntimeError> {
+        Ok(vec![vec![
+            Some("https://example.test/s".into()),
+            Some("named value".into()),
+            Some("https://example.test/graph".into()),
+        ]])
+    }
+}
+
 struct D005Source;
 impl DataSource for D005Source {
     fn execute(
@@ -775,7 +786,7 @@ fn distinguishes_invalid_and_unsupported_sparql() {
     ));
     assert!(matches!(
         runtime.query("ASK { ?s ?p ?o }"),
-        Err(RuntimeError::UnsupportedSparql(_))
+        Err(RuntimeError::NotFullyTranslatable(_))
     ));
 }
 
@@ -913,7 +924,7 @@ fn evaluates_nested_arithmetic_before_numeric_bind_functions() {
     let result = runtime.query("SELECT ?abs ?half WHERE { BIND(ABS((10 - 0.15 * 10) - 10) AS ?abs) BIND(10 / 2 AS ?half) }").unwrap();
     assert!(
         matches!(result, rtop::QueryResult::Bindings(rows) if rows == vec![std::collections::BTreeMap::from([
-            ("abs".into(), RdfTerm::Literal { value: "1.5".into(), datatype: Some("http://www.w3.org/2001/XMLSchema#decimal".into()), language: None }),
+            ("abs".into(), RdfTerm::Literal { value: "1.50".into(), datatype: Some("http://www.w3.org/2001/XMLSchema#decimal".into()), language: None }),
             ("half".into(), RdfTerm::Literal { value: "5".into(), datatype: Some("http://www.w3.org/2001/XMLSchema#decimal".into()), language: None }),
         ])])
     );
@@ -1118,6 +1129,36 @@ fn evaluates_single_variable_values_and_binds_each_value() {
 }
 
 #[test]
+fn filters_an_in_match_when_a_later_candidate_has_an_expression_error() {
+    let dir = tempfile::tempdir().unwrap();
+    let mapping = dir.path().join("x.obda");
+    let facts = dir.path().join("facts.ttl");
+    std::fs::write(
+        &mapping,
+        "[MappingDeclaration]\ntarget <https://example.test/unused/{id}> <https://example.test/type> <https://example.test/Unused> .\nsource SELECT id FROM people\n",
+    )
+    .unwrap();
+    std::fs::write(
+        &facts,
+        "<https://example.test/person/1> <https://example.test/type> <https://example.test/Person> .",
+    )
+    .unwrap();
+    let spec = KnowledgeGraphSpec {
+        mapping_file: mapping,
+        facts_file: Some(facts),
+        facts_format: None,
+        facts_base_iri: None,
+        ontology_file: None,
+        xml_catalog_file: None,
+    };
+    let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
+    let result = runtime
+        .query("SELECT ?person WHERE { ?person <https://example.test/type> <https://example.test/Person> . FILTER(?person IN (<https://example.test/person/1>, 1 / 0)) }")
+        .unwrap();
+    assert!(matches!(result, rtop::QueryResult::Bindings(rows) if rows.is_empty()));
+}
+
+#[test]
 fn preserves_left_rows_for_optional_patterns_and_merges_matches() {
     let dir = tempfile::tempdir().unwrap();
     let mapping = dir.path().join("x.obda");
@@ -1268,6 +1309,28 @@ fn keeps_rows_when_bind_substr_errors_after_nested_subquery_union() {
             std::collections::BTreeMap::from([("b".into(), RdfTerm::Literal { value: "2".into(), datatype: Some("http://www.w3.org/2001/XMLSchema#integer".into()), language: None }), ("v".into(), RdfTerm::Literal { value: "yy".into(), datatype: Some("http://www.w3.org/2001/XMLSchema#string".into()), language: None })]),
             std::collections::BTreeMap::from([("b".into(), RdfTerm::Literal { value: "aa".into(), datatype: None, language: None })]),
         ])
+    );
+}
+
+#[test]
+fn preserves_an_empty_solution_mapping_when_all_bind_casts_error() {
+    let dir = tempfile::tempdir().unwrap();
+    let mapping = dir.path().join("x.obda");
+    std::fs::write(&mapping, "[MappingDeclaration]\ntarget <https://example.test/person/{id}> <https://example.test/type> <https://example.test/Person> .\nsource SELECT id FROM people\n").unwrap();
+    let spec = KnowledgeGraphSpec {
+        mapping_file: mapping,
+        facts_file: None,
+        facts_format: None,
+        facts_base_iri: None,
+        ontology_file: None,
+        xml_catalog_file: None,
+    };
+    let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
+    let result = runtime
+        .query("PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\nSELECT ?decimal ?float WHERE { BIND(xsd:decimal(\"not-a-number\"^^xsd:string) AS ?decimal) BIND(xsd:float(\"not-a-number\"^^xsd:string) AS ?float) }")
+        .unwrap();
+    assert!(
+        matches!(result, rtop::QueryResult::Bindings(rows) if rows == vec![std::collections::BTreeMap::new()])
     );
 }
 
@@ -1710,17 +1773,9 @@ fn evaluates_bounded_property_paths_and_correlated_exists_against_facts() {
         && rows[0].get("person") == Some(&RdfTerm::Iri("https://example.test/alice".into())))
     );
 
-    let correlated = runtime
-        .query("PREFIX ex: <https://example.test/>\nSELECT ?subject ?value { ?subject ex:value ?value FILTER NOT EXISTS { ?subject ex:other ?other . FILTER(?value = ?other) } }")
-        .unwrap();
+    let correlated = runtime.query("PREFIX ex: <https://example.test/>\nSELECT ?subject ?value { ?subject ex:value ?value FILTER NOT EXISTS { ?subject ex:other ?other . FILTER(?value = ?other) } }");
     assert!(
-        matches!(correlated, rtop::QueryResult::Bindings(rows) if rows.len() == 1
-        && rows[0].get("subject") == Some(&RdfTerm::Iri("https://example.test/b".into()))
-        && rows[0].get("value") == Some(&RdfTerm::Literal {
-            value: "3.0".into(),
-            datatype: Some("http://www.w3.org/2001/XMLSchema#decimal".into()),
-            language: None,
-        }))
+        matches!(correlated, Err(RuntimeError::NotFullyTranslatable(message)) if message.contains("EXISTS subquery"))
     );
 }
 
@@ -1793,6 +1848,26 @@ fn evaluates_manifest_style_equality_filters_and_semicolon_patterns() {
     ] {
         assert!(matches!(runtime.query(query), Ok(rtop::QueryResult::Bindings(rows)) if rows.len() == 1));
     }
+}
+
+#[test]
+fn does_not_equate_datetime_literals_with_different_timezone_instants() {
+    let dir = tempfile::tempdir().unwrap();
+    let mapping = dir.path().join("x.obda");
+    let facts = dir.path().join("facts.ttl");
+    std::fs::write(&mapping, "[MappingDeclaration]\ntarget <https://example.test/person/{id}> <https://example.test/type> <https://example.test/Person> .\nsource SELECT id FROM people\n").unwrap();
+    std::fs::write(&facts, "<https://example.test/a> <https://example.test/timestamp> \"2008-04-02T00:00:00Z\"^^<http://www.w3.org/2001/XMLSchema#dateTime> .").unwrap();
+    let spec = KnowledgeGraphSpec {
+        mapping_file: mapping,
+        facts_file: Some(facts),
+        facts_format: None,
+        facts_base_iri: None,
+        ontology_file: None,
+        xml_catalog_file: None,
+    };
+    let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
+    let result = runtime.query("SELECT ?x WHERE { ?x <https://example.test/timestamp> ?d FILTER (?d = \"2008-04-02T00:00:00-06:00\"^^<http://www.w3.org/2001/XMLSchema#dateTime>) }").unwrap();
+    assert!(matches!(result, rtop::QueryResult::Bindings(rows) if rows.is_empty()));
 }
 
 #[test]
@@ -2819,6 +2894,81 @@ fn matches_a_native_obda_simple_literal_against_an_xsd_string_query_literal() {
 }
 
 #[test]
+fn matches_an_explicit_xsd_string_mapping_literal_against_an_xsd_string_filter() {
+    struct Source;
+    impl DataSource for Source {
+        fn execute(
+            &mut self,
+            _: &str,
+            _: &[String],
+        ) -> Result<Vec<Vec<Option<String>>>, RuntimeError> {
+            Ok(vec![vec![Some("1".into()), Some("2013-03-18".into())]])
+        }
+    }
+
+    let dir = tempfile::tempdir().unwrap();
+    let mapping = dir.path().join("x.obda");
+    std::fs::write(
+        &mapping,
+        "[PrefixDeclaration]\nxsd: http://www.w3.org/2001/XMLSchema#\n[MappingDeclaration]\ntarget <https://example.test/date/{id}> <https://example.test/date> {value}^^xsd:string .\nsource SELECT id, value FROM dates\n",
+    )
+    .unwrap();
+    let spec = KnowledgeGraphSpec {
+        mapping_file: mapping,
+        facts_file: None,
+        facts_format: None,
+        facts_base_iri: None,
+        ontology_file: None,
+        xml_catalog_file: None,
+    };
+    let mut runtime = VkgRuntime::new(spec, Source).unwrap();
+    let result = runtime.query("PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\nSELECT ?date ?value { ?date <https://example.test/date> ?value FILTER (?value = \"2013-03-18\"^^xsd:string) }");
+    assert!(
+        matches!(result, Ok(rtop::QueryResult::Bindings(ref rows)) if rows.len() == 1),
+        "{result:?}"
+    );
+}
+
+#[test]
+fn matches_a_timestamptz_string_mapping_against_an_equivalent_offset_filter() {
+    struct Source;
+    impl DataSource for Source {
+        fn execute(
+            &mut self,
+            _: &str,
+            _: &[String],
+        ) -> Result<Vec<Vec<Option<String>>>, RuntimeError> {
+            Ok(vec![vec![
+                Some("1".into()),
+                Some("2013-03-19T02:12:10+00:00".into()),
+            ]])
+        }
+    }
+
+    let dir = tempfile::tempdir().unwrap();
+    let mapping = dir.path().join("x.obda");
+    std::fs::write(
+        &mapping,
+        "[PrefixDeclaration]\nxsd: http://www.w3.org/2001/XMLSchema#\n[MappingDeclaration]\ntarget <https://example.test/date/{id}> <https://example.test/date> {value}^^xsd:string .\nsource SELECT id, value FROM dates\n",
+    )
+    .unwrap();
+    let spec = KnowledgeGraphSpec {
+        mapping_file: mapping,
+        facts_file: None,
+        facts_format: None,
+        facts_base_iri: None,
+        ontology_file: None,
+        xml_catalog_file: None,
+    };
+    let mut runtime = VkgRuntime::new(spec, Source).unwrap();
+    let result = runtime.query("PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\nSELECT ?date ?value { ?date <https://example.test/date> ?value FILTER (?value = \"2013-03-19T03:12:10+01:00\"^^xsd:string) }");
+    assert!(
+        matches!(result, Ok(rtop::QueryResult::Bindings(ref rows)) if rows.len() == 1),
+        "{result:?}"
+    );
+}
+
+#[test]
 fn applies_ontology_domain_and_range_axioms_to_facts() {
     let dir = tempfile::tempdir().unwrap();
     let mapping = dir.path().join("x.obda");
@@ -2932,6 +3082,42 @@ fn queries_nquads_facts_in_a_named_graph_without_mixing_the_default_graph() {
         .query("SELECT ?value FROM NAMED <https://example.test/extra> { GRAPH <https://example.test/extra> { <https://example.test/s> <https://example.test/p> ?value } }")
         .unwrap();
     assert!(matches!(from_named, rtop::QueryResult::Bindings(rows) if rows.len() == 1));
+}
+
+#[test]
+fn projects_a_variable_named_graph_from_a_mapping() {
+    let dir = tempfile::tempdir().unwrap();
+    let mapping = dir.path().join("named-graph.ttl");
+    std::fs::write(
+        &mapping,
+        r#"@prefix rr: <http://www.w3.org/ns/r2rml#> .
+<map> a rr:TriplesMap;
+  rr:logicalTable [ rr:tableName "source" ];
+  rr:subjectMap [ rr:constant <https://example.test/s>; rr:graph <https://example.test/graph> ];
+  rr:predicateObjectMap [ rr:predicate <https://example.test/p>; rr:objectMap [ rr:constant "named value" ] ] .
+"#,
+    )
+    .unwrap();
+    let spec = KnowledgeGraphSpec {
+        mapping_file: mapping,
+        facts_file: None,
+        facts_format: None,
+        facts_base_iri: None,
+        ontology_file: None,
+        xml_catalog_file: None,
+    };
+    let mut runtime = VkgRuntime::new(spec, NamedGraphMappingSource).unwrap();
+    let result = runtime
+        .query("SELECT ?s ?p ?o ?g WHERE { GRAPH ?g { ?s ?p ?o } }")
+        .unwrap();
+    assert!(
+        matches!(result, rtop::QueryResult::Bindings(rows) if rows == vec![std::collections::BTreeMap::from([
+            ("s".into(), RdfTerm::Iri("https://example.test/s".into())),
+            ("p".into(), RdfTerm::Iri("https://example.test/p".into())),
+            ("o".into(), RdfTerm::Literal { value: "named value".into(), datatype: None, language: None }),
+            ("g".into(), RdfTerm::Iri("https://example.test/graph".into())),
+        ])])
+    );
 }
 
 #[test]
@@ -3304,7 +3490,7 @@ fn combines_turtle_facts_and_mapping_results_from_ontop_facts_file_test() {
 }
 
 #[test]
-fn rejects_disjoint_type_facts_from_ontop_university_tbox() {
+fn accepts_disjoint_type_facts_like_the_fixed_ontop_endpoint() {
     let dir = tempfile::tempdir().unwrap();
     let mapping = dir.path().join("mapping.obda");
     let facts = dir.path().join("facts.ttl");
@@ -3320,8 +3506,13 @@ fn rejects_disjoint_type_facts_from_ontop_university_tbox() {
         ontology_file: Some(ontology),
         xml_catalog_file: None,
     };
-    assert!(
-        matches!(VkgRuntime::new(spec, FakeSource { sql: String::new() }), Err(RuntimeError::Ontology(message)) if message.contains("ontology inconsistent"))
+    let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
+    let result = runtime
+        .query("SELECT ?s WHERE { ?s a <http://example.org/voc#Course> }")
+        .unwrap();
+    assert_eq!(
+        format!("{result:?}"),
+        "Bindings([{\"s\": Iri(\"https://example.test/alice\")}])"
     );
 }
 

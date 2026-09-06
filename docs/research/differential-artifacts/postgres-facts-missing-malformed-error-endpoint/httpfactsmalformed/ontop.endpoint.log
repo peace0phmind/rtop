@@ -1,0 +1,195 @@
+-------------------------------------------
+
+    ####    #   #   #####    ####    #####
+   #    #   ##  #     #     #    #   #    #
+   #    #   # # #     #     #    #   #####
+   #    #   #  ##     #     #    #   #
+    ####    #   #     #      ####    #
+
+   v5.6.0-SNAPSHOT
+   (Java 17.0.19, Linux 6.8.0-137-generic)
+-------------------------------------------
+
+
+
+
+12:05:04.869 |-INFO  in i.u.i.o.e.OntopEndpointApplication - Starting OntopEndpointApplication v5.6.0-SNAPSHOT using Java 17.0.19 on 24a4fece4edd with PID 1 (/opt/ontop/lib/ontop-endpoint-5.6.0-SNAPSHOT.jar started by root in /opt/ontop)
+12:05:04.870 |-INFO  in i.u.i.o.e.OntopEndpointApplication - No active profile set, falling back to 1 default profile: "default"
+12:05:05.335 |-INFO  in o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+12:05:05.340 |-INFO  in o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+12:05:05.341 |-INFO  in o.a.catalina.core.StandardService - Starting service [Tomcat]
+12:05:05.341 |-INFO  in o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.117]
+12:05:05.389 |-INFO  in o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+12:05:05.390 |-INFO  in o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 501 ms
+12:05:05.897 |-WARN  in o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'sparqlQueryController' defined in URL [jar:file:/opt/ontop/lib/ontop-endpoint-5.6.0-SNAPSHOT.jar!/it/unibz/inf/ontop/endpoint/controllers/SparqlQueryController.class]: Unsatisfied dependency expressed through constructor parameter 0; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'setupVirtualRepository' defined in class path resource [it/unibz/inf/ontop/endpoint/beans/OntopVirtualRepositoryBean.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [it.unibz.inf.ontop.rdf4j.repository.impl.OntopVirtualRepository]: Factory method 'setupVirtualRepository' threw exception; nested exception is org.eclipse.rdf4j.repository.RepositoryException: it.unibz.inf.ontop.injection.impl.FactsException: An error occured while parsing the facts file: Illegal carriage return or new line in literal [line 2]
+12:05:05.898 |-INFO  in o.a.catalina.core.StandardService - Stopping service [Tomcat]
+12:05:05.907 |-INFO  in o.s.b.a.l.ConditionEvaluationReportLoggingListener - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+12:05:05.914 |-ERROR in o.s.boot.SpringApplication - Application run failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'sparqlQueryController' defined in URL [jar:file:/opt/ontop/lib/ontop-endpoint-5.6.0-SNAPSHOT.jar!/it/unibz/inf/ontop/endpoint/controllers/SparqlQueryController.class]: Unsatisfied dependency expressed through constructor parameter 0; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'setupVirtualRepository' defined in class path resource [it/unibz/inf/ontop/endpoint/beans/OntopVirtualRepositoryBean.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [it.unibz.inf.ontop.rdf4j.repository.impl.OntopVirtualRepository]: Factory method 'setupVirtualRepository' threw exception; nested exception is org.eclipse.rdf4j.repository.RepositoryException: it.unibz.inf.ontop.injection.impl.FactsException: An error occured while parsing the facts file: Illegal carriage return or new line in literal [line 2]
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:801)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:224)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1372)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1222)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:955)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:929)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:591)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:147)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:732)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:409)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:308)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1300)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1289)
+	at it.unibz.inf.ontop.endpoint.OntopEndpointApplication.main(OntopEndpointApplication.java:20)
+	at it.unibz.inf.ontop.cli.OntopEndpoint.run(OntopEndpoint.java:152)
+	at it.unibz.inf.ontop.cli.Ontop.main(Ontop.java:19)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'setupVirtualRepository' defined in class path resource [it/unibz/inf/ontop/endpoint/beans/OntopVirtualRepositoryBean.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [it.unibz.inf.ontop.rdf4j.repository.impl.OntopVirtualRepository]: Factory method 'setupVirtualRepository' threw exception; nested exception is org.eclipse.rdf4j.repository.RepositoryException: it.unibz.inf.ontop.injection.impl.FactsException: An error occured while parsing the facts file: Illegal carriage return or new line in literal [line 2]
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:653)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:633)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1352)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1195)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:276)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1391)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1311)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:911)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:788)
+	... 21 common frames omitted
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [it.unibz.inf.ontop.rdf4j.repository.impl.OntopVirtualRepository]: Factory method 'setupVirtualRepository' threw exception; nested exception is org.eclipse.rdf4j.repository.RepositoryException: it.unibz.inf.ontop.injection.impl.FactsException: An error occured while parsing the facts file: Illegal carriage return or new line in literal [line 2]
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:185)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:648)
+	... 35 common frames omitted
+Caused by: org.eclipse.rdf4j.repository.RepositoryException: it.unibz.inf.ontop.injection.impl.FactsException: An error occured while parsing the facts file: Illegal carriage return or new line in literal [line 2]
+	at it.unibz.inf.ontop.rdf4j.repository.impl.OntopVirtualRepository.initializeInternal(OntopVirtualRepository.java:76)
+	at org.eclipse.rdf4j.repository.base.AbstractRepository.init(AbstractRepository.java:36)
+	at it.unibz.inf.ontop.endpoint.beans.OntopVirtualRepositoryBean.setupVirtualRepository(OntopVirtualRepositoryBean.java:91)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154)
+	... 36 common frames omitted
+Caused by: it.unibz.inf.ontop.injection.impl.FactsException: An error occured while parsing the facts file: Illegal carriage return or new line in literal [line 2]
+	at it.unibz.inf.ontop.injection.impl.OntopMappingOntologyConfigurationImpl.loadFactsFromFile(OntopMappingOntologyConfigurationImpl.java:157)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingOntologyConfigurationImpl.loadInputFacts(OntopMappingOntologyConfigurationImpl.java:63)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingConfigurationImpl.loadSpecification(OntopMappingConfigurationImpl.java:95)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingSQLConfigurationImpl.loadSpecification(OntopMappingSQLConfigurationImpl.java:93)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingSQLAllConfigurationImpl.loadSpecification(OntopMappingSQLAllConfigurationImpl.java:55)
+	at it.unibz.inf.ontop.injection.impl.OntopSQLOWLAPIConfigurationImpl.loadOBDASpecification(OntopSQLOWLAPIConfigurationImpl.java:42)
+	at it.unibz.inf.ontop.injection.impl.OntopOBDAConfigurationImpl.loadSpecification(OntopOBDAConfigurationImpl.java:44)
+	at it.unibz.inf.ontop.injection.OntopSystemConfiguration.loadQueryEngine(OntopSystemConfiguration.java:20)
+	at it.unibz.inf.ontop.rdf4j.repository.impl.OntopVirtualRepository.initializeInternal(OntopVirtualRepository.java:72)
+	... 43 common frames omitted
+Caused by: org.eclipse.rdf4j.rio.RDFParseException: Illegal carriage return or new line in literal [line 2]
+	at org.eclipse.rdf4j.rio.helpers.RDFParserHelper.reportFatalError(RDFParserHelper.java:347)
+	at org.eclipse.rdf4j.rio.helpers.AbstractRDFParser.reportFatalError(AbstractRDFParser.java:698)
+	at org.eclipse.rdf4j.rio.turtle.TurtleParser.reportFatalError(TurtleParser.java:1313)
+	at org.eclipse.rdf4j.rio.turtle.TurtleParser.parseString(TurtleParser.java:727)
+	at org.eclipse.rdf4j.rio.turtle.TurtleParser.parseQuotedString(TurtleParser.java:694)
+	at org.eclipse.rdf4j.rio.turtle.TurtleParser.parseQuotedLiteral(TurtleParser.java:597)
+	at org.eclipse.rdf4j.rio.turtle.TurtleParser.parseValue(TurtleParser.java:580)
+	at org.eclipse.rdf4j.rio.turtle.TurtleParser.parseObject(TurtleParser.java:453)
+	at org.eclipse.rdf4j.rio.turtle.TurtleParser.parseObjectList(TurtleParser.java:375)
+	at org.eclipse.rdf4j.rio.turtle.TurtleParser.parsePredicateObjectList(TurtleParser.java:348)
+	at org.eclipse.rdf4j.rio.turtle.TurtleParser.parseTriples(TurtleParser.java:335)
+	at org.eclipse.rdf4j.rio.turtle.TurtleParser.parseStatement(TurtleParser.java:203)
+	at org.eclipse.rdf4j.rio.turtle.TurtleParser.parse(TurtleParser.java:165)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingOntologyConfigurationImpl.loadFactsWithReader(OntopMappingOntologyConfigurationImpl.java:171)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingOntologyConfigurationImpl.loadFactsFromFile(OntopMappingOntologyConfigurationImpl.java:148)
+	... 51 common frames omitted
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'sparqlQueryController' defined in URL [jar:file:/opt/ontop/lib/ontop-endpoint-5.6.0-SNAPSHOT.jar!/it/unibz/inf/ontop/endpoint/controllers/SparqlQueryController.class]: Unsatisfied dependency expressed through constructor parameter 0; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'setupVirtualRepository' defined in class path resource [it/unibz/inf/ontop/endpoint/beans/OntopVirtualRepositoryBean.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [it.unibz.inf.ontop.rdf4j.repository.impl.OntopVirtualRepository]: Factory method 'setupVirtualRepository' threw exception; nested exception is org.eclipse.rdf4j.repository.RepositoryException: it.unibz.inf.ontop.injection.impl.FactsException: An error occured while parsing the facts file: Illegal carriage return or new line in literal [line 2]
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:801)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:224)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1372)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1222)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:955)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:929)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:591)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:147)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:732)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:409)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:308)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1300)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1289)
+	at it.unibz.inf.ontop.endpoint.OntopEndpointApplication.main(OntopEndpointApplication.java:20)
+	at it.unibz.inf.ontop.cli.OntopEndpoint.run(OntopEndpoint.java:152)
+	at it.unibz.inf.ontop.cli.Ontop.main(Ontop.java:19)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'setupVirtualRepository' defined in class path resource [it/unibz/inf/ontop/endpoint/beans/OntopVirtualRepositoryBean.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [it.unibz.inf.ontop.rdf4j.repository.impl.OntopVirtualRepository]: Factory method 'setupVirtualRepository' threw exception; nested exception is org.eclipse.rdf4j.repository.RepositoryException: it.unibz.inf.ontop.injection.impl.FactsException: An error occured while parsing the facts file: Illegal carriage return or new line in literal [line 2]
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:653)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:633)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1352)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1195)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:276)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1391)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1311)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:911)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:788)
+	... 21 more
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [it.unibz.inf.ontop.rdf4j.repository.impl.OntopVirtualRepository]: Factory method 'setupVirtualRepository' threw exception; nested exception is org.eclipse.rdf4j.repository.RepositoryException: it.unibz.inf.ontop.injection.impl.FactsException: An error occured while parsing the facts file: Illegal carriage return or new line in literal [line 2]
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:185)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:648)
+	... 35 more
+Caused by: org.eclipse.rdf4j.repository.RepositoryException: it.unibz.inf.ontop.injection.impl.FactsException: An error occured while parsing the facts file: Illegal carriage return or new line in literal [line 2]
+	at it.unibz.inf.ontop.rdf4j.repository.impl.OntopVirtualRepository.initializeInternal(OntopVirtualRepository.java:76)
+	at org.eclipse.rdf4j.repository.base.AbstractRepository.init(AbstractRepository.java:36)
+	at it.unibz.inf.ontop.endpoint.beans.OntopVirtualRepositoryBean.setupVirtualRepository(OntopVirtualRepositoryBean.java:91)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154)
+	... 36 more
+Caused by: it.unibz.inf.ontop.injection.impl.FactsException: An error occured while parsing the facts file: Illegal carriage return or new line in literal [line 2]
+	at it.unibz.inf.ontop.injection.impl.OntopMappingOntologyConfigurationImpl.loadFactsFromFile(OntopMappingOntologyConfigurationImpl.java:157)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingOntologyConfigurationImpl.loadInputFacts(OntopMappingOntologyConfigurationImpl.java:63)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingConfigurationImpl.loadSpecification(OntopMappingConfigurationImpl.java:95)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingSQLConfigurationImpl.loadSpecification(OntopMappingSQLConfigurationImpl.java:93)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingSQLAllConfigurationImpl.loadSpecification(OntopMappingSQLAllConfigurationImpl.java:55)
+	at it.unibz.inf.ontop.injection.impl.OntopSQLOWLAPIConfigurationImpl.loadOBDASpecification(OntopSQLOWLAPIConfigurationImpl.java:42)
+	at it.unibz.inf.ontop.injection.impl.OntopOBDAConfigurationImpl.loadSpecification(OntopOBDAConfigurationImpl.java:44)
+	at it.unibz.inf.ontop.injection.OntopSystemConfiguration.loadQueryEngine(OntopSystemConfiguration.java:20)
+	at it.unibz.inf.ontop.rdf4j.repository.impl.OntopVirtualRepository.initializeInternal(OntopVirtualRepository.java:72)
+	... 43 more
+Caused by: org.eclipse.rdf4j.rio.RDFParseException: Illegal carriage return or new line in literal [line 2]
+	at org.eclipse.rdf4j.rio.helpers.RDFParserHelper.reportFatalError(RDFParserHelper.java:347)
+	at org.eclipse.rdf4j.rio.helpers.AbstractRDFParser.reportFatalError(AbstractRDFParser.java:698)
+	at org.eclipse.rdf4j.rio.turtle.TurtleParser.reportFatalError(TurtleParser.java:1313)
+	at org.eclipse.rdf4j.rio.turtle.TurtleParser.parseString(TurtleParser.java:727)
+	at org.eclipse.rdf4j.rio.turtle.TurtleParser.parseQuotedString(TurtleParser.java:694)
+	at org.eclipse.rdf4j.rio.turtle.TurtleParser.parseQuotedLiteral(TurtleParser.java:597)
+	at org.eclipse.rdf4j.rio.turtle.TurtleParser.parseValue(TurtleParser.java:580)
+	at org.eclipse.rdf4j.rio.turtle.TurtleParser.parseObject(TurtleParser.java:453)
+	at org.eclipse.rdf4j.rio.turtle.TurtleParser.parseObjectList(TurtleParser.java:375)
+	at org.eclipse.rdf4j.rio.turtle.TurtleParser.parsePredicateObjectList(TurtleParser.java:348)
+	at org.eclipse.rdf4j.rio.turtle.TurtleParser.parseTriples(TurtleParser.java:335)
+	at org.eclipse.rdf4j.rio.turtle.TurtleParser.parseStatement(TurtleParser.java:203)
+	at org.eclipse.rdf4j.rio.turtle.TurtleParser.parse(TurtleParser.java:165)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingOntologyConfigurationImpl.loadFactsWithReader(OntopMappingOntologyConfigurationImpl.java:171)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingOntologyConfigurationImpl.loadFactsFromFile(OntopMappingOntologyConfigurationImpl.java:148)
+	... 51 more
+Exception in thread "main" java.lang.AssertionError
+	at it.unibz.inf.ontop.cli.Ontop.main(Ontop.java:31)

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d001-template",
+  "mapping_behavior": "template IRI subject",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D001/{init.sql,r2rmla.ttl}",
+  "query": "/home/mind/top/rtop/tests/compat/postgres-d001/query.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "4e4609a99b7691332c788a10eed17185016da96c14fbc27a998390890c56dd17",
+    "rtop_raw": "de3bc210027ac416abed25b5f38be24d762b0da10e6ef813be352613bfcbf2fc",
+    "normalized": "b1eb2d5a4b2f775c9da81180b860d8842620d9a74c3f40f8e6d05956ee74a9d7"
+  }
+}

@@ -1,0 +1,1 @@
+{"command":"./scripts/test-postgres-compat.sh","result":"passed","test":"postgres_stream_stops_early_and_connection_remains_usable","query":"SELECT generate_series(1, 1000000)","first_row_control":"Stop","rows_observed":1,"reuse_query":"SELECT 42","reuse_result":"42","postgres_image":"postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e"}

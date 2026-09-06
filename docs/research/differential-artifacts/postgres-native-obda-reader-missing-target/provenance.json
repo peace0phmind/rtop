@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-native-obda-reader-missing-target",
+  "mapping_behavior": "Missing native OBDA target term is rejected by the mapping reader before PostgreSQL source execution",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "mapping/sql/all/src/test/resources/mistake/missing-target-term.obda; tests/compat/postgres-minimal/init.sql",
+  "query": "CLI materialize mapping-reader rejection",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "ca623a3562e6036a26c7df675fc91ac8b495079a5f8ea8dd2c2dde4adf744bbc",
+    "rtop_raw": "95e5b9dd00be4d18af927e1d9a7ff44b97f6e09ae60769aca6493de78a035a81",
+    "normalized": "828fe98af68df802ca641bff3823fdaaf76be7f048334a1d48b7e0a2963cf718"
+  }
+}

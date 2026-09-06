@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-native-obda-invalid-source-sql-endpoint",
+  "mapping_behavior": "Invalid native source SQL permits endpoint startup and fails when its mapped source is first queried",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "mapping/sql/all/src/test/resources/mistake/invalid-sql1.obda; tests/compat/postgres-minimal/init.sql",
+  "query": "tests/compat/postgres-native-obda/runtime-source.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "792376c209f338959be4cf00c54dbf82662b90516082e23106faec4c43c69e49",
+    "rtop_raw": "792376c209f338959be4cf00c54dbf82662b90516082e23106faec4c43c69e49",
+    "normalized": "d8f1f56bed388438fb2eb52973a9d6be7e115615d0d0db7ca80787e9dfe34455"
+  }
+}

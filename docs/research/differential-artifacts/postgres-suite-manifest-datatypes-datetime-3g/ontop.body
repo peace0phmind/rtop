@@ -1,0 +1,1 @@
+it.unibz.inf.ontop.exception.OntopReformulationException: java.lang.RuntimeException: it.unibz.inf.ontop.exception.OntopUnsupportedKGQueryException: Invalid lexical forms are not accepted. Found for xsd:dateTime: 2008-04-02T00:00:00-06

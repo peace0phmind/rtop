@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-httpcastmappeddate-endpoint",
+  "mapping_behavior": "PostgreSQL CastPostgreSQL scalar lexical result and invalid cast expression-error bindings through the endpoint",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/lightweight-tests/src/test/{java/it/unibz/inf/ontop/docker/lightweight/postgresql/CastPostgreSQLTest.java,resources/books/books.obda}; tests/compat/postgres-cast/{init-mapped-datetime.sql,cast-date-from-mapped-datetime.rq}",
+  "query": "tests/compat/postgres-cast/cast-date-from-mapped-datetime.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "c51a48bb53846946fa47549c1b67d4a44ec094dbf568123a6dec33a74b7b3b8e",
+    "rtop_raw": "fadcda91052280d2a27f2837fa6140093b2a73031281b1db4c8c33e35a815a6d",
+    "normalized": "fb9d377aeb9fc30b4077a3cbd442032b4fca12b1aebf049a69ac2c621a4fa442"
+  }
+}

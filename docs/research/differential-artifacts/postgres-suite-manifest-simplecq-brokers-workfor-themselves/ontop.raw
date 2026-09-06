@@ -1,0 +1,27 @@
+{
+  "head" : {
+    "vars" : [
+      "fname",
+      "ln",
+      "securitynum"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "fname" : {
+          "type" : "literal",
+          "value" : "Joana"
+        },
+        "ln" : {
+          "type" : "literal",
+          "value" : "Lopatenkko"
+        },
+        "securitynum" : {
+          "type" : "literal",
+          "value" : "JLPTK54992"
+        }
+      }
+    ]
+  }
+}

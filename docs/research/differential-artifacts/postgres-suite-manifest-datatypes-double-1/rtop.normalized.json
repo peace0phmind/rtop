@@ -1,0 +1,11 @@
+{
+  "head": {
+    "vars": [
+      "name",
+      "x"
+    ]
+  },
+  "results": {
+    "bindings": []
+  }
+}

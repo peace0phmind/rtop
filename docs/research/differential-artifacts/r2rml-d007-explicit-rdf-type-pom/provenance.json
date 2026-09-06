@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d007-explicit-rdf-type-pom",
+  "mapping_behavior": "explicit rdf:type predicate-object map",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D007/{create.sql,r2rmla.ttl}",
+  "query": "materialize default graph as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "59a5840287d1addebcfc30ea4d369e48fc284a3750b650f5713bad8cc4f5a3e0",
+    "rtop_raw": "59a5840287d1addebcfc30ea4d369e48fc284a3750b650f5713bad8cc4f5a3e0",
+    "normalized": "13e3bc3d3511c9139c37b1facb5ded29ef0512c1cb9985c94741f9605506407a"
+  }
+}

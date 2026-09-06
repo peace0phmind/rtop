@@ -1,0 +1,275 @@
+{
+  "head" : {
+    "vars" : [
+      "x",
+      "id",
+      "numberofshares",
+      "sharetype",
+      "description"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-665"
+        },
+        "id" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "665"
+        },
+        "numberofshares" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        },
+        "sharetype" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        },
+        "description" : {
+          "xml:lang" : "en-us",
+          "type" : "literal",
+          "value" : "Testo di descrizione 1"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-666"
+        },
+        "id" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "666"
+        },
+        "numberofshares" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        },
+        "sharetype" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        },
+        "description" : {
+          "xml:lang" : "en-us",
+          "type" : "literal",
+          "value" : "Testo di descrizione 2"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-667"
+        },
+        "id" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "667"
+        },
+        "numberofshares" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        },
+        "sharetype" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        },
+        "description" : {
+          "xml:lang" : "en-us",
+          "type" : "literal",
+          "value" : "Testo di descrizione 3"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-669"
+        },
+        "id" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "669"
+        },
+        "numberofshares" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        },
+        "sharetype" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        },
+        "description" : {
+          "xml:lang" : "en-us",
+          "type" : "literal",
+          "value" : "Testo di descrizione 4"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-668"
+        },
+        "id" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "668"
+        },
+        "numberofshares" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        },
+        "sharetype" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "true"
+        },
+        "description" : {
+          "xml:lang" : "en-us",
+          "type" : "literal",
+          "value" : "Testo di descrizione 5"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-661"
+        },
+        "id" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "661"
+        },
+        "numberofshares" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        },
+        "sharetype" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        },
+        "description" : {
+          "xml:lang" : "en-us",
+          "type" : "literal",
+          "value" : "Text description 1"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-660"
+        },
+        "id" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "660"
+        },
+        "numberofshares" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        },
+        "sharetype" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        },
+        "description" : {
+          "xml:lang" : "en-us",
+          "type" : "literal",
+          "value" : "Text description 2"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-662"
+        },
+        "id" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "662"
+        },
+        "numberofshares" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        },
+        "sharetype" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        },
+        "description" : {
+          "xml:lang" : "en-us",
+          "type" : "literal",
+          "value" : "Text description 3"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-663"
+        },
+        "id" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "663"
+        },
+        "numberofshares" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        },
+        "sharetype" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        },
+        "description" : {
+          "xml:lang" : "en-us",
+          "type" : "literal",
+          "value" : "Text description 4"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-664"
+        },
+        "id" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "664"
+        },
+        "numberofshares" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        },
+        "sharetype" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#boolean",
+          "type" : "literal",
+          "value" : "false"
+        },
+        "description" : {
+          "xml:lang" : "en-us",
+          "type" : "literal",
+          "value" : "Text description 5"
+        }
+      }
+    ]
+  }
+}

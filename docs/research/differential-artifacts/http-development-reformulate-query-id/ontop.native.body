@@ -1,0 +1,2 @@
+SELECT ('https://example.test/person/' || CAST(v1."id" AS TEXT)) AS "person"
+FROM "query_people" v1

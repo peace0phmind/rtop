@@ -1,0 +1,4 @@
+_:genid355577bc214d12a5b1c3835ab14c073759913a0182b13715529336e2d22712fdf3 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/base/Student> .
+_:genid355577bc214d12a5b1c3835ab14c073759913a0182b13715529336e2d22712fdf3 <http://example.com/base/Student#ID> "10"^^<http://www.w3.org/2001/XMLSchema#integer> .
+_:genid355577bc214d12a5b1c3835ab14c073759913a0182b13715529336e2d22712fdf3 <http://example.com/base/Student#FirstName> "Venus" .
+_:genid355577bc214d12a5b1c3835ab14c073759913a0182b13715529336e2d22712fdf3 <http://example.com/base/Student#LastName> "Williams" .

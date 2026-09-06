@@ -1,0 +1,3 @@
+-- Intentionally empty PostgreSQL schema.
+-- The native `correct.obda` differential case requires PERSON to be absent so
+-- mapping loading succeeds and the source fails only during execution.

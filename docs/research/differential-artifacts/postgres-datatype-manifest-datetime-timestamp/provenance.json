@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-datatype-manifest-datetime-timestamp",
+  "mapping_behavior": "PgsqlDatatypeTest datetime/timestamp 原始 manifest query 的 PostgreSQL typed binding",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/docker-tests/src/test/{java/it/unibz/inf/ontop/docker/datatypes/PgsqlDatatypeTest.java,resources/testcases-docker/datetime/{datatypes-pgsql.obda,timestamp.rq}}; tests/compat/postgres-datatype-manifest/init.sql",
+  "query": "../ontop/test/docker-tests/src/test/resources/testcases-docker/datetime/timestamp.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "852dd1c90382638606347e0df0441a54ae2e83dfe2695aeaa86cf79ddb27ec88",
+    "rtop_raw": "5460631ec008563c631793005f0d68da4b551de32653a21d144852365f7cd84f",
+    "normalized": "6efb6b3c877e62821a2d0fcfb9ebc625bddee90b5f6665e524b5b0c8e5812450"
+  }
+}

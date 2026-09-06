@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-http-concurrency-isolation-endpoint",
+  "mapping_behavior": "PostgreSQL pg_sleep mapped request does not block a concurrent successful SPARQL ASK on the same endpoint",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/docker-tests/src/test/java/it/unibz/inf/ontop/docker/QuestParallelScenario.java; tests/compat/{postgres-concurrency/mapping-isolation.obda,postgres-concurrency/delayed.rq,postgres-query-kinds/init.sql}",
+  "query": "concurrent pg_sleep ASK and Person ASK",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "c7c3430ca59b4046095ab58ada4041f3d03dca3c32fdb8a795ffe4eff610dd85",
+    "rtop_raw": "4e9ac9e0e2e9303049133e3b2a9270e36cf53143b35ceb1ded89acc63a2555eb",
+    "normalized": "601a20bda162228bc3b6a34bd850c55a908bc97e03ef4b51af37d48cceb4baca"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "format": "mapping-rejection-suite",
+  "cases": [
+    {
+      "case_id": "differential-r2rml-d002-reject-undefined-object-column",
+      "status": "passed",
+      "mapping_behavior": "reject undefined object SQL column"
+    },
+    {
+      "case_id": "differential-r2rml-d002-reject-undefined-table",
+      "status": "passed",
+      "mapping_behavior": "reject undefined SQL table"
+    },
+    {
+      "case_id": "differential-r2rml-d002-reject-unquoted-identifiers",
+      "status": "passed",
+      "mapping_behavior": "reject unquoted mixed-case SQL identifiers"
+    },
+    {
+      "case_id": "differential-r2rml-d002-reject-duplicate-alias",
+      "status": "passed",
+      "mapping_behavior": "reject duplicate SQL projection aliases"
+    }
+  ],
+  "all_rejected": true
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d011-many-to-many-sql-view",
+  "mapping_behavior": "three-table SQL view many-to-many relation",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D011/{create.sql,r2rmla.ttl}",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "4ab14316e3925517f9d3ffe376d1a11bdc675abb1f2f44197f0a2a3f5ba991f9",
+    "rtop_raw": "c4ba3c2b1643f5e5b44b9223f7136b8cf89557724727a53c5c4c7bf30cbdd4e1",
+    "normalized": "27e850ebf109ebff50860a05973ac2c69b98abddb39a76762da99d689613519e"
+  }
+}

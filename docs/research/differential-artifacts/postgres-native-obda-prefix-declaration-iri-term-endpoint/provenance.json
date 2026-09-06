@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-native-obda-prefix-declaration-iri-term-endpoint",
+  "mapping_behavior": "native OBDA PrefixDeclaration preserves mo/mo2 namespace expansion inside target RDF IRI terms",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/docker-tests/src/test/{java/it/unibz/inf/ontop/docker/postgres/PrefixSourceTest.java,resources/pgsql/imdb/newPrefixMovieOntology.obda}; tests/compat/postgres-identifiers/{prefix-source-init.sql,prefix-source.rq}",
+  "query": "tests/compat/postgres-identifiers/prefix-source.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "ee107f22d8def9c9ef4c71418e3e092759580ea3fe172155b3b11794d741f3d6",
+    "rtop_raw": "34c7f3101405ed83cf0e47a2b31c0e44c1f5cd8846886426c121a4a2e45a91a5",
+    "normalized": "e113210f4ccd4f134b81e43774ea094e8427fdae6aff475f73c9090d5e8f9cc6"
+  }
+}

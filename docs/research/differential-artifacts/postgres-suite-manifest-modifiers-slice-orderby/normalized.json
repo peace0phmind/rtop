@@ -1,0 +1,113 @@
+{
+  "head": {
+    "vars": [
+      "city",
+      "country",
+      "id",
+      "number",
+      "state",
+      "street",
+      "x"
+    ]
+  },
+  "results": {
+    "bindings": [
+      {
+        "city": {
+          "type": "literal",
+          "value": "Chonala"
+        },
+        "country": {
+          "type": "literal",
+          "value": "Mexico"
+        },
+        "id": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "991"
+        },
+        "number": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "24"
+        },
+        "state": {
+          "type": "literal",
+          "value": "Veracruz"
+        },
+        "street": {
+          "type": "literal",
+          "value": "Road street"
+        },
+        "x": {
+          "type": "uri",
+          "value": "http://www.owl-ontologies.com/Ontology1207768242.owl#address-991"
+        }
+      },
+      {
+        "city": {
+          "type": "literal",
+          "value": "Jakarta"
+        },
+        "country": {
+          "type": "literal",
+          "value": "Indonesia"
+        },
+        "id": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "998"
+        },
+        "number": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "245"
+        },
+        "state": {
+          "type": "literal",
+          "value": "Jakarta"
+        },
+        "street": {
+          "type": "literal",
+          "value": "Jalan Madura 12"
+        },
+        "x": {
+          "type": "uri",
+          "value": "http://www.owl-ontologies.com/Ontology1207768242.owl#address-998"
+        }
+      },
+      {
+        "city": {
+          "type": "literal",
+          "value": "Malaga"
+        },
+        "country": {
+          "type": "literal",
+          "value": "Spain"
+        },
+        "id": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "993"
+        },
+        "number": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "32"
+        },
+        "state": {
+          "type": "literal",
+          "value": "Malaga"
+        },
+        "street": {
+          "type": "literal",
+          "value": "Romer Street"
+        },
+        "x": {
+          "type": "uri",
+          "value": "http://www.owl-ontologies.com/Ontology1207768242.owl#address-993"
+        }
+      }
+    ]
+  }
+}

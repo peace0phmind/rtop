@@ -1,0 +1,1 @@
+{"head":{"vars":["x","name"]},"results":{"bindings":[{"name":{"type":"literal","value":"General Motors"},"x":{"type":"uri","value":"http://www.owl-ontologies.com/Ontology1207768242.owl#company-211"}},{"name":{"type":"literal","value":"GnA Investments"},"x":{"type":"uri","value":"http://www.owl-ontologies.com/Ontology1207768242.owl#company-212"}}]}}

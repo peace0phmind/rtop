@@ -1,0 +1,26 @@
+{
+  "format": "cli-mapping-shared-input-contract",
+  "cases": [
+    {
+      "case_id": "differential-cli-pretty-r2rml",
+      "status": "passed",
+      "mapping_behavior": "pretty-r2rml output reloads to the same PostgreSQL-backed RDF graph"
+    },
+    {
+      "case_id": "differential-cli-v1-to-v3-native-obda",
+      "status": "passed",
+      "mapping_behavior": "v1-to-v3 rejects legacy native SourceDeclaration containing sourceUri"
+    },
+    {
+      "case_id": "differential-cli-r2rml-to-obda-d001-reload",
+      "status": "passed",
+      "mapping_behavior": "to-obda output reloads to the same PostgreSQL-backed RDF graph"
+    },
+    {
+      "case_id": "differential-cli-obda-to-r2rml-force-reload",
+      "status": "passed",
+      "mapping_behavior": "to-r2rml --force output reloads to the same PostgreSQL-backed RDF graph"
+    }
+  ],
+  "all_passed": true
+}

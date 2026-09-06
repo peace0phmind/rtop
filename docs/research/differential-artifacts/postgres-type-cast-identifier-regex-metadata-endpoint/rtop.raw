@@ -1,0 +1,8 @@
+{"aggregation":"rtop 原始输出索引；sha256 对应组成 artifact 的 rtop.raw","components":[
+{"case_id":"differential-postgres-httpcastmappeddate-endpoint","sha256":"fadcda91052280d2a27f2837fa6140093b2a73031281b1db4c8c33e35a815a6d"},
+{"case_id":"differential-postgres-cast-lexical-and-invalid-input-endpoint","sha256":"8c94fbb3032fa4b4f1dacb2970ea899cd440bb3f48536f0aaab06472712d33ba"},
+{"case_id":"differential-postgres-source-sql-regex-negation-endpoint","sha256":"dd7859b04c6bf04dc688d4daf3989b94a7f39253f9ff04c97bbd1f5d0f679f9d"},
+{"case_id":"differential-postgres-unquoted-identifier-folding-endpoint","sha256":"ae30130eeff913f4d0567ae1db808e2667bd92e00a6af3ff6a569fd323b001ac"},
+{"case_id":"differential-postgres-quoted-identifier-alias-endpoint","sha256":"ac4456cd30fdfbb1c92cbf14b470c477d84b04df4538fc986388f7bf7098f763"},
+{"case_id":"differential-cli-extract-db-metadata","sha256":"cef35ab02b8a8e7f32baee771bd85f3dc0974a4b1c5d1764791116e407e220da"}
+]}

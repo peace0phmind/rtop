@@ -1,0 +1,1 @@
+{"head":{"vars":["person","label"]},"results":{"bindings":[{"label":{"type":"literal","value":"visible"},"person":{"type":"uri","value":"https://example.test/nullable/1"}},{"label":{"type":"literal","value":"Ada","xml:lang":"en"},"person":{"type":"uri","value":"https://example.test/person/1"}}]}}

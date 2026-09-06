@@ -1,0 +1,45 @@
+### httpcastscalar
+{
+  "head" : {
+    "vars" : [
+      "v"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "v" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#float",
+          "type" : "literal",
+          "value" : "0"
+        }
+      }
+    ]
+  }
+}### httpcastinvalid
+{
+  "head" : {
+    "vars" : [
+      "booleanDate",
+      "booleanDateTime",
+      "booleanString",
+      "dateDouble",
+      "dateInteger",
+      "dateTimeDouble",
+      "dateTimeInteger",
+      "decimalDate",
+      "decimalDateTime",
+      "decimalString",
+      "doubleDate",
+      "doubleDateTime",
+      "doubleString",
+      "floatDate",
+      "floatDateTime"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      { }
+    ]
+  }
+}

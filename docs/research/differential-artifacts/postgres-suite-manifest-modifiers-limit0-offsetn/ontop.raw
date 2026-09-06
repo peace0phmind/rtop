@@ -1,0 +1,16 @@
+{
+  "head" : {
+    "vars" : [
+      "x",
+      "id",
+      "street",
+      "city",
+      "country",
+      "state",
+      "number"
+    ]
+  },
+  "results" : {
+    "bindings" : [ ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-ontology-httpuniversityinverse-endpoint",
+  "mapping_behavior": "OWL 2 QL property closure rewrites givesLab mapping through teaches and isTaughtBy",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "binding/rdf4j/src/test/{java/it/unibz/inf/ontop/rdf4j/repository/UniversityTBoxFactTest.java,resources/tbox-facts/{university.sql,university-complete.ttl}}; tests/compat/postgres-ontology/{endpoint-imports-university.ttl,teaching.obda,subproperty.rq,inverse.rq}",
+  "query": "tests/compat/postgres-ontology/inverse.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "33f37d71241c1a2e1b3b395e8f9a6f05aa2805dd6234c60fa5ad6c46eeb95305",
+    "rtop_raw": "4150b34d2fa2e6dc60ca5fe7d43c6269e7031ca882df5b0a23f727317271c66b",
+    "normalized": "2eb9655987659771bc12526eccab8374f9ac733429f2d3706c637d9d74849ee0"
+  }
+}

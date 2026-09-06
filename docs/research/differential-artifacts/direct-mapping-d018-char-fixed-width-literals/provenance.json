@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-direct-mapping-d018-char-fixed-width-literals",
+  "mapping_behavior": "Direct Mapping no-primary-key CHAR(15) fixed-width literals",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D018/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "pgcrypto",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "53675bb6e1335a6ed5cd17d7e04e57d55d1ee11384efa38adc33ab37282272b5",
+    "rtop_raw": "03067e4717a879e4f1f77110cf2edd0742d3d2606f82c11cd76c2dc6d7ff492c",
+    "normalized": "407bfde59a70e6b1e02e501ccc0b712ad00d8444f6ea4f581704c8e8e4de977c"
+  }
+}

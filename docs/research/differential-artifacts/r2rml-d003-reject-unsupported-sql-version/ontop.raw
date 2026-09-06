@@ -1,0 +1,3 @@
+08:56:49.839 |-INFO  in i.u.i.o.a.impl.OntopQueryEngineImpl - Ontop has completed the setup and it is ready for query answering!
+NR of TRIPLES: 2
+Elapsed time to materialize: 75 {ms}

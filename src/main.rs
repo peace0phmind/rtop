@@ -2,8 +2,8 @@ use regex::Regex;
 use rio_api::{formatter::TriplesFormatter, parser::TriplesParser};
 use rio_turtle::{TurtleFormatter, TurtleParser};
 use rtop::{
-    format_rdf_term, load_configuration, serve, Mapping, PostgresDataSource, QueryResult, RdfFact,
-    VkgRuntime,
+    format_rdf_term, load_configuration, serve, Binding, Mapping, PostgresDataSource, QueryResult,
+    RdfFact, RdfTerm, RuntimeError, VkgRuntime,
 };
 use sqlparser::{
     ast::{Expr, SelectItem, SetExpr, Statement},
@@ -66,10 +66,23 @@ fn main() {
             if loaded.direct_mapping.is_some() {
                 Ok(())
             } else {
-                VkgRuntime::new(loaded.spec, ValidationSource).map(|_| ())
+                VkgRuntime::new_with_mapping_options(
+                    loaded.spec,
+                    ValidationSource,
+                    loaded.mapping_infer_default_datatype,
+                    loaded.mapping_require_absolute_iri_values,
+                )
+                .map(|_| ())
             }
         }) {
-            Ok(_) => return,
+            Ok(_) => {
+                // Ontop validate 的成功路径会向 stdout 报告完成；compile 则是
+                // 隐藏的静默 no-op。这一分支保留两者不同的 CLI 可观察契约。
+                if command == "validate" {
+                    println!("Validation completed");
+                }
+                return;
+            }
             Err(error) => {
                 eprintln!("{error}");
                 std::process::exit(2);
@@ -141,8 +154,14 @@ fn main() {
                 source,
                 &direct.base_iri,
                 &direct.relations,
+                direct.preserve_physical_rows,
             )?,
-            None => VkgRuntime::new(loaded.spec, source)?,
+            None => VkgRuntime::new_with_mapping_options(
+                loaded.spec,
+                source,
+                loaded.mapping_infer_default_datatype,
+                loaded.mapping_require_absolute_iri_values,
+            )?,
         };
         runtime.query(&query)
     })();
@@ -183,15 +202,36 @@ fn materialize(config: &str, output: &str, format: &str) -> Result<(), rtop::Run
             source,
             &direct.base_iri,
             &direct.relations,
+            direct.preserve_physical_rows,
         )?,
-        None => VkgRuntime::new(loaded.spec, source)?,
+        None => VkgRuntime::new_with_mapping_options(
+            loaded.spec,
+            source,
+            loaded.mapping_infer_default_datatype,
+            loaded.mapping_require_absolute_iri_values,
+        )?,
     };
-    let QueryResult::Graph(facts) = runtime.query("CONSTRUCT { ?s ?p ?o } WHERE { ?s ?p ?o }")?
-    else {
-        return Err(rtop::RuntimeError::UnsupportedSparql(
-            "materialize 只接受图结果".into(),
-        ));
-    };
+    // 默认图与具名图是两个 SPARQL dataset domain。只以默认图 CONSTRUCT
+    // materialize 会让仅带 rr:graph 的 triples map 没有可改写的 rule；分别
+    // SELECT 后重建 RDF fact 可同时保留 N-Quads 中的 graph term。
+    let mut facts = Vec::new();
+    for query in [
+        "SELECT ?s ?p ?o WHERE { ?s ?p ?o }",
+        "SELECT ?s ?p ?o ?g WHERE { GRAPH ?g { ?s ?p ?o } }",
+    ] {
+        match runtime.query(query) {
+            Ok(QueryResult::Bindings(rows)) => facts.extend(facts_from_bindings(rows)?),
+            // 仅默认/仅具名图的 mapping 在另一个 domain 没有 rule；这不是
+            // materialize 错误，而是该 domain 为空。
+            Err(RuntimeError::NotFullyTranslatable(_)) => {}
+            Ok(_) => {
+                return Err(RuntimeError::UnsupportedSparql(
+                    "materialize 只接受绑定结果".into(),
+                ))
+            }
+            Err(error) => return Err(error),
+        }
+    }
     let text = match format {
         "turtle" | "ttl" => facts.iter().map(turtle).collect::<Vec<_>>().join("\n"),
         "nquads" | "nq" => facts.iter().map(nquad).collect::<Vec<_>>().join("\n"),
@@ -210,6 +250,33 @@ fn materialize(config: &str, output: &str, format: &str) -> Result<(), rtop::Run
         println!("NR of TRIPLES: {}", facts.len());
     }
     Ok(())
+}
+
+fn facts_from_bindings(rows: Vec<Binding>) -> Result<Vec<RdfFact>, RuntimeError> {
+    rows.into_iter()
+        .map(|row| {
+            let subject = row.get("s").cloned().ok_or_else(|| {
+                RuntimeError::UnsupportedSparql("materialize 缺少 subject 绑定".into())
+            })?;
+            let predicate = match row.get("p") {
+                Some(RdfTerm::Iri(value)) => value.clone(),
+                _ => {
+                    return Err(RuntimeError::UnsupportedSparql(
+                        "materialize predicate 必须是 IRI".into(),
+                    ))
+                }
+            };
+            let object = row.get("o").cloned().ok_or_else(|| {
+                RuntimeError::UnsupportedSparql("materialize 缺少 object 绑定".into())
+            })?;
+            Ok(RdfFact {
+                subject,
+                predicate,
+                object,
+                graph: row.get("g").cloned(),
+            })
+        })
+        .collect()
 }
 
 fn extract_db_metadata(config: &str, output: &str) -> Result<(), rtop::RuntimeError> {
@@ -339,10 +406,24 @@ fn r2rml_to_obda(input: &str, output: &str) -> Result<(), rtop::RuntimeError> {
 fn obda_to_r2rml(input: &str, output: &str) -> Result<(), rtop::RuntimeError> {
     let text = std::fs::read_to_string(input)
         .map_err(|error| rtop::RuntimeError::Config(format!("无法读取 native OBDA：{error}")))?;
+    if has_duplicate_native_mapping_id(&text) {
+        return Err(rtop::RuntimeError::Mapping(
+            "Duplicate mapping IDs found in obda file".into(),
+        ));
+    }
     let mapping = Mapping::parse(&text)?;
     std::fs::write(output, mapping.to_r2rml())
         .map_err(|error| rtop::RuntimeError::Config(format!("无法写入 R2RML：{error}")))?;
     Ok(())
+}
+
+/// Ontop 的 to-r2rml serializer 不接受重复 mappingId；此检查只应用于该转换入口，
+/// 不影响运行时读取同名 block 的既有行为。
+fn has_duplicate_native_mapping_id(text: &str) -> bool {
+    let mut mapping_ids = std::collections::HashSet::new();
+    text.lines()
+        .filter_map(|line| line.trim().strip_prefix("mappingId").map(str::trim))
+        .any(|mapping_id| !mapping_ids.insert(mapping_id))
 }
 
 fn migrate_v1_mapping(
@@ -405,7 +486,13 @@ fn migrate_v1_native_text(
                     "username" => "jdbc.user",
                     "password" => "jdbc.password",
                     "driverClass" => "jdbc.driver",
-                    "sourceUri" => continue,
+                    // 固定 Ontop v1-to-v3 CLI 将 sourceUri 视为未知 datasource
+                    // 参数；不能静默丢弃后继续生成可加载 mapping。
+                    "sourceUri" => {
+                        return Err(rtop::RuntimeError::Mapping(
+                            "Unknown parameter name \"sourceUri\"".into(),
+                        ))
+                    }
                     _ => {
                         return Err(rtop::RuntimeError::Mapping(format!(
                             "不支持的旧 datasource 字段：{key}"
@@ -589,4 +676,40 @@ fn nquad(fact: &RdfFact) -> String {
         format_rdf_term(&fact.object),
         graph
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::facts_from_bindings;
+    use rtop::{Binding, RdfTerm};
+
+    #[test]
+    fn materialize_bindings_preserve_a_named_graph() {
+        let mut row = Binding::new();
+        row.insert(
+            "s".into(),
+            RdfTerm::Iri("http://example.com/student/10".into()),
+        );
+        row.insert("p".into(), RdfTerm::Iri("http://example.com/name".into()));
+        row.insert(
+            "o".into(),
+            RdfTerm::Literal {
+                value: "Venus Williams".into(),
+                datatype: None,
+                language: None,
+            },
+        );
+        row.insert(
+            "g".into(),
+            RdfTerm::Iri("http://example.com/graph/students".into()),
+        );
+
+        let facts = facts_from_bindings(vec![row]).unwrap();
+
+        assert_eq!(facts.len(), 1);
+        assert_eq!(
+            facts[0].graph,
+            Some(RdfTerm::Iri("http://example.com/graph/students".into()))
+        );
+    }
 }

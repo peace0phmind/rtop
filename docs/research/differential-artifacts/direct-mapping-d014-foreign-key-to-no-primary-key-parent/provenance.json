@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-direct-mapping-d014-foreign-key-to-no-primary-key-parent",
+  "mapping_behavior": "Direct Mapping foreign key to no-primary-key parent blank node",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D014/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "pgcrypto",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "c50edc222003bc97ce4a157e67cb27c1780146c7f82beec26cee5b85c137155d",
+    "rtop_raw": "c903c8791218d80209cde43ad9a78d6eac57ac97f9ad002feeff013ff264ee6a",
+    "normalized": "0f9f7c0d0647678bccecf5f26910c4cfe89172ae72c19a1556e5a63cda1703a5"
+  }
+}

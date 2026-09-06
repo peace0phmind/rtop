@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-suite-manifest-filters-string-neq",
+  "mapping_behavior": "DockerPostgresTestSuite stockexchange filters string-neq manifest query 的 SPARQL JSON bindings",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/docker-tests/src/test/resources/testcases-docker/virtual-mode/stockexchange/filters/{stockexchange-pgsql.obda,stockexchange.owl,string-neq.rq}; test/docker-tests/src/test/resources/dump/stockexchange-create-pgsql.sql",
+  "query": "../ontop/test/docker-tests/src/test/resources/testcases-docker/virtual-mode/stockexchange/filters/string-neq.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "d14579acef9c2d160a07d367bb84503549d35074f13ee3224b52aacc3a72d169",
+    "rtop_raw": "b354ba7e6f85d85fd20543de275783bb856087186378b8871a7fae659b93ce39",
+    "normalized": "36425dd9630ebb687c4b407264bf85b0ce8fa52bd37391f7e9fb94a0c1bd932c"
+  }
+}

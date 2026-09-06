@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-suite-manifest-filters-literal-langmatch",
+  "mapping_behavior": "DockerPostgresTestSuite stockexchange filters literal-langmatch manifest query 的 SPARQL JSON bindings",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/docker-tests/src/test/resources/testcases-docker/virtual-mode/stockexchange/filters/{stockexchange-pgsql.obda,stockexchange.owl,literal-langmatch.rq}; test/docker-tests/src/test/resources/dump/stockexchange-create-pgsql.sql",
+  "query": "../ontop/test/docker-tests/src/test/resources/testcases-docker/virtual-mode/stockexchange/filters/literal-langmatch.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "b3549e3f834e7a593a8ea287479c693b9b4e91fd9533436e3bf65aafba37baa1",
+    "rtop_raw": "3aa956f8c93e7a57dd34037894d0f7e56de63405417a982811fe110811eed866",
+    "normalized": "d1a4a8be7b5786d03b5d92f7b03abd50c0883ebef8c29d04bfdab5551763216e"
+  }
+}

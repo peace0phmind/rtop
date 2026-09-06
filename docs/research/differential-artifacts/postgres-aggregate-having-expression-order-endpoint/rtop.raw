@@ -1,0 +1,1 @@
+{"head":{"vars":["category","total"]},"results":{"bindings":[{"category":{"type":"literal","value":"profit"},"total":{"type":"literal","value":"2.60","datatype":"http://www.w3.org/2001/XMLSchema#decimal"}},{"category":{"type":"literal","value":"loss"},"total":{"type":"literal","value":"-1.50","datatype":"http://www.w3.org/2001/XMLSchema#decimal"}}]}}

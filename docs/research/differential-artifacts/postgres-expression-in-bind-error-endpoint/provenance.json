@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-expression-in-bind-error-endpoint",
+  "mapping_behavior": "PostgreSQL endpoint preserves IN error short-circuit, OPTIONAL/BOUND, BIND string functions, and NOT IN filtering",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/sparql-compliance functions IN/NOT IN; tests/compat/postgres-http/{algebra-init.sql,mapping-algebra-bag.obda,expression-in-bind.rq}",
+  "query": "tests/compat/postgres-http/expression-in-bind.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "e6e802e50b3f46b2a93b23f8327f025f6e54875570d6c4c7f51b956dca6cac0a",
+    "rtop_raw": "31c5a8262276305aceda2867e391f517a11eb148f89f2bbcf186d22d49add221",
+    "normalized": "64be11137c84b43f4588fda6544b555a0e5736cb62b1e2da94b11cead6f5c5ee"
+  }
+}

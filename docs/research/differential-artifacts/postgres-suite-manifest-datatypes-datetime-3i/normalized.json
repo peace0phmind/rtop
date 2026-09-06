@@ -1,0 +1,5 @@
+{
+  "format": "http-error",
+  "status": "500",
+  "category": "invalid-datetime-lexical"
+}

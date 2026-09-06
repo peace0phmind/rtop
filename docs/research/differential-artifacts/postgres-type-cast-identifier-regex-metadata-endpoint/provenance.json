@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-type-cast-identifier-regex-metadata-endpoint",
+  "mapping_behavior": "CastPostgreSQL mapped date cast、regex、quoted/unquoted identifiers 和 PostgreSQL metadata JSON 的聚合",
+  "status": "passed",
+  "status_reason": "六份固定 PostgreSQL 17 Ontop-vs-rtop 差分均通过；本目录只索引各独立原始输出，不将任一子项扩大解释为全部行为。",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "CastPostgreSQLTest、RegexPostgresSQLTest、PostgresIdentifierTest、OntopExtractDBMetadata",
+  "query": "HTTP JSON RDF bindings 和 extract-db-metadata JSON",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI/endpoint",
+    "rtop": "Rust host CLI/endpoint"
+  },
+  "component_artifacts": [
+    "docs/research/differential-artifacts/postgres-cast-mapped-date-endpoint/provenance.json",
+    "docs/research/differential-artifacts/postgres-cast-lexical-and-invalid-input-endpoint/provenance.json",
+    "docs/research/differential-artifacts/postgres-source-sql-regex-negation-endpoint/provenance.json",
+    "docs/research/differential-artifacts/postgres-unquoted-identifier-folding-endpoint/provenance.json",
+    "docs/research/differential-artifacts/postgres-quoted-identifier-alias-endpoint/provenance.json",
+    "docs/research/differential-artifacts/cli-extract-db-metadata/provenance.json"
+  ],
+  "sha256": {
+    "ontop_raw": "c66d6d76aef81598342d82c2c143638dbba30cb632c700bdd03864a976aeb2bf",
+    "rtop_raw": "2811a685cf7bbcc6b598ccc4a73cdffb88c34dafa369592ca64443154ffb06fc",
+    "normalized": "0daf643125d67cb28cada32159d27ba0656de8597b23f81506c610b45a82ebcd"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "head" : {
+    "vars" : [
+      "s",
+      "p",
+      "o",
+      "g"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://example.com/Student/10/Venus%20Williams"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "o" : {
+          "type" : "uri",
+          "value" : "http://xmlns.com/foaf/0.1/Person"
+        },
+        "g" : {
+          "type" : "uri",
+          "value" : "http://example.com/graph/Student/10/Venus%20Williams"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://example.com/Student/10/Venus%20Williams"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://example.com/Sport"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "Tennis"
+        },
+        "g" : {
+          "type" : "uri",
+          "value" : "http://example.com/graph/Student/10/Venus%20Williams"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://example.com/Student/10/Venus%20Williams"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://xmlns.com/foaf/0.1/name"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "Venus Williams"
+        },
+        "g" : {
+          "type" : "uri",
+          "value" : "http://example.com/graph/Student/10/Venus%20Williams"
+        }
+      },
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://example.com/Student/10/Venus%20Williams"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://example.com/id"
+        },
+        "o" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "10"
+        },
+        "g" : {
+          "type" : "uri",
+          "value" : "http://example.com/graph/Student/10/Venus%20Williams"
+        }
+      }
+    ]
+  }
+}

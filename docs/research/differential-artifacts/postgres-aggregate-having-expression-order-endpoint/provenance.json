@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-aggregate-having-expression-order-endpoint",
+  "mapping_behavior": "PostgreSQL aggregate subquery HAVING and expression ORDER BY endpoint results",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "SPARQL 1.1 aggregate/subquery/sort assets; tests/compat/postgres-http/{algebra-init.sql,mapping-algebra-bag.obda,aggregate-having-order.rq}",
+  "query": "tests/compat/postgres-http/aggregate-having-order.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "bc76968cfde42196a6e7de96f8462ac00e31075697b986f55d460ce477d33130",
+    "rtop_raw": "672829008503707cb56795eb0e8de09b2a68dd74e8611553315d4f7ea9e74ede",
+    "normalized": "561ccb0d72089a84eda3f468b14f47d24422f91820e5feed96665577cb94858e"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d007-direct-named-graph",
+  "mapping_behavior": "subject-map named graph with rdf:type and column object",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D007/{create.sql,r2rmlb.ttl}",
+  "query": "tests/compat/postgres-d007/differential-b.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "73e37a2fafabd79221d535052fef0712e6cefa337b7c97c51ac45a1bc8cb7a9c",
+    "rtop_raw": "9da7ed67bb87e6f3fd87b631883418e29cc1a2d83f93c7f443daf7879e3a25cb",
+    "normalized": "ac834d8614d51bd93f8aa2fe20f1ddd319e69c311b51d1008c30b739f9e8e3da"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-facts-rdfxml-explicit-base-endpoint",
+  "mapping_behavior": "RDF/XML facts with the explicit facts base preserve the Company integer binding alongside PostgreSQL mapping input",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "binding/rdf4j/src/test/{java/it/unibz/inf/ontop/rdf4j/repository/FactsFileTest{,RDF}.java,resources/facts/{mapping.obda,ontology.ttl,facts.rdf}}; tests/compat/postgres-facts/{init.sql,rdfxml-company.rq}",
+  "query": "tests/compat/postgres-facts/rdfxml-company.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "ebf313b3d39e93ddcc6dac6caef50ac3b3d8e112d1d015af7b1bc4dab3629983",
+    "rtop_raw": "30d06021104dd05c0f0161cd814f9039c89a0f1b27529cb5b5fdb22f1a3289cf",
+    "normalized": "5be528a484b38c26d6fcca1ffddff80eb9ab5b44fe1269672cfdfa4388d06c39"
+  }
+}

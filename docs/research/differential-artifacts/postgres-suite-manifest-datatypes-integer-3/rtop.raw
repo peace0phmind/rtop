@@ -1,0 +1,1 @@
+{"head":{"vars":["x","street"]},"results":{"bindings":[{"street":{"type":"literal","value":"Via Marconi"},"x":{"type":"uri","value":"http://www.owl-ontologies.com/Ontology1207768242.owl#address-992"}},{"street":{"type":"literal","value":"Huberg Strasse"},"x":{"type":"uri","value":"http://www.owl-ontologies.com/Ontology1207768242.owl#address-995"}}]}}

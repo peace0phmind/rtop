@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d019-invalid-iri-column-data",
+  "mapping_behavior": "reject runtime invalid IRI column data",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D019/{create.sql,r2rmlb.ttl}",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "8118f7216570e155e897992e00d7b212f5c4e18fc2f389ee98f0573224e97c0b",
+    "rtop_raw": "480626ba431abf08b952a5b86f6328d650b922052e768cb7dc0e1b1bc50336c9",
+    "normalized": "01dc18be3f289c742b1514c35003be858c03bc57c7874c02ea9527f8897289ca"
+  }
+}

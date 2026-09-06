@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d016-real-float",
+  "mapping_behavior": "PostgreSQL REAL and FLOAT default SQL datatypes",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D016/r2rmlb.ttl; tests/compat/postgres-d016/r2rml-init.sql（PostgreSQL BYTEA/DOUBLE PRECISION 适配）",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "5da2ce62fe2202a75014c2da4930fb299b3f552e46baae231fbefdc0ff8a9cf1",
+    "rtop_raw": "55f5e6d245714402ae2bc43940ee7b812842cd6ce67b5ce6665b638f63e4d132",
+    "normalized": "b77b7ccb8d85e383acdf7eb057e92de625510be5602e05626eabf6d2dba0fb16"
+  }
+}

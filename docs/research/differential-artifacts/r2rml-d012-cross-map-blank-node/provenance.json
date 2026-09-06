@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d012-cross-map-blank-node",
+  "mapping_behavior": "cross-TriplesMap blank-node identity",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D012/{create.sql,r2rmlb.ttl}",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "pgcrypto",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "db3474dcef9999e1717d69706a048c95da1abda1ff8bf5c71b646f1719b48530",
+    "rtop_raw": "89a13a8fa244417e44d846d482d8e32993b77e28c9b7cf453599f892f46bbe0d",
+    "normalized": "21640fd5a0f39a2f7691835f971967c2c41a4abbb00108ded94b38d8d44c07c5"
+  }
+}

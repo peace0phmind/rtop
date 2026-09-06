@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-native-obda-runtime-source-relation-error",
+  "mapping_behavior": "Valid native OBDA source fails at PostgreSQL execution when PERSON relation is absent",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "mapping/sql/all/src/test/resources/mistake/correct.obda; tests/compat/postgres-native-obda/empty-schema.sql (PERSON intentionally absent)",
+  "query": "CLI materialize valid mapping against absent PERSON relation",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "33704d9712d8ba9cd414801e54d9fe6c56a6593b626abc71075186606fcb56f9",
+    "rtop_raw": "60628558f2173f6b14752747efc14f394b3569babec8781e27e9fbe7ba7dacb1",
+    "normalized": "70ab8fcd9ea53212303899f8f0f50f63675f86a717a4574d221bc1651c999a0a"
+  }
+}

@@ -1,0 +1,1 @@
+{"head":{"vars":["entity","type"]},"results":{"bindings":[{"entity":{"type":"uri","value":"https://example.test/alice"},"type":{"type":"uri","value":"http://example.org/voc#Teacher"}},{"entity":{"type":"uri","value":"https://example.test/course"},"type":{"type":"uri","value":"http://example.org/voc#Course"}}]}}

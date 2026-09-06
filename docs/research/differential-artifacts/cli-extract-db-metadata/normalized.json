@@ -1,0 +1,77 @@
+{
+  "relations": [
+    {
+      "columns": [
+        {
+          "datatype": "integer",
+          "isNullable": false,
+          "name": "\"id\""
+        },
+        {
+          "datatype": "text",
+          "isNullable": false,
+          "name": "\"name\""
+        }
+      ],
+      "name": [
+        "\"query_named_people\""
+      ],
+      "uniqueConstraints": [
+        {
+          "determinants": [
+            "\"id\""
+          ],
+          "isPrimaryKey": true,
+          "name": "query_named_people_pkey"
+        }
+      ]
+    },
+    {
+      "columns": [
+        {
+          "datatype": "integer",
+          "isNullable": false,
+          "name": "\"id\""
+        },
+        {
+          "datatype": "text",
+          "isNullable": true,
+          "name": "\"name\""
+        }
+      ],
+      "name": [
+        "\"query_nullable_people\""
+      ],
+      "uniqueConstraints": [
+        {
+          "determinants": [
+            "\"id\""
+          ],
+          "isPrimaryKey": true,
+          "name": "query_nullable_people_pkey"
+        }
+      ]
+    },
+    {
+      "columns": [
+        {
+          "datatype": "integer",
+          "isNullable": false,
+          "name": "\"id\""
+        }
+      ],
+      "name": [
+        "\"query_people\""
+      ],
+      "uniqueConstraints": [
+        {
+          "determinants": [
+            "\"id\""
+          ],
+          "isPrimaryKey": true,
+          "name": "query_people_pkey"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,111 @@
+### httpdecimalscalar
+{
+  "head" : {
+    "vars" : [
+      "amount",
+      "sum",
+      "rounded",
+      "negativeHalf"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "amount" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+          "type" : "literal",
+          "value" : "-1.50"
+        },
+        "sum" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+          "type" : "literal",
+          "value" : "-1.30"
+        },
+        "rounded" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+          "type" : "literal",
+          "value" : "-2"
+        },
+        "negativeHalf" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+          "type" : "literal",
+          "value" : "-3"
+        }
+      },
+      {
+        "amount" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+          "type" : "literal",
+          "value" : "0.10"
+        },
+        "sum" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+          "type" : "literal",
+          "value" : "0.30"
+        },
+        "rounded" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+          "type" : "literal",
+          "value" : "0"
+        },
+        "negativeHalf" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+          "type" : "literal",
+          "value" : "-3"
+        }
+      },
+      {
+        "amount" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+          "type" : "literal",
+          "value" : "2.50"
+        },
+        "sum" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+          "type" : "literal",
+          "value" : "2.70"
+        },
+        "rounded" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+          "type" : "literal",
+          "value" : "3"
+        },
+        "negativeHalf" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+          "type" : "literal",
+          "value" : "-3"
+        }
+      }
+    ]
+  }
+}### httpdecimalaggregate
+{
+  "head" : {
+    "vars" : [
+      "total",
+      "roundAfterSum",
+      "sumAfterRound"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "total" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+          "type" : "literal",
+          "value" : "1.10"
+        },
+        "roundAfterSum" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+          "type" : "literal",
+          "value" : "1"
+        },
+        "sumAfterRound" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+          "type" : "literal",
+          "value" : "1"
+        }
+      }
+    ]
+  }
+}

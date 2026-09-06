@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-owl-ql-httptboxexistentialdomain-endpoint",
+  "mapping_behavior": "OWL 2 QL TBox closure and qualified existential limit through XML Catalog imports on PostgreSQL endpoint",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "tests/compat/postgres-http/{imports-catalog.xml,imports-root.ttl,imports-child.ttl,mapping-algebra-bag.obda,algebra-init.sql,tbox-*.rq}",
+  "query": "tests/compat/postgres-http/tbox-existential-domain.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "7f7c4f919abb1ed79a563bba18b383439b9c38aca7fb1322d6633bca490573df",
+    "rtop_raw": "4a9491173963bd30d140f264cdac2e6500cbcd9cd8ae4d32e9e054b13ef55372",
+    "normalized": "f64394556c6a7e45fa44810eea4087022bb0b9b00b16ba336a56519ec0c0c635"
+  }
+}

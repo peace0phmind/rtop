@@ -1,0 +1,9 @@
+{
+  "format": "http-native-obda-terms-null",
+  "language_literal": {
+    "value": "Ada",
+    "language": "en"
+  },
+  "string_literal": "visible",
+  "null_person_omitted": true
+}

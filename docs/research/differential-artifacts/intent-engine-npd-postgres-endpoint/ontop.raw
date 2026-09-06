@@ -1,0 +1,1 @@
+{"baseline":"5ec07573b18513f33dfcd59ac45fe26a81f9cdbd","scope":"NPD PostgreSQL endpoint","result":"固定 Ontop 源码树没有 intent-engine NPD service artifact；本原子从公开 ontop/npd-benchmark 固定 commit 下载、git-blob 校验并作为 rtop PostgreSQL endpoint fixture，不能伪造 Java endpoint 比较。"}

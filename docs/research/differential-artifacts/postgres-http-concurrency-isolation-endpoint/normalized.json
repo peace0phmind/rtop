@@ -1,0 +1,8 @@
+{
+  "format": "http-concurrency-isolation-and-disconnect",
+  "delayed": "pg_sleep(5) ASK false",
+  "concurrent_ask": true,
+  "disconnect_curl_exit": 28,
+  "active_delays": 0,
+  "reuse_ask": true
+}

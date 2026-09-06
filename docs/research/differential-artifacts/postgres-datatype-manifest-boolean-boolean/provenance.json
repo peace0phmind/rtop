@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-datatype-manifest-boolean-boolean",
+  "mapping_behavior": "PgsqlDatatypeTest boolean manifest query preserves xsd:boolean binding and lexical filter semantics through the endpoint",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/docker-tests/src/test/{java/it/unibz/inf/ontop/docker/datatypes/PgsqlDatatypeTest.java,resources/testcases-docker/boolean/{datatypes-pgsql.obda,boolean.rq}}; tests/compat/postgres-datatype-manifest/init.sql",
+  "query": "../ontop/test/docker-tests/src/test/resources/testcases-docker/boolean/boolean.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "45e62926c88b803bc749dbe345da62009984ab6930f37d645f5dacc7d127a11c",
+    "rtop_raw": "463a62e60a5b9d7d34f43d06d2dc84bc48a5a7825deccd9811bea67698ea3111",
+    "normalized": "4ecb02433e5ee80c1097a954124a795fe32124c6217b2e7ecc3dabf134aefa49"
+  }
+}

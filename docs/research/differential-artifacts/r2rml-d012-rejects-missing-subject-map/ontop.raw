@@ -1,0 +1,23 @@
+java.lang.RuntimeException: it.unibz.inf.ontop.exception.InvalidMappingException: Invalid mapping: TriplesMap http://example.com/base/TriplesMap1 without a subjectMap node
+	at it.unibz.inf.ontop.cli.OntopMaterialize.createMaterializer(OntopMaterialize.java:127)
+	at it.unibz.inf.ontop.cli.OntopMaterialize.run(OntopMaterialize.java:104)
+	at it.unibz.inf.ontop.cli.Ontop.main(Ontop.java:19)
+Caused by: it.unibz.inf.ontop.exception.InvalidMappingException: Invalid mapping: TriplesMap http://example.com/base/TriplesMap1 without a subjectMap node
+	at it.unibz.inf.ontop.spec.mapping.parser.impl.R2RMLMappingParser.parse(R2RMLMappingParser.java:111)
+	at it.unibz.inf.ontop.spec.mapping.parser.impl.R2RMLMappingParser.parse(R2RMLMappingParser.java:78)
+	at it.unibz.inf.ontop.spec.mapping.impl.SQLMappingExtractor.extractPPMapping(SQLMappingExtractor.java:128)
+	at it.unibz.inf.ontop.spec.mapping.impl.SQLMappingExtractor.extract(SQLMappingExtractor.java:108)
+	at it.unibz.inf.ontop.spec.impl.DefaultOBDASpecificationExtractor.extract(DefaultOBDASpecificationExtractor.java:51)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingConfigurationImpl.loadSpecification(OntopMappingConfigurationImpl.java:130)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingSQLConfigurationImpl.loadSpecification(OntopMappingSQLConfigurationImpl.java:93)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingSQLAllConfigurationImpl.loadSpecification(OntopMappingSQLAllConfigurationImpl.java:55)
+	at it.unibz.inf.ontop.injection.impl.OntopSQLOWLAPIConfigurationImpl.loadOBDASpecification(OntopSQLOWLAPIConfigurationImpl.java:42)
+	at it.unibz.inf.ontop.injection.impl.OntopOBDAConfigurationImpl.loadSpecification(OntopOBDAConfigurationImpl.java:44)
+	at it.unibz.inf.ontop.materialization.impl.OnePassRDFMaterializer.<init>(OnePassRDFMaterializer.java:62)
+	at it.unibz.inf.ontop.materialization.impl.Materializers.create(Materializers.java:14)
+	at it.unibz.inf.ontop.rdf4j.materialization.impl.DefaultRDF4JMaterializer.<init>(DefaultRDF4JMaterializer.java:40)
+	at it.unibz.inf.ontop.rdf4j.materialization.RDF4JMaterializer.defaultMaterializer(RDF4JMaterializer.java:36)
+	at it.unibz.inf.ontop.cli.OntopMaterialize.createMaterializer(OntopMaterialize.java:119)
+	... 2 more
+Exception in thread "main" java.lang.AssertionError
+	at it.unibz.inf.ontop.cli.Ontop.main(Ontop.java:31)

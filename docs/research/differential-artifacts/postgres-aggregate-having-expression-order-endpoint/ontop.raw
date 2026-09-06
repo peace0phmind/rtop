@@ -1,0 +1,34 @@
+{
+  "head" : {
+    "vars" : [
+      "category",
+      "total"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "category" : {
+          "type" : "literal",
+          "value" : "profit"
+        },
+        "total" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+          "type" : "literal",
+          "value" : "2.60"
+        }
+      },
+      {
+        "category" : {
+          "type" : "literal",
+          "value" : "loss"
+        },
+        "total" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+          "type" : "literal",
+          "value" : "-1.50"
+        }
+      }
+    ]
+  }
+}

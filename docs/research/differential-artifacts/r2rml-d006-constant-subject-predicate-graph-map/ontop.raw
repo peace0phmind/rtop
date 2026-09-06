@@ -1,0 +1,32 @@
+{
+  "head" : {
+    "vars" : [
+      "s",
+      "p",
+      "o",
+      "g"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "s" : {
+          "type" : "uri",
+          "value" : "http://example.com/BadStudent"
+        },
+        "p" : {
+          "type" : "uri",
+          "value" : "http://example.com/description"
+        },
+        "o" : {
+          "type" : "literal",
+          "value" : "Bad Student"
+        },
+        "g" : {
+          "type" : "uri",
+          "value" : "http://example.com/graph/student"
+        }
+      }
+    ]
+  }
+}

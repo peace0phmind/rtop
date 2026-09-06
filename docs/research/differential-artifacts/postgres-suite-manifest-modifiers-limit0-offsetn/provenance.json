@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-suite-manifest-modifiers-limit0-offsetn",
+  "mapping_behavior": "DockerPostgresTestSuite stockexchange modifiers limit0-offsetn manifest query 的 SPARQL JSON bindings",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/docker-tests/src/test/resources/testcases-docker/virtual-mode/stockexchange/modifiers/{stockexchange-pgsql.obda,stockexchange.owl,limit0-offsetn.rq}; test/docker-tests/src/test/resources/dump/stockexchange-create-pgsql.sql",
+  "query": "../ontop/test/docker-tests/src/test/resources/testcases-docker/virtual-mode/stockexchange/modifiers/limit0-offsetn.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "51452073fb0a5cd810af13f49dd6c1feca03e5af210fab0c11c4d27bcb7cfdef",
+    "rtop_raw": "5d9a0657cdeed69fb8d93ed76bbf0d981789c065a217eb0e3c3befe9808a471b",
+    "normalized": "e7b756c156c9b2cfa4203ce250fcdc8a50770306dcb3887622abf456b379b3de"
+  }
+}

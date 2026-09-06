@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-cli-obda-to-r2rml-force-template-graph",
+  "mapping_behavior": "to-r2rml --force preserves a native template named graph on reload",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopOBDAToR2RML.java; tests/compat/postgres-query-kinds/{init.sql,template-graph.obda}; each converted mapping is reloaded by its own CLI",
+  "query": "to-r2rml template graph generated mappings materialized as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "8c90a3c0224be3b544b2e4d64af3eaaa5e5920a1441f3df41c25bb1d3275c9b6",
+    "rtop_raw": "8c90a3c0224be3b544b2e4d64af3eaaa5e5920a1441f3df41c25bb1d3275c9b6",
+    "normalized": "7c29295fdc2349ac094fcc1fd57f25f90cecada244149aeb73859320927d156b"
+  }
+}

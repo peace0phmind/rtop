@@ -1,0 +1,4 @@
+it.unibz.inf.ontop.spec.mapping.exception.R2RMLSerializationException: Duplicate mapping IDs found in obda file
+	at it.unibz.inf.ontop.spec.mapping.serializer.impl.R2RMLMappingSerializer.write(R2RMLMappingSerializer.java:48)
+	at it.unibz.inf.ontop.cli.OntopOBDAToR2RML.run(OntopOBDAToR2RML.java:125)
+	at it.unibz.inf.ontop.cli.Ontop.main(Ontop.java:19)

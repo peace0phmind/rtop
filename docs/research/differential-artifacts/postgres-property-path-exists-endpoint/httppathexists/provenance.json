@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-httppathexists-endpoint",
+  "mapping_behavior": "PostgreSQL property path and correlated EXISTS/NOT EXISTS endpoint results",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "SPARQL 1.1 property path/EXISTS assets; tests/compat/postgres-http algebra fixture",
+  "query": "tests/compat/postgres-http/property-path-exists.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "9ea4fba0a8de9c4d0b9fd49724e0d492501681a9363add93b1584ed1ecf349e3",
+    "rtop_raw": "0a4df1518cefb4ce0f44fce98ace4e2313871c2d3cbf458a9a7f354383dc1e7a",
+    "normalized": "6f3411c314957b243029688aff56985ed91098d83adfd3239a6565253e039ffd"
+  }
+}

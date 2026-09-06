@@ -1,0 +1,61 @@
+{
+  "head" : {
+    "vars" : [
+      "person",
+      "name",
+      "tag"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "person" : {
+          "type" : "uri",
+          "value" : "https://example.test/person/1"
+        },
+        "name" : {
+          "type" : "literal",
+          "value" : "Ada"
+        },
+        "tag" : {
+          "type" : "literal",
+          "value" : "left"
+        }
+      },
+      {
+        "person" : {
+          "type" : "uri",
+          "value" : "https://example.test/person/1"
+        },
+        "name" : {
+          "type" : "literal",
+          "value" : "Ada"
+        },
+        "tag" : {
+          "type" : "literal",
+          "value" : "right"
+        }
+      },
+      {
+        "person" : {
+          "type" : "uri",
+          "value" : "https://example.test/person/3"
+        },
+        "tag" : {
+          "type" : "literal",
+          "value" : "left"
+        }
+      },
+      {
+        "person" : {
+          "type" : "uri",
+          "value" : "https://example.test/person/3"
+        },
+        "tag" : {
+          "type" : "literal",
+          "value" : "right"
+        }
+      }
+    ]
+  }
+}

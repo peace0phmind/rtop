@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-postgis-geometry-geography-intersection-endpoint",
+  "mapping_behavior": "GeoSPARQL PostGIS geometry/geography buffer intersection and mixed-type empty results",
+  "status": "passed",
+  "status_reason": "固定 PostGIS 17/3.5 digest 下三项双边 HTTP JSON 结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6",
+  "required_postgres_image_digest": "sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6",
+  "fixture": "test/lightweight-tests/src/test/resources/geospatial/geospatial.obda; tests/compat/postgres-geospatial/{init.sql,geospatial.obda,intersection-1.rq,intersection-2.rq,intersection-3.rq}",
+  "query": "geometry/geography buffer intersection plus two mixed-type counterfactuals",
+  "postgres_extensions": "postgis",
+  "independent_processes": {
+    "ontop": "Java 17 container endpoint",
+    "rtop": "Rust host endpoint"
+  },
+  "sha256": {
+    "ontop_raw": "4fa61c7dda1dbd2cc397f88074aea30a39e0cae65e732445991418c86eeaac4d",
+    "rtop_raw": "7cb0b262511d294bc7fdb8ef1bc2a5663eb33388d6232958de424b6b3354335b",
+    "normalized": "26f259281d2563e9c322dee393b1dcb3069864fa59b1c8f31475a67935b2541e"
+  }
+}

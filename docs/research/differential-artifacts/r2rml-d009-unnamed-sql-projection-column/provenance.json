@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d009-unnamed-sql-projection-column",
+  "mapping_behavior": "unnamed SQL projection column",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D009/{create.sql,r2rmlc.ttl}",
+  "query": "materialize default graph as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "0a069790cb012318593a291a834c5a2cc43e57e9575c0ca4ac24cda0b98ca8a0",
+    "rtop_raw": "0a069790cb012318593a291a834c5a2cc43e57e9575c0ca4ac24cda0b98ca8a0",
+    "normalized": "0827b310afe04ab65cd3cf26ef1b7fb5b03e1a136743b485e9ad9bb845f5bbc6"
+  }
+}

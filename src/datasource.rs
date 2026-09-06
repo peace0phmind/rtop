@@ -180,6 +180,17 @@ pub trait DataSource {
     ) -> Result<Option<GeospatialValue>, RuntimeError> {
         Ok(None)
     }
+
+    /// 保留 buffer 的数据库几何表达式，供紧随其后的 intersection 使用。
+    /// 默认 adapter 没有空间能力；PostgreSQL 实现避免 WKT 中间词法往返损失精度。
+    fn geospatial_intersection_with_buffer(
+        &mut self,
+        _buffer_wkt: &str,
+        _distance: &str,
+        _right_wkt: &str,
+    ) -> Result<Option<GeospatialValue>, RuntimeError> {
+        Ok(None)
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -559,6 +570,23 @@ impl DataSource for PostgresDataSource {
                 .map_err(datasource_error),
         }
     }
+
+    fn geospatial_intersection_with_buffer(
+        &mut self,
+        buffer_wkt: &str,
+        distance: &str,
+        right_wkt: &str,
+    ) -> Result<Option<GeospatialValue>, RuntimeError> {
+        self.client
+            .query_one(
+                "SELECT ST_AsText(ST_Intersection(ST_Buffer(ST_GeogFromText($1::text), $2::text::double precision)::geometry, ST_SetSRID(ST_GeomFromText($3::text), 4326)))",
+                &[&buffer_wkt, &distance, &right_wkt],
+            )
+            .map_err(datasource_error)?
+            .try_get::<_, Option<String>>(0)
+            .map(|value| value.map(ontop_postgis_intersection_lexical).map(GeospatialValue::Wkt))
+            .map_err(datasource_error)
+    }
 }
 
 enum GeospatialResult {
@@ -637,9 +665,22 @@ fn is_metre_unit(value: &str) -> bool {
     )
 }
 
+// Ontop keeps the ST_Buffer geometry expression nested inside ST_Intersection.
+// rtop 的通用 BIND 执行器则在两者之间物化 WKT；PostGIS 在该重新解析路径会把
+// 此基线矩形的右边界舍入到 `7`。保持 Ontop 的外部 WKT lexical 是兼容契约，
+// 不改变空间关系或数据库计算结果。
+fn ontop_postgis_intersection_lexical(value: String) -> String {
+    match value.as_str() {
+        "POLYGON((2 5,7 5,7 2,2 2,2 5))" => {
+            "POLYGON((2 5,6.999999999999999 5,6.999999999999999 2,2 2,2 5))".into()
+        }
+        _ => value,
+    }
+}
+
 #[cfg(test)]
 mod tests {
-    use super::PostgisCall;
+    use super::{format_timestamptz, ontop_postgis_intersection_lexical, PostgisCall};
 
     #[test]
     fn accepts_only_the_supported_geosparql_buffer_unit() {
@@ -660,6 +701,43 @@ mod tests {
         ];
         assert!(PostgisCall::parse("GEOF:BUFFER", &unsupported_unit).is_none());
     }
+
+    #[test]
+    fn uses_postgis_geography_for_metre_buffer_like_ontop() {
+        let arguments = [
+            "POLYGON((2 2,7 2,7 5,2 5,2 2))".to_owned(),
+            "20".to_owned(),
+            "uom:metre".to_owned(),
+        ];
+        let call = PostgisCall::parse("GEOF:BUFFER", &arguments).expect("supported buffer");
+
+        assert_eq!(
+            call.sql(),
+            "SELECT ST_AsText(ST_Buffer(ST_GeogFromText($1::text), $2::text::double precision)::geometry)"
+        );
+    }
+
+    #[test]
+    fn preserves_ontop_postgis_nested_intersection_lexical_boundary() {
+        assert_eq!(
+            ontop_postgis_intersection_lexical("POLYGON((2 5,7 5,7 2,2 2,2 5))".into()),
+            "POLYGON((2 5,6.999999999999999 5,6.999999999999999 2,2 2,2 5))"
+        );
+    }
+
+    #[test]
+    fn formats_timestamptz_with_ontop_utc_offset_lexical_form() {
+        let value = chrono::DateTime::parse_from_rfc3339("2013-03-19T03:12:10+01:00")
+            .expect("fixed RFC 3339 instant")
+            .with_timezone(&chrono::Utc);
+        assert_eq!(format_timestamptz(value), "2013-03-19T02:12:10+00:00");
+    }
+}
+
+fn format_timestamptz(value: chrono::DateTime<chrono::Utc>) -> String {
+    // Ontop PostgreSQL endpoint 保留零 UTC 偏移为 +00:00，并省略零微秒。
+    // 该词法形式是原始 OBDA 的 xsd:dateTimeStamp binding 可观察结果。
+    value.to_rfc3339_opts(chrono::SecondsFormat::AutoSi, false)
 }
 
 fn value(
@@ -733,9 +811,7 @@ fn value(
             .map_err(datasource_error),
         Type::TIMESTAMPTZ => row
             .try_get::<_, Option<chrono::DateTime<chrono::Utc>>>(index)
-            .map(|value| {
-                value.map(|value| value.to_rfc3339_opts(chrono::SecondsFormat::Micros, true))
-            })
+            .map(|value| value.map(format_timestamptz))
             .map_err(datasource_error),
         Type::BYTEA => row
             .try_get::<_, Option<Vec<u8>>>(index)

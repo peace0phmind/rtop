@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-http-result-formats-endpoint",
+  "mapping_behavior": "PostgreSQL endpoint negotiates SPARQL JSON/XML/CSV/TSV, N-Triples CONSTRUCT, and rejects an unsupported Accept value",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "client/endpoint/src/main/java/it/unibz/inf/ontop/endpoint/controllers/SparqlQueryController.java; tests/compat/{postgres-query-kinds/init.sql,postgres-http/mapping-sql-seam.obda,postgres-http/sql-seam.rq}",
+  "query": "SELECT person/name and CONSTRUCT person/name with JSON/XML/CSV/TSV/N-Triples Accept negotiation",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "43520b1a0e58f96d40a969b743b64d0ef3ec58f4bb0e418056fee1753a179cbd",
+    "rtop_raw": "942b15d96efea9288089f2d8fedea84387fee54ffa93e83fe669e1fb770a681c",
+    "normalized": "05c9429aabed49c8360ac51d0578aa67f23bc2c9649fa75a9f2eda7d720797b4"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "format": "property-path-exists-http-suite",
+  "cases": [
+    {
+      "case_id": "differential-postgres-httppathexists-endpoint",
+      "status": "passed",
+      "mapping_behavior": "PostgreSQL property path and correlated EXISTS/NOT EXISTS endpoint results"
+    },
+    {
+      "case_id": "differential-postgres-httppathnotexists-endpoint",
+      "status": "passed",
+      "mapping_behavior": "PostgreSQL property path and correlated EXISTS/NOT EXISTS endpoint results"
+    }
+  ],
+  "all_passed": true
+}

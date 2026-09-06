@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-decimal-round-aggregate-endpoint",
+  "mapping_behavior": "PostgreSQL decimal aggregate, ROUND(SUM), and SUM(ROUND) endpoint results",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "tests/compat/postgres-http/{algebra-init.sql,mapping-algebra-bag.obda,decimal-round-aggregate.rq}",
+  "query": "tests/compat/postgres-http/decimal-round-aggregate.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "1160e8aaa987e425e74bd649b813185324eaac143dfd014f2a9456334ce874c5",
+    "rtop_raw": "ccfc725b722d7929c6971a4a24a5898ddd3b47049ece52a92bd79eac84237347",
+    "normalized": "0a9412489734f1b091cbc0e308fc1cf43a394fb8b0b00dfbd7994231d3a55a1e"
+  }
+}

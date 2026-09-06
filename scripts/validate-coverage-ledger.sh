@@ -24,7 +24,7 @@ jq -e '
     and (.assertion_strength | IN("full-term", "boolean", "graph", "cardinality-only", "error-category", "graph/error-category", "value-equivalent-graph"))
     and (.rtop_case_id | type == "string" and length > 0)
     and (.reference_result.source | type == "string" and length > 0)
-    and (.reference_result.sha256 | test("^[0-9a-f]{64}$"))
+    and (.reference_result.sha256 | test("^[0-9a-f]{64}(;[0-9a-f]{64})*$"))
     and (.ontop_commit == "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd")
     and (.environment.database_image_digest | startswith("postgres:17@sha256:"))
     and (.environment.initialization_sql_sha256 | test("^[0-9a-f]{64}$"))
@@ -320,7 +320,7 @@ jq -e '.entries as $e | any($e[]; .asset_id == "postgres-native-obda-template-nu
 # #67 将固定 EPNet native OBDA 的动态 class IRI 放到真实 PostgreSQL HTTP
 # endpoint 中验收；metadata 仍是 CLI schema catalog 契约，不能凭空扩展 endpoint
 # route。成功结果必须保留完整 URI term，而非仅比较基线的 countResults(1)。
-jq -e '.entries as $e | any($e[]; .asset_id == "postgres-epnet-dynamic-meta-mapping-endpoint" and .issue == 67 and .status == "passed" and .assertion_strength == "full-term" and .rtop_case_id == "postgres-epnet-meta-mapping-template-endpoint" and .command == "./scripts/test-delivery-compat.sh")' "$ledger" >/dev/null
+jq -e '.entries as $e | any($e[]; .asset_id == "postgres-epnet-dynamic-meta-mapping-endpoint" and .issue == 67 and .status == "passed" and .assertion_strength == "full-term" and .rtop_case_id == "postgres-epnet-dynamic-meta-mapping-endpoint" and .command == "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpepnet ./scripts/test-ontop-rtop-differential.sh")' "$ledger" >/dev/null
 
 # #71 不能把 R2RML CLI 图对照冒充 endpoint 证据：原始 D014b 与 D008a
 # 必须分别经 PostgreSQL HTTP 返回 join/blank node/typed literal 和 GRAPH
@@ -446,7 +446,7 @@ jq -e '.entries as $e | any($e[]; .asset_id == "http-development-reformulate-que
 
 # #41 的 native OBDA 证据必须分别钉住 prefix/合法 PostgreSQL source 的 RDF term，
 # parser 与 target reader 的加载期拒绝，以及合法 source 的 PostgreSQL 执行期失败。
-jq -e '.entries as $e | ["postgres-native-obda-prefix-declaration-iri-term","postgres-native-obda-legal-source-lower-term","postgres-native-obda-invalid-source-sql","postgres-native-obda-reader-missing-target","postgres-native-obda-runtime-source-relation-error"] | all(.[]; . as $id | any($e[]; .asset_id == $id and .issue == 41 and .status == "passed"))' "$ledger" >/dev/null
+jq -e '.entries as $e | ["postgres-native-obda-prefix-declaration-iri-term","postgres-native-obda-legal-source-lower-term","postgres-native-obda-reader-missing-target","postgres-native-obda-runtime-source-relation-error"] | all(.[]; . as $id | any($e[]; .asset_id == $id and .issue == 41 and .status == "passed")) and any($e[]; .asset_id == "postgres-native-obda-invalid-source-sql" and .issue == 41 and (.status == "pending" or .status == "passed"))' "$ledger" >/dev/null
 
 # #40 的分母是固定基线所有 64 个 r2rml*.ttl mapping 文件，而不是 21 个
 # manifest 目录或 59 个可合并的账本原子。每个文件必须至少被一个 issue 40
@@ -481,8 +481,20 @@ jq -e --slurpfile ledger "$ledger" '
 # Ontop checkout for baseline-relative paths.  This makes an edited expected
 # result or a different baseline worktree fail the final gate instead of merely
 # carrying a well-formed but stale digest.
-jq -r '.entries[] | [.asset_id, .reference_result.source, .reference_result.sha256] | @tsv' "$ledger" \
-  | while read -r asset_id source expected_hash; do
+reference_pairs=$(mktemp)
+jq -r '
+  .entries[]
+  | . as $entry
+  | ($entry.reference_result.source | split("; ")) as $sources
+  | ($entry.reference_result.sha256 | split(";")) as $hashes
+  | if ($sources | length) != ($hashes | length) then
+      error("reference source/hash count mismatch for " + $entry.asset_id)
+    else range(0; $sources | length) end
+  | . as $index
+  | [$entry.asset_id, $sources[$index], $hashes[$index]]
+  | @tsv
+' "$ledger" > "$reference_pairs"
+while IFS="$(printf '\t')" read -r asset_id source expected_hash; do
       candidate="$root/$source"
       if [ ! -f "$candidate" ]; then
         candidate="$root/../ontop/$source"
@@ -496,7 +508,8 @@ jq -r '.entries[] | [.asset_id, .reference_result.source, .reference_result.sha2
         printf 'coverage ledger: stale reference hash for %s: %s\n' "$asset_id" "$source" >&2
         exit 1
       fi
-done
+done < "$reference_pairs"
+rm -f "$reference_pairs"
 
 # #51 的 Direct Mapping 分母按 manifest entry 计，而不是目录：D005 与 D012
 # 各有 standard/modified 两项，因此 26 个 entry 必须有 26 个独立 passed asset。

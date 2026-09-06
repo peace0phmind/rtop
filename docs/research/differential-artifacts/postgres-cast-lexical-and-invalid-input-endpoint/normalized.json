@@ -1,0 +1,16 @@
+{
+  "format": "postgres-cast-http-suite",
+  "cases": [
+    {
+      "case_id": "differential-postgres-httpcastscalar-endpoint",
+      "status": "passed",
+      "mapping_behavior": "PostgreSQL CastPostgreSQL scalar lexical result and invalid cast expression-error bindings through the endpoint"
+    },
+    {
+      "case_id": "differential-postgres-httpcastinvalid-endpoint",
+      "status": "passed",
+      "mapping_behavior": "PostgreSQL CastPostgreSQL scalar lexical result and invalid cast expression-error bindings through the endpoint"
+    }
+  ],
+  "all_passed": true
+}

@@ -1,0 +1,49 @@
+10:54:35.681 |-INFO  in i.u.i.o.a.impl.OntopQueryEngineImpl - Ontop has completed the setup and it is ready for query answering!
+java.lang.RuntimeException: org.eclipse.rdf4j.query.QueryEvaluationException: it.unibz.inf.ontop.exception.OntopResultConversionException: java.lang.IllegalArgumentException: Not a valid (absolute) IRI: Carlos
+	at it.unibz.inf.ontop.cli.OntopMaterialize.runWithSingleFile(OntopMaterialize.java:147)
+	at it.unibz.inf.ontop.cli.OntopMaterialize.run(OntopMaterialize.java:109)
+	at it.unibz.inf.ontop.cli.Ontop.main(Ontop.java:19)
+Caused by: org.eclipse.rdf4j.query.QueryEvaluationException: it.unibz.inf.ontop.exception.OntopResultConversionException: java.lang.IllegalArgumentException: Not a valid (absolute) IRI: Carlos
+	at it.unibz.inf.ontop.rdf4j.materialization.impl.DefaultRDF4JMaterializer$GraphMaterializationIteration.next(DefaultRDF4JMaterializer.java:233)
+	at it.unibz.inf.ontop.rdf4j.materialization.impl.DefaultRDF4JMaterializer$GraphMaterializationIteration.next(DefaultRDF4JMaterializer.java:202)
+	at org.eclipse.rdf4j.common.iteration.IterationWrapper.next(IterationWrapper.java:88)
+	at it.unibz.inf.ontop.cli.OntopMaterialize.serializeTripleBatch(OntopMaterialize.java:291)
+	at it.unibz.inf.ontop.cli.OntopMaterialize.runWithSingleFile(OntopMaterialize.java:140)
+	... 2 more
+Caused by: it.unibz.inf.ontop.exception.OntopResultConversionException: java.lang.IllegalArgumentException: Not a valid (absolute) IRI: Carlos
+	at it.unibz.inf.ontop.query.resultset.impl.JDBCTupleResultSet.readCurrentRow(JDBCTupleResultSet.java:76)
+	at it.unibz.inf.ontop.query.resultset.impl.JDBCTupleResultSet.readCurrentRow(JDBCTupleResultSet.java:26)
+	at it.unibz.inf.ontop.query.resultset.impl.AbstractTupleResultSet.next(AbstractTupleResultSet.java:79)
+	at it.unibz.inf.ontop.query.resultset.impl.AbstractTupleResultSet.next(AbstractTupleResultSet.java:18)
+	at it.unibz.inf.ontop.materialization.impl.OnePassMaterializedGraphResultSet.next(OnePassMaterializedGraphResultSet.java:126)
+	at it.unibz.inf.ontop.rdf4j.materialization.impl.DefaultRDF4JMaterializer$GraphMaterializationIteration.next(DefaultRDF4JMaterializer.java:231)
+	... 6 more
+Caused by: java.lang.IllegalArgumentException: Not a valid (absolute) IRI: Carlos
+	at org.eclipse.rdf4j.model.impl.SimpleIRI.setIRIString(SimpleIRI.java:96)
+	at org.eclipse.rdf4j.model.impl.SimpleIRI.<init>(SimpleIRI.java:67)
+	at org.eclipse.rdf4j.model.impl.SimpleValueFactory.createIRI(SimpleValueFactory.java:83)
+	at org.apache.commons.rdf.rdf4j.RDF4J.createIRI(RDF4J.java:607)
+	at org.apache.commons.rdf.rdf4j.RDF4J.createIRI(RDF4J.java:104)
+	at it.unibz.inf.ontop.model.term.impl.TermFactoryImpl.getRDFConstant(TermFactoryImpl.java:116)
+	at it.unibz.inf.ontop.model.term.functionsymbol.impl.RDFTermFunctionSymbolImpl.buildTermAfterEvaluation(RDFTermFunctionSymbolImpl.java:70)
+	at it.unibz.inf.ontop.model.term.functionsymbol.impl.FunctionSymbolImpl.lambda$simplify$6(FunctionSymbolImpl.java:97)
+	at java.base/java.util.Optional.orElseGet(Optional.java:364)
+	at it.unibz.inf.ontop.model.term.functionsymbol.impl.FunctionSymbolImpl.simplify(FunctionSymbolImpl.java:97)
+	at it.unibz.inf.ontop.model.term.impl.ImmutableFunctionalTermImpl.simplify(ImmutableFunctionalTermImpl.java:147)
+	at it.unibz.inf.ontop.query.resultset.impl.JDBCTupleResultSet.evaluate(JDBCTupleResultSet.java:113)
+	at it.unibz.inf.ontop.query.resultset.impl.JDBCTupleResultSet.getBinding(JDBCTupleResultSet.java:107)
+	at it.unibz.inf.ontop.query.resultset.impl.JDBCTupleResultSet.lambda$computeBindingMap$1(JDBCTupleResultSet.java:89)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197)
+	at com.google.common.collect.CollectSpliterators$1WithCharacteristics.lambda$forEachRemaining$1(CollectSpliterators.java:72)
+	at java.base/java.util.stream.Streams$RangeIntSpliterator.forEachRemaining(Streams.java:104)
+	at com.google.common.collect.CollectSpliterators$1WithCharacteristics.forEachRemaining(CollectSpliterators.java:72)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:575)
+	at java.base/java.util.stream.AbstractPipeline.evaluateToArrayNode(AbstractPipeline.java:260)
+	at java.base/java.util.stream.ReferencePipeline.toArray(ReferencePipeline.java:616)
+	at it.unibz.inf.ontop.query.resultset.impl.JDBCTupleResultSet.computeBindingMap(JDBCTupleResultSet.java:92)
+	at it.unibz.inf.ontop.query.resultset.impl.JDBCTupleResultSet.readCurrentRow(JDBCTupleResultSet.java:73)
+	... 11 more
+Exception in thread "main" java.lang.AssertionError
+	at it.unibz.inf.ontop.cli.Ontop.main(Ontop.java:31)

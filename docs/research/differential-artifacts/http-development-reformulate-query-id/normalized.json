@@ -1,0 +1,10 @@
+{
+  "format": "development-reformulate",
+  "paths": [
+    "default",
+    "forNativeConsumption=true"
+  ],
+  "status": "200",
+  "sql_diagnostic": true,
+  "query_id": "uuid-v4"
+}

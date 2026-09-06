@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d003-sql1979-annotation",
+  "mapping_behavior": "rr:SQL1979 annotation accepted by the fixed Ontop CLI baseline",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D003/{create.sql,r2rmla.ttl}",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "2f1526f52e5b7d764e52bf26ebd01dfb7d924fdd021f208e37b493c56d99c36f",
+    "rtop_raw": "bd779f891770f911c234f888ddffbde0062a69c72032ad2db254d87671617f6f",
+    "normalized": "5416e6dcdc0a5504788ec14ef6587d5affc957d06f6c8e01ba3a9f12f75c1c2c"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-cli-v1-to-v3-duplicate-qualified-alias",
+  "mapping_behavior": "v1-to-v3 generates distinct stable aliases for duplicate qualified projection suffixes on reload",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopMappingV1ToV3.java; tests/compat/postgres-query-kinds/{init.sql,v1-to-v3-duplicate-alias.obda}; each converted mapping is reloaded by its own CLI",
+  "query": "v1-to-v3 duplicate qualified aliases generated mappings materialized as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "50a334c1745bc8eae4b376f4accc80285cb26b5ea5c2d40c663c43b4f5491c3e",
+    "rtop_raw": "50a334c1745bc8eae4b376f4accc80285cb26b5ea5c2d40c663c43b4f5491c3e",
+    "normalized": "e4d9b2c1446453e0bdc8e602691f669a1c258165e044f285c4f06c4b29d89a9a"
+  }
+}

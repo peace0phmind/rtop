@@ -1,0 +1,1 @@
+{"format":"differential-artifact-aggregation","all_components_passed":true,"components":["differential-postgres-nested-json-jsonb-array-aggregate-endpoint","differential-postgres-postgis-geometry-geography-intersection-endpoint"]}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d016-default-sql-datatypes",
+  "mapping_behavior": "PostgreSQL DATE TIMESTAMP BOOLEAN default SQL datatypes",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D016/r2rmlc.ttl; tests/compat/postgres-d016/r2rml-init.sql（PostgreSQL BYTEA/DOUBLE PRECISION 适配）",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "f7cf4cf1cb44ad74229caeadce4c35dbdbbec6c8fc5557aaf25329c8e7504f9d",
+    "rtop_raw": "14d5948e7a13f2ed7f99317cc8e9b55aec9019cd9ee1427f9abc4ff932d9329c",
+    "normalized": "8991cdd1d9f8955ea0fdb25be1de995641d2975ae23ac6137350e10ac7949bef"
+  }
+}

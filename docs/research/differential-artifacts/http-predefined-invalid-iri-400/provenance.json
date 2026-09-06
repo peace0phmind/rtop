@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-http-predefined-invalid-iri-400",
+  "mapping_behavior": "predefined IRI parameter rejects an invalid IRI with Ontop controller HTTP 500 before query evaluation",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "client/endpoint/src/main/java/it/unibz/inf/ontop/endpoint/controllers/PredefinedQueryController.java; tests/compat/postgres-http/{predefined-person.obda,algebra-init.sql,predefined.json,predefined.toml}",
+  "query": "GET /predefined/person?person=not-an-iri status",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "792376c209f338959be4cf00c54dbf82662b90516082e23106faec4c43c69e49",
+    "rtop_raw": "792376c209f338959be4cf00c54dbf82662b90516082e23106faec4c43c69e49",
+    "normalized": "40355ad13f5b8bcfa93e732fb4441166de3cddf38534c86fbd35b0857022f133"
+  }
+}

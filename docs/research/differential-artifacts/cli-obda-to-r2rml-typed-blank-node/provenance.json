@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-cli-obda-to-r2rml-typed-blank-node",
+  "mapping_behavior": "to-r2rml --force preserves a native blank-node subject and typed column object on reload",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopOBDAToR2RML.java; tests/compat/postgres-query-kinds/{init.sql,typed-blank-node.obda}; each converted mapping is reloaded by its own CLI",
+  "query": "to-r2rml typed blank-node generated mappings materialized as N-Quads",
+  "postgres_extensions": "pgcrypto",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "b7f505295b6905a52d933495efddb5a890916c4200929c78b5bec03a01123561",
+    "rtop_raw": "33bf6107489e375c43b1b76e2bb5c9a76453c9d20cf76e471d018bfdf71d4aa8",
+    "normalized": "8e15d5c7b2a7ef2fc9e5de4d213658936faed33d161f7ca174951ca884eda097"
+  }
+}

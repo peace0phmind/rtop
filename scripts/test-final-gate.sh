@@ -18,6 +18,7 @@ run_gate rust-tests cargo test --all --locked
 run_gate baseline-discovery ./scripts/validate-postgres-baseline-discovery.sh
 run_gate method-audits ./scripts/validate-postgres-method-audits.sh
 run_gate coverage-ledger ./scripts/validate-coverage-ledger.sh
+run_gate closure-matrix-structure ./scripts/validate-three-layer-closure-matrix.sh
 run_gate report-json jq empty compatibility-report.json
 run_gate diff-check git diff --check
 run_gate postgres-compat ./scripts/test-postgres-compat.sh

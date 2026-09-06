@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-httpcastinvalid-endpoint",
+  "mapping_behavior": "PostgreSQL CastPostgreSQL scalar lexical result and invalid cast expression-error bindings through the endpoint",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/lightweight-tests/src/test/{java/it/unibz/inf/ontop/docker/lightweight/postgresql/CastPostgreSQLTest.java,resources/books/books.obda}; tests/compat/postgres-expressions/init.sql; tests/compat/postgres-cast queries",
+  "query": "tests/compat/postgres-cast/cast-invalid-direct.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "bcd7f9bf9ca750d51a89d21e86232db8c6cf0101d9d78503b9c479d3f6c718d4",
+    "rtop_raw": "5f1bc1a5440921050be89a001dba7e37c77d025b065ed160775a3e2ae6f827c8",
+    "normalized": "bfd9b5add0e02144aa09983b8b5fd0e249cdb7d9e78b20e5107e0f6074f4afa0"
+  }
+}

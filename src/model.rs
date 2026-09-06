@@ -39,6 +39,10 @@ pub enum RuntimeError {
     MalformedSparql(String),
     #[error("unsupported-sparql: {0}")]
     UnsupportedSparql(String),
+    // Ontop lets an invalid declared IRI parameter escape its predefined-query
+    // controller and reports it through the controller's generic 500 handler.
+    #[error("Unexpected exception: Not a valid (absolute) IRI: {0}")]
+    InvalidPredefinedIri(String),
     #[error("not-acceptable: {0}")]
     NotAcceptable(String),
     #[error("not-fully-translatable: {0}")]

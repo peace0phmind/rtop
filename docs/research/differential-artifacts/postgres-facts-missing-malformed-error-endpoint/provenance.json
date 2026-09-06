@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-facts-missing-malformed-error-endpoint",
+  "mapping_behavior": "missing and malformed Turtle facts reject both endpoints before health readiness",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下两端均以各自稳定 facts 错误类别拒绝启动",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "binding/rdf4j/src/test/resources/facts/mapping.obda; tests/compat/postgres-facts/{missing.ttl,malformed.ttl}",
+  "query": "endpoint startup rejection",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container endpoint",
+    "rtop": "Rust host endpoint"
+  },
+  "sha256": {
+    "ontop_raw": "2e6fbb123564f6b95e61eabe9d0720e212e050df863b3e7ff347bee9a5bf8f5c",
+    "rtop_raw": "51779dd11090374b3f7cb43b0a71d5d4938db0b98e13a23214f16dfa1bac36c0",
+    "normalized": "c2354f02cddad2a17766e027929a5a2f4693ef47bc0423f6e149d4e20115b5b0"
+  }
+}

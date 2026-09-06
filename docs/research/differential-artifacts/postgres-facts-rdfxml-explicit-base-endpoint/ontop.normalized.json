@@ -1,0 +1,23 @@
+{
+  "head": {
+    "vars": [
+      "company",
+      "year"
+    ]
+  },
+  "results": {
+    "bindings": [
+      {
+        "company": {
+          "type": "uri",
+          "value": "http://www.semanticweb.org/ontop-facts#factCompany"
+        },
+        "year": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "2022"
+        }
+      }
+    ]
+  }
+}

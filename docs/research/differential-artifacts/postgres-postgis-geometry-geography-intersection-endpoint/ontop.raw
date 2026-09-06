@@ -1,0 +1,39 @@
+### httppostgisintersection1
+{
+  "head" : {
+    "vars" : [
+      "v"
+    ]
+  },
+  "results" : {
+    "bindings" : [ ]
+  }
+}### httppostgisintersection2
+{
+  "head" : {
+    "vars" : [
+      "v"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "v" : {
+          "datatype" : "http://www.opengis.net/ont/geosparql#wktLiteral",
+          "type" : "literal",
+          "value" : "POLYGON((2 5,6.999999999999999 5,6.999999999999999 2,2 2,2 5))"
+        }
+      }
+    ]
+  }
+}### httppostgisintersection3
+{
+  "head" : {
+    "vars" : [
+      "v"
+    ]
+  },
+  "results" : {
+    "bindings" : [ ]
+  }
+}

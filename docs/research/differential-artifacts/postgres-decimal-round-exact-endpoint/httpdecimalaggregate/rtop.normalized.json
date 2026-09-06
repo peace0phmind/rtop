@@ -1,0 +1,30 @@
+{
+  "head": {
+    "vars": [
+      "roundAfterSum",
+      "sumAfterRound",
+      "total"
+    ]
+  },
+  "results": {
+    "bindings": [
+      {
+        "roundAfterSum": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "1"
+        },
+        "sumAfterRound": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "1"
+        },
+        "total": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#decimal",
+          "type": "literal",
+          "value": "1.10"
+        }
+      }
+    ]
+  }
+}

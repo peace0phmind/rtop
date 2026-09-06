@@ -1,0 +1,10 @@
+PREFIX : <http://example.org/voc#>
+
+SELECT ?entity ?type WHERE {
+  VALUES (?entity ?type) {
+    (<https://example.test/alice> :Teacher)
+    (<https://example.test/course> :Course)
+  }
+  ?entity a ?type .
+}
+ORDER BY ?entity

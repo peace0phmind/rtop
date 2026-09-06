@@ -1,0 +1,162 @@
+{
+  "head" : {
+    "vars" : [
+      "X",
+      "Y"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu/FullProfessor0"
+        },
+        "Y" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu/FullProfessor1"
+        },
+        "Y" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu/FullProfessor10"
+        },
+        "Y" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu/FullProfessor11"
+        },
+        "Y" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu/FullProfessor12"
+        },
+        "Y" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu/FullProfessor13"
+        },
+        "Y" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu/FullProfessor14"
+        },
+        "Y" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu/FullProfessor2"
+        },
+        "Y" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu/FullProfessor3"
+        },
+        "Y" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu/FullProfessor4"
+        },
+        "Y" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu/FullProfessor5"
+        },
+        "Y" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu/FullProfessor6"
+        },
+        "Y" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu/FullProfessor7"
+        },
+        "Y" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu/FullProfessor8"
+        },
+        "Y" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu/FullProfessor9"
+        },
+        "Y" : {
+          "type" : "uri",
+          "value" : "http://www.Department2.University0.edu"
+        }
+      }
+    ]
+  }
+}

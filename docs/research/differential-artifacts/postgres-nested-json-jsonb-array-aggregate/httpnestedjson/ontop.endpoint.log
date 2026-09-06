@@ -1,0 +1,215 @@
+-------------------------------------------
+
+    ####    #   #   #####    ####    #####
+   #    #   ##  #     #     #    #   #    #
+   #    #   # # #     #     #    #   #####
+   #    #   #  ##     #     #    #   #
+    ####    #   #     #      ####    #
+
+   v5.6.0-SNAPSHOT
+   (Java 17.0.19, Linux 6.8.0-137-generic)
+-------------------------------------------
+
+
+
+
+15:22:49.532 |-INFO  in i.u.i.o.e.OntopEndpointApplication - Starting OntopEndpointApplication v5.6.0-SNAPSHOT using Java 17.0.19 on a285f9854cd4 with PID 1 (/opt/ontop/lib/ontop-endpoint-5.6.0-SNAPSHOT.jar started by root in /opt/ontop)
+15:22:49.533 |-INFO  in i.u.i.o.e.OntopEndpointApplication - No active profile set, falling back to 1 default profile: "default"
+15:22:50.006 |-INFO  in o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+15:22:50.010 |-INFO  in o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+15:22:50.011 |-INFO  in o.a.catalina.core.StandardService - Starting service [Tomcat]
+15:22:50.011 |-INFO  in o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.117]
+15:22:50.057 |-INFO  in o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+15:22:50.057 |-INFO  in o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 504 ms
+15:22:50.711 |-INFO  in i.u.i.o.d.i.AbstractDBMetadataProvider - FAILED TO PARSE: SELECT c.id, item.ordinality::integer AS index, item.value::text::timestamp AS invoice_date FROM nested_company_data AS c CROSS JOIN LATERAL json_array_elements_text(c.days::json) WITH ORDINALITY AS item(value, ordinality) Unable to parse SQL: TH ORDINALITY AS item(value, ordinality)
+                                                           ^
+net.sf.jsqlparser.parser.ParseException: Encountered unexpected token: "json_array_elements_text" <S_IDENTIFIER>
+    at line 1, column 142.
+
+Was expecting:
+
+    "("
+
+15:22:50.719 |-WARN  in o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'sparqlQueryController' defined in URL [jar:file:/opt/ontop/lib/ontop-endpoint-5.6.0-SNAPSHOT.jar!/it/unibz/inf/ontop/endpoint/controllers/SparqlQueryController.class]: Unsatisfied dependency expressed through constructor parameter 0; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'setupVirtualRepository' defined in class path resource [it/unibz/inf/ontop/endpoint/beans/OntopVirtualRepositoryBean.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [it.unibz.inf.ontop.rdf4j.repository.impl.OntopVirtualRepository]: Factory method 'setupVirtualRepository' threw exception; nested exception is org.eclipse.rdf4j.repository.RepositoryException: it.unibz.inf.ontop.exception.InvalidMappingSourceQueriesException: The placeholder(s) index in the target do(es) not occur in source query of the mapping assertion
+[id: period-date
+target atom: triple(s, p, o) with s/RDF(http://nested.example.org/period/{}/{}(TmpToTEXT(id),TmpToTEXT(index)),IRI), p/<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>, o/<http://nested.example.org/Period>
+source query: SELECT c.id, item.ordinality::integer AS index, item.value::text::timestamp AS invoice_date FROM nested_company_data AS c CROSS JOIN LATERAL json_array_elements_text(c.days::json) WITH ORDINALITY AS item(value, ordinality)]
+15:22:50.720 |-INFO  in o.a.catalina.core.StandardService - Stopping service [Tomcat]
+15:22:50.727 |-INFO  in o.s.b.a.l.ConditionEvaluationReportLoggingListener - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+15:22:50.735 |-ERROR in o.s.boot.SpringApplication - Application run failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'sparqlQueryController' defined in URL [jar:file:/opt/ontop/lib/ontop-endpoint-5.6.0-SNAPSHOT.jar!/it/unibz/inf/ontop/endpoint/controllers/SparqlQueryController.class]: Unsatisfied dependency expressed through constructor parameter 0; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'setupVirtualRepository' defined in class path resource [it/unibz/inf/ontop/endpoint/beans/OntopVirtualRepositoryBean.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [it.unibz.inf.ontop.rdf4j.repository.impl.OntopVirtualRepository]: Factory method 'setupVirtualRepository' threw exception; nested exception is org.eclipse.rdf4j.repository.RepositoryException: it.unibz.inf.ontop.exception.InvalidMappingSourceQueriesException: The placeholder(s) index in the target do(es) not occur in source query of the mapping assertion
+[id: period-date
+target atom: triple(s, p, o) with s/RDF(http://nested.example.org/period/{}/{}(TmpToTEXT(id),TmpToTEXT(index)),IRI), p/<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>, o/<http://nested.example.org/Period>
+source query: SELECT c.id, item.ordinality::integer AS index, item.value::text::timestamp AS invoice_date FROM nested_company_data AS c CROSS JOIN LATERAL json_array_elements_text(c.days::json) WITH ORDINALITY AS item(value, ordinality)]
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:801)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:224)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1372)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1222)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:955)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:929)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:591)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:147)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:732)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:409)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:308)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1300)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1289)
+	at it.unibz.inf.ontop.endpoint.OntopEndpointApplication.main(OntopEndpointApplication.java:20)
+	at it.unibz.inf.ontop.cli.OntopEndpoint.run(OntopEndpoint.java:152)
+	at it.unibz.inf.ontop.cli.Ontop.main(Ontop.java:19)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'setupVirtualRepository' defined in class path resource [it/unibz/inf/ontop/endpoint/beans/OntopVirtualRepositoryBean.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [it.unibz.inf.ontop.rdf4j.repository.impl.OntopVirtualRepository]: Factory method 'setupVirtualRepository' threw exception; nested exception is org.eclipse.rdf4j.repository.RepositoryException: it.unibz.inf.ontop.exception.InvalidMappingSourceQueriesException: The placeholder(s) index in the target do(es) not occur in source query of the mapping assertion
+[id: period-date
+target atom: triple(s, p, o) with s/RDF(http://nested.example.org/period/{}/{}(TmpToTEXT(id),TmpToTEXT(index)),IRI), p/<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>, o/<http://nested.example.org/Period>
+source query: SELECT c.id, item.ordinality::integer AS index, item.value::text::timestamp AS invoice_date FROM nested_company_data AS c CROSS JOIN LATERAL json_array_elements_text(c.days::json) WITH ORDINALITY AS item(value, ordinality)]
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:653)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:633)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1352)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1195)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:276)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1391)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1311)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:911)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:788)
+	... 21 common frames omitted
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [it.unibz.inf.ontop.rdf4j.repository.impl.OntopVirtualRepository]: Factory method 'setupVirtualRepository' threw exception; nested exception is org.eclipse.rdf4j.repository.RepositoryException: it.unibz.inf.ontop.exception.InvalidMappingSourceQueriesException: The placeholder(s) index in the target do(es) not occur in source query of the mapping assertion
+[id: period-date
+target atom: triple(s, p, o) with s/RDF(http://nested.example.org/period/{}/{}(TmpToTEXT(id),TmpToTEXT(index)),IRI), p/<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>, o/<http://nested.example.org/Period>
+source query: SELECT c.id, item.ordinality::integer AS index, item.value::text::timestamp AS invoice_date FROM nested_company_data AS c CROSS JOIN LATERAL json_array_elements_text(c.days::json) WITH ORDINALITY AS item(value, ordinality)]
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:185)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:648)
+	... 35 common frames omitted
+Caused by: org.eclipse.rdf4j.repository.RepositoryException: it.unibz.inf.ontop.exception.InvalidMappingSourceQueriesException: The placeholder(s) index in the target do(es) not occur in source query of the mapping assertion
+[id: period-date
+target atom: triple(s, p, o) with s/RDF(http://nested.example.org/period/{}/{}(TmpToTEXT(id),TmpToTEXT(index)),IRI), p/<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>, o/<http://nested.example.org/Period>
+source query: SELECT c.id, item.ordinality::integer AS index, item.value::text::timestamp AS invoice_date FROM nested_company_data AS c CROSS JOIN LATERAL json_array_elements_text(c.days::json) WITH ORDINALITY AS item(value, ordinality)]
+	at it.unibz.inf.ontop.rdf4j.repository.impl.OntopVirtualRepository.initializeInternal(OntopVirtualRepository.java:76)
+	at org.eclipse.rdf4j.repository.base.AbstractRepository.init(AbstractRepository.java:36)
+	at it.unibz.inf.ontop.endpoint.beans.OntopVirtualRepositoryBean.setupVirtualRepository(OntopVirtualRepositoryBean.java:91)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154)
+	... 36 common frames omitted
+Caused by: it.unibz.inf.ontop.exception.InvalidMappingSourceQueriesException: The placeholder(s) index in the target do(es) not occur in source query of the mapping assertion
+[id: period-date
+target atom: triple(s, p, o) with s/RDF(http://nested.example.org/period/{}/{}(TmpToTEXT(id),TmpToTEXT(index)),IRI), p/<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>, o/<http://nested.example.org/Period>
+source query: SELECT c.id, item.ordinality::integer AS index, item.value::text::timestamp AS invoice_date FROM nested_company_data AS c CROSS JOIN LATERAL json_array_elements_text(c.days::json) WITH ORDINALITY AS item(value, ordinality)]
+	at it.unibz.inf.ontop.spec.mapping.pp.impl.SQLPPMappingConverterImpl.convert(SQLPPMappingConverterImpl.java:130)
+	at it.unibz.inf.ontop.spec.mapping.pp.impl.SQLPPMappingConverterImpl.convert(SQLPPMappingConverterImpl.java:93)
+	at it.unibz.inf.ontop.spec.mapping.impl.SQLMappingExtractor.convert(SQLMappingExtractor.java:247)
+	at it.unibz.inf.ontop.spec.mapping.impl.SQLMappingExtractor.convert(SQLMappingExtractor.java:218)
+	at it.unibz.inf.ontop.spec.mapping.impl.SQLMappingExtractor.convert(SQLMappingExtractor.java:187)
+	at it.unibz.inf.ontop.spec.mapping.impl.SQLMappingExtractor.convertPPMapping(SQLMappingExtractor.java:153)
+	at it.unibz.inf.ontop.spec.mapping.impl.SQLMappingExtractor.extract(SQLMappingExtractor.java:108)
+	at it.unibz.inf.ontop.spec.impl.DefaultOBDASpecificationExtractor.extract(DefaultOBDASpecificationExtractor.java:51)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingConfigurationImpl.loadSpecification(OntopMappingConfigurationImpl.java:130)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingSQLConfigurationImpl.loadSpecification(OntopMappingSQLConfigurationImpl.java:93)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingSQLAllConfigurationImpl.loadSpecification(OntopMappingSQLAllConfigurationImpl.java:55)
+	at it.unibz.inf.ontop.injection.impl.OntopSQLOWLAPIConfigurationImpl.loadOBDASpecification(OntopSQLOWLAPIConfigurationImpl.java:42)
+	at it.unibz.inf.ontop.injection.impl.OntopOBDAConfigurationImpl.loadSpecification(OntopOBDAConfigurationImpl.java:44)
+	at it.unibz.inf.ontop.injection.OntopSystemConfiguration.loadQueryEngine(OntopSystemConfiguration.java:20)
+	at it.unibz.inf.ontop.rdf4j.repository.impl.OntopVirtualRepository.initializeInternal(OntopVirtualRepository.java:72)
+	... 43 common frames omitted
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'sparqlQueryController' defined in URL [jar:file:/opt/ontop/lib/ontop-endpoint-5.6.0-SNAPSHOT.jar!/it/unibz/inf/ontop/endpoint/controllers/SparqlQueryController.class]: Unsatisfied dependency expressed through constructor parameter 0; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'setupVirtualRepository' defined in class path resource [it/unibz/inf/ontop/endpoint/beans/OntopVirtualRepositoryBean.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [it.unibz.inf.ontop.rdf4j.repository.impl.OntopVirtualRepository]: Factory method 'setupVirtualRepository' threw exception; nested exception is org.eclipse.rdf4j.repository.RepositoryException: it.unibz.inf.ontop.exception.InvalidMappingSourceQueriesException: The placeholder(s) index in the target do(es) not occur in source query of the mapping assertion
+[id: period-date
+target atom: triple(s, p, o) with s/RDF(http://nested.example.org/period/{}/{}(TmpToTEXT(id),TmpToTEXT(index)),IRI), p/<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>, o/<http://nested.example.org/Period>
+source query: SELECT c.id, item.ordinality::integer AS index, item.value::text::timestamp AS invoice_date FROM nested_company_data AS c CROSS JOIN LATERAL json_array_elements_text(c.days::json) WITH ORDINALITY AS item(value, ordinality)]
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:801)
+	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:224)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1372)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1222)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:955)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:929)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:591)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:147)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:732)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:409)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:308)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1300)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1289)
+	at it.unibz.inf.ontop.endpoint.OntopEndpointApplication.main(OntopEndpointApplication.java:20)
+	at it.unibz.inf.ontop.cli.OntopEndpoint.run(OntopEndpoint.java:152)
+	at it.unibz.inf.ontop.cli.Ontop.main(Ontop.java:19)
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'setupVirtualRepository' defined in class path resource [it/unibz/inf/ontop/endpoint/beans/OntopVirtualRepositoryBean.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [it.unibz.inf.ontop.rdf4j.repository.impl.OntopVirtualRepository]: Factory method 'setupVirtualRepository' threw exception; nested exception is org.eclipse.rdf4j.repository.RepositoryException: it.unibz.inf.ontop.exception.InvalidMappingSourceQueriesException: The placeholder(s) index in the target do(es) not occur in source query of the mapping assertion
+[id: period-date
+target atom: triple(s, p, o) with s/RDF(http://nested.example.org/period/{}/{}(TmpToTEXT(id),TmpToTEXT(index)),IRI), p/<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>, o/<http://nested.example.org/Period>
+source query: SELECT c.id, item.ordinality::integer AS index, item.value::text::timestamp AS invoice_date FROM nested_company_data AS c CROSS JOIN LATERAL json_array_elements_text(c.days::json) WITH ORDINALITY AS item(value, ordinality)]
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:653)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:633)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1352)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1195)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:276)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1391)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1311)
+	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:911)
+	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:788)
+	... 21 more
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [it.unibz.inf.ontop.rdf4j.repository.impl.OntopVirtualRepository]: Factory method 'setupVirtualRepository' threw exception; nested exception is org.eclipse.rdf4j.repository.RepositoryException: it.unibz.inf.ontop.exception.InvalidMappingSourceQueriesException: The placeholder(s) index in the target do(es) not occur in source query of the mapping assertion
+[id: period-date
+target atom: triple(s, p, o) with s/RDF(http://nested.example.org/period/{}/{}(TmpToTEXT(id),TmpToTEXT(index)),IRI), p/<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>, o/<http://nested.example.org/Period>
+source query: SELECT c.id, item.ordinality::integer AS index, item.value::text::timestamp AS invoice_date FROM nested_company_data AS c CROSS JOIN LATERAL json_array_elements_text(c.days::json) WITH ORDINALITY AS item(value, ordinality)]
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:185)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:648)
+	... 35 more
+Caused by: org.eclipse.rdf4j.repository.RepositoryException: it.unibz.inf.ontop.exception.InvalidMappingSourceQueriesException: The placeholder(s) index in the target do(es) not occur in source query of the mapping assertion
+[id: period-date
+target atom: triple(s, p, o) with s/RDF(http://nested.example.org/period/{}/{}(TmpToTEXT(id),TmpToTEXT(index)),IRI), p/<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>, o/<http://nested.example.org/Period>
+source query: SELECT c.id, item.ordinality::integer AS index, item.value::text::timestamp AS invoice_date FROM nested_company_data AS c CROSS JOIN LATERAL json_array_elements_text(c.days::json) WITH ORDINALITY AS item(value, ordinality)]
+	at it.unibz.inf.ontop.rdf4j.repository.impl.OntopVirtualRepository.initializeInternal(OntopVirtualRepository.java:76)
+	at org.eclipse.rdf4j.repository.base.AbstractRepository.init(AbstractRepository.java:36)
+	at it.unibz.inf.ontop.endpoint.beans.OntopVirtualRepositoryBean.setupVirtualRepository(OntopVirtualRepositoryBean.java:91)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154)
+	... 36 more
+Caused by: it.unibz.inf.ontop.exception.InvalidMappingSourceQueriesException: The placeholder(s) index in the target do(es) not occur in source query of the mapping assertion
+[id: period-date
+target atom: triple(s, p, o) with s/RDF(http://nested.example.org/period/{}/{}(TmpToTEXT(id),TmpToTEXT(index)),IRI), p/<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>, o/<http://nested.example.org/Period>
+source query: SELECT c.id, item.ordinality::integer AS index, item.value::text::timestamp AS invoice_date FROM nested_company_data AS c CROSS JOIN LATERAL json_array_elements_text(c.days::json) WITH ORDINALITY AS item(value, ordinality)]
+	at it.unibz.inf.ontop.spec.mapping.pp.impl.SQLPPMappingConverterImpl.convert(SQLPPMappingConverterImpl.java:130)
+	at it.unibz.inf.ontop.spec.mapping.pp.impl.SQLPPMappingConverterImpl.convert(SQLPPMappingConverterImpl.java:93)
+	at it.unibz.inf.ontop.spec.mapping.impl.SQLMappingExtractor.convert(SQLMappingExtractor.java:247)
+	at it.unibz.inf.ontop.spec.mapping.impl.SQLMappingExtractor.convert(SQLMappingExtractor.java:218)
+	at it.unibz.inf.ontop.spec.mapping.impl.SQLMappingExtractor.convert(SQLMappingExtractor.java:187)
+	at it.unibz.inf.ontop.spec.mapping.impl.SQLMappingExtractor.convertPPMapping(SQLMappingExtractor.java:153)
+	at it.unibz.inf.ontop.spec.mapping.impl.SQLMappingExtractor.extract(SQLMappingExtractor.java:108)
+	at it.unibz.inf.ontop.spec.impl.DefaultOBDASpecificationExtractor.extract(DefaultOBDASpecificationExtractor.java:51)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingConfigurationImpl.loadSpecification(OntopMappingConfigurationImpl.java:130)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingSQLConfigurationImpl.loadSpecification(OntopMappingSQLConfigurationImpl.java:93)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingSQLAllConfigurationImpl.loadSpecification(OntopMappingSQLAllConfigurationImpl.java:55)
+	at it.unibz.inf.ontop.injection.impl.OntopSQLOWLAPIConfigurationImpl.loadOBDASpecification(OntopSQLOWLAPIConfigurationImpl.java:42)
+	at it.unibz.inf.ontop.injection.impl.OntopOBDAConfigurationImpl.loadSpecification(OntopOBDAConfigurationImpl.java:44)
+	at it.unibz.inf.ontop.injection.OntopSystemConfiguration.loadQueryEngine(OntopSystemConfiguration.java:20)
+	at it.unibz.inf.ontop.rdf4j.repository.impl.OntopVirtualRepository.initializeInternal(OntopVirtualRepository.java:72)
+	... 43 more
+Exception in thread "main" java.lang.AssertionError
+	at it.unibz.inf.ontop.cli.Ontop.main(Ontop.java:31)

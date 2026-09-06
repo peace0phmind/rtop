@@ -1,12 +1,13 @@
-[MappingDeclaration]
+[MappingDeclaration] @collection [[
 mappingId person-type
 target <https://example.test/person/{id}> <https://example.test/type> <https://example.test/Person> .
 source SELECT id FROM query_people
 
 mappingId delayed-person
 target <https://example.test/delayed/{id}> <https://example.test/delayed> <https://example.test/Delayed> .
-source SELECT 1 AS id FROM (SELECT pg_sleep(5)) AS delay
+source SELECT 1 AS id WHERE pg_sleep(5) IS NULL
 
 mappingId failed-person
 target <https://example.test/failed/{id}> <https://example.test/failed> <https://example.test/Failed> .
 source SELECT id FROM rtop_nonexistent_relation
+]]

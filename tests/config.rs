@@ -27,3 +27,20 @@ fn accepts_the_native_datasource_section() {
     std::fs::write(&config, "mapping = 'm.obda'\n[datasource]\nkind = 'postgres'\nhost = 'localhost'\ndatabase = 'x'\nuser = 'x'\npassword = 'x'\n").unwrap();
     assert!(rtop::load_configuration(config).is_ok());
 }
+
+#[test]
+fn accepts_mapping_datatype_inference_override() {
+    let dir = tempfile::tempdir().unwrap();
+    let config = dir.path().join("rtop.toml");
+    std::fs::write(
+        &config,
+        "mapping = 'm.obda'\nmapping_infer_default_datatype = false\n[datasource]\nkind = 'postgres'\nhost = 'localhost'\ndatabase = 'x'\nuser = 'x'\npassword = 'x'\n",
+    )
+    .unwrap();
+
+    assert!(
+        !rtop::load_configuration(config)
+            .unwrap()
+            .mapping_infer_default_datatype
+    );
+}

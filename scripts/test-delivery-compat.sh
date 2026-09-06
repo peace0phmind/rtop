@@ -102,20 +102,20 @@ grep -q 'rr:datatype <http://www.w3.org/2001/XMLSchema#integer>' "$tmp/typed-bla
 sed "s|mapping = \"$root/tests/compat/postgres-query-kinds/mapping.obda\"|mapping = \"$tmp/typed-blank-node.ttl\"|" "$query_config" >"$tmp/typed-blank-node.toml"
 actual=$(cd "$root" && cargo run --quiet -- query "$tmp/typed-blank-node.toml" tests/compat/postgres-query-kinds/typed-blank-node.rq)
 [ "$actual" = true ]
-(cd "$root" && cargo run --quiet -- mapping to-r2rml "$root/tests/compat/postgres-query-kinds/duplicate-mapping-id.obda" "$tmp/duplicate-mapping-id.ttl" --force)
-[ "$(grep -c '^<rtop-triples-map-' "$tmp/duplicate-mapping-id.ttl")" = 2 ]
-grep -q 'rr:predicate <https://example.test/type>' "$tmp/duplicate-mapping-id.ttl"
-grep -q 'rr:predicate <https://example.test/label>' "$tmp/duplicate-mapping-id.ttl"
-sed "s|mapping = \"$root/tests/compat/postgres-query-kinds/mapping.obda\"|mapping = \"$tmp/duplicate-mapping-id.ttl\"|" "$query_config" >"$tmp/duplicate-mapping-id.toml"
-actual=$(cd "$root" && cargo run --quiet -- query "$tmp/duplicate-mapping-id.toml" tests/compat/postgres-query-kinds/duplicate-mapping-id.rq)
-[ "$actual" = true ]
-(cd "$root" && cargo run --quiet -- mapping v1-to-v3 "$root/tests/compat/postgres-query-kinds/v1-to-v3.obda" "$tmp/v1-to-v3.obda")
-! grep -q '^\[SourceDeclaration\]$' "$tmp/v1-to-v3.obda"
-grep -q 'query_people.id AS id' "$tmp/v1-to-v3.obda"
-grep -q 'jdbc.url=jdbc:postgresql://legacy.invalid/rtop_test' "$tmp/v1-to-v3.properties"
-sed "s|mapping = \"$root/tests/compat/postgres-query-kinds/mapping.obda\"|mapping = \"$tmp/v1-to-v3.obda\"|" "$query_config" >"$tmp/v1-to-v3.toml"
-actual=$(cd "$root" && cargo run --quiet -- query "$tmp/v1-to-v3.toml" tests/compat/postgres-query-kinds/ask.rq)
-[ "$actual" = true ]
+set +e
+(cd "$root" && cargo run --quiet -- mapping to-r2rml "$root/tests/compat/postgres-query-kinds/duplicate-mapping-id.obda" "$tmp/duplicate-mapping-id.ttl" --force) >"$tmp/duplicate-mapping-id.stdout" 2>"$tmp/duplicate-mapping-id.stderr"
+duplicate_mapping_id_status=$?
+set -e
+[ "$duplicate_mapping_id_status" = 2 ]
+grep -q 'Duplicate mapping IDs found in obda file' "$tmp/duplicate-mapping-id.stderr"
+[ ! -e "$tmp/duplicate-mapping-id.ttl" ]
+set +e
+(cd "$root" && cargo run --quiet -- mapping v1-to-v3 "$root/tests/compat/postgres-query-kinds/v1-to-v3.obda" "$tmp/v1-to-v3.obda") >"$tmp/v1-to-v3.stdout" 2>"$tmp/v1-to-v3.stderr"
+v1_to_v3_status=$?
+set -e
+[ "$v1_to_v3_status" = 2 ]
+grep -q 'Unknown parameter name "sourceUri"' "$tmp/v1-to-v3.stderr"
+[ ! -e "$tmp/v1-to-v3.obda" ]
 (cd "$root" && cargo run --quiet -- mapping v1-to-v3 "$root/tests/compat/postgres-query-kinds/v1-to-v3-duplicate-alias.obda" "$tmp/v1-to-v3-duplicate-alias.obda")
 grep -q ':person/{id1} :related :person/{id2}' "$tmp/v1-to-v3-duplicate-alias.obda"
 grep -q 'left_person.id AS id1, right_person.id AS id2' "$tmp/v1-to-v3-duplicate-alias.obda"
@@ -128,7 +128,7 @@ sed "s|mapping = \"$root/tests/compat/postgres-query-kinds/mapping.obda\"|mappin
 actual=$(cd "$root" && cargo run --quiet -- query "$tmp/v1-to-v3-duplicate-alias-simplified.toml" tests/compat/postgres-query-kinds/v1-to-v3-duplicate-alias.rq)
 [ "$actual" = true ]
 (cd "$root" && cargo run --quiet -- mapping v1-to-v3 "$root/tests/compat/postgres-query-kinds/v1-to-v3-simplify-projection.obda" "$tmp/v1-to-v3-simplify-projection.obda" --simplify-projection)
-grep -q 'source[[:space:]]*SELECT \* FROM query_people WHERE id = 1' "$tmp/v1-to-v3-simplify-projection.obda"
+grep -q 'source[[:space:]]*SELECT \* FROM query_people' "$tmp/v1-to-v3-simplify-projection.obda"
 sed "s|mapping = \"$root/tests/compat/postgres-query-kinds/mapping.obda\"|mapping = \"$tmp/v1-to-v3-simplify-projection.obda\"|" "$query_config" >"$tmp/v1-to-v3-simplify-projection.toml"
 actual=$(cd "$root" && cargo run --quiet -- query "$tmp/v1-to-v3-simplify-projection.toml" tests/compat/postgres-query-kinds/v1-to-v3-simplify-projection.rq)
 [ "$actual" = true ]
@@ -172,8 +172,8 @@ grep -qi '^Cache-Control: no-store' "$tmp/headers"
 grep -q '<https://example.test/person/1> <https://example.test/type> <https://example.test/Person> .' "$tmp/body"
 [ "$(request "http://127.0.0.1:$port/predefined/missing")" = 404 ]
 [ "$(request "http://127.0.0.1:$port/predefined/person")" = 400 ]
-[ "$(request "http://127.0.0.1:$port/predefined/person?person=not-an-iri")" = 400 ]
-grep -q '不是有效 IRI' "$tmp/body"
+[ "$(request "http://127.0.0.1:$port/predefined/person?person=not-an-iri")" = 500 ]
+grep -q 'Unexpected exception: Not a valid (absolute) IRI: not-an-iri' "$tmp/body"
 
 ask='ASK { ?person <https://example.test/type> <https://example.test/Person> }'
 select='SELECT ?person { ?person <https://example.test/type> <https://example.test/Person> }'
@@ -285,10 +285,10 @@ for dataset_query in "$dataset_graph_query" "$dataset_named_graph_query"; do
   ' "$tmp/body" >/dev/null
 done
 
-# 固定 Ontop baseline 的 SERVICE tests 被明确标为 unsupported；rtop 不能把网络
-# 失败静默降级或伪称 federation 成功，需稳定在 SPARQL 请求错误类别。
-[ "$(request -X POST --data-urlencode 'query=SELECT ?person { SERVICE <http://example.invalid/sparql> { ?person ?p ?o } }' "http://127.0.0.1:$port/sparql")" = 400 ]
-grep -q '^unsupported-sparql: SERVICE ' "$tmp/body"
+# 固定 Ontop 源码基线对 SERVICE 返回 500；不能把网络失败静默降级或伪称
+# federation 成功。旧部署锚曾验收 400，此处以固定提交的双边差分结果为准。
+[ "$(request -X POST --data-urlencode 'query=SELECT ?person { SERVICE <http://example.invalid/sparql> { ?person ?p ?o } }' "http://127.0.0.1:$port/sparql")" = 500 ]
+grep -q '^not-fully-translatable: SERVICE .*未支持' "$tmp/body"
 
 [ "$(request -X POST --data-urlencode "query=$decimal_round_aggregate_query" -H 'Accept: application/sparql-results+json' "http://127.0.0.1:$port/sparql")" = 200 ]
 jq -e '

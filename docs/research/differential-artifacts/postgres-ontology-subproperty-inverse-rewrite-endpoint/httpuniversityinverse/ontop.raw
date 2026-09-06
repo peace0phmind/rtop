@@ -1,0 +1,62 @@
+{
+  "head" : {
+    "vars" : [
+      "course",
+      "teacher"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "course" : {
+          "type" : "uri",
+          "value" : "https://example.test/course/1"
+        },
+        "teacher" : {
+          "type" : "uri",
+          "value" : "https://example.test/teacher/1"
+        }
+      },
+      {
+        "course" : {
+          "type" : "uri",
+          "value" : "https://example.test/course/2"
+        },
+        "teacher" : {
+          "type" : "uri",
+          "value" : "https://example.test/teacher/2"
+        }
+      },
+      {
+        "course" : {
+          "type" : "uri",
+          "value" : "https://example.test/course/3"
+        },
+        "teacher" : {
+          "type" : "uri",
+          "value" : "https://example.test/teacher/3"
+        }
+      },
+      {
+        "course" : {
+          "type" : "uri",
+          "value" : "https://example.test/course/4"
+        },
+        "teacher" : {
+          "type" : "uri",
+          "value" : "https://example.test/teacher/4"
+        }
+      },
+      {
+        "course" : {
+          "type" : "uri",
+          "value" : "https://example.test/course/5"
+        },
+        "teacher" : {
+          "type" : "uri",
+          "value" : "https://example.test/teacher/5"
+        }
+      }
+    ]
+  }
+}

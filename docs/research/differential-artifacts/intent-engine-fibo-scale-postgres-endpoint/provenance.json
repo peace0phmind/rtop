@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-intent-engine-fibo-scale-postgres-endpoint",
+  "mapping_behavior": "The version-controlled FIBO scale profile validates fact quality and serves three bounded PostgreSQL HTTP aggregate queries whose complete decimal terms match independent SQL oracles",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下 test-delivery-compat gate 实际通过 590 行/220 金融事实的质量门槛和 30 秒 endpoint 上限。固定 Ontop 源码没有同构 intent-engine FIBO scale fixture，ontop.raw 明确记录不可比较边界；三个 Rust HTTP 结果均与独立 PostgreSQL SQL oracle 比较。",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "tests/compat/postgres-fibo/fixtures/{application-ontology.ttl,generated/{mapping.obda,query.sparql,disbursement-query.sparql,allocated-attribution-query.sparql},scale/generated/{facts.sql,manifest.json}}",
+  "query": "FIBO scale HTTP SPARQL Results JSON and independent PostgreSQL SQL oracles",
+  "postgres_extensions": "none",
+  "independent_processes": {"ontop": "不适用：固定 Ontop 源码无 intent-engine FIBO scale service fixture", "rtop": "Rust HTTP endpoint and PostgreSQL SQL oracle"},
+  "sha256": {"ontop_raw": "f0f2f2fd7324d3684ff148a1ae85fd557d6d84a821d09711a9eb533d6b65c156", "rtop_raw": "ff1ac5ddf02289fd0fea2177480c863076912cd2b522d1896b3681b45141198f", "normalized": "91445de90b66ed821be74a1962ab54c192ad501cd5a3a3062b80ef416ad7a9b7"}
+}

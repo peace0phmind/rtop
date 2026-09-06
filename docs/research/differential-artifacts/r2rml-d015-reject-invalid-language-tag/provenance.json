@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d015-reject-invalid-language-tag",
+  "mapping_behavior": "reject invalid rr:language values",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D015/{create.sql,r2rmlb.ttl}",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "43566243897a5fe10f35583d1956bb1abe6945f3d490d9afc451e4ade4240828",
+    "rtop_raw": "664ed12c66b04869bb789d43a05dfeb688a4f48b1e197a6cd45c8d24c9129591",
+    "normalized": "01dc18be3f289c742b1514c35003be858c03bc57c7874c02ea9527f8897289ca"
+  }
+}

@@ -1,0 +1,15 @@
+### clipretty
+<http://example.com/Venus> <http://xmlns.com/foaf/0.1/name> "Venus" .
+### cliv1native
+Error occurred during v1-to-v3 mapping conversion: Unknown parameter name "sourceUri"
+Debugging information for developers: 
+java.io.IOException: Unknown parameter name "sourceUri"
+	at it.unibz.inf.ontop.cli.OntopMappingV1ToV3.readSourceDeclaration(OntopMappingV1ToV3.java:222)
+	at it.unibz.inf.ontop.cli.OntopMappingV1ToV3.processOBDA(OntopMappingV1ToV3.java:128)
+	at it.unibz.inf.ontop.cli.OntopMappingV1ToV3.run(OntopMappingV1ToV3.java:94)
+	at it.unibz.inf.ontop.cli.Ontop.main(Ontop.java:19)
+### clitoobda
+<http://example.com/Venus> <http://xmlns.com/foaf/0.1/name> "Venus" .
+### clitor2rml
+<http://it.unibz.inf/obda/test/simple#1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://it.unibz.inf/obda/test/simple#A> .
+<http://it.unibz.inf/obda/test/simple#7> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://it.unibz.inf/obda/test/simple#B> .

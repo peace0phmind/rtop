@@ -1,0 +1,1 @@
+{"format":"nquads","ordered":false,"triples":["_:b0 <http://example.com/base/Student#FirstName> \"Venus\" .\n_:b0 <http://example.com/base/Student#ID> \"10\"^^<http://www.w3.org/2001/XMLSchema#integer> .\n_:b0 <http://example.com/base/Student#LastName> \"Williams\" .\n_:b0 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/base/Student> .\n"]}

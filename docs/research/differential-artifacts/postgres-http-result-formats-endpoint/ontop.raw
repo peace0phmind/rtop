@@ -1,0 +1,26 @@
+{
+  "json": {
+    "status": "200",
+    "body": "{\n  \"head\" : {\n    \"vars\" : [\n      \"person\",\n      \"name\"\n    ]\n  },\n  \"results\" : {\n    \"bindings\" : [\n      {\n        \"person\" : {\n          \"type\" : \"uri\",\n          \"value\" : \"https://example.test/person/1\"\n        },\n        \"name\" : {\n          \"type\" : \"literal\",\n          \"value\" : \"Ada\"\n        }\n      }\n    ]\n  }\n}"
+  },
+  "xml": {
+    "status": "200",
+    "body": "<?xml version='1.0' encoding='UTF-8'?>\n<sparql xmlns='http://www.w3.org/2005/sparql-results#'>\n\t<head>\n\t\t<variable name='person'/>\n\t\t<variable name='name'/>\n\t</head>\n\t<results>\n\t\t<result>\n\t\t\t<binding name='person'>\n\t\t\t\t<uri>https://example.test/person/1</uri>\n\t\t\t</binding>\n\t\t\t<binding name='name'>\n\t\t\t\t<literal>Ada</literal>\n\t\t\t</binding>\n\t\t</result>\n\t</results>\n</sparql>\n"
+  },
+  "csv": {
+    "status": "200",
+    "body": "person,name\r\nhttps://example.test/person/1,Ada\r\n"
+  },
+  "tsv": {
+    "status": "200",
+    "body": "?person\t?name\n<https://example.test/person/1>\t\"Ada\"\n"
+  },
+  "ntriples": {
+    "status": "200",
+    "body": "<https://example.test/person/1> <https://example.test/name> \"Ada\" .\n"
+  },
+  "unsupported": {
+    "status": "406",
+    "body": ""
+  }
+}

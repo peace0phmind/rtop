@@ -1,0 +1,2 @@
+it.unibz.inf.ontop.exception.OntopQueryEvaluationException: org.postgresql.util.PSQLException: ERROR: syntax error at or near "!"
+  Position: 49

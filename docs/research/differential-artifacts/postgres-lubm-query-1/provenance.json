@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-lubm-query-1",
+  "mapping_behavior": "LUBM PostgreSQL manifest query-1 的 SPARQL JSON bindings",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/docker-tests/src/test/resources/testcases-docker/virtual-mode/lubm/{lubm-pgsql.obda,lubm.owl,query-1.rq}; tests/compat/postgres-lubm/fixture.sql",
+  "query": "../ontop/test/docker-tests/src/test/resources/testcases-docker/virtual-mode/lubm/query-1.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "630f3e6faca201b562a4547861b69d8c03af43b0d79be90a47b206d559040255",
+    "rtop_raw": "862c35b1d039270cd4495e94d469631078652ae83d04f94ef0a9a64f3f8a3c30",
+    "normalized": "417184a4528765715db62d6897cf4187930901a20c76fe9b7741fe200e14171a"
+  }
+}

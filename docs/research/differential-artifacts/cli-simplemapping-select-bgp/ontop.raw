@@ -1,0 +1,4 @@
+09:48:39.533 |-INFO  in i.u.i.o.a.impl.OntopQueryEngineImpl - Ontop has completed the setup and it is ready for query answering!
+09:48:39.534 |-INFO  in i.u.i.o.r.r.i.OntopVirtualRepository - Ontop virtual repository initialized successfully!
+resource
+http://it.unibz.inf/obda/test/simple#1

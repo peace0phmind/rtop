@@ -165,11 +165,11 @@ assert_direct_graph tests/compat/postgres-direct-d003/rtop.toml "$root/tests/com
 actual=$(cd "$root" && cargo run --quiet -- query tests/compat/postgres-d003/rtop.toml tests/compat/postgres-d003/construct.rq | sort)
 expected=$(tr -d '\r' < "$root/../ontop/test/rdb2rdf-compliance/src/test/resources/D003/mappedc.nq" | sort)
 assert_output "$actual" "$expected"
-if invalid=$(cd "$root" && cargo run --quiet -- validate tests/compat/postgres-d003/a.toml 2>&1); then
-  echo "D003 r2rmla 应被拒绝" >&2
-  exit 1
-fi
-printf '%s\n' "$invalid" | grep -F 'invalid-mapping: R2RML 结构错误：不支持的 rr:sqlVersion <http://www.w3.org/ns/r2rml#SQL1979>' >/dev/null
+# 固定 Ontop CLI 接受 rr:SQL1979 annotation；不能把 R2RML 静态规范的未定义
+# 声明误当成运行时拒绝契约。以完整 RDF graph 锁定该可观察基线行为。
+actual=$(cd "$root" && cargo run --quiet -- query tests/compat/postgres-d003/a.toml tests/compat/postgres-d003/construct.rq | sort)
+expected=$(tr -d '\r' < "$root/tests/compat/postgres-d003/a.expected" | sort)
+assert_output "$actual" "$expected"
 actual=$(cd "$root" && cargo run --quiet -- query tests/compat/postgres-d003/b.toml tests/compat/postgres-d003/construct.rq | sort)
 expected=$(tr -d '\r' < "$root/../ontop/test/rdb2rdf-compliance/src/test/resources/D003/mappedb.nq" | sed -E 's/[[:space:]]+\.[[:space:]]*$/ ./' | sort)
 assert_output "$actual" "$expected"

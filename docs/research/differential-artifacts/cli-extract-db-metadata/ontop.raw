@@ -1,0 +1,59 @@
+{
+  "relations" : [ {
+    "uniqueConstraints" : [ {
+      "name" : "query_people_pkey",
+      "determinants" : [ "\"id\"" ],
+      "isPrimaryKey" : true
+    } ],
+    "columns" : [ {
+      "name" : "\"id\"",
+      "isNullable" : false,
+      "datatype" : "int4"
+    } ],
+    "name" : [ "\"query_people\"" ],
+    "otherNames" : [ [ "\"public\"", "\"query_people\"" ] ]
+  }, {
+    "uniqueConstraints" : [ {
+      "name" : "query_nullable_people_pkey",
+      "determinants" : [ "\"id\"" ],
+      "isPrimaryKey" : true
+    } ],
+    "columns" : [ {
+      "name" : "\"id\"",
+      "isNullable" : false,
+      "datatype" : "int4"
+    }, {
+      "name" : "\"name\"",
+      "isNullable" : true,
+      "datatype" : "text(2147483647)"
+    } ],
+    "name" : [ "\"query_nullable_people\"" ],
+    "otherNames" : [ [ "\"public\"", "\"query_nullable_people\"" ] ]
+  }, {
+    "uniqueConstraints" : [ {
+      "name" : "query_named_people_pkey",
+      "determinants" : [ "\"id\"" ],
+      "isPrimaryKey" : true
+    } ],
+    "columns" : [ {
+      "name" : "\"id\"",
+      "isNullable" : false,
+      "datatype" : "int4"
+    }, {
+      "name" : "\"name\"",
+      "isNullable" : false,
+      "datatype" : "text(2147483647)"
+    } ],
+    "name" : [ "\"query_named_people\"" ],
+    "otherNames" : [ [ "\"public\"", "\"query_named_people\"" ] ]
+  } ],
+  "metadata" : {
+    "dbmsProductName" : "PostgreSQL",
+    "dbmsVersion" : "17.10 (Debian 17.10-1.pgdg13+1)",
+    "driverName" : "PostgreSQL JDBC Driver",
+    "driverVersion" : "42.7.2",
+    "quotationString" : "\"",
+    "extractionTime" : "2026-09-06T16:24:49",
+    "idFactoryType" : "POSTGRESQL"
+  }
+}

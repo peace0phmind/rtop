@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-oci-no-jvm-default-endpoint-cli-secret-healthcheck",
+  "mapping_behavior": "PostgreSQL-backed Rust OCI delivery keeps the endpoint and CLI externally usable without a JVM while accepting password_file configuration and exposing stable health/configuration/data-source diagnostics",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下 OCI gate 实际通过。Ontop 固定源码没有同构 OCI runtime artifact，故 ontop.raw 明确记录不可比较边界；本原子验证的是替代 Rust 交付面的可观察契约，而非伪造 Java 镜像结果。",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "Dockerfile；tests/compat/postgres-query-kinds/{init.sql,mapping.obda,ask.rq,rtop.toml,secret}",
+  "query": "OCI endpoint ASK；OCI CLI ASK；/healthz；invalid-config 与不可达 PostgreSQL diagnostics",
+  "postgres_extensions": "none",
+  "independent_processes": {"ontop": "不适用：固定 Ontop Java 源码无同构 OCI artifact", "rtop": "Docker final image endpoint and CLI"},
+  "sha256": {
+    "ontop_raw": "298e1818d39d64a6508c939aab5dc392f1a219e55e68f3e040869234af402f1b",
+    "rtop_raw": "3709a8cb77ed168ec1fff32aa956f98f0bc5b70629b38c4413817c1f2b67279e",
+    "normalized": "efb1b86fc81e6f7109916e201048e15e7eb79cad992098e75773caf84dbece49"
+  }
+}

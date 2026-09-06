@@ -1,0 +1,34 @@
+{
+  "head": {
+    "vars": [
+      "id",
+      "x"
+    ]
+  },
+  "results": {
+    "bindings": [
+      {
+        "id": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "3333"
+        },
+        "x": {
+          "type": "uri",
+          "value": "http://www.owl-ontologies.com/Ontology1207768242.owl#transaction-3333"
+        }
+      },
+      {
+        "id": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "3334"
+        },
+        "x": {
+          "type": "uri",
+          "value": "http://www.owl-ontologies.com/Ontology1207768242.owl#transaction-3334"
+        }
+      }
+    ]
+  }
+}

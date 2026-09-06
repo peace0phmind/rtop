@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-suite-manifest-datatypes-datetime-3d",
+  "mapping_behavior": "DockerPostgresTestSuite stockexchange datatypes datetime-3d manifest query 的 SPARQL JSON bindings",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/docker-tests/src/test/resources/testcases-docker/virtual-mode/stockexchange/datatypes/{stockexchange-pgsql.obda,stockexchange.owl,datetime-3d.rq}; test/docker-tests/src/test/resources/dump/stockexchange-create-pgsql.sql",
+  "query": "../ontop/test/docker-tests/src/test/resources/testcases-docker/virtual-mode/stockexchange/datatypes/datetime-3d.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "3566d0fbae4e1d80b97b435564ef812b6a78770f596a5afee402434767a0a058",
+    "rtop_raw": "2ea0eb1aa86f3e85ab083739d8b55a197a1471dc53cba3e9b497bb8daf4c6b12",
+    "normalized": "03612582a7ec17400d4920fd3a7c34775880d6e3dc797cd6ba922aca35342a61"
+  }
+}

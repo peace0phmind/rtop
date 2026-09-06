@@ -1,0 +1,1 @@
+{"format":"postgres-oci-delivery-gate","baseline_has_no_isomorphic_oci_artifact":true,"rtop_gate_passed":true,"no_jvm":true,"secret_file":true,"endpoint_ask":true,"cli_ask":true,"healthcheck":true,"invalid_config_diagnostic":true,"unreachable_postgres_diagnostic":true}

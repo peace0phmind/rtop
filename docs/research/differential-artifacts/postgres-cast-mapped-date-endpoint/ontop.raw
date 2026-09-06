@@ -1,0 +1,39 @@
+{
+  "head" : {
+    "vars" : [
+      "v"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "v" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#date",
+          "type" : "literal",
+          "value" : "1970-11-05"
+        }
+      },
+      {
+        "v" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#date",
+          "type" : "literal",
+          "value" : "2011-12-08"
+        }
+      },
+      {
+        "v" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#date",
+          "type" : "literal",
+          "value" : "2014-06-05"
+        }
+      },
+      {
+        "v" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#date",
+          "type" : "literal",
+          "value" : "2015-09-21"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "head" : {
+    "vars" : [
+      "x",
+      "amount",
+      "description"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-661"
+        },
+        "amount" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        },
+        "description" : {
+          "xml:lang" : "en-us",
+          "type" : "literal",
+          "value" : "Text description 1"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-660"
+        },
+        "amount" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        },
+        "description" : {
+          "xml:lang" : "en-us",
+          "type" : "literal",
+          "value" : "Text description 2"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-662"
+        },
+        "amount" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        },
+        "description" : {
+          "xml:lang" : "en-us",
+          "type" : "literal",
+          "value" : "Text description 3"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-663"
+        },
+        "amount" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        },
+        "description" : {
+          "xml:lang" : "en-us",
+          "type" : "literal",
+          "value" : "Text description 4"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-664"
+        },
+        "amount" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        },
+        "description" : {
+          "xml:lang" : "en-us",
+          "type" : "literal",
+          "value" : "Text description 5"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-665"
+        },
+        "amount" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        },
+        "description" : {
+          "xml:lang" : "en-us",
+          "type" : "literal",
+          "value" : "Testo di descrizione 1"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-666"
+        },
+        "amount" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        },
+        "description" : {
+          "xml:lang" : "en-us",
+          "type" : "literal",
+          "value" : "Testo di descrizione 2"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-667"
+        },
+        "amount" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        },
+        "description" : {
+          "xml:lang" : "en-us",
+          "type" : "literal",
+          "value" : "Testo di descrizione 3"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-669"
+        },
+        "amount" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        },
+        "description" : {
+          "xml:lang" : "en-us",
+          "type" : "literal",
+          "value" : "Testo di descrizione 4"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#stock-668"
+        },
+        "amount" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "100"
+        },
+        "description" : {
+          "xml:lang" : "en-us",
+          "type" : "literal",
+          "value" : "Testo di descrizione 5"
+        }
+      }
+    ]
+  }
+}

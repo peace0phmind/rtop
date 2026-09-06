@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d009-subject-and-pom-named-graphs",
+  "mapping_behavior": "subject-map and predicate-object-map named graphs",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D009/{create.sql,r2rmlb.ttl}",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "45266b0321eeced932cef7e6b69b05f6a4e6e669fde05093c14aa797e2d61745",
+    "rtop_raw": "6e8be62caf42c1576968786ec62f0557386c55e104fd78cb2a44685e904ac108",
+    "normalized": "2173ab078a38b5bbbf8ce34a82e1a0e9bc87d9fae5bb6cf60b3d9616d697b3f1"
+  }
+}

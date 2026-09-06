@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-direct-mapping-d004-no-primary-key-two-columns",
+  "mapping_behavior": "Direct Mapping no-primary-key two-column blank-node relation",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D004/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "pgcrypto",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "8009728cb49f44232f40ff1371c97ea1a67c24ec588dc2ce69610b40039f7606",
+    "rtop_raw": "ebc648967803db035d90048f63ef2bfb1bd420b9ff5dcb38a1bd6905aa970217",
+    "normalized": "09ea148da472d940c7871b47353d414676824eda33ee3e4fa0cc5a64481deed5"
+  }
+}

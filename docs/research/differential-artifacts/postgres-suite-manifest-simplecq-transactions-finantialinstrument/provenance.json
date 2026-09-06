@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-suite-manifest-simplecq-transactions-finantialinstrument",
+  "mapping_behavior": "DockerPostgresTestSuite stockexchange simplecq transactions-finantialinstrument manifest query 的 SPARQL JSON bindings",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/docker-tests/src/test/resources/testcases-docker/virtual-mode/stockexchange/simplecq/{stockexchange-pgsql.obda,stockexchange.owl,transactions-finantialinstrument.rq}; test/docker-tests/src/test/resources/dump/stockexchange-create-pgsql.sql",
+  "query": "../ontop/test/docker-tests/src/test/resources/testcases-docker/virtual-mode/stockexchange/simplecq/transactions-finantialinstrument.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "63e25f3d74d07e6dbbbf62aa3de86cf5780b061313f85c84e7502409f48be2b0",
+    "rtop_raw": "73164a88cfdb1b2b2cb01f72931ef6d7e25ee1cda5343b442b50f2a6e23b2678",
+    "normalized": "a1554024492611996afe949c3dea1acb46b5c7edbc40ce4038fa1ce87bd8454f"
+  }
+}

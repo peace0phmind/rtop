@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-cli-validate",
+  "mapping_behavior": "CLI validate loads ontology and native OBDA mapping then reports completion",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopValidate.java; client/cli/src/test/resources/test/{simplemapping.obda,simplemapping.owl}; tests/compat/postgres-cli-materialize/init.sql",
+  "query": "validate stdout",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "823388b394527175d230e7b28afc0ffe33eade076029fbcd4358990f0eb70b5b",
+    "rtop_raw": "823388b394527175d230e7b28afc0ffe33eade076029fbcd4358990f0eb70b5b",
+    "normalized": "0eaf9aa3aa51a87c3a0597e1e44cf2daf2844c7c7dca98f1b021713e6b21a799"
+  }
+}

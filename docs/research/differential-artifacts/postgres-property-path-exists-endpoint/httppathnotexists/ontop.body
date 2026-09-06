@@ -1,0 +1,1 @@
+it.unibz.inf.ontop.exception.OntopUnsupportedInputQueryException: Some of the variables in the EXISTS subquery are unbound[value]

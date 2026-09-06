@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-direct-mapping-pk-fk-null-encoding-endpoint",
+  "mapping_behavior": "Direct Mapping endpoint preserves D009 PK/FK/NULL and D010 percent-encoding",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边 HTTP JSON 结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D009,D010/{create.sql,directGraph.ttl}; Ontop bootstrap + endpoint; rtop direct_mapping endpoint",
+  "query": "D009 FK SELECT; D010 percent-encoded IRI SELECT",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container endpoint",
+    "rtop": "Rust host endpoint"
+  },
+  "sha256": {
+    "ontop_raw": "9b8c78711b14d4c31eddddfb90bbed4031d4c4a610d0d697ada46217051f8d29",
+    "rtop_raw": "f2d6aa8ed964978bb3a13e3aa8aac5de062b062de1787258017617d75e1b3df3",
+    "normalized": "12c4c8f442d708a4b503cd47f26bf57295f15adb1275279b8d0c2a7b48c923ea"
+  }
+}

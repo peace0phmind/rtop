@@ -1,0 +1,6 @@
+{
+  "format": "ontology-document",
+  "get_status": "200",
+  "post_status": "200",
+  "required_iri": "http://it.unibz.inf/obda/test/simple#A"
+}

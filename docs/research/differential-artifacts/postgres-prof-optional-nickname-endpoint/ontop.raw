@@ -1,0 +1,39 @@
+{
+  "head" : {
+    "vars" : [
+      "v"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      { },
+      { },
+      { },
+      { },
+      {
+        "v" : {
+          "type" : "literal",
+          "value" : "Frankie"
+        }
+      },
+      {
+        "v" : {
+          "type" : "literal",
+          "value" : "Johnny"
+        }
+      },
+      {
+        "v" : {
+          "type" : "literal",
+          "value" : "King of Pop"
+        }
+      },
+      {
+        "v" : {
+          "type" : "literal",
+          "value" : "Rog"
+        }
+      }
+    ]
+  }
+}

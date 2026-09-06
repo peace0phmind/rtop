@@ -1,0 +1,18 @@
+{
+  "delayed": {
+    "status": "200",
+    "body": "{\"head\":{},\"boolean\":false}"
+  },
+  "ask": {
+    "status": "200",
+    "body": "{\"head\":{},\"boolean\":true}"
+  },
+  "disconnect": {
+    "curl_exit": 28,
+    "active_delays": "0"
+  },
+  "reuse": {
+    "status": "200",
+    "body": "{\"head\":{},\"boolean\":true}"
+  }
+}

@@ -1,4 +1,6 @@
-[MappingDeclaration]
+[PrefixDeclaration]
+
+[MappingDeclaration] @collection [[
 mappingId person-type
 target <https://example.test/person/{id}> <https://example.test/type> <https://example.test/Person> .
 source SELECT id FROM algebra_people
@@ -54,3 +56,4 @@ source SELECT id, amount, category FROM algebra_money
 mappingId money-category
 target <https://example.test/money/{id}> <https://example.test/category> {category} .
 source SELECT id, amount, category FROM algebra_money
+]]

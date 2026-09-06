@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-intent-engine-fibo-ontology-identity-counterexamples-postgres-endpoint",
+  "mapping_behavior": "A PostgreSQL FIBO endpoint preserves positive subclass inference and counterexamples for removed subclass, excessive equivalentClass, weak alignment, and unsafe owl:sameAs identity",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下 test-delivery-compat gate 实际通过四种 ontology/mapping 反例。固定 Ontop 源码没有同构 intent-engine service fixture，ontop.raw 明确记录不可比较边界；每个结果经 Rust HTTP endpoint 的完整 RDF term 断言。",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "tests/compat/postgres-fibo/fixtures/generated/{fibo-loan-count-query.sparql,no-loan-entailment-ontology.ttl,wrong-equivalence-ontology.ttl,no-weak-alignment-ontology.ttl,unsafe-identity-ontology.ttl,unsafe-identity-mapping.obda,schema.sql}",
+  "query": "FIBO ontology variants HTTP SPARQL Results JSON",
+  "postgres_extensions": "none",
+  "independent_processes": {"ontop": "不适用：固定 Ontop 源码无 intent-engine FIBO counterexample service fixture", "rtop": "Rust HTTP endpoint"},
+  "sha256": {"ontop_raw": "3633ceb097e7ced48cc6e1b51684445828ae30483ea92e6069851d89592ec909", "rtop_raw": "b43e7f0ea3cea3d29ecb5a29f4f696418004bacb6f3159101a096036ba4c9dbb", "normalized": "f2d49fe62f4cd9467c6fbae1ee3e68ae540b9d6287fe640a055add9ab1c45789"}
+}

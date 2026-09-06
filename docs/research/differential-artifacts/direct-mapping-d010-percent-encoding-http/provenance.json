@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-direct-mapping-d010-percent-encoding-http",
+  "mapping_behavior": "Direct Mapping HTTP D010 percent-encoded relation and column identifiers",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D010/{create.sql,directGraph.ttl}; Ontop bootstrap + endpoint; rtop direct_mapping endpoint",
+  "query": "tests/compat/postgres-http/direct-d010-percent-encoding.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "0ca6e0a54f51e2fb27aa25c5f485428f90b52e7b05d3e3e4b10b848fd12792e8",
+    "rtop_raw": "d896f1e7ac3006ce13e7af86a5b5467195ab008fe6cf9d67b347117f37324aa8",
+    "normalized": "d3de333ee1275059519744e4a9a71e763b809f9bbb5f4cdc77c9737320c6fd9b"
+  }
+}

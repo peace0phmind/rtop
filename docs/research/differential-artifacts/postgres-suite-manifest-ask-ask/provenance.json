@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-suite-manifest-ask-ask",
+  "mapping_behavior": "DockerPostgresTestSuite stockexchange ASK manifest query 的 SPARQL JSON boolean",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/docker-tests/src/test/resources/testcases-docker/sparql/ask/{stockexchange-pgsql.obda,stockexchange.owl,ask.rq}; test/docker-tests/src/test/resources/dump/stockexchange-create-pgsql.sql",
+  "query": "../ontop/test/docker-tests/src/test/resources/testcases-docker/sparql/ask/ask.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "d952aa3737c9d3555dc6930dae8d669be9699456ddc42cc302e4394d60b9a975",
+    "rtop_raw": "4f2d9aecdf335b07881a6946a0dab6e8d18313b1e6af93c8dfd7d9a4d0c13856",
+    "normalized": "0cae304226eefcffccf2c35d3f9bc217625fc9e29064fa7fe280396904b134fd"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-direct-mapping-d005-duplicate-blank-nodes-and-double",
+  "mapping_behavior": "Direct Mapping duplicate no-primary-key blank nodes and xsd:double values",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D005/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "pgcrypto",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "bc4febe3b72f51225dfea90a46aed0840bd6ffe8a71407b52929556b41e2c198",
+    "rtop_raw": "85bb450f4b8af3e108332f17371ed6abfdc876c4cc3c48fad2e3c5dcb705e7c5",
+    "normalized": "e8e51b80cd009ed6bfd0cabab0e00d0eaadf0e221fd66489a241e8da14d02ec5"
+  }
+}

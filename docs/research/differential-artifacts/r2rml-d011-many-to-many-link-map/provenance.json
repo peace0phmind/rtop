@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d011-many-to-many-link-map",
+  "mapping_behavior": "additional LinkMap many-to-many relation",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D011/{create.sql,r2rmlb.ttl}",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "4acc71189d5dfe9da16f3655eda2ef656a19d2fa190c7d8b55362e13fee72fe6",
+    "rtop_raw": "779a9383d7197a6494d41d9c7ee07c4017d7db09d01ae8fa4cd85f8d02e59f80",
+    "normalized": "761dacd56fcabaf6095c467f8e8be75f3f437747225d52f681778b5ea43085e2"
+  }
+}

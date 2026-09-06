@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d005-template-iri-class-float",
+  "mapping_behavior": "template IRI, rr:class, and FLOAT object",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D005/{create.sql,r2rmla.ttl}",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "3b607f3a22058d471819201e5fe816e4c6cd7e0b3c22564b4fe119d17d0fd1f9",
+    "rtop_raw": "089c0493709ee1a32df1c5ebb187c89b346b888a23cfb76596718c076a14d742",
+    "normalized": "fe304de0dd938d583adb697123f894ec1a112e2d648fc99f3fc2b69ce4abfa89"
+  }
+}

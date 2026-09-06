@@ -1,0 +1,23 @@
+{
+  "get": {
+    "status": "200",
+    "body": {
+      "head": {},
+      "boolean": true
+    }
+  },
+  "form_post": {
+    "status": "200",
+    "body": {
+      "head": {},
+      "boolean": true
+    }
+  },
+  "sparql_post": {
+    "status": "200",
+    "body": {
+      "head": {},
+      "boolean": true
+    }
+  }
+}

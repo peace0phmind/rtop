@@ -1,0 +1,12 @@
+{
+  "default": {
+    "status": "200",
+    "body": "SELECT $1 || replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(CAST(id AS text), '%', '%25'), ' ', '%20'), ':', '%3A'), '/', '%2F'), '\"', '%22'), '<', '%3C'), '>', '%3E'), '#', '%23'), '?', '%3F'), '{', '%7B'), '}', '%7D'), '|', '%7C'), '\\', '%5C'), '^', '%5E'), '`', '%60'), ',', '%2C'), '(', '%28'), ')', '%29') || $2 FROM (SELECT id FROM query_people) AS rtop_mapping",
+    "query_id": "5048ff5b-a26b-4fa0-b04d-17ff41e00fc6"
+  },
+  "native": {
+    "status": "200",
+    "body": "SELECT $1 || replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(CAST(id AS text), '%', '%25'), ' ', '%20'), ':', '%3A'), '/', '%2F'), '\"', '%22'), '<', '%3C'), '>', '%3E'), '#', '%23'), '?', '%3F'), '{', '%7B'), '}', '%7D'), '|', '%7C'), '\\', '%5C'), '^', '%5E'), '`', '%60'), ',', '%2C'), '(', '%28'), ')', '%29') || $2 FROM (SELECT id FROM query_people) AS rtop_mapping",
+    "query_id": "d2e8bcb2-e3cb-4c6b-a201-b6bd9f3e2c3a"
+  }
+}

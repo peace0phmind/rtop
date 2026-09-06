@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-httppostgisintersection3-endpoint",
+  "mapping_behavior": "GeoSPARQL PostGIS geometry/geography buffer intersection preserves RDF WKT terms and mixed-type empty results through the endpoint",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6",
+  "required_postgres_image_digest": "sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6",
+  "fixture": "test/lightweight-tests/src/test/{java/it/unibz/inf/ontop/docker/lightweight/postgresql/other/GeoSPARQLPostGISTest.java,resources/geospatial/geospatial.obda}; tests/compat/postgres-geospatial/{init.sql,geospatial.obda,intersection-1.rq,intersection-2.rq,intersection-3.rq}",
+  "query": "tests/compat/postgres-geospatial/intersection-3.rq",
+  "postgres_extensions": "postgis",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "bb2e139eb0c3e3ede5c95bf9f86609f8944a8345969c969539605e2ffa65adc3",
+    "rtop_raw": "b42c778a35d9c939c11fa78df32a0d79d307c966acda5ab61fd2c0e390f1b53c",
+    "normalized": "63ad3e75459577367ffa47c26ee6e91f48403ea25f349e075dcdf78fcc1f346d"
+  }
+}

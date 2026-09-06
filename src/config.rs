@@ -6,6 +6,8 @@ use std::path::{Path, PathBuf};
 #[derive(Debug, Deserialize)]
 struct FileConfig {
     mapping: Option<String>,
+    mapping_infer_default_datatype: Option<bool>,
+    mapping_require_absolute_iri_values: Option<bool>,
     direct_mapping: Option<FileDirectMapping>,
     facts: Option<String>,
     facts_format: Option<String>,
@@ -25,6 +27,7 @@ struct FileEndpoint {
 struct FileDirectMapping {
     base_iri: String,
     relations: Vec<String>,
+    preserve_physical_rows: Option<bool>,
 }
 #[derive(Debug, Deserialize)]
 struct FileDataSource {
@@ -53,6 +56,10 @@ pub struct KnowledgeGraphSpec {
 #[derive(Debug, Clone)]
 pub struct LoadedConfiguration {
     pub spec: KnowledgeGraphSpec,
+    /// 是否把 PostgreSQL 返回的服务器类型自动映射为未显式标注的 RDF literal datatype。
+    /// 默认开启；某些固定 Ontop 配置组合可显式关闭该行为。
+    pub mapping_infer_default_datatype: bool,
+    pub mapping_require_absolute_iri_values: bool,
     pub postgres: PostgresConnectionConfig,
     pub direct_mapping: Option<DirectMappingConfiguration>,
     pub endpoint: EndpointConfiguration,
@@ -71,6 +78,7 @@ pub struct EndpointConfiguration {
 pub struct DirectMappingConfiguration {
     pub base_iri: String,
     pub relations: Vec<String>,
+    pub preserve_physical_rows: bool,
 }
 
 pub fn load_configuration(path: impl AsRef<Path>) -> Result<LoadedConfiguration, RuntimeError> {
@@ -129,6 +137,7 @@ pub fn load_configuration(path: impl AsRef<Path>) -> Result<LoadedConfiguration,
         .map(|direct| DirectMappingConfiguration {
             base_iri: direct.base_iri,
             relations: direct.relations,
+            preserve_physical_rows: direct.preserve_physical_rows.unwrap_or(true),
         });
     if config.mapping.is_some() == direct_mapping.is_some() {
         return Err(RuntimeError::Config(
@@ -197,6 +206,10 @@ pub fn load_configuration(path: impl AsRef<Path>) -> Result<LoadedConfiguration,
             ontology_file,
             xml_catalog_file,
         },
+        mapping_infer_default_datatype: config.mapping_infer_default_datatype.unwrap_or(true),
+        mapping_require_absolute_iri_values: config
+            .mapping_require_absolute_iri_values
+            .unwrap_or(false),
         postgres,
         direct_mapping,
         endpoint: EndpointConfiguration {

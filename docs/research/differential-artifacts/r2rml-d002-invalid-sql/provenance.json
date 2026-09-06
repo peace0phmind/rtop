@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d002-invalid-sql",
+  "mapping_behavior": "reject invalid SQL logical table source",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D002/{create.sql,r2rmlg.ttl}",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "a4a3b5df22e1d26657a81b71d323ba4d407656fda7194352ffdf992a50c2a1be",
+    "rtop_raw": "02411987b78b2dea8cd8eb8ceb98fdea231685b394fbd17701082bb77d26a0e9",
+    "normalized": "01dc18be3f289c742b1514c35003be858c03bc57c7874c02ea9527f8897289ca"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "default": {
+    "status": "200",
+    "body": "ans1(person)\nCONSTRUCT [person] [person/RDF(https://example.test/person/{}(INTEGERToTEXT(id1m1)),IRI)]\n   NATIVE [id1m1]\nSELECT v1.\"id\" AS \"id1m1\"\nFROM \"query_people\" v1",
+    "query_id": "5752d622-8e1c-4040-a1a7-1e2e18b15e03"
+  },
+  "native": {
+    "status": "200",
+    "body": "SELECT ('https://example.test/person/' || CAST(v1.\"id\" AS TEXT)) AS \"person\"\nFROM \"query_people\" v1",
+    "query_id": "f6edf408-f094-4765-9cae-f6e50ea5d4c1"
+  }
+}

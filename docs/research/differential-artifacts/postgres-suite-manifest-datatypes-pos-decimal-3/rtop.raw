@@ -1,0 +1,1 @@
+{"head":{"vars":["x","date"]},"results":{"bindings":[{"date":{"type":"literal","value":"2008-04-14T00:00:00","datatype":"http://www.w3.org/2001/XMLSchema#dateTime"},"x":{"type":"uri","value":"http://www.owl-ontologies.com/Ontology1207768242.owl#transaction-3334"}}]}}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-direct-mapping-d021-composite-foreign-key-null-omission",
+  "mapping_behavior": "Direct Mapping composite foreign key NULL omission to parent primary-key IRI",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D021/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "a336453eacc259881bfacfad9eba06cee773a8f2ecbe1660eefd952733304d5a",
+    "rtop_raw": "b0a50592e13ea3018f6b364b3891995fb93577b81223be5244ca7ade18dee0bb",
+    "normalized": "294f2624b71146833c198ee39aafb63df47f7795a6b657eb0da37e6f7c1fe4a1"
+  }
+}

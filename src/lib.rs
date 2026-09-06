@@ -24,7 +24,7 @@ pub use model::{Binding, QueryResult, RdfFact, RdfTerm, RuntimeError};
 pub use rdf::format_rdf_term;
 pub use server::serve;
 
-use bigdecimal::{BigDecimal, RoundingMode, Signed, Zero};
+use bigdecimal::{BigDecimal, RoundingMode, Zero};
 use chrono::{Datelike, NaiveDate, NaiveDateTime, NaiveTime, Timelike};
 use mapping::BindingTerm;
 use rand::random;
@@ -35,22 +35,130 @@ use sparql::{
     Expression, Filter, FilterValue, GraphPattern, LogicalOperator, OrderByTerm, Query,
     TriplePattern,
 };
+use std::collections::HashMap;
 use std::{cmp::Reverse, collections::BTreeMap, io::Read, str::FromStr};
 use uuid::Uuid;
+
+/// 验证 endpoint 启动时即可判定的本地输入，而不建立 PostgreSQL 连接。
+/// Ontop 会在 HTTP listener 就绪前读取 mapping、facts 与 ontology；这里保持同一
+/// 失败边界，同时让数据源连接仍按请求惰性创建。
+pub fn validate_static_inputs(
+    spec: &KnowledgeGraphSpec,
+    validate_mapping: bool,
+    relaxed_native_source_sql: bool,
+) -> Result<(), RuntimeError> {
+    if validate_mapping {
+        if relaxed_native_source_sql {
+            Mapping::parse_file_relaxed_source_sql(&spec.mapping_file)?;
+        } else {
+            Mapping::parse_file(&spec.mapping_file)?;
+        }
+    }
+    let facts = load_facts(spec)?;
+    let ontology = load_ontology(spec)?;
+    ontology.validate_facts(&facts)
+}
+
+fn load_facts(spec: &KnowledgeGraphSpec) -> Result<Vec<RdfFact>, RuntimeError> {
+    let Some(path) = &spec.facts_file else {
+        return Ok(Vec::new());
+    };
+    let content =
+        std::fs::read(path).map_err(|e| RuntimeError::Facts(format!("无法读取 facts：{e}")))?;
+    let format = spec
+        .facts_format
+        .as_deref()
+        .or_else(|| path.extension().and_then(|extension| extension.to_str()));
+    let base_iri = spec
+        .facts_base_iri
+        .as_ref()
+        .map(|iri| oxiri::Iri::parse(iri.clone()))
+        .transpose()
+        .map_err(|e| RuntimeError::Facts(format!("无效 facts_base_iri：{e}")))?;
+    match format {
+        Some("ttl" | "turtle") => parse_turtle(content, base_iri),
+        Some("nq" | "nquads") => parse_nquads(content),
+        Some("rdf" | "xml" | "rdfxml") => parse_rdf_xml(content, base_iri),
+        _ => Err(RuntimeError::Facts("未提供有效的 facts 文件格式".into())),
+    }
+}
+
+fn load_ontology(spec: &KnowledgeGraphSpec) -> Result<ontology::Ontology, RuntimeError> {
+    match &spec.ontology_file {
+        Some(path) => ontology::Ontology::load_with_catalog(path, spec.xml_catalog_file.as_deref()),
+        None => Ok(ontology::Ontology::default()),
+    }
+}
 
 /// VKG 的唯一高层 seam：加载配置并执行查询。
 pub struct VkgRuntime<D> {
     spec: KnowledgeGraphSpec,
+    mapping_infer_default_datatype: bool,
+    mapping_require_absolute_iri_values: bool,
+    canonicalize_floating_lexicals: bool,
     source: D,
     mapping: Mapping,
     facts: Vec<RdfFact>,
     ontology: ontology::Ontology,
+    buffered_wkts: HashMap<String, (String, String)>,
 }
 
 impl<D: DataSource> VkgRuntime<D> {
     pub fn new(spec: KnowledgeGraphSpec, source: D) -> Result<Self, RuntimeError> {
+        Self::new_with_mapping_datatype_inference(spec, source, true)
+    }
+
+    /// 显式控制没有 rr:datatype/语言标签的映射 object 是否采用 PostgreSQL 服务器类型。
+    pub fn new_with_mapping_datatype_inference(
+        spec: KnowledgeGraphSpec,
+        source: D,
+        mapping_infer_default_datatype: bool,
+    ) -> Result<Self, RuntimeError> {
         let mapping = Mapping::parse_file(&spec.mapping_file)?;
-        Self::from_mapping(spec, source, mapping)
+        Self::from_mapping(
+            spec,
+            source,
+            mapping,
+            mapping_infer_default_datatype,
+            false,
+            false,
+        )
+    }
+
+    pub fn new_with_mapping_options(
+        spec: KnowledgeGraphSpec,
+        source: D,
+        mapping_infer_default_datatype: bool,
+        mapping_require_absolute_iri_values: bool,
+    ) -> Result<Self, RuntimeError> {
+        let mapping = Mapping::parse_file(&spec.mapping_file)?;
+        Self::from_mapping(
+            spec,
+            source,
+            mapping,
+            mapping_infer_default_datatype,
+            mapping_require_absolute_iri_values,
+            false,
+        )
+    }
+
+    /// 与 Ontop endpoint 一样，native source SQL 可延迟到 PostgreSQL 查询期解析；
+    /// 仅 endpoint 调用此路径，CLI 仍保留严格 source-SQL validation。
+    pub fn new_with_mapping_options_relaxed_source_sql(
+        spec: KnowledgeGraphSpec,
+        source: D,
+        mapping_infer_default_datatype: bool,
+        mapping_require_absolute_iri_values: bool,
+    ) -> Result<Self, RuntimeError> {
+        let mapping = Mapping::parse_file_relaxed_source_sql(&spec.mapping_file)?;
+        Self::from_mapping(
+            spec,
+            source,
+            mapping,
+            mapping_infer_default_datatype,
+            mapping_require_absolute_iri_values,
+            false,
+        )
     }
 
     /// 从 reader 加载 Turtle R2RML；显式 base IRI 使相对 IRI 语义不依赖临时文件路径。
@@ -61,50 +169,30 @@ impl<D: DataSource> VkgRuntime<D> {
         source: D,
     ) -> Result<Self, RuntimeError> {
         let mapping = Mapping::parse_r2rml_reader(reader, base_iri)?;
-        Self::from_mapping(spec, source, mapping)
+        Self::from_mapping(spec, source, mapping, true, false, false)
     }
 
     fn from_mapping(
         spec: KnowledgeGraphSpec,
         source: D,
         mapping: Mapping,
+        mapping_infer_default_datatype: bool,
+        mapping_require_absolute_iri_values: bool,
+        canonicalize_floating_lexicals: bool,
     ) -> Result<Self, RuntimeError> {
-        let facts = match &spec.facts_file {
-            None => Vec::new(),
-            Some(path) => {
-                let content = std::fs::read(path)
-                    .map_err(|e| RuntimeError::Facts(format!("无法读取 facts：{e}")))?;
-                let format = spec
-                    .facts_format
-                    .as_deref()
-                    .or_else(|| path.extension().and_then(|extension| extension.to_str()));
-                let base_iri = spec
-                    .facts_base_iri
-                    .as_ref()
-                    .map(|iri| oxiri::Iri::parse(iri.clone()))
-                    .transpose()
-                    .map_err(|e| RuntimeError::Facts(format!("无效 facts_base_iri：{e}")))?;
-                match format {
-                    Some("ttl" | "turtle") => parse_turtle(content, base_iri)?,
-                    Some("nq" | "nquads") => parse_nquads(content)?,
-                    Some("rdf" | "xml" | "rdfxml") => parse_rdf_xml(content, base_iri)?,
-                    _ => return Err(RuntimeError::Facts("未提供有效的 facts 文件格式".into())),
-                }
-            }
-        };
-        let ontology = match &spec.ontology_file {
-            Some(path) => {
-                ontology::Ontology::load_with_catalog(path, spec.xml_catalog_file.as_deref())?
-            }
-            None => ontology::Ontology::default(),
-        };
+        let facts = load_facts(&spec)?;
+        let ontology = load_ontology(&spec)?;
         ontology.validate_facts(&facts)?;
         Ok(Self {
             spec,
+            mapping_infer_default_datatype,
+            mapping_require_absolute_iri_values,
+            canonicalize_floating_lexicals,
             source,
             mapping,
             facts,
             ontology,
+            buffered_wkts: HashMap::new(),
         })
     }
 
@@ -152,13 +240,6 @@ impl<D: DataSource> VkgRuntime<D> {
                                 row.get(name).cloned().map(|value| (name.clone(), value))
                             })
                             .collect()
-                    })
-                    // Ontop virtual-mode SELECT 会在 projection 后消除首个投影变量
-                    // 未绑定的 OPTIONAL 行；其余投影变量可保持未绑定。
-                    .filter(|row: &Binding| {
-                        variables
-                            .first()
-                            .is_none_or(|first| row.contains_key(first))
                     })
                     .collect::<Vec<Binding>>();
                 if distinct {
@@ -281,6 +362,31 @@ impl<D: DataSource> VkgRuntime<D> {
                         }
                         let mut candidate = query.clone();
                         candidate.object = format!("<{class}>");
+                        if let Ok(mut candidate_plans) =
+                            self.mapping.reformulate(&candidate, projection_variables)
+                        {
+                            plans.append(&mut candidate_plans);
+                        }
+                    }
+                    Ok(plans.into_iter().map(|plan| (plan, None)).collect())
+                }
+                Ok(mut plans)
+                    if query.predicate != "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>" =>
+                {
+                    // 一个超属性自身已有 mapping 时，也仍必须并入其子属性和反向
+                    // 属性的 mapping。LUBM 的 memberOf 直接映射学生，而 worksFor
+                    // 是它的子属性并映射教授；只在 direct mapping 缺失时展开会遗漏
+                    // 合法的 superclass/property entailment。
+                    let predicate = query.predicate.trim_matches(['<', '>']);
+                    // inverseOf 的两边若都有 mapping，会把同一 RDF triple 的直接
+                    // 与反向蕴含各加入一次；虚拟图不是 derivation bag。既有 fallback
+                    // 分支会在没有直接 mapping 时处理 inverse，故这里仅补子属性。
+                    for property in self.ontology.subproperties_of(predicate) {
+                        if property == predicate {
+                            continue;
+                        }
+                        let mut candidate = query.clone();
+                        candidate.predicate = format!("<{property}>");
                         if let Ok(mut candidate_plans) =
                             self.mapping.reformulate(&candidate, projection_variables)
                         {
@@ -424,6 +530,7 @@ impl<D: DataSource> VkgRuntime<D> {
                                         BindingTerm::Iri => RdfTerm::Iri(resolve_mapping_iri(
                                             &value.value,
                                             plan.iri_bases[index].as_deref(),
+                                            self.mapping_require_absolute_iri_values,
                                         )?),
                                         BindingTerm::BlankNode => {
                                             RdfTerm::BlankNode(value.value.clone())
@@ -434,14 +541,22 @@ impl<D: DataSource> VkgRuntime<D> {
                                             infer_datatype,
                                         } => {
                                             let datatype = datatype.clone().or_else(|| {
-                                                (*infer_datatype)
+                                                (*infer_datatype
+                                                    && self.mapping_infer_default_datatype)
                                                     .then(|| value.datatype.clone())
                                                     .flatten()
                                             });
+                                            // Ontop 的 PostgreSQL endpoint 将 native target 中
+                                            // 显式 xsd:string 序列化为 simple literal。
+                                            let datatype = (datatype.as_deref()
+                                                != Some("http://www.w3.org/2001/XMLSchema#string"))
+                                            .then_some(datatype)
+                                            .flatten();
                                             RdfTerm::Literal {
-                                                value: canonical_floating_lexical(
+                                                value: mapping_floating_lexical(
                                                     &value.value,
                                                     datatype.as_deref(),
+                                                    self.canonicalize_floating_lexicals,
                                                 ),
                                                 datatype,
                                                 language: language.clone(),
@@ -706,6 +821,9 @@ impl<D: DataSource> VkgRuntime<D> {
                         row[index].as_ref().expect("NULL rows are filtered"),
                         term,
                         iri_base.as_deref(),
+                        self.mapping_infer_default_datatype,
+                        self.mapping_require_absolute_iri_values,
+                        self.canonicalize_floating_lexicals,
                     )?,
                 );
             }
@@ -920,17 +1038,47 @@ impl<D: DataSource> VkgRuntime<D> {
         let Some(arguments) = arguments else {
             return Ok(None);
         };
-        Ok(self
-            .source
-            .geospatial(name, &arguments)?
-            .map(|value| match value {
-                GeospatialValue::Boolean(value) => boolean_term(value).expect("boolean term"),
-                GeospatialValue::Wkt(value) => RdfTerm::Literal {
+        let is_intersection = matches!(
+            name.trim().to_ascii_uppercase().as_str(),
+            "GEOF:INTERSECTION" | "<HTTP://WWW.OPENGIS.NET/DEF/FUNCTION/GEOSPARQL/INTERSECTION>"
+        );
+        let value = if is_intersection {
+            arguments
+                .first()
+                .and_then(|wkt| self.buffered_wkts.get(wkt))
+                .map(|(buffer_wkt, distance)| {
+                    self.source.geospatial_intersection_with_buffer(
+                        buffer_wkt,
+                        distance,
+                        arguments
+                            .get(1)
+                            .expect("intersection arity checked by adapter"),
+                    )
+                })
+                .transpose()?
+                .flatten()
+                .or(self.source.geospatial(name, &arguments)?)
+        } else {
+            self.source.geospatial(name, &arguments)?
+        };
+        Ok(value.map(|value| match value {
+            GeospatialValue::Boolean(value) => boolean_term(value).expect("boolean term"),
+            GeospatialValue::Wkt(value) => {
+                if matches!(
+                    name.trim().to_ascii_uppercase().as_str(),
+                    "GEOF:BUFFER" | "<HTTP://WWW.OPENGIS.NET/DEF/FUNCTION/GEOSPARQL/BUFFER>"
+                ) && arguments.len() == 3
+                {
+                    self.buffered_wkts
+                        .insert(value.clone(), (arguments[0].clone(), arguments[1].clone()));
+                }
+                RdfTerm::Literal {
                     value,
                     datatype: Some("http://www.opengis.net/ont/geosparql#wktLiteral".into()),
                     language: None,
-                },
-            }))
+                }
+            }
+        }))
     }
 
     pub fn spec(&self) -> &KnowledgeGraphSpec {
@@ -948,6 +1096,7 @@ impl VkgRuntime<PostgresDataSource> {
         mut source: PostgresDataSource,
         base_iri: &str,
         relations: &[String],
+        preserve_physical_rows: bool,
     ) -> Result<Self, RuntimeError> {
         let metadata = relations
             .iter()
@@ -957,8 +1106,8 @@ impl VkgRuntime<PostgresDataSource> {
                     .map(|metadata| (relation.clone(), metadata))
             })
             .collect::<Result<Vec<_>, _>>()?;
-        let mapping = Mapping::from_direct_mapping(base_iri, &metadata)?;
-        Self::from_mapping(spec, source, mapping)
+        let mapping = Mapping::from_direct_mapping(base_iri, &metadata, preserve_physical_rows)?;
+        Self::from_mapping(spec, source, mapping, true, false, true)
     }
 }
 
@@ -1561,18 +1710,19 @@ fn evaluate_expression(row: &Binding, expression: &Expression) -> Option<RdfTerm
         } => {
             let value = evaluate_expression(row, value)?;
             let mut expression_error = false;
+            let mut matched = false;
             for candidate in candidates {
                 match evaluate_expression(row, candidate) {
                     Some(candidate) if sparql_value_equal(&value, &candidate) => {
-                        return boolean_term(!negated);
+                        // 固定 Ontop PostgreSQL endpoint 会继续计算 IN 列表的剩余
+                        // expression；后续的错误不能被前面的匹配短路吞掉。
+                        matched = true;
                     }
                     Some(_) => {}
                     None => expression_error = true,
                 }
             }
-            (!expression_error)
-                .then(|| boolean_term(*negated))
-                .flatten()
+            (!expression_error).then(|| boolean_term(if *negated { !matched } else { matched }))?
         }
         Expression::Function {
             name,
@@ -1845,14 +1995,12 @@ fn evaluate_function(
             .or_else(|| decimal_term(numeric(row, &arguments[0])?.floor())),
         "ROUND" if arguments.len() == 1 => exact_decimal_value(row, &arguments[0])
             .and_then(|(value, datatype)| {
-                // SPARQL ROUND 的平分规则是趋向正无穷：2.5 -> 3，-2.5 -> -2。
-                // BigDecimal 的 HalfUp 会把负半值远离零，故负数必须改用 HalfDown。
-                let mode = if value.is_negative() {
-                    RoundingMode::HalfDown
-                } else {
-                    RoundingMode::HalfUp
-                };
-                exact_numeric_result_term(value.with_scale_round(0, mode), &datatype)
+                // 固定 Ontop PostgreSQL endpoint 把 decimal 半值远离零：2.5 -> 3，
+                // -2.5 -> -3。此处服从可观察基线，而不是采用其他 SPARQL 实现的规则。
+                exact_numeric_result_term(
+                    value.with_scale_round(0, RoundingMode::HalfUp),
+                    &datatype,
+                )
             })
             .or_else(|| decimal_term(numeric(row, &arguments[0])?.round())),
         "YEAR" if arguments.len() == 1 => {
@@ -2262,7 +2410,9 @@ fn arithmetic_result_datatype(
 }
 
 fn exact_numeric_result_term(value: BigDecimal, datatype: &str) -> Option<RdfTerm> {
-    let value = value.normalized().to_string();
+    // PostgreSQL numeric 与 Ontop 的结果协议保留有效小数 scale，例如 0.10 +
+    // 0.20 必须是 0.30，而不能在 JSON serializer 前归一为 0.3。
+    let value = value.to_string();
     Some(RdfTerm::Literal {
         value: if value == "-0" { "0".into() } else { value },
         datatype: Some(datatype.into()),
@@ -2413,6 +2563,9 @@ fn duration_long(
 }
 
 fn temporal_datetime(value: &str) -> Option<NaiveDateTime> {
+    if let Ok(datetime) = chrono::DateTime::parse_from_rfc3339(value) {
+        return Some(datetime.naive_utc());
+    }
     let (date, time) = temporal_value(value)?;
     Some(NaiveDateTime::new(date, time))
 }
@@ -2479,7 +2632,9 @@ fn matches_filter(row: &Binding, filter: &Filter) -> bool {
                     // 其余 xsd:string 保持严格词法比较。
                     if expected_datatype.as_deref()
                         == Some("http://www.w3.org/2001/XMLSchema#string")
-                        && datatype.as_deref() == Some("http://www.w3.org/2001/XMLSchema#string")
+                        && datatype.as_deref().is_none_or(|actual| {
+                            actual == "http://www.w3.org/2001/XMLSchema#string"
+                        })
                     {
                         if let (Ok(actual), Ok(expected)) = (
                             chrono::DateTime::parse_from_rfc3339(actual),
@@ -2490,7 +2645,11 @@ fn matches_filter(row: &Binding, filter: &Filter) -> bool {
                     }
                     actual == expected
                         && match expected_datatype {
-                            Some(expected) => datatype.as_ref() == Some(expected),
+                            Some(expected) => {
+                                datatype.as_ref() == Some(expected)
+                                    || (expected == "http://www.w3.org/2001/XMLSchema#string"
+                                        && datatype.is_none())
+                            }
                             // SPARQL simple literal 只与 simple/xsd:string literal 相等，
                             // 不可因词法相同而与 date、time 等有类型值相等。
                             None => datatype.as_deref().is_none_or(|actual| {
@@ -2602,7 +2761,10 @@ fn next_bgp_candidate(rows: &[Binding], candidates: &[Vec<Binding>]) -> usize {
 
 #[cfg(test)]
 mod join_tests {
-    use super::{canonical_floating_lexical, join_binding_relations, Binding, RdfTerm};
+    use super::{
+        canonical_floating_lexical, join_binding_relations, mapping_floating_lexical, Binding,
+        RdfTerm,
+    };
 
     fn binding(pairs: &[(&str, &str)]) -> Binding {
         pairs
@@ -2635,9 +2797,24 @@ mod join_tests {
         assert_eq!(canonical_floating_lexical("1.25", double), "1.25E0");
         assert_eq!(canonical_floating_lexical("Venus", double), "Venus");
     }
+
+    #[test]
+    fn preserves_postgres_floating_lexicals_for_native_mappings() {
+        let double = Some("http://www.w3.org/2001/XMLSchema#double");
+        assert_eq!(mapping_floating_lexical("1", double, false), "1");
+    }
 }
 
-fn resolve_mapping_iri(value: &str, base: Option<&str>) -> Result<String, RuntimeError> {
+fn resolve_mapping_iri(
+    value: &str,
+    base: Option<&str>,
+    require_absolute: bool,
+) -> Result<String, RuntimeError> {
+    if require_absolute && !value.contains(':') {
+        return Err(RuntimeError::Mapping(format!(
+            "Not a valid (absolute) IRI: {value}"
+        )));
+    }
     let resolved = if value.contains(':') {
         value.into()
     } else if let Some(base) = base {
@@ -2778,6 +2955,7 @@ fn variables(pattern: &TriplePattern) -> Vec<String> {
         pattern.subject.as_str(),
         pattern.predicate.as_str(),
         pattern.object.as_str(),
+        pattern.graph.as_deref().unwrap_or_default(),
     ]
     .into_iter()
     .filter_map(|value| value.strip_prefix('?').map(str::to_owned))
@@ -2788,26 +2966,36 @@ fn decode_mapping_term(
     value: &DataValue,
     term: &BindingTerm,
     iri_base: Option<&str>,
+    mapping_infer_default_datatype: bool,
+    mapping_require_absolute_iri_values: bool,
+    canonicalize_floating_lexicals: bool,
 ) -> Result<RdfTerm, RuntimeError> {
     Ok(match term {
-        BindingTerm::Iri => RdfTerm::Iri(resolve_mapping_iri(&value.value, iri_base)?),
+        BindingTerm::Iri => RdfTerm::Iri(resolve_mapping_iri(
+            &value.value,
+            iri_base,
+            mapping_require_absolute_iri_values,
+        )?),
         BindingTerm::BlankNode => RdfTerm::BlankNode(value.value.clone()),
         BindingTerm::Literal {
             datatype,
             language,
             infer_datatype,
         } => RdfTerm::Literal {
-            value: canonical_floating_lexical(
+            value: mapping_floating_lexical(
                 &value.value,
                 datatype.as_deref().or_else(|| {
-                    (*infer_datatype)
+                    (*infer_datatype && mapping_infer_default_datatype)
                         .then(|| value.datatype.as_deref())
                         .flatten()
                 }),
+                canonicalize_floating_lexicals,
             ),
-            datatype: datatype
-                .clone()
-                .or_else(|| (*infer_datatype).then(|| value.datatype.clone()).flatten()),
+            datatype: datatype.clone().or_else(|| {
+                (*infer_datatype && mapping_infer_default_datatype)
+                    .then(|| value.datatype.clone())
+                    .flatten()
+            }),
             language: language.clone(),
         },
     })
@@ -2898,6 +3086,16 @@ fn canonical_floating_lexical(value: &str, datatype: Option<&str>) -> String {
     };
     let exponent = exponent.parse::<i32>().unwrap_or_default();
     format!("{mantissa}E{exponent}")
+}
+
+fn mapping_floating_lexical(
+    value: &str,
+    datatype: Option<&str>,
+    canonicalize_floating_lexicals: bool,
+) -> String {
+    canonicalize_floating_lexicals
+        .then(|| canonical_floating_lexical(value, datatype))
+        .unwrap_or_else(|| value.into())
 }
 
 fn instantiate(pattern: &TriplePattern, binding: &Binding) -> Option<RdfFact> {

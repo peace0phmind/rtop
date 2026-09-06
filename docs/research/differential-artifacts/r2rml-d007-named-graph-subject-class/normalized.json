@@ -1,0 +1,69 @@
+{
+  "head": {
+    "vars": [
+      "g",
+      "o",
+      "p",
+      "s"
+    ]
+  },
+  "results": {
+    "bindings": [
+      {
+        "g": {
+          "type": "uri",
+          "value": "http://example.com/PersonGraph"
+        },
+        "o": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "10"
+        },
+        "p": {
+          "type": "uri",
+          "value": "http://example.com/id"
+        },
+        "s": {
+          "type": "uri",
+          "value": "http://example.com/Student/10/Venus"
+        }
+      },
+      {
+        "g": {
+          "type": "uri",
+          "value": "http://example.com/PersonGraph"
+        },
+        "o": {
+          "type": "literal",
+          "value": "Venus"
+        },
+        "p": {
+          "type": "uri",
+          "value": "http://xmlns.com/foaf/0.1/name"
+        },
+        "s": {
+          "type": "uri",
+          "value": "http://example.com/Student/10/Venus"
+        }
+      },
+      {
+        "g": {
+          "type": "uri",
+          "value": "http://example.com/PersonGraph"
+        },
+        "o": {
+          "type": "uri",
+          "value": "http://xmlns.com/foaf/0.1/Person"
+        },
+        "p": {
+          "type": "uri",
+          "value": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        },
+        "s": {
+          "type": "uri",
+          "value": "http://example.com/Student/10/Venus"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-suite-manifest-datatypes-boolean-2d",
+  "mapping_behavior": "DockerPostgresTestSuite stockexchange datatypes boolean-2d manifest query 的 SPARQL JSON bindings",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/docker-tests/src/test/resources/testcases-docker/virtual-mode/stockexchange/datatypes/{stockexchange-pgsql.obda,stockexchange.owl,boolean-2d.rq}; test/docker-tests/src/test/resources/dump/stockexchange-create-pgsql.sql",
+  "query": "../ontop/test/docker-tests/src/test/resources/testcases-docker/virtual-mode/stockexchange/datatypes/boolean-2d.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "20c8a41dfd0058a7a26484d5966607654a793e202b46da2f890f8c91a4e4870d",
+    "rtop_raw": "93ac19ffdb31f322d1bf162e21dc46d73f4aeba98b7ab21798b40bd2e4efaf2c",
+    "normalized": "4635ba8c7df3c9993b383a32218933cbe35321093250546a0eb49cbfa9f95b18"
+  }
+}

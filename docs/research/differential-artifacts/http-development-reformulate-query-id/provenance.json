@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-http-development-reformulate-query-id",
+  "mapping_behavior": "development reformulate endpoint returns PostgreSQL SQL diagnostics and a query correlation ID for default and native-consumption paths",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "client/endpoint/src/main/java/it/unibz/inf/ontop/endpoint/controllers/ReformulateController.java; tests/compat/{postgres-query-kinds/init.sql,postgres-http/mapping-sql-seam.obda,postgres-http/reformulate-single-triple.rq}",
+  "query": "tests/compat/postgres-http/reformulate-single-triple.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "e9b50591a239d7a5114b1851e548c993ed5c8b4df1d250700b7b18551402cac6",
+    "rtop_raw": "0bfd1c5c4892c835f3aa70861eafa2e83759f9ccd031ca735120da93403006fe",
+    "normalized": "0208f047e2b16e976a668c9754ac98b5155913c6d993e693c0c43a576ce79cfc"
+  }
+}

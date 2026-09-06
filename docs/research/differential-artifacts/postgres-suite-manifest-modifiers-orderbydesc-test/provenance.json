@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-suite-manifest-modifiers-orderbydesc-test",
+  "mapping_behavior": "DockerPostgresTestSuite stockexchange modifiers orderbydesc-test manifest query 的 SPARQL JSON bindings",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/docker-tests/src/test/resources/testcases-docker/virtual-mode/stockexchange/modifiers/{stockexchange-pgsql.obda,stockexchange.owl,orderbydesc-test.rq}; test/docker-tests/src/test/resources/dump/stockexchange-create-pgsql.sql",
+  "query": "../ontop/test/docker-tests/src/test/resources/testcases-docker/virtual-mode/stockexchange/modifiers/orderbydesc-test.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "68ad21b1ca7961e7bb2306e0d0e2df220ea6fc5efe1bd3a62c93a2c9cf178eed",
+    "rtop_raw": "021e8f87ef385837fdfebb61816e0ade3776c77990574ba0bb3850f5ce9a4fde",
+    "normalized": "6f70a751ff73104eb2e5c0aaddd44c3a535056cf4161d631c8e33cc2b8c5295c"
+  }
+}

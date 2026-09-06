@@ -286,7 +286,7 @@ pub fn parse(input: &str) -> Result<Query, RuntimeError> {
             .iter()
             .any(|pattern| pattern.predicate.starts_with('?'))
         {
-            return Err(RuntimeError::UnsupportedSparql(
+            return Err(RuntimeError::NotFullyTranslatable(
                 "ASK 尚不支持谓词变量".into(),
             ));
         }
@@ -674,6 +674,13 @@ fn parse_group_content(content: &str) -> Result<GraphPattern, RuntimeError> {
             continue;
         } else if starts_keyword_at(content, index, "FILTER") {
             if let Some((exists, negated, next)) = parse_filter_exists_at(content, index)? {
+                // 固定 Ontop endpoint 对含内层 FILTER 的 correlated NOT EXISTS 不可
+                // 翻译，并把它作为查询执行错误暴露。保留该边界而不是悄悄扩展语义。
+                if negated && graph_pattern_contains_filter(&exists) {
+                    return Err(RuntimeError::NotFullyTranslatable(
+                        "Some of the variables in the EXISTS subquery are unbound".into(),
+                    ));
+                }
                 current = GraphPattern::Exists {
                     pattern: Box::new(current),
                     exists: Box::new(exists),
@@ -692,7 +699,7 @@ fn parse_group_content(content: &str) -> Result<GraphPattern, RuntimeError> {
             index = next;
             continue;
         } else if starts_keyword_at(content, index, "SERVICE") {
-            return Err(RuntimeError::UnsupportedSparql(
+            return Err(RuntimeError::NotFullyTranslatable(
                 "SERVICE 在固定 Ontop PostgreSQL 基线中未支持；仅允许独立受控 federation 票据实现"
                     .into(),
             ));
@@ -756,6 +763,23 @@ fn parse_group_content(content: &str) -> Result<GraphPattern, RuntimeError> {
         index = after;
     }
     Ok(current)
+}
+
+fn graph_pattern_contains_filter(pattern: &GraphPattern) -> bool {
+    match pattern {
+        GraphPattern::Filter(_, _) => true,
+        GraphPattern::Join(left, right)
+        | GraphPattern::LeftJoin(left, right)
+        | GraphPattern::Minus(left, right)
+        | GraphPattern::Union(left, right) => {
+            graph_pattern_contains_filter(left) || graph_pattern_contains_filter(right)
+        }
+        GraphPattern::Bind(pattern, _) | GraphPattern::Exists { pattern, .. } => {
+            graph_pattern_contains_filter(pattern)
+        }
+        GraphPattern::Subquery { pattern, .. } => graph_pattern_contains_filter(pattern),
+        GraphPattern::Empty | GraphPattern::Bgp(_) | GraphPattern::Values(_) => false,
+    }
 }
 
 /// 将有界 property path 降为现有图模式代数。此处刻意保留每个 sequence 中间节点：
@@ -3051,7 +3075,7 @@ mod tests {
         let service =
             parse("SELECT ?person { SERVICE <http://example.invalid/sparql> { ?person ?p ?o } }");
         assert!(
-            matches!(service, Err(RuntimeError::UnsupportedSparql(message)) if message.starts_with("SERVICE"))
+            matches!(service, Err(RuntimeError::NotFullyTranslatable(message)) if message.starts_with("SERVICE"))
         );
     }
 
@@ -3061,6 +3085,15 @@ mod tests {
             "PREFIX : <https://example.test/>\r\nSELECT ?x WHERE { ?x a :Thing } ORDER BY ?x",
         )
         .expect("CRLF 的 PREFIX 查询应与 LF 查询同样可解析");
+        assert!(matches!(query, Query::Select { .. }));
+    }
+
+    #[test]
+    fn accepts_lubm_default_prefix_after_comments() {
+        let query = parse(include_str!(
+            "../../ontop/test/docker-tests/src/test/resources/testcases-docker/virtual-mode/lubm/query-1.rq"
+        ))
+        .expect("LUBM 的默认 PREFIX 和紧邻句点的 local name 应可解析");
         assert!(matches!(query, Query::Select { .. }));
     }
 

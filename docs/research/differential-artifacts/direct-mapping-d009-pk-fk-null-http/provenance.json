@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-direct-mapping-d009-pk-fk-null-http",
+  "mapping_behavior": "Direct Mapping HTTP D009 primary key, foreign key, and NULL omission",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D009/{create.sql,directGraph.ttl}; Ontop bootstrap + endpoint; rtop direct_mapping endpoint",
+  "query": "tests/compat/postgres-http/direct-d009-foreign-key.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "7c229a72f69cfc750ef1d2387ed7f57ecaed7a68f1ca125b18a729b27458b32a",
+    "rtop_raw": "f1ab3d522a559264ada8f8055b2a7bd0339aaee763515a98426419d0e1cd5c7b",
+    "normalized": "e3b9eba36fb359f5dbbbf6f3eb7634a5e0ef2d190cb4483fa32069edca223318"
+  }
+}

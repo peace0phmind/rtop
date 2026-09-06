@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-cli-r2rml-to-obda-relative-iri",
+  "mapping_behavior": "to-obda uses Ontop default base for relative IRI templates while Turtle @base resolves RDF resources on reload",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopR2RMLToOBDA.java; tests/compat/postgres-query-kinds/{init.sql,relative-r2rml.ttl}; each converted mapping is reloaded by its own CLI",
+  "query": "to-obda relative IRI generated mappings materialized as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "38f3db0915d5f31492c4c395966ff04b91b88759907409ee1ae7ea2065f148d9",
+    "rtop_raw": "38f3db0915d5f31492c4c395966ff04b91b88759907409ee1ae7ea2065f148d9",
+    "normalized": "0c8a48e8c6d54ea9cc282f373476d0bd67aeb2cd39f5c023da1bcfa77422f7f6"
+  }
+}

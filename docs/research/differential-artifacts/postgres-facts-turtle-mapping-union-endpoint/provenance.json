@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-facts-turtle-mapping-union-endpoint",
+  "mapping_behavior": "Turtle facts and PostgreSQL company mapping form one DISTINCT/ORDER BY virtual graph result",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "binding/rdf4j/src/test/{java/it/unibz/inf/ontop/rdf4j/repository/FactsFileTest{,Turtle}.java,resources/facts/{mapping.obda,ontology.ttl,facts.ttl}}; tests/compat/postgres-facts/{init.sql,companies.rq}",
+  "query": "tests/compat/postgres-facts/companies.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "441d3ff7abe9d84d180a82ec1a27c59f5185bcc819f6152623f8b5f7d2985ec2",
+    "rtop_raw": "488c397176a37066f5a04f107b58bbe3aa2659879fd0fe3466814a86bd6cb338",
+    "normalized": "08439e4c394f2eb04952d84ad0719598882e74eb7dbe2aec94557dd13ddc0a3e"
+  }
+}

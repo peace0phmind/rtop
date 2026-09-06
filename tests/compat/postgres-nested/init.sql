@@ -1,5 +1,6 @@
 -- 来源：Ontop lightweight-db-test-images/pgsql/sql/nested-postgresql.sql
 -- 仅保留当前数据库中的两张源表；展开由 OBDA source SQL 在查询时完成。
+DROP VIEW IF EXISTS company_data, company_data_arrays;
 DROP TABLE IF EXISTS nested_company_data, nested_company_data_arrays;
 
 CREATE TABLE nested_company_data (
@@ -29,3 +30,8 @@ INSERT INTO nested_company_data_arrays VALUES
   (2, ARRAY['2023-02-12 18:00:00'::timestamp, '2023-02-26 18:00:00'::timestamp], ARRAY[14000, 0], ARRAY[['Jim', 'Cynthia'], [NULL, NULL]], ARRAY['{"firstName": "Helena", "lastName": "of Troy"}'::jsonb, '{"firstName": "Robert", "lastName": "Smith", "age": 48}'::jsonb]),
   (3, ARRAY['2023-03-12 18:00:00'::timestamp, '2023-03-26 18:00:00'::timestamp], ARRAY[15000, 20000], ARRAY[['Carl', 'Bob', 'Cynthia'], ['Jim', 'Bob', NULL]], ARRAY['{"firstName": "Joseph", "lastName": "Grey"}'::jsonb, '{"firstName": "Godfrey", "lastName": "Hamilton", "age": 59}'::jsonb]),
   (4, ARRAY[]::timestamp[], ARRAY[]::integer[], NULL, ARRAY[]::jsonb[]);
+
+-- 固定 Ontop NestedData PostgreSQL fixture 的 lenses 使用这些原始 relation
+-- 名称；以视图把同一物理行同时提供给 Java baseline 和 Rust native-OBDA。
+CREATE VIEW company_data AS SELECT * FROM nested_company_data;
+CREATE VIEW company_data_arrays AS SELECT * FROM nested_company_data_arrays;

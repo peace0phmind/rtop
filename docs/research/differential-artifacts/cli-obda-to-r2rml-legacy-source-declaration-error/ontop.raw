@@ -1,0 +1,17 @@
+it.unibz.inf.ontop.exception.MappingIOException: java.io.IOException: ERROR reading mapping.obda at line: 4
+MESSAGE: Source declaration is not supported anymore (since 3.0). Please give this information with the Ontop configuration.
+	at it.unibz.inf.ontop.spec.mapping.parser.impl.OntopNativeMappingParser.load(OntopNativeMappingParser.java:156)
+	at it.unibz.inf.ontop.spec.mapping.parser.impl.OntopNativeMappingParser.parse(OntopNativeMappingParser.java:93)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingSQLConfigurationImpl.loadPPMapping(OntopMappingSQLConfigurationImpl.java:130)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingSQLAllConfigurationImpl.loadPPMapping(OntopMappingSQLAllConfigurationImpl.java:68)
+	at it.unibz.inf.ontop.injection.OntopMappingSQLConfiguration.loadProvidedPPMapping(OntopMappingSQLConfiguration.java:26)
+	at it.unibz.inf.ontop.cli.OntopOBDAToR2RML.extractAndNormalizePPMapping(OntopOBDAToR2RML.java:135)
+	at it.unibz.inf.ontop.cli.OntopOBDAToR2RML.run(OntopOBDAToR2RML.java:122)
+	at it.unibz.inf.ontop.cli.Ontop.main(Ontop.java:19)
+Caused by: java.io.IOException: ERROR reading mapping.obda at line: 4
+MESSAGE: Source declaration is not supported anymore (since 3.0). Please give this information with the Ontop configuration.
+	at it.unibz.inf.ontop.spec.mapping.parser.impl.OntopNativeMappingParser.load(OntopNativeMappingParser.java:151)
+	... 7 more
+Caused by: java.lang.RuntimeException: Source declaration is not supported anymore (since 3.0). Please give this information with the Ontop configuration.
+	at it.unibz.inf.ontop.spec.mapping.parser.impl.OntopNativeMappingParser.load(OntopNativeMappingParser.java:143)
+	... 7 more

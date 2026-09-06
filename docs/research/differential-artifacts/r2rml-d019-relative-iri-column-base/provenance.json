@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d019-relative-iri-column-base",
+  "mapping_behavior": "fixed Ontop CLI rejects relative IRI column values as non-absolute",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D019/{create.sql,r2rmla.ttl}",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "5708773dd172e010704ae0ba6f5f8005d1e7386e78fae1756faf48f91be50cd2",
+    "rtop_raw": "e7800b3bfa69d217ae9c58d91a363473042ec14e5daa88d54435a6800df78371",
+    "normalized": "01dc18be3f289c742b1514c35003be858c03bc57c7874c02ea9527f8897289ca"
+  }
+}

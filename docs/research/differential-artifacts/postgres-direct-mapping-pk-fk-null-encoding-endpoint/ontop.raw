@@ -1,0 +1,40 @@
+### dmd009http
+{
+  "head" : {
+    "vars" : [
+      "student",
+      "sport"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "student" : {
+          "type" : "uri",
+          "value" : "http://example.com/base/Student/ID=10"
+        },
+        "sport" : {
+          "type" : "uri",
+          "value" : "http://example.com/base/Sport/ID=100"
+        }
+      }
+    ]
+  }
+}### dmd010http
+{
+  "head" : {
+    "vars" : [
+      "name"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "name" : {
+          "type" : "literal",
+          "value" : "Bolivia, Plurinational State of"
+        }
+      }
+    ]
+  }
+}

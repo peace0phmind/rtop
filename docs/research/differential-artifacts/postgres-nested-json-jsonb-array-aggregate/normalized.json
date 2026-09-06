@@ -1,0 +1,21 @@
+{
+  "format": "postgres-nested-aggregate-http-suite",
+  "cases": [
+    {
+      "case_id": "differential-postgres-httpnestedjson-endpoint",
+      "status": "passed",
+      "mapping_behavior": "PostgreSQL nested JSON/JSONB/array source SQL preserves aggregate RDF lexical bindings through the endpoint"
+    },
+    {
+      "case_id": "differential-postgres-httpnestedjsonb-endpoint",
+      "status": "passed",
+      "mapping_behavior": "PostgreSQL nested JSON/JSONB/array source SQL preserves aggregate RDF lexical bindings through the endpoint"
+    },
+    {
+      "case_id": "differential-postgres-httpnestedarray-endpoint",
+      "status": "passed",
+      "mapping_behavior": "PostgreSQL nested JSON/JSONB/array source SQL preserves aggregate RDF lexical bindings through the endpoint"
+    }
+  ],
+  "all_passed": true
+}

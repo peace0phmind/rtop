@@ -1,0 +1,137 @@
+{
+  "head" : {
+    "vars" : [
+      "x",
+      "fn",
+      "ln",
+      "address",
+      "street",
+      "city",
+      "country"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#person-111"
+        },
+        "fn" : {
+          "type" : "literal",
+          "value" : "John"
+        },
+        "ln" : {
+          "type" : "literal",
+          "value" : "Smith"
+        },
+        "address" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#address-991"
+        },
+        "street" : {
+          "type" : "literal",
+          "value" : "Road street"
+        },
+        "city" : {
+          "type" : "literal",
+          "value" : "Chonala"
+        },
+        "country" : {
+          "type" : "literal",
+          "value" : "Mexico"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#person-112"
+        },
+        "fn" : {
+          "type" : "literal",
+          "value" : "Joana"
+        },
+        "ln" : {
+          "type" : "literal",
+          "value" : "Lopatenkko"
+        },
+        "address" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#address-992"
+        },
+        "street" : {
+          "type" : "literal",
+          "value" : "Via Marconi"
+        },
+        "city" : {
+          "type" : "literal",
+          "value" : "Bolzano"
+        },
+        "country" : {
+          "type" : "literal",
+          "value" : "Italy"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#person-113"
+        },
+        "fn" : {
+          "type" : "literal",
+          "value" : "Walter"
+        },
+        "ln" : {
+          "type" : "literal",
+          "value" : "Schmidt"
+        },
+        "address" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#address-993"
+        },
+        "street" : {
+          "type" : "literal",
+          "value" : "Romer Street"
+        },
+        "city" : {
+          "type" : "literal",
+          "value" : "Malaga"
+        },
+        "country" : {
+          "type" : "literal",
+          "value" : "Spain"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#person-114"
+        },
+        "fn" : {
+          "type" : "literal",
+          "value" : "Patricia"
+        },
+        "ln" : {
+          "type" : "literal",
+          "value" : "Lombrardi"
+        },
+        "address" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#address-997"
+        },
+        "street" : {
+          "type" : "literal",
+          "value" : "Samara road"
+        },
+        "city" : {
+          "type" : "literal",
+          "value" : "Puebla"
+        },
+        "country" : {
+          "type" : "literal",
+          "value" : "Mexico"
+        }
+      }
+    ]
+  }
+}

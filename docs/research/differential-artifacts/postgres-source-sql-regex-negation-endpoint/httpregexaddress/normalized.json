@@ -1,0 +1,23 @@
+{
+  "head": {
+    "vars": [
+      "x"
+    ]
+  },
+  "results": {
+    "bindings": [
+      {
+        "x": {
+          "type": "uri",
+          "value": "http://www.owl-ontologies.com/Ontology1207768242.owl#Address-1"
+        }
+      },
+      {
+        "x": {
+          "type": "uri",
+          "value": "http://www.owl-ontologies.com/Ontology1207768242.owl#Address-2"
+        }
+      }
+    ]
+  }
+}

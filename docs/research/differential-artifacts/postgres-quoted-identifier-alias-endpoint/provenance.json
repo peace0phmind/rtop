@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-quoted-identifier-alias-endpoint",
+  "mapping_behavior": "PostgreSQL quoted AS \"LETTER\" projection alias is preserved when the mapping template refers to {LETTER}",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/docker-tests/src/test/resources/pgsql/identifiers/identifiers-postgres.obda; tests/compat/postgres-datatype-manifest/init.sql; PostgresIdentifierTest PostgreSQL fixture",
+  "query": "tests/compat/postgres-identifiers/country3.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "08ba03099896bcce1757d2e3ac51f96b9358017636fc1a986860d0cd7d87ef48",
+    "rtop_raw": "ac4456cd30fdfbb1c92cbf14b470c477d84b04df4538fc986388f7bf7098f763",
+    "normalized": "1b8ec339c909f865f43478de16e044924a56010ff14ad9f2ea9e1563484db8ed"
+  }
+}

@@ -1,0 +1,6 @@
+ans1(person)
+CONSTRUCT [person] [person/RDF(https://example.test/person/{}(INTEGERToTEXT(id1m1)),IRI)]
+   NATIVE [id1m1]
+SELECT v1."id" AS "id1m1"
+FROM "query_people" v1
+

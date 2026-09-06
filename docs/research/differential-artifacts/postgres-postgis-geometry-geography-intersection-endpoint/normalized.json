@@ -1,0 +1,21 @@
+{
+  "format": "postgres-postgis-intersection-http-suite",
+  "cases": [
+    {
+      "case_id": "differential-postgres-httppostgisintersection1-endpoint",
+      "status": "passed",
+      "mapping_behavior": "GeoSPARQL PostGIS geometry/geography buffer intersection preserves RDF WKT terms and mixed-type empty results through the endpoint"
+    },
+    {
+      "case_id": "differential-postgres-httppostgisintersection2-endpoint",
+      "status": "passed",
+      "mapping_behavior": "GeoSPARQL PostGIS geometry/geography buffer intersection preserves RDF WKT terms and mixed-type empty results through the endpoint"
+    },
+    {
+      "case_id": "differential-postgres-httppostgisintersection3-endpoint",
+      "status": "passed",
+      "mapping_behavior": "GeoSPARQL PostGIS geometry/geography buffer intersection preserves RDF WKT terms and mixed-type empty results through the endpoint"
+    }
+  ],
+  "all_passed": true
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d016-binary-data-iri",
+  "mapping_behavior": "PostgreSQL BYTEA rendered into data IRI template",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D016/r2rmle.ttl; tests/compat/postgres-d016/r2rml-init.sql（PostgreSQL BYTEA 适配）",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "9c2898c41f3b8318716bd8075f7d702e9a29dc9af761a8bd1b3536f9ca1bd781",
+    "rtop_raw": "cdeabf166678e006deca1abdb282674933abd8648236e85e1e08cd5342025d45",
+    "normalized": "eaff2a30ebdb26abec4f3ba09719319d2aab46b0f87e0dd112d421e12b3abf64"
+  }
+}

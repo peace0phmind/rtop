@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-cli-bootstrap",
+  "mapping_behavior": "bootstrap generated native mappings materialize the PostgreSQL catalog graph equivalently",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopBootstrap.java; tests/compat/postgres-query-kinds/init.sql; each generated OBDA is reloaded by its own CLI",
+  "query": "bootstrap generated mappings materialized as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "151e837e1a7cbbd9f1ee8c89026e81a3cda5efa46af6aa31b333b1aefb92f092",
+    "rtop_raw": "3f462dafbfb1d41651d76fcf1e3f20ba9ba5850df71c0166624a760a6b1c077f",
+    "normalized": "d090643ae66851f5785d825821070d9c26def796cfe8f23de6ca5539939f957d"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "head": {
+    "vars": [
+      "v"
+    ]
+  },
+  "results": {
+    "bindings": [
+      {
+        "v": {
+          "type": "literal",
+          "value": "Bob: 17666.666666666667"
+        }
+      },
+      {
+        "v": {
+          "type": "literal",
+          "value": "Carl: 15000.0000000000000000"
+        }
+      },
+      {
+        "v": {
+          "type": "literal",
+          "value": "Cynthia: 13000.0000000000000000"
+        }
+      },
+      {
+        "v": {
+          "type": "literal",
+          "value": "Jim: 15666.666666666667"
+        }
+      },
+      {
+        "v": {
+          "type": "literal",
+          "value": "Sam: 10000.0000000000000000"
+        }
+      }
+    ]
+  }
+}

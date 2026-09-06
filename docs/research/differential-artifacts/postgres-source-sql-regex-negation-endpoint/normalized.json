@@ -1,0 +1,16 @@
+{
+  "format": "postgres-source-regex-http-suite",
+  "cases": [
+    {
+      "case_id": "differential-postgres-httpregexaddress-endpoint",
+      "status": "passed",
+      "mapping_behavior": "PostgreSQL source SQL case-insensitive regex and negated regex preserve RDF bindings through the endpoint"
+    },
+    {
+      "case_id": "differential-postgres-httpregexperson-endpoint",
+      "status": "passed",
+      "mapping_behavior": "PostgreSQL source SQL case-insensitive regex and negated regex preserve RDF bindings through the endpoint"
+    }
+  ],
+  "all_passed": true
+}

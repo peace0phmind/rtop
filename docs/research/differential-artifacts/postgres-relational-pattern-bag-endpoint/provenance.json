@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-relational-pattern-bag-endpoint",
+  "mapping_behavior": "PostgreSQL endpoint preserves VALUES multiplicity, OPTIONAL unbound values, MINUS anti-join, and UNION branch multiplicity",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "client/endpoint/src/main/java/it/unibz/inf/ontop/endpoint/controllers/SparqlQueryController.java; tests/compat/postgres-http/{algebra-init.sql,mapping-algebra-bag.obda,algebra-bag.rq}",
+  "query": "tests/compat/postgres-http/algebra-bag.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "e4e0ac1040a3258b251a60f0475ddcb88e9247f7eaefae559a1e28cc095429d5",
+    "rtop_raw": "7ab137916a29eabb653255ca386690690b9ce4215efc24285b84672aa3777b1e",
+    "normalized": "1c2c15eb3e95de028969ae5ca2f958b00c677f105bcf59f9db047d66cc6adc37"
+  }
+}

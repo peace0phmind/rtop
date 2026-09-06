@@ -1,0 +1,1 @@
+{"format":"fibo-ontology-identity-counterexamples-postgres-endpoint","baseline_has_no_isomorphic_fibo_service":true,"rtop_gate_passed":true,"counts":{"subclass":2,"no_subclass":0,"wrong_equivalent_class":3,"no_weak_alignment":2},"unsafe_identity":{"lender":"lender.alpha","label":"同名贷款人","count":2}}

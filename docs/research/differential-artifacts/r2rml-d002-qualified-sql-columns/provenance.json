@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d002-qualified-sql-columns",
+  "mapping_behavior": "qualified SQL column projection",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D002/{create.sql,r2rmlj.ttl}",
+  "query": "materialize default graph as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "85a1d129bd851c85dd9327e7ea3a50b2e2943f10325d04546484afb07d2973a8",
+    "rtop_raw": "85a1d129bd851c85dd9327e7ea3a50b2e2943f10325d04546484afb07d2973a8",
+    "normalized": "2a54cac77564890b49f8a5f6546824b482bc6c9bc32351cbfb2a1f8b5d1fe495"
+  }
+}

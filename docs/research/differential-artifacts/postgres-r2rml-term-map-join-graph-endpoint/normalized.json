@@ -1,0 +1,10 @@
+{
+  "format": "differential-artifact-aggregation",
+  "ordered": false,
+  "all_components_passed": true,
+  "components": [
+    "differential-r2rml-d014-ref-object-map-and-inline-terms",
+    "differential-r2rml-d008-template-named-graph",
+    "differential-r2rml-d007-reject-literal-column-graph"
+  ]
+}

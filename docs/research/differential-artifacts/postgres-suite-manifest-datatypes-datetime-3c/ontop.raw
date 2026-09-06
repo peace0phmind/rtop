@@ -1,0 +1,23 @@
+{
+  "head" : {
+    "vars" : [
+      "x",
+      "id"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#transaction-3332"
+        },
+        "id" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "3332"
+        }
+      }
+    ]
+  }
+}

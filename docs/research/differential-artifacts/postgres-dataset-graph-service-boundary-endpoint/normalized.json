@@ -1,0 +1,21 @@
+{
+  "format": "dataset-graph-service-http-suite",
+  "cases": [
+    {
+      "case_id": "differential-postgres-dataset-from-named-graph-endpoint",
+      "status": "passed",
+      "mapping_behavior": "PostgreSQL named graph mapping is visible through FROM as the default dataset graph"
+    },
+    {
+      "case_id": "differential-postgres-dataset-from-named-graph-pattern-endpoint",
+      "status": "passed",
+      "mapping_behavior": "PostgreSQL named graph mapping is visible only through FROM NAMED plus GRAPH"
+    },
+    {
+      "case_id": "differential-postgres-service-unsupported-endpoint",
+      "status": "passed",
+      "mapping_behavior": "SERVICE endpoint query is rejected without federation network access"
+    }
+  ],
+  "all_passed": true
+}

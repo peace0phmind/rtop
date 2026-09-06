@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-nested-json-jsonb-array-postgis-endpoint",
+  "mapping_behavior": "NestedData JSON/JSONB/array 及 GeoSPARQL PostGIS geometry/geography 的聚合",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 与固定 PostGIS 17/3.5 的独立 Ontop-vs-rtop 差分均通过；本目录仅固定组成原始输出哈希。",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "NestedData PostgreSQL fixture；GeoSPARQLPostGISTest PostGIS fixture",
+  "query": "nested aggregate bindings；PostGIS intersection success and mixed-type counterfactuals",
+  "postgres_extensions": "postgis（PostGIS component）；none（nested component）",
+  "independent_processes": {"ontop": "Java 17 container endpoint", "rtop": "Rust host endpoint"},
+  "component_artifacts": [
+    "docs/research/differential-artifacts/postgres-nested-json-jsonb-array-aggregate/provenance.json",
+    "docs/research/differential-artifacts/postgres-postgis-geometry-geography-intersection-endpoint/provenance.json"
+  ],
+  "sha256": {
+    "ontop_raw": "41f0e0e6d66e646c8d9931f3a2096b3db47327c23ef8edbc7d5c5cb6d308fc33",
+    "rtop_raw": "82462e951519c71ace718b9b6bc34dc27eb59a13fd70aff33cc93f8b8b42ca34",
+    "normalized": "314c64fd19204d912661aa40136432650d3a2861ff5b8bf21695433a804610df"
+  }
+}

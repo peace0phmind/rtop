@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d003-reject-unsupported-sql-version",
+  "mapping_behavior": "reject unsupported rr:SQL1979 version",
+  "status": "failed",
+  "status_reason": "固定环境下 Ontop 与 rtop 的规范化外部结果不一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D003/{create.sql,r2rmla.ttl}",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "7f4316a7e59dac7055b3aa3ed3d0a7f3018615a7abbb6dd2faa79e8f86f5c1aa",
+    "rtop_raw": "7106eb684039e8940a1ff8a9c7c930266632b026419b5e408d02b342c2243f24",
+    "normalized": "22b1e002ba27a6d4135aea8ef1ace924548663429c0adad8607fb7eef89c00bd"
+  }
+}

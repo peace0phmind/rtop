@@ -1,0 +1,3 @@
+_:genid311f25e842aa54b061ac720b6e4affa2a20fb4d80f369433cd63369f4e8502481f <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/base/Student_Sport> .
+_:genid311f25e842aa54b061ac720b6e4affa2a20fb4d80f369433cd63369f4e8502481f <http://example.com/base/Student_Sport#Student> "Venus" .
+_:genid311f25e842aa54b061ac720b6e4affa2a20fb4d80f369433cd63369f4e8502481f <http://example.com/base/Student_Sport#Sport> "Tennis" .

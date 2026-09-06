@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-datatype-manifest-character-varchar",
+  "mapping_behavior": "PgsqlDatatypeTest character varchar manifest query preserves simple-literal binding and lexical filter semantics through the endpoint",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/docker-tests/src/test/{java/it/unibz/inf/ontop/docker/datatypes/PgsqlDatatypeTest.java,resources/testcases-docker/character/{datatypes-pgsql.obda,varchar.rq}}; tests/compat/postgres-datatype-manifest/init.sql",
+  "query": "../ontop/test/docker-tests/src/test/resources/testcases-docker/character/varchar.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "8034c2fb096a7056208a4ed62f830f16256e63d95196cf3261e3398d6c3c761e",
+    "rtop_raw": "a00f49ff32d4ef607a9712212cd9502c7ff52d7dcd59464a9a23dfc235235b53",
+    "normalized": "052f2fc606eeabbb58cfdc1edfb1801afac8d249cc3db74def2df0d81bd400d0"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-direct-mapping-d011-many-to-many-composite-link-table",
+  "mapping_behavior": "Direct Mapping many-to-many composite primary-key link table and two foreign keys",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D011/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "2a42100554971f65613aa7f351c655968d715bfdd804a5ee9be3291accfa794c",
+    "rtop_raw": "c1e397ab3d09a2e61e8f512619d25014ffddf5cf562bc3c7a2d16c6d2f043f86",
+    "normalized": "7e058c4346d8ffb4552c91439ccd12719e5563d2cd8733f94385810b8138e35b"
+  }
+}

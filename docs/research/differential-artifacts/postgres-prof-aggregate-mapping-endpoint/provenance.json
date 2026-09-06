@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-httpprofaggregate-endpoint",
+  "mapping_behavior": "PostgreSQL course/professors/teaching primary and foreign keys preserve LEFT JOIN bag and aggregate mapping RDF terms through the endpoint",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/docker-tests/src/test/{java/it/unibz/inf/ontop/docker/{AbstractLeftJoinProfTest,postgres/LeftJoinProfPgSQLTest}.java,resources/redundant_join/{redundant_join_fk_test.obda,redundant_join_fk_test.owl}}; tests/compat/postgres-aggregates/{init.sql,course-join-left-2.rq,aggregation-mapping-prof-student-count-property.rq}",
+  "query": "tests/compat/postgres-aggregates/aggregation-mapping-prof-student-count-property.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "617090b4eff62d1ef22898460f69ca8002a35bbf2774d23352c40a2ab0a8b1c5",
+    "rtop_raw": "d1d1091fb2a58c6434abc9de1ea07b21e939d76a7701f1fb3d992916ff5bbc6d",
+    "normalized": "79bc9285a10bc7086e012a4aa5306cbff42d868ba945ac0ecd4ef4a7ccb6168a"
+  }
+}

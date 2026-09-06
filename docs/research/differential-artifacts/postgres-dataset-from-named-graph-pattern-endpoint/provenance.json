@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-dataset-from-named-graph-pattern-endpoint",
+  "mapping_behavior": "PostgreSQL named graph mapping is visible only through FROM NAMED plus GRAPH",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "SPARQL dataset graph assets; tests/compat/postgres-http/{algebra-init.sql,mapping-algebra-bag.obda,dataset-named-graph.rq}",
+  "query": "tests/compat/postgres-http/dataset-named-graph.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "d924627502575c2d93bc9b86fe6a884a8866403d08fd6ff85b179d1f4df4e4f4",
+    "rtop_raw": "f6c8462895152f2b4550274f53df4e903b1a251c7f75d84378bdcec324d49b1f",
+    "normalized": "47a2f4f52e252e1b4a55ded65703531db746ea07244f74b513273637f15dfae8"
+  }
+}

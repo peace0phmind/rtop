@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-direct-mapping-d023-foreign-key-to-non-primary-unique-key",
+  "mapping_behavior": "Direct Mapping foreign key to non-primary UNIQUE key with primary-key IRI object",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D023/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "3b63a98281df269663c85dd97ba825b1c2e718943898f5719a3a96694fa1093f",
+    "rtop_raw": "24e7220cb77791c106f20099bf388d9092327ee4fea72e75b45c31140219d055",
+    "normalized": "63e4dc278599d1dd430c090ff34a517c68ba244519794aa1a34e73d58aa0febe"
+  }
+}

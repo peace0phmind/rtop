@@ -1,0 +1,4 @@
+07:32:37.401 |-INFO  in i.u.i.o.a.impl.OntopQueryEngineImpl - Ontop has completed the setup and it is ready for query answering!
+07:32:37.402 |-INFO  in i.u.i.o.r.r.i.OntopVirtualRepository - Ontop virtual repository initialized successfully!
+student,name
+6a7bf16065069cb589d27a1ae769f0a3a10473a54375b7c33bc9677cb90ef019,Venus

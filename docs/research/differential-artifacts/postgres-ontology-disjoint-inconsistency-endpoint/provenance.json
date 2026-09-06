@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-ontology-disjoint-inconsistency-endpoint",
+  "mapping_behavior": "University Course and foaf:Person disjoint facts input boundary",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "binding/rdf4j/src/test/resources/tbox-facts/{university.sql,university.obda,university-complete.ttl}; tests/compat/postgres-ontology/{endpoint-imports-university.ttl,inconsistent-facts.ttl,disjoint-probe.rq}",
+  "query": "tests/compat/postgres-ontology/disjoint-probe.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "70cc5ad6d150f0aa3729658ecb0860ebdf3cfc93d424a798d5027920bb66168b",
+    "rtop_raw": "367633e8cca7d16e15063f79950aa91fada411f3b2787b575783462c83ef33b0",
+    "normalized": "27d28ac7b4baaa3a263a494adb56ee336dcb39ca3b2a8660101804121098a667"
+  }
+}

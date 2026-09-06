@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d012-duplicate-row-blank-node",
+  "mapping_behavior": "duplicate tuple preserves blank-node identity",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D012/{create.sql,r2rmla.ttl}",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "pgcrypto",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "f444fc201800e56fcca311201deac29a2a0031a750c178fd084a7a895287350b",
+    "rtop_raw": "eba04d0921596fb13fee89c834fc81bfd9aa0095e42b52d26d3f579d8266149d",
+    "normalized": "1ba73d9577bb97f48edeb29e52363b1b8d3ec456cdad941110efe94577393c2a"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-suite-manifest-simplecq-brokers-workfor-legal-physical",
+  "mapping_behavior": "DockerPostgresTestSuite stockexchange simplecq brokers-workfor-legal-physical manifest query 的 SPARQL JSON bindings",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/docker-tests/src/test/resources/testcases-docker/virtual-mode/stockexchange/simplecq/{stockexchange-pgsql.obda,stockexchange.owl,brokers-workfor-legal-physical.rq}; test/docker-tests/src/test/resources/dump/stockexchange-create-pgsql.sql",
+  "query": "../ontop/test/docker-tests/src/test/resources/testcases-docker/virtual-mode/stockexchange/simplecq/brokers-workfor-legal-physical.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "6c1b85aaacee24a427f65fdf607d379066e3572fdb4497c52b1befff671d40ba",
+    "rtop_raw": "a05b763bc76998fa2753f6c54d1b70436c5891b178753d5c535d2652b291f53c",
+    "normalized": "da12ebb26deb0714f9cd6b970785791c7baeba46ea29f271f6c443776fc29129"
+  }
+}

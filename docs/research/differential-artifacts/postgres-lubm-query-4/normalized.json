@@ -1,0 +1,626 @@
+{
+  "head": {
+    "vars": [
+      "X",
+      "Y1",
+      "Y2",
+      "Y3"
+    ]
+  },
+  "results": {
+    "bindings": [
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor0"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-0"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-0@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-0"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-1"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-1@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-1"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor10"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-10"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-10@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-10"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor11"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-11"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-11@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-11"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor12"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-12"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-12@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-12"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor13"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-13"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-13@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-13"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor14"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-14"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-14@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-14"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor15"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-15"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-15@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-15"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor16"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-16"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-16@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-16"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor17"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-17"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-17@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-17"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor18"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-18"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-18@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-18"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor19"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-19"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-19@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-19"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor2"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-2"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-2@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor20"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-20"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-20@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-20"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor21"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-21"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-21@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-21"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor22"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-22"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-22@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-22"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor23"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-23"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-23@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-23"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor24"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-24"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-24@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-24"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor25"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-25"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-25@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-25"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor26"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-26"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-26@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-26"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor27"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-27"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-27@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-27"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor28"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-28"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-28@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-28"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor29"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-29"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-29@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-29"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor3"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-3"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-3@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-3"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor30"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-30"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-30@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-30"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor31"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-31"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-31@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-31"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor32"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-32"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-32@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-32"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor33"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-33"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-33@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-33"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor4"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-4"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-4@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-4"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor5"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-5"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-5@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-5"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor6"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-6"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-6@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-6"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor7"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-7"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-7@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-7"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor8"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-8"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-8@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-8"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor9"
+        },
+        "Y1": {
+          "type": "literal",
+          "value": "assistant-9"
+        },
+        "Y2": {
+          "type": "literal",
+          "value": "assistant-9@example.test"
+        },
+        "Y3": {
+          "type": "literal",
+          "value": "300-9"
+        }
+      }
+    ]
+  }
+}

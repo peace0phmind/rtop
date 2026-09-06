@@ -1,0 +1,177 @@
+{
+  "head": {
+    "vars": [
+      "city",
+      "country",
+      "id",
+      "number",
+      "state",
+      "street",
+      "x"
+    ]
+  },
+  "results": {
+    "bindings": [
+      {
+        "city": {
+          "type": "literal",
+          "value": "Bolzano"
+        },
+        "country": {
+          "type": "literal",
+          "value": "Italy"
+        },
+        "id": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "992"
+        },
+        "number": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "3"
+        },
+        "state": {
+          "type": "literal",
+          "value": "Bolzano"
+        },
+        "street": {
+          "type": "literal",
+          "value": "Via Marconi"
+        },
+        "x": {
+          "type": "uri",
+          "value": "http://www.owl-ontologies.com/Ontology1207768242.owl#address-992"
+        }
+      },
+      {
+        "city": {
+          "type": "literal",
+          "value": "Bolzano"
+        },
+        "country": {
+          "type": "literal",
+          "value": "Italy"
+        },
+        "id": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "995"
+        },
+        "number": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "3"
+        },
+        "state": {
+          "type": "literal",
+          "value": "Bolzano"
+        },
+        "street": {
+          "type": "literal",
+          "value": "Huberg Strasse"
+        },
+        "x": {
+          "type": "uri",
+          "value": "http://www.owl-ontologies.com/Ontology1207768242.owl#address-995"
+        }
+      },
+      {
+        "city": {
+          "type": "literal",
+          "value": "Malaga"
+        },
+        "country": {
+          "type": "literal",
+          "value": "Spain"
+        },
+        "id": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "993"
+        },
+        "number": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "32"
+        },
+        "state": {
+          "type": "literal",
+          "value": "Malaga"
+        },
+        "street": {
+          "type": "literal",
+          "value": "Romer Street"
+        },
+        "x": {
+          "type": "uri",
+          "value": "http://www.owl-ontologies.com/Ontology1207768242.owl#address-993"
+        }
+      },
+      {
+        "city": {
+          "type": "literal",
+          "value": "Marconi"
+        },
+        "country": {
+          "type": "literal",
+          "value": "Italy"
+        },
+        "id": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "996"
+        },
+        "number": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "7"
+        },
+        "state": {
+          "type": "literal",
+          "value": "Trentino"
+        },
+        "street": {
+          "type": "literal",
+          "value": "Via Piani di Bolzano"
+        },
+        "x": {
+          "type": "uri",
+          "value": "http://www.owl-ontologies.com/Ontology1207768242.owl#address-996"
+        }
+      },
+      {
+        "city": {
+          "type": "literal",
+          "value": "Puebla"
+        },
+        "country": {
+          "type": "literal",
+          "value": "Mexico"
+        },
+        "id": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "997"
+        },
+        "number": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#integer",
+          "type": "literal",
+          "value": "9976"
+        },
+        "state": {
+          "type": "literal",
+          "value": "Puebla"
+        },
+        "street": {
+          "type": "literal",
+          "value": "Samara road"
+        },
+        "x": {
+          "type": "uri",
+          "value": "http://www.owl-ontologies.com/Ontology1207768242.owl#address-997"
+        }
+      }
+    ]
+  }
+}

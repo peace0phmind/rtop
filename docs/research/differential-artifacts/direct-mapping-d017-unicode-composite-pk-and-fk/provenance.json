@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-direct-mapping-d017-unicode-composite-pk-and-fk",
+  "mapping_behavior": "Direct Mapping Unicode composite primary key, blank node, and foreign key",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D017/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "pgcrypto",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "ca69f8bd8926949bf527b62d963cea40cd4828ca3d89e9cd4f4c1e5f66e30b03",
+    "rtop_raw": "7c903bab0e67cc3c0d12971462b49d6f4f5109469a9bc996db19d753c2aa33a9",
+    "normalized": "7d5530e9b43da91a842ab6dc8e5f8da22fa29baf5d071686914a61acb393909e"
+  }
+}

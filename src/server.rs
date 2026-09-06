@@ -1,3 +1,4 @@
+use crate::sparql::{parse as parse_query, Query};
 use crate::{
     format_rdf_term, load_configuration, Binding, PostgresDataSource, QueryResult, RdfFact,
     RdfTerm, RuntimeError, VkgRuntime,
@@ -12,6 +13,8 @@ use uuid::Uuid;
 
 /// 启动最小 SPARQL HTTP adapter。每个请求独立创建 adapter，会话类型不会越过内核边界。
 pub fn serve(config: &str, bind: &str, development: bool) -> Result<(), RuntimeError> {
+    let loaded = load_configuration(config)?;
+    crate::validate_static_inputs(&loaded.spec, loaded.direct_mapping.is_none(), true)?;
     let listener = TcpListener::bind(bind)
         .map_err(|e| RuntimeError::DataSource(format!("无法监听 {bind}：{e}")))?;
     let config: Arc<str> = Arc::from(config);
@@ -199,7 +202,8 @@ fn execute_loaded(
 ) -> Result<(&'static str, &'static str, String), RuntimeError> {
     let source = PostgresDataSource::connect(&loaded.postgres)?;
     let mut runtime = runtime_from_loaded(loaded, source)?;
-    render_query_result(runtime.query(query)?, accept)
+    let variables = select_projection_variables(query)?;
+    render_query_result(runtime.query(query)?, accept, &variables)
 }
 
 fn execute_loaded_cancellable(
@@ -214,7 +218,8 @@ fn execute_loaded_cancellable(
         return Err(RuntimeError::DataSource("client-disconnected".into()));
     }
     let mut runtime = runtime_from_loaded(loaded, source)?;
-    render_query_result(runtime.query(query)?, accept)
+    let variables = select_projection_variables(query)?;
+    render_query_result(runtime.query(query)?, accept, &variables)
 }
 
 /// 服务器入口唯一的运行时构造模块。它把 Direct Mapping 的分支留在内部，确保
@@ -229,14 +234,21 @@ fn runtime_from_loaded(
             source,
             &direct.base_iri,
             &direct.relations,
+            direct.preserve_physical_rows,
         ),
-        None => VkgRuntime::new(loaded.spec, source),
+        None => VkgRuntime::new_with_mapping_options_relaxed_source_sql(
+            loaded.spec,
+            source,
+            loaded.mapping_infer_default_datatype,
+            loaded.mapping_require_absolute_iri_values,
+        ),
     }
 }
 
 fn render_query_result(
     result: QueryResult,
     accept: &str,
+    variables: &[String],
 ) -> Result<(&'static str, &'static str, String), RuntimeError> {
     Ok(match result {
         QueryResult::Bindings(rows) => match select_media(
@@ -252,18 +264,18 @@ fn render_query_result(
             "application/sparql-results+json" => (
                 "200 OK",
                 "application/sparql-results+json",
-                bindings_json(&rows),
+                bindings_json(&rows, variables),
             ),
             "application/sparql-results+xml" => (
                 "200 OK",
                 "application/sparql-results+xml",
-                bindings_xml(&rows),
+                bindings_xml(&rows, variables),
             ),
-            "text/csv" => ("200 OK", "text/csv", bindings_delimited(&rows, ',', false)),
+            "text/csv" => ("200 OK", "text/csv", bindings_delimited(&rows, variables, ',', false)),
             "text/tab-separated-values" => (
                 "200 OK",
                 "text/tab-separated-values",
-                bindings_delimited(&rows, '\t', true),
+                bindings_delimited(&rows, variables, '\t', true),
             ),
             _ => unreachable!(),
         },
@@ -444,7 +456,10 @@ fn bind_predefined_query(
         };
         let term = if definition.kind.eq_ignore_ascii_case("iri") {
             oxiri::Iri::parse(value.clone()).map_err(|_| {
-                RuntimeError::MalformedSparql(format!("预定义参数 {name} 不是有效 IRI"))
+                // Keep this distinct from malformed user SPARQL: fixed Ontop's
+                // generic predefined-query controller turns this binding failure
+                // into HTTP 500 before query evaluation.
+                RuntimeError::InvalidPredefinedIri(value.clone())
             })?;
             format!("<{value}>")
         } else {
@@ -488,11 +503,15 @@ fn turtle(fact: &RdfFact) -> String {
     )
 }
 
-fn bindings_json(rows: &[Binding]) -> String {
-    let variables = rows
-        .first()
-        .map(|row| row.keys().cloned().collect::<Vec<_>>())
-        .unwrap_or_default();
+fn select_projection_variables(query: &str) -> Result<Vec<String>, RuntimeError> {
+    match parse_query(query)? {
+        Query::Select { variables, .. } => Ok(variables),
+        _ => Ok(Vec::new()),
+    }
+}
+
+fn bindings_json(rows: &[Binding], projection_variables: &[String]) -> String {
+    let variables = binding_variables(rows, projection_variables);
     let head = variables
         .iter()
         .map(|name| format!("\"{}\"", json(name)))
@@ -513,14 +532,18 @@ fn bindings_json(rows: &[Binding]) -> String {
     format!("{{\"head\":{{\"vars\":[{head}]}},\"results\":{{\"bindings\":[{rows}]}}}}")
 }
 
-fn binding_variables(rows: &[Binding]) -> Vec<String> {
-    rows.first()
-        .map(|row| row.keys().cloned().collect())
-        .unwrap_or_default()
+fn binding_variables(rows: &[Binding], projection_variables: &[String]) -> Vec<String> {
+    if projection_variables.is_empty() {
+        rows.first()
+            .map(|row| row.keys().cloned().collect())
+            .unwrap_or_default()
+    } else {
+        projection_variables.to_vec()
+    }
 }
 
-fn bindings_xml(rows: &[Binding]) -> String {
-    let variables = binding_variables(rows);
+fn bindings_xml(rows: &[Binding], projection_variables: &[String]) -> String {
+    let variables = binding_variables(rows, projection_variables);
     let head = variables
         .iter()
         .map(|name| format!("<variable name=\"{}\"/>", xml(name)))
@@ -572,8 +595,13 @@ fn term_xml(term: &RdfTerm) -> String {
     }
 }
 
-fn bindings_delimited(rows: &[Binding], separator: char, tsv: bool) -> String {
-    let variables = binding_variables(rows);
+fn bindings_delimited(
+    rows: &[Binding],
+    projection_variables: &[String],
+    separator: char,
+    tsv: bool,
+) -> String {
+    let variables = binding_variables(rows, projection_variables);
     let header = variables
         .iter()
         .map(|name| if tsv { format!("?{name}") } else { csv(name) })
@@ -640,7 +668,11 @@ fn term_json(term: &RdfTerm) -> String {
                 .map(|value| format!(",\"xml:lang\":\"{}\"", json(value)))
                 .or_else(|| {
                     datatype
-                        .as_ref()
+                        .as_deref()
+                        // Ontop 的 SPARQL JSON endpoint 把 RDF 1.1 中与 simple
+                        // literal 等价的显式 xsd:string 序列化为无 datatype 的 term。
+                        // 内部术语仍保留 datatype，避免丢失 facts 的原始信息。
+                        .filter(|value| *value != "http://www.w3.org/2001/XMLSchema#string")
                         .map(|value| format!(",\"datatype\":\"{}\"", json(value)))
                 })
                 .unwrap_or_default();
@@ -674,26 +706,38 @@ fn form_values(input: &str) -> BTreeMap<String, String> {
         .collect()
 }
 fn percent_decode(value: &str) -> String {
-    value
-        .replace('+', " ")
-        .split('%')
-        .fold(String::new(), |mut out, part| {
-            if out.is_empty() {
-                out.push_str(part);
-            } else if part.len() >= 2 {
-                let (hex, rest) = part.split_at(2);
-                if let Ok(byte) = u8::from_str_radix(hex, 16) {
-                    out.push(byte as char);
-                    out.push_str(rest);
-                }
+    // query 参数可以以 `%23`（SPARQL 的首行注释）开头。此前以已输出文本是否为空
+    // 来区分 split 的首段，会把这个首个转义序列当作普通文本，令 `PREFIX :` 未被
+    // 读取为声明。按 URL 字节流逐项解码，同时保留不完整或无效的 `%` 序列。
+    let bytes = value.as_bytes();
+    let mut output = Vec::with_capacity(bytes.len());
+    let mut index = 0;
+    while index < bytes.len() {
+        if bytes[index] == b'+' {
+            output.push(b' ');
+            index += 1;
+        } else if bytes[index] == b'%' && index + 2 < bytes.len() {
+            let hex = std::str::from_utf8(&bytes[index + 1..index + 3]).unwrap_or_default();
+            if let Ok(byte) = u8::from_str_radix(hex, 16) {
+                output.push(byte);
+                index += 3;
+            } else {
+                output.push(b'%');
+                index += 1;
             }
-            out
-        })
+        } else {
+            output.push(bytes[index]);
+            index += 1;
+        }
+    }
+    String::from_utf8_lossy(&output).into_owned()
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{bind_predefined_query, bindings_json, negotiate, PredefinedParameter};
+    use super::{
+        bind_predefined_query, bindings_json, negotiate, percent_decode, PredefinedParameter,
+    };
     use crate::{Binding, RdfTerm};
     use std::collections::BTreeMap;
 
@@ -718,13 +762,65 @@ mod tests {
     }
 
     #[test]
+    fn invalid_predefined_iri_uses_ontop_controller_error_category() {
+        let definitions = BTreeMap::from([(
+            "person".into(),
+            PredefinedParameter {
+                kind: "IRI".into(),
+                required: true,
+            },
+        )]);
+        let values = BTreeMap::from([("person".into(), "not-an-iri".into())]);
+
+        assert_eq!(
+            bind_predefined_query("CONSTRUCT {} WHERE {}", &definitions, &values),
+            Err(crate::RuntimeError::InvalidPredefinedIri(
+                "not-an-iri".into()
+            ))
+        );
+    }
+
+    #[test]
+    fn decodes_a_leading_escaped_comment_marker_in_a_sparql_query() {
+        assert_eq!(
+            percent_decode("%23%20comment%0APREFIX%20%3A%20%3Chttps%3A%2F%2Fexample.test%2F%3E"),
+            "# comment\nPREFIX : <https://example.test/>"
+        );
+    }
+
+    #[test]
     fn serializes_sparql_json_bindings_with_rdf_terms() {
         let mut row = Binding::new();
         row.insert(
             "person".into(),
             RdfTerm::Iri("https://example.test/p".into()),
         );
-        assert_eq!(bindings_json(&[row]), "{\"head\":{\"vars\":[\"person\"]},\"results\":{\"bindings\":[{\"person\":{\"type\":\"uri\",\"value\":\"https://example.test/p\"}}]}}");
+        assert_eq!(bindings_json(&[row], &["person".into()]), "{\"head\":{\"vars\":[\"person\"]},\"results\":{\"bindings\":[{\"person\":{\"type\":\"uri\",\"value\":\"https://example.test/p\"}}]}}");
+    }
+
+    #[test]
+    fn serializes_explicit_xsd_string_as_ontop_simple_literal_in_sparql_json() {
+        let mut row = Binding::new();
+        row.insert(
+            "name".into(),
+            RdfTerm::Literal {
+                value: "The Fact Company".into(),
+                datatype: Some("http://www.w3.org/2001/XMLSchema#string".into()),
+                language: None,
+            },
+        );
+        assert_eq!(
+            bindings_json(&[row], &["name".into()]),
+            "{\"head\":{\"vars\":[\"name\"]},\"results\":{\"bindings\":[{\"name\":{\"type\":\"literal\",\"value\":\"The Fact Company\"}}]}}"
+        );
+    }
+
+    #[test]
+    fn preserves_select_projection_variables_for_empty_json_results() {
+        assert_eq!(
+            bindings_json(&[], &["person".into(), "role".into()]),
+            "{\"head\":{\"vars\":[\"person\",\"role\"]},\"results\":{\"bindings\":[]}}"
+        );
     }
 
     #[test]

@@ -1,0 +1,4 @@
+_:genid388f02b3808e8be24f9faf8ee5f3ca9d50b2a687fb71aeee682807fb574d5212dd <http://xmlns.com/foaf/0.1/name> "Sue Jones" .
+_:c429d406d0ec565a976d12194070394ebf853415063586a30c03e7bd53465260 <http://xmlns.com/foaf/0.1/name> "Bob Smith" .
+_:genid388f02b3808e8be24f9faf8ee5f3ca9d50b2a687fb71aeee682807fb574d5212dd <http://example.com/amount> "20"^^<http://www.w3.org/2001/XMLSchema#double> .
+_:c429d406d0ec565a976d12194070394ebf853415063586a30c03e7bd53465260 <http://example.com/amount> "30"^^<http://www.w3.org/2001/XMLSchema#double> .

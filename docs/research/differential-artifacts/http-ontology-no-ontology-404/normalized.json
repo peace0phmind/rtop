@@ -1,0 +1,6 @@
+{
+  "format": "http-status-body",
+  "get_status": "404",
+  "get_body": "No ontology found",
+  "post_status": "404"
+}

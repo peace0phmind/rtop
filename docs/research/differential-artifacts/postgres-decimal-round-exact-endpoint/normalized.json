@@ -1,0 +1,16 @@
+{
+  "format": "decimal-round-http-suite",
+  "cases": [
+    {
+      "case_id": "differential-postgres-decimal-round-scalar-endpoint",
+      "status": "passed",
+      "mapping_behavior": "PostgreSQL decimal arithmetic and positive/negative scalar ROUND endpoint results"
+    },
+    {
+      "case_id": "differential-postgres-decimal-round-aggregate-endpoint",
+      "status": "passed",
+      "mapping_behavior": "PostgreSQL decimal aggregate, ROUND(SUM), and SUM(ROUND) endpoint results"
+    }
+  ],
+  "all_passed": true
+}

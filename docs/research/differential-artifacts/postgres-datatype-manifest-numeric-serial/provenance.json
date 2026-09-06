@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-datatype-manifest-numeric-serial",
+  "mapping_behavior": "PgsqlDatatypeTest numeric/serial 原始 manifest query 的 PostgreSQL typed binding",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/docker-tests/src/test/{java/it/unibz/inf/ontop/docker/datatypes/PgsqlDatatypeTest.java,resources/testcases-docker/numeric/{datatypes-pgsql.obda,serial.rq}}; tests/compat/postgres-datatype-manifest/init.sql",
+  "query": "../ontop/test/docker-tests/src/test/resources/testcases-docker/numeric/serial.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "dc6c68d3841f932d3b11948c3d42511a9f09dc505de35b649bfc941bc2a1a2a0",
+    "rtop_raw": "054a67be2c24a48cca12bc2c3bf0ff583e7d85424691cbcb40f3b1bc68abb224",
+    "normalized": "8171aca6b5713672adf5f57ca5c0c3356519e5d191528767936c7b59e2858f00"
+  }
+}

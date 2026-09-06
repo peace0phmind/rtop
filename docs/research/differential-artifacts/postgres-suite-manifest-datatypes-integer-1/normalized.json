@@ -1,0 +1,11 @@
+{
+  "head": {
+    "vars": [
+      "street",
+      "x"
+    ]
+  },
+  "results": {
+    "bindings": []
+  }
+}

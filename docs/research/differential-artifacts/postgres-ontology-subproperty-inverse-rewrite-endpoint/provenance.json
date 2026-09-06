@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-ontology-subproperty-inverse-rewrite-endpoint",
+  "mapping_behavior": "PostgreSQL givesLab subproperty and isTaughtBy inverse property closure",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的两项双边 HTTP JSON 结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "binding/rdf4j/src/test/resources/tbox-facts/{university.sql,university-complete.ttl}; tests/compat/postgres-ontology/{endpoint-imports-university.ttl,teaching.obda,subproperty.rq,inverse.rq}",
+  "query": "subPropertyOf and inverseOf SELECT",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container endpoint",
+    "rtop": "Rust host endpoint"
+  },
+  "sha256": {
+    "ontop_raw": "298fd366c38e8542e55a99bab29e37cdac572bdbde82b4b9c7f853a9238dca92",
+    "rtop_raw": "3798f4374c5e8837bcf9fea6be27c015f6018670ed0aa75510ff018153fc2c90",
+    "normalized": "b52f4af4f4a46658ac0dc635f9c40a6cb94fe4916ba25d2889183395654cf111"
+  }
+}

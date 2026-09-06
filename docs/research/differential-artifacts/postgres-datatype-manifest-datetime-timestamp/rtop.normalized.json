@@ -1,0 +1,23 @@
+{
+  "head": {
+    "vars": [
+      "x",
+      "y"
+    ]
+  },
+  "results": {
+    "bindings": [
+      {
+        "x": {
+          "type": "uri",
+          "value": "http://ontop.inf.unibz.it/test/datatypes#datetime-1"
+        },
+        "y": {
+          "datatype": "http://www.w3.org/2001/XMLSchema#dateTime",
+          "type": "literal",
+          "value": "2013-03-18T10:12:10"
+        }
+      }
+    ]
+  }
+}

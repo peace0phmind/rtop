@@ -1,0 +1,2925 @@
+{
+  "head": {
+    "vars": [
+      "X",
+      "Y",
+      "Z"
+    ]
+  },
+  "results": {
+    "bindings": [
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent1"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent10"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent100"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent101"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent102"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent103"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent104"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent105"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent106"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent107"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent108"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent109"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent11"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent110"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent111"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent112"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent113"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent114"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent115"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent116"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent117"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent118"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent119"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent12"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent120"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent121"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent122"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent123"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent124"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent125"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent126"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent127"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent128"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent129"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent13"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent130"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent131"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent132"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent133"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent134"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent135"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent136"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent137"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent138"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent139"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent14"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent140"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent141"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent142"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent143"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent144"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent145"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent146"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent147"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent148"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent149"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent15"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent150"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent151"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent152"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent153"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent154"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent155"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent156"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent157"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent158"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent159"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent16"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent160"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent161"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent162"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent163"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent164"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent165"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent166"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent167"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent168"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent169"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent17"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent170"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent171"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent172"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent173"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent174"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent175"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent176"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent177"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent178"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent179"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent18"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent180"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent181"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent182"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent183"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent184"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent185"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent186"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent187"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent188"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent189"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent19"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent190"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent191"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent192"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent193"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent194"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent195"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent196"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent197"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent198"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent199"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent2"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent20"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent200"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent201"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent202"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent203"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent204"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent205"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent206"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent207"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent208"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent21"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent22"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent23"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent24"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent25"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent26"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent27"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent28"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent29"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent3"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent30"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent31"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent32"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent33"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent34"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent35"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent36"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent37"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent38"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent39"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent4"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent40"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent41"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent42"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent43"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent44"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent45"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent46"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent47"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent48"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent49"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent5"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent50"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent51"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent52"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent53"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent54"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent55"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent56"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent57"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent58"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent59"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent6"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent60"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent61"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent62"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent63"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent64"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent65"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent66"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent67"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent68"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent69"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent7"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent70"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent71"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent72"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent73"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent74"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent75"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent76"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent77"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent78"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent79"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent8"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent80"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent81"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent82"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent83"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent84"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent85"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent86"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent87"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent88"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent89"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent9"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent90"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent91"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent92"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent93"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent94"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent95"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent96"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent97"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent98"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      },
+      {
+        "X": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/UndergraduateStudent99"
+        },
+        "Y": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/AssistantProfessor1"
+        },
+        "Z": {
+          "type": "uri",
+          "value": "http://www.Department0.University0.edu/Course2"
+        }
+      }
+    ]
+  }
+}

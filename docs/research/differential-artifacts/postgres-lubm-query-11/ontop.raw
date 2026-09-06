@@ -1,0 +1,1355 @@
+{
+  "head" : {
+    "vars" : [
+      "X"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup0"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup1"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup10"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup100"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup101"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup102"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup103"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup104"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup105"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup106"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup107"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup108"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup109"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup11"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup110"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup111"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup112"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup113"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup114"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup115"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup116"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup117"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup118"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup119"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup12"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup120"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup121"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup122"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup123"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup124"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup125"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup126"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup127"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup128"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup129"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup13"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup130"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup131"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup132"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup133"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup134"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup135"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup136"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup137"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup138"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup139"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup14"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup140"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup141"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup142"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup143"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup144"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup145"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup146"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup147"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup148"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup149"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup15"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup150"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup151"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup152"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup153"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup154"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup155"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup156"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup157"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup158"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup159"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup16"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup160"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup161"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup162"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup163"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup164"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup165"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup166"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup167"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup168"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup169"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup17"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup170"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup171"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup172"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup173"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup174"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup175"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup176"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup177"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup178"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup179"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup18"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup180"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup181"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup182"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup183"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup184"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup185"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup186"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup187"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup188"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup189"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup19"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup190"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup191"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup192"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup193"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup194"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup195"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup196"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup197"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup198"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup199"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup2"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup20"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup200"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup201"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup202"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup203"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup204"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup205"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup206"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup207"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup208"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup209"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup21"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup210"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup211"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup212"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup213"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup214"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup215"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup216"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup217"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup218"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup219"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup22"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup220"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup221"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup222"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup223"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup23"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup24"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup25"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup26"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup27"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup28"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup29"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup3"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup30"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup31"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup32"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup33"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup34"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup35"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup36"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup37"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup38"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup39"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup4"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup40"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup41"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup42"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup43"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup44"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup45"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup46"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup47"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup48"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup49"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup5"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup50"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup51"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup52"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup53"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup54"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup55"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup56"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup57"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup58"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup59"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup6"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup60"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup61"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup62"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup63"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup64"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup65"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup66"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup67"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup68"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup69"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup7"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup70"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup71"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup72"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup73"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup74"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup75"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup76"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup77"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup78"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup79"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup8"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup80"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup81"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup82"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup83"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup84"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup85"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup86"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup87"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup88"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup89"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup9"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup90"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup91"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup92"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup93"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup94"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup95"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup96"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup97"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup98"
+        }
+      },
+      {
+        "X" : {
+          "type" : "uri",
+          "value" : "http://www.Department1.University0.edu/ResearchGroup99"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,61 @@
+### clipretty
+<http://example.com/Venus> <http://xmlns.com/foaf/0.1/name> "Venus" .
+### cliv1native
+warning: associated function `load` is never used
+  --> src/ontology.rs:42:12
+   |
+41 | impl Ontology {
+   | ------------- associated function in this implementation
+42 |     pub fn load(path: &Path) -> Result<Self, RuntimeError> {
+   |            ^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: struct `BindingValue` is never constructed
+  --> src/sparql.rs:84:12
+   |
+84 | pub struct BindingValue {
+   |            ^^^^^^^^^^^^
+
+warning: function `parse_subquery` is never used
+    --> src/sparql.rs:1200:4
+     |
+1200 | fn parse_subquery(input: &str) -> Result<Option<GraphPattern>, RuntimeError> {
+     |    ^^^^^^^^^^^^^^
+
+warning: function `parse_union_bgp` is never used
+    --> src/sparql.rs:1249:4
+     |
+1249 | fn parse_union_bgp(input: &str) -> Result<Option<GraphPattern>, RuntimeError> {
+     |    ^^^^^^^^^^^^^^^
+
+warning: function `top_level_union` is never used
+    --> src/sparql.rs:1278:4
+     |
+1278 | fn top_level_union(input: &str) -> Option<usize> {
+     |    ^^^^^^^^^^^^^^^
+
+warning: function `extract_optionals` is never used
+    --> src/sparql.rs:1304:4
+     |
+1304 | fn extract_optionals(input: &str) -> Result<(String, Vec<Vec<TriplePattern>>), RuntimeError> {
+     |    ^^^^^^^^^^^^^^^^^
+
+warning: function `extract_values` is never used
+    --> src/sparql.rs:1333:4
+     |
+1333 | fn extract_values(input: &str) -> Result<(String, Vec<BindingValue>), RuntimeError> {
+     |    ^^^^^^^^^^^^^^
+
+warning: function `extract_binds` is never used
+    --> src/sparql.rs:1601:4
+     |
+1601 | fn extract_binds(input: &str) -> Result<(String, Vec<Bind>), RuntimeError> {
+     |    ^^^^^^^^^^^^^
+
+invalid-mapping: Unknown parameter name "sourceUri"
+### clitoobda
+<http://example.com/Venus> <http://xmlns.com/foaf/0.1/name> "Venus" .
+### clitor2rml
+<http://it.unibz.inf/obda/test/simple#1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://it.unibz.inf/obda/test/simple#A> .
+<http://it.unibz.inf/obda/test/simple#7> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://it.unibz.inf/obda/test/simple#B> .

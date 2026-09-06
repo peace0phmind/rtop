@@ -1,0 +1,4 @@
+_:genid34406fd1b7aa667ae3fc9f7e77269ce401366c901ed1775ed5dfe131ffb46bec63 <http://xmlns.com/foaf/0.1/name> "Bob Smith" .
+_:genid377bbb4e08b394704e2836b7f75b9304b50e4f1c70ec028a71befa05717c2baa21 <http://xmlns.com/foaf/0.1/name> "Sue Jones" .
+_:genid34406fd1b7aa667ae3fc9f7e77269ce401366c901ed1775ed5dfe131ffb46bec63 <http://example.com/city> "London" .
+_:genid377bbb4e08b394704e2836b7f75b9304b50e4f1c70ec028a71befa05717c2baa21 <http://example.com/city> "Madrid" .

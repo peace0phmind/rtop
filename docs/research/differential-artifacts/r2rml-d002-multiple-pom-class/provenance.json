@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d002-multiple-pom-class",
+  "mapping_behavior": "multiple predicate-object maps and rr:class",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D002/{create.sql,r2rmla.ttl}",
+  "query": "materialize default graph as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "e0d3f1d3b061dc4018646305b080f7e8b2ccdd9ee993a342e026ebe6d0711689",
+    "rtop_raw": "30d2f17e8e7730d0e81aaca8a9d97d08110a8a13372140ac1d18a53408267069",
+    "normalized": "5089946c6184b37d9e9bc1e8b6304c94b48b70e0245c21fb8597c996de25f37b"
+  }
+}

@@ -39,6 +39,7 @@ struct MappingRule {
     graph: Option<GraphMap>,
     source: String,
     iri_base: Option<String>,
+    object_is_iri_template: bool,
 }
 
 #[derive(Clone, PartialEq, Eq)]
@@ -72,12 +73,21 @@ pub enum BindingTerm {
     },
 }
 
-fn native_serialized_term(value: &str, term: &BindingTerm, iri_base: Option<&str>) -> String {
+fn native_serialized_term(
+    value: &str,
+    term: &BindingTerm,
+    iri_base: Option<&str>,
+    ontop_iri_template: bool,
+) -> String {
     match term {
         BindingTerm::Iri => {
             let value = value.trim_matches(['<', '>']);
             let value = if value.contains(':') {
                 value.to_owned()
+            } else if ontop_iri_template {
+                // 固定 Ontop 的 R2RML serializer：IRI rr:template 使用默认 base，
+                // 而非 Turtle 文档的 @base。
+                format!("http://example.com/base/{value}")
             } else if let Some(iri_base) = iri_base {
                 // 与执行期 resolve_mapping_iri 一致：R2RML @base 是模板固定片段的词法前缀。
                 format!("{iri_base}{value}")
@@ -179,9 +189,14 @@ impl Mapping {
                 &rule.subject_template,
                 &rule.subject_term,
                 rule.iri_base.as_deref(),
+                !rule.subject_is_column,
             );
-            let object =
-                native_serialized_term(&rule.object, &rule.object_term, rule.iri_base.as_deref());
+            let object = native_serialized_term(
+                &rule.object,
+                &rule.object_term,
+                rule.iri_base.as_deref(),
+                rule.object_is_iri_template,
+            );
             let triple = format!("{subject} {} {object} .", rule.predicate);
             let target = match &rule.graph {
                 None => triple,
@@ -242,6 +257,7 @@ impl Mapping {
     pub fn from_direct_mapping(
         base_iri: &str,
         relations: &[(String, RelationMetadata)],
+        preserve_physical_rows: bool,
     ) -> Result<Self, RuntimeError> {
         let _base = oxiri::Iri::parse(base_iri.to_owned()).map_err(|error| {
             RuntimeError::Mapping(format!("无效 Direct Mapping base IRI：{error}"))
@@ -262,7 +278,7 @@ impl Mapping {
                     "Direct Mapping relation `{table}` 不存在或没有 column"
                 )));
             }
-            let source = direct_source(table, relation);
+            let source = direct_source(table, relation, preserve_physical_rows);
             let (subject_template, subject_term) = direct_subject(base_iri, table, relation);
             rules.push(MappingRule {
                 subject_template: subject_template.clone(),
@@ -274,6 +290,7 @@ impl Mapping {
                 graph: None,
                 source: source.clone(),
                 iri_base: None,
+                object_is_iri_template: false,
             });
             for column in &relation.columns {
                 rules.push(MappingRule {
@@ -294,6 +311,7 @@ impl Mapping {
                     graph: None,
                     source: source.clone(),
                     iri_base: None,
+                    object_is_iri_template: false,
                 });
             }
             for foreign_key in &relation.foreign_keys {
@@ -371,6 +389,7 @@ impl Mapping {
                     graph: None,
                     source: rule_source,
                     iri_base: None,
+                    object_is_iri_template: false,
                 });
             }
         }
@@ -426,6 +445,21 @@ impl Mapping {
         }
     }
 
+    /// Endpoint 的 native OBDA source 会与 Ontop 一样作为 black-box SQL 保留到
+    /// PostgreSQL 执行期；target、prefix 与 mapping 结构仍在读取期严格验证。
+    pub fn parse_file_relaxed_source_sql(path: &Path) -> Result<Self, RuntimeError> {
+        let text = std::fs::read_to_string(path)
+            .map_err(|error| RuntimeError::Mapping(format!("无法读取 mapping：{error}")))?;
+        if matches!(
+            path.extension().and_then(|value| value.to_str()),
+            Some("ttl" | "turtle")
+        ) {
+            Self::parse_file(path)
+        } else {
+            Self::parse_with_source_sql_validation(&text, false)
+        }
+    }
+
     pub fn parse_r2rml_reader<R: Read>(
         mut reader: R,
         base_iri: &str,
@@ -440,6 +474,13 @@ impl Mapping {
     }
 
     pub fn parse(text: &str) -> Result<Self, RuntimeError> {
+        Self::parse_with_source_sql_validation(text, true)
+    }
+
+    fn parse_with_source_sql_validation(
+        text: &str,
+        validate_native_source_sql: bool,
+    ) -> Result<Self, RuntimeError> {
         if text.contains("[SourceDeclaration]") {
             return Err(RuntimeError::Mapping(
                 "不支持已废弃的 [SourceDeclaration]；请在 rtop 配置中声明 datasource".into(),
@@ -499,7 +540,9 @@ impl Mapping {
             // Ontop 原生 OBDA 的 source SQL 常以 statement terminator 结束；rtop 会把
             // 它嵌进 FROM (...)，因此此处只剥离末尾分号而不改变 SQL 主体。
             source = source.trim_end().trim_end_matches(';').trim_end().into();
-            validate_source_sql(&source)?;
+            if validate_native_source_sql {
+                validate_source_sql(&source)?;
+            }
             for (subject, predicate, object, graph) in parse_native_target(target, &prefixes)? {
                 rules.push(MappingRule {
                     subject_template: subject.0,
@@ -511,6 +554,7 @@ impl Mapping {
                     graph,
                     source: source.clone(),
                     iri_base: None,
+                    object_is_iri_template: false,
                 });
             }
         }
@@ -549,7 +593,6 @@ impl Mapping {
                 .ok_or_else(|| {
                     RuntimeError::Mapping("R2RML 结构错误：缺少 rr:logicalTable".into())
                 })?;
-            validate_sql_version(&triples, logical_table)?;
             let source = literal_for(&triples, logical_table, &format!("{RR}sqlQuery"))
                 .or_else(|| {
                     literal_for(&triples, logical_table, &format!("{RR}tableName"))
@@ -711,6 +754,7 @@ impl Mapping {
                                         graph: graph.clone(),
                                         source: source.clone(),
                                         iri_base: iri_base.clone(),
+                                        object_is_iri_template: false,
                                     });
                                 }
                             }
@@ -746,6 +790,7 @@ impl Mapping {
                                         graph: graph.clone(),
                                         source: source.clone(),
                                         iri_base: iri_base.clone(),
+                                        object_is_iri_template: false,
                                     });
                                 }
                             }
@@ -885,6 +930,8 @@ impl Mapping {
                             "R2RML 结构错误：ObjectMap 缺少 rr:constant、rr:template 或 rr:column".into(),
                             ));
                         };
+                        let object_is_iri_template = matches!(object_term, BindingTerm::Iri)
+                            && literal_for(&triples, object_map, &format!("{RR}template")).is_some();
                         let mut variants = Vec::new();
                         for predicate in predicates {
                             for graph in &rule_graphs {
@@ -898,6 +945,7 @@ impl Mapping {
                                     graph: graph.clone(),
                                     source: rule_source.clone(),
                                     iri_base: iri_base.clone(),
+                                    object_is_iri_template,
                                 });
                             }
                         }
@@ -921,6 +969,7 @@ impl Mapping {
                             graph: graph.clone(),
                             source: source.clone(),
                             iri_base: iri_base.clone(),
+                            object_is_iri_template: false,
                         }),
                         _ => Err(RuntimeError::Mapping(
                             "R2RML 结构错误：rr:class 必须是 IRI".into(),
@@ -942,7 +991,9 @@ impl Mapping {
             .filter(|rule| {
                 (match (query.graph.as_deref(), rule.graph.as_ref()) {
                     (None, None) => true,
-                    (Some(query), Some(GraphMap::Constant(rule))) => query == rule,
+                    (Some(query), Some(GraphMap::Constant(rule))) => {
+                        query.starts_with('?') || query == rule
+                    }
                     (Some(_), Some(GraphMap::Template(_))) => true,
                     _ => false,
                 }) && rule.predicate == query.predicate
@@ -1009,6 +1060,68 @@ impl MappingRule {
                     query.predicate, query.object, self.predicate, self.object
                 ),
             ));
+        }
+        // `GRAPH ?g { ?s <p> ?o }` 必须像 subject/object 一样投影具名图：常量
+        // graph 也不是过滤条件。predicate variable 在 runtime 层单独绑定，故这里
+        // 的三个 mapping 变量恰为 subject、object、graph。
+        if variables.len() == 3
+            && variables[0] == query.subject.trim_start_matches('?')
+            && variables[1] == query.object.trim_start_matches('?')
+            && query
+                .graph
+                .as_deref()
+                .is_some_and(|graph| graph == format!("?{}", variables[2]))
+        {
+            let iri = subject_template.trim_matches('<').trim_matches('>');
+            let mut parameters = Vec::new();
+            let subject_projection = if iri.contains('{') {
+                if matches!(&self.subject_term, BindingTerm::Iri) && !self.subject_is_column {
+                    iri_template_projection(iri, &mut parameters)?
+                } else {
+                    template_projection(iri, &mut parameters)?
+                }
+            } else {
+                parameters.push(iri.into());
+                format!("CAST(${} AS text)", parameters.len())
+            };
+            let object_projection = self.object_projection(&mut parameters)?;
+            let graph_projection = match self.graph.as_ref() {
+                Some(GraphMap::Constant(graph)) => {
+                    parameters.push(graph.clone());
+                    format!("CAST(${} AS text)", parameters.len())
+                }
+                Some(GraphMap::Template(template)) => {
+                    iri_template_projection(template, &mut parameters)?
+                }
+                None => {
+                    return Err(RuntimeError::NotFullyTranslatable(
+                        "GRAPH 变量不能匹配默认图 mapping".into(),
+                    ))
+                }
+            };
+            return Ok(Plan {
+                sql: format!(
+                    "SELECT {subject_projection}, {object_projection}, {graph_projection} FROM ({}) AS rtop_mapping",
+                    self.source
+                ),
+                parameters,
+                variables: variables.to_vec(),
+                terms: vec![
+                    self.subject_term.clone(),
+                    self.object_term.clone(),
+                    BindingTerm::Iri,
+                ],
+                iri_bases: vec![
+                    matches!(&self.subject_term, BindingTerm::Iri)
+                        .then(|| self.iri_base.clone())
+                        .flatten(),
+                    matches!(&self.object_term, BindingTerm::Iri)
+                        .then(|| self.iri_base.clone())
+                        .flatten(),
+                    None,
+                ],
+                object_validation: None,
+            });
         }
         if variables.len() == 1
             && !query.subject.starts_with('?')
@@ -1222,7 +1335,7 @@ impl MappingRule {
     }
 }
 
-fn direct_source(table: &str, relation: &RelationMetadata) -> String {
+fn direct_source(table: &str, relation: &RelationMetadata, preserve_physical_rows: bool) -> String {
     let columns = relation
         .columns
         .iter()
@@ -1231,7 +1344,23 @@ fn direct_source(table: &str, relation: &RelationMetadata) -> String {
             format!("{quoted} AS {quoted}")
         })
         .collect::<Vec<_>>();
-    let mut projections = vec!["ctid::text AS \"__rtop_direct_row_id\"".into()];
+    let row_id = if preserve_physical_rows {
+        "ctid::text".into()
+    } else {
+        format!(
+            "concat_ws('|', {})",
+            relation
+                .columns
+                .iter()
+                .map(|column| format!(
+                    "COALESCE({}::text, '<NULL>')",
+                    postgres_identifier(&column.name)
+                ))
+                .collect::<Vec<_>>()
+                .join(", ")
+        )
+    };
+    let mut projections = vec![format!("{row_id} AS \"__rtop_direct_row_id\"")];
     projections.extend(columns);
     format!(
         "SELECT {} FROM {}",
@@ -1431,6 +1560,7 @@ mod tests {
         sparql::{parse, GraphPattern, Query, TriplePattern},
         RelationColumn, RelationMetadata,
     };
+    use std::io::Cursor;
 
     #[test]
     fn normalizes_postgres_timetz_offset_for_text_parameter() {
@@ -1448,6 +1578,21 @@ mod tests {
     }
 
     #[test]
+    fn accepts_r2rml_sql1979_like_the_fixed_ontop_cli_baseline() {
+        let mapping = r#"
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+[] a rr:TriplesMap;
+   rr:logicalTable [ rr:sqlQuery "SELECT 1 AS id"; rr:sqlVersion rr:SQL1979 ];
+   rr:subjectMap [ rr:template "http://example.test/{id}" ];
+   rr:predicateObjectMap [ rr:predicate <http://example.test/type>; rr:object <http://example.test/Thing> ] .
+"#;
+        let parsed =
+            Mapping::parse_r2rml_reader(Cursor::new(mapping), "http://example.test/mapping.ttl")
+                .unwrap();
+        assert_eq!(parsed.rules.len(), 1);
+    }
+
+    #[test]
     fn plans_direct_mapping_predicates_with_sparql_iri_tokens() {
         let mapping = Mapping::from_direct_mapping(
             "http://example.com/base/",
@@ -1462,6 +1607,7 @@ mod tests {
                     foreign_keys: vec![],
                 },
             )],
+            true,
         )
         .unwrap();
         assert_eq!(
@@ -1573,6 +1719,9 @@ fn r2rml_base(text: &str) -> Option<String> {
     })
 }
 
+/// Ontop 的 R2RML converter 对 IRI `rr:template` 使用固定的默认 base，而不是
+/// Turtle 文档的 `@base`。RDF resource（如 `rr:predicate`）仍由 Turtle parser 按
+/// 文档 base 解析，故此规则只能用于模板字符串。
 /// R2RML 的 IRI template 只对 column 槽位做 percent-encoding；固定片段保留原样。
 fn iri_template_projection(
     template: &str,
@@ -1669,22 +1818,6 @@ fn iri_component_projection(column: &str) -> String {
     expression
 }
 
-/// R2RML 的标准 SQL 版本标识符是 rr:SQL2008；其他 IRI 不能静默按 PostgreSQL
-/// 方言执行，否则会把基线规定的非一致 mapping 误接受。
-fn validate_sql_version(
-    triples: &[(RdfNode, String, RdfNode)],
-    logical_table: &RdfNode,
-) -> Result<(), RuntimeError> {
-    if let Some(version) = iri_for(triples, logical_table, &format!("{RR}sqlVersion")) {
-        if version != format!("{RR}SQL2008") {
-            return Err(RuntimeError::Mapping(format!(
-                "R2RML 结构错误：不支持的 rr:sqlVersion <{version}>"
-            )));
-        }
-    }
-    Ok(())
-}
-
 fn triples_map_info(
     triples: &[(RdfNode, String, RdfNode)],
     triples_map: &RdfNode,
@@ -1693,7 +1826,6 @@ fn triples_map_info(
         object_for(triples, triples_map, &format!("{RR}logicalTable")).ok_or_else(|| {
             RuntimeError::Mapping("R2RML 结构错误：parentTriplesMap 缺少 rr:logicalTable".into())
         })?;
-    validate_sql_version(triples, logical_table)?;
     let source = literal_for(triples, logical_table, &format!("{RR}sqlQuery"))
         .or_else(|| {
             literal_for(triples, logical_table, &format!("{RR}tableName"))

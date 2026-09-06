@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d008-ref-object-map-without-join",
+  "mapping_behavior": "ref-object map without join condition",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D008/{create.sql,r2rmlb.ttl}",
+  "query": "materialize default graph as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "95eeae44b9132c9f2ab5f393404611c94a3b5c2f58b99b102af8d7b78226d1e0",
+    "rtop_raw": "dd2d29b0ff02971892d1ff7bd343d0d0d956245cc1ad795bb8c7696c5689d306",
+    "normalized": "bc96fb41d707d01dfc3419f32a64fab11df692dc3cce387ae932016977856d82"
+  }
+}

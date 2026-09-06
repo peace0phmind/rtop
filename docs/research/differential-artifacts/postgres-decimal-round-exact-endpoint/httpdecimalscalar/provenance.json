@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-decimal-round-scalar-endpoint",
+  "mapping_behavior": "PostgreSQL decimal arithmetic and positive/negative scalar ROUND endpoint results",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "tests/compat/postgres-http/{algebra-init.sql,mapping-algebra-bag.obda,decimal-round.rq}",
+  "query": "tests/compat/postgres-http/decimal-round.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "6021a034f7b425a17a354f4a53a73005f268627790312fc4cf9e4cea9c657dc3",
+    "rtop_raw": "d0e4b0980fa4797743e585efc5763fccfe58d1e96d1e39c1f193290a518c4b6f",
+    "normalized": "21f9aeb281ee8b9f3aa238aa27c001ec55ba4a4b9723e7a7c8c1689e87b929bb"
+  }
+}

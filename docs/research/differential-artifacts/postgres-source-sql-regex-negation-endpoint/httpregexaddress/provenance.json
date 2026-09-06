@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-httpregexaddress-endpoint",
+  "mapping_behavior": "PostgreSQL source SQL case-insensitive regex and negated regex preserve RDF bindings through the endpoint",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/docker-tests/src/test/{java/it/unibz/inf/ontop/docker/postgres/RegexPostgresSQLTest.java,resources/pgsql/regex/stockexchangeRegex.obda}; tests/compat/postgres-expressions/{init.sql,regex-address.rq,regex-person.rq}",
+  "query": "tests/compat/postgres-expressions/regex-address.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "98ee4958cf9228bbc8f04603cdcaec05b53c1a245e3e200da49ea9382fadd736",
+    "rtop_raw": "d4f60dcc0c662c04e9e2db28c9373df783e8deeaa9278dde64b32da3f3ed3dd6",
+    "normalized": "7506cfd4f4568bc85b22d8b7bc1ac9d9458ce55b43dd2ccdb5dd780defcad897"
+  }
+}

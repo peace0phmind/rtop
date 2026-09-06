@@ -1,0 +1,1 @@
+{"format":"npd-postgres-endpoint-sql-oracle","baseline_has_no_isomorphic_intent_service":true,"rtop_gate_passed":true,"bgp_ids":[20756,20764,20772],"optional":{"20756":null,"20980":"2012-07-04"},"agent_entailment":20756,"request_timeout_seconds":30}

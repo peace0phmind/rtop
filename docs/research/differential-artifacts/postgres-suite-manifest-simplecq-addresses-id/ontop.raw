@@ -1,0 +1,39 @@
+{
+  "head" : {
+    "vars" : [
+      "x",
+      "id",
+      "country",
+      "state",
+      "number"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#address-992"
+        },
+        "id" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "992"
+        },
+        "country" : {
+          "type" : "literal",
+          "value" : "Italy"
+        },
+        "state" : {
+          "type" : "literal",
+          "value" : "Bolzano"
+        },
+        "number" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "3"
+        }
+      }
+    ]
+  }
+}

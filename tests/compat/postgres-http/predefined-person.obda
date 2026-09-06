@@ -1,0 +1,5 @@
+[MappingDeclaration] @collection [[
+mappingId person-type
+target <https://example.test/person/{id}> <https://example.test/type> <https://example.test/Person> .
+source SELECT id FROM algebra_people
+]]

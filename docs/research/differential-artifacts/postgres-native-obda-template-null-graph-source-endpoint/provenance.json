@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-native-obda-template-null-graph-source-endpoint",
+  "mapping_behavior": "PostgreSQL native OBDA preserves language and string RDF terms, omits NULL source values, exposes a named graph through FROM, and distinguishes reader failures from source execution failures",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下五组独立 Ontop-vs-rtop native OBDA/dataset 差分结果一致；本目录仅固定组成原始输出哈希。",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "mapping/sql/all/src/test/resources/mistake/{invalid-sql1.obda,missing-target-term.obda,correct.obda}; tests/compat/postgres-http/{mapping-algebra-bag.obda,algebra-init.sql,native-obda-terms-null.rq,dataset-graph.rq}",
+  "query": "native-obda-terms-null.rq；runtime-source.rq；CLI materialize reader/runtime rejection；dataset-graph.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {"ontop": "Java 17 container CLI/endpoint", "rtop": "Rust host CLI/endpoint"},
+  "component_artifacts": [
+    "docs/research/differential-artifacts/postgres-native-obda-terms-null-endpoint/provenance.json",
+    "docs/research/differential-artifacts/postgres-native-obda-invalid-source-sql-endpoint/provenance.json",
+    "docs/research/differential-artifacts/postgres-native-obda-reader-missing-target/provenance.json",
+    "docs/research/differential-artifacts/postgres-native-obda-runtime-source-relation-error/provenance.json",
+    "docs/research/differential-artifacts/postgres-dataset-from-named-graph-endpoint/provenance.json"
+  ],
+  "sha256": {
+    "ontop_raw": "680281ee91972ca6022b15aae489e70ef091809dd9896a6bf1764eebdcd5a0c3",
+    "rtop_raw": "ee39e860e5fe42dbfb84c0eab1e556371a8d02e29cf96b7aef723e1041fd2fc2",
+    "normalized": "ae76c6fa9bded9c2226bd225d22cef88aca01fddc94fddcd78f67e0f62f42823"
+  }
+}

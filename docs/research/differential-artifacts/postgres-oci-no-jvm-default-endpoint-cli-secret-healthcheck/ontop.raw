@@ -1,0 +1,1 @@
+{"baseline":"5ec07573b18513f33dfcd59ac45fe26a81f9cdbd","scope":"OCI delivery","result":"固定 Ontop Java 源码树没有与 rtop Dockerfile 同构的 OCI runtime artifact；此交付原子只保留 PostgreSQL 可观察 gate，不能宣称 Java 镜像比较。"}

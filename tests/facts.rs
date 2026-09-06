@@ -1,4 +1,6 @@
-use rtop::{parse_nquads, parse_rdf_xml, parse_turtle, RdfTerm};
+use rtop::{
+    parse_nquads, parse_rdf_xml, parse_turtle, validate_static_inputs, KnowledgeGraphSpec, RdfTerm,
+};
 
 #[test]
 fn preserves_blank_nodes_languages_and_datatypes_from_turtle_facts() {
@@ -38,6 +40,31 @@ fn classifies_malformed_turtle_facts() {
         format!("{}", parse_turtle(b"@prefix : <bad", None).unwrap_err())
             .starts_with("invalid-facts:")
     );
+}
+
+#[test]
+fn rejects_malformed_turtle_facts_during_endpoint_static_input_validation() {
+    let dir = tempfile::tempdir().unwrap();
+    let mapping = dir.path().join("mapping.obda");
+    let facts = dir.path().join("facts.ttl");
+    std::fs::write(&mapping, "[MappingDeclaration] @collection [[\nmappingId m\ntarget <https://example.test/s> <https://example.test/p> <https://example.test/o> .\nsource SELECT 1\n]]\n").unwrap();
+    std::fs::write(
+        &facts,
+        "@prefix : <https://example.test/> .\n<https://example.test/s> :p \"broken .\n",
+    )
+    .unwrap();
+    let spec = KnowledgeGraphSpec {
+        mapping_file: mapping,
+        facts_file: Some(facts),
+        facts_format: Some("turtle".into()),
+        facts_base_iri: None,
+        ontology_file: None,
+        xml_catalog_file: None,
+    };
+    assert!(matches!(
+        validate_static_inputs(&spec, true, false),
+        Err(rtop::RuntimeError::Facts(_))
+    ));
 }
 
 #[test]

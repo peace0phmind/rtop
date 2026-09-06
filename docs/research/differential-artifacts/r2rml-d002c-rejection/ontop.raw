@@ -1,0 +1,32 @@
+java.lang.RuntimeException: it.unibz.inf.ontop.exception.InvalidMappingSourceQueriesException: The placeholder(s) "IDs" in the target do(es) not occur in source query of the mapping assertion
+[id: mapping--564255819
+target atom: triple(s, p, o) with s/RDF(http://example.com/{}/{}(TmpToTEXT("ID"),TmpToTEXT("Name")),IRI), p/<http://example.com/id>, o/RDF(TmpToTEXT("IDs"),rdfs:Literal)
+source query: SELECT * FROM "Student"]
+	at it.unibz.inf.ontop.cli.OntopMaterialize.createMaterializer(OntopMaterialize.java:127)
+	at it.unibz.inf.ontop.cli.OntopMaterialize.run(OntopMaterialize.java:104)
+	at it.unibz.inf.ontop.cli.Ontop.main(Ontop.java:19)
+Caused by: it.unibz.inf.ontop.exception.InvalidMappingSourceQueriesException: The placeholder(s) "IDs" in the target do(es) not occur in source query of the mapping assertion
+[id: mapping--564255819
+target atom: triple(s, p, o) with s/RDF(http://example.com/{}/{}(TmpToTEXT("ID"),TmpToTEXT("Name")),IRI), p/<http://example.com/id>, o/RDF(TmpToTEXT("IDs"),rdfs:Literal)
+source query: SELECT * FROM "Student"]
+	at it.unibz.inf.ontop.spec.mapping.pp.impl.SQLPPMappingConverterImpl.convert(SQLPPMappingConverterImpl.java:130)
+	at it.unibz.inf.ontop.spec.mapping.pp.impl.SQLPPMappingConverterImpl.convert(SQLPPMappingConverterImpl.java:93)
+	at it.unibz.inf.ontop.spec.mapping.impl.SQLMappingExtractor.convert(SQLMappingExtractor.java:247)
+	at it.unibz.inf.ontop.spec.mapping.impl.SQLMappingExtractor.convert(SQLMappingExtractor.java:218)
+	at it.unibz.inf.ontop.spec.mapping.impl.SQLMappingExtractor.convert(SQLMappingExtractor.java:187)
+	at it.unibz.inf.ontop.spec.mapping.impl.SQLMappingExtractor.convertPPMapping(SQLMappingExtractor.java:153)
+	at it.unibz.inf.ontop.spec.mapping.impl.SQLMappingExtractor.extract(SQLMappingExtractor.java:108)
+	at it.unibz.inf.ontop.spec.impl.DefaultOBDASpecificationExtractor.extract(DefaultOBDASpecificationExtractor.java:51)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingConfigurationImpl.loadSpecification(OntopMappingConfigurationImpl.java:130)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingSQLConfigurationImpl.loadSpecification(OntopMappingSQLConfigurationImpl.java:93)
+	at it.unibz.inf.ontop.injection.impl.OntopMappingSQLAllConfigurationImpl.loadSpecification(OntopMappingSQLAllConfigurationImpl.java:55)
+	at it.unibz.inf.ontop.injection.impl.OntopSQLOWLAPIConfigurationImpl.loadOBDASpecification(OntopSQLOWLAPIConfigurationImpl.java:42)
+	at it.unibz.inf.ontop.injection.impl.OntopOBDAConfigurationImpl.loadSpecification(OntopOBDAConfigurationImpl.java:44)
+	at it.unibz.inf.ontop.materialization.impl.OnePassRDFMaterializer.<init>(OnePassRDFMaterializer.java:62)
+	at it.unibz.inf.ontop.materialization.impl.Materializers.create(Materializers.java:14)
+	at it.unibz.inf.ontop.rdf4j.materialization.impl.DefaultRDF4JMaterializer.<init>(DefaultRDF4JMaterializer.java:40)
+	at it.unibz.inf.ontop.rdf4j.materialization.RDF4JMaterializer.defaultMaterializer(RDF4JMaterializer.java:36)
+	at it.unibz.inf.ontop.cli.OntopMaterialize.createMaterializer(OntopMaterialize.java:119)
+	... 2 more
+Exception in thread "main" java.lang.AssertionError
+	at it.unibz.inf.ontop.cli.Ontop.main(Ontop.java:31)

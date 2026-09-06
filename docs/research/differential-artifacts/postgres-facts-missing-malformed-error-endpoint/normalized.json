@@ -1,0 +1,10 @@
+{
+  "format": "facts-endpoint-startup-rejection",
+  "cases": [
+    "missing",
+    "malformed"
+  ],
+  "ontop_category": "FactsException",
+  "rtop_category": "invalid-facts",
+  "both_rejected_before_health": true
+}

@@ -1,0 +1,8 @@
+{
+  "aggregation": "rtop 原始输出索引；每个 sha256 对应下列已存档的独立 PostgreSQL 差分 artifact/rtop.raw",
+  "components": [
+    {"case_id":"differential-r2rml-d014-ref-object-map-and-inline-terms","sha256":"53346b4815b9eb6b89fb6cee000bbb22ca37071695873ce03c20a56dc09c77a6"},
+    {"case_id":"differential-r2rml-d008-template-named-graph","sha256":"e413feff79d7f14cde953da51dc76f0a259f852677db52be27bd31eacc210253"},
+    {"case_id":"differential-r2rml-d007-reject-literal-column-graph","sha256":"4904f9e20ca7f717c69621c98f395ed4c310ae32b84110d4db279f1bdf7b5f64"}
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d012-default-mapping-no-primary-key",
+  "mapping_behavior": "no-primary-key tables mapped to blank-node default mapping",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D012/{create.sql,r2rmle.ttl}",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "pgcrypto",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "4e163e0a0881018f123e3339d990eae0b23f2903cda8fea0a153bbc2277a9693",
+    "rtop_raw": "2f4681f8f2c48394dc07ffe11f66966f2ceb3922c0e4a87b5a408b376782cf63",
+    "normalized": "27279fc800c50ed4475c2658e442500a13d82c27d5863cb376a7ffb35d8dda60"
+  }
+}

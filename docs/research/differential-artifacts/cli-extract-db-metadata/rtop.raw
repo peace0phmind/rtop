@@ -1,0 +1,98 @@
+{
+  "relations": [
+    {
+      "uniqueConstraints": [
+        {
+          "name": "query_named_people_pkey",
+          "determinants": [
+            "\"id\""
+          ],
+          "isPrimaryKey": true
+        }
+      ],
+      "foreignKeys": [],
+      "columns": [
+        {
+          "name": "\"id\"",
+          "isNullable": false,
+          "datatype": "INTEGER"
+        },
+        {
+          "name": "\"name\"",
+          "isNullable": false,
+          "datatype": "TEXT"
+        }
+      ],
+      "name": [
+        "\"query_named_people\""
+      ],
+      "otherNames": [
+        [
+          "\"public\"",
+          "\"query_named_people\""
+        ]
+      ]
+    },
+    {
+      "uniqueConstraints": [
+        {
+          "name": "query_nullable_people_pkey",
+          "determinants": [
+            "\"id\""
+          ],
+          "isPrimaryKey": true
+        }
+      ],
+      "foreignKeys": [],
+      "columns": [
+        {
+          "name": "\"id\"",
+          "isNullable": false,
+          "datatype": "INTEGER"
+        },
+        {
+          "name": "\"name\"",
+          "isNullable": true,
+          "datatype": "TEXT"
+        }
+      ],
+      "name": [
+        "\"query_nullable_people\""
+      ],
+      "otherNames": [
+        [
+          "\"public\"",
+          "\"query_nullable_people\""
+        ]
+      ]
+    },
+    {
+      "uniqueConstraints": [
+        {
+          "name": "query_people_pkey",
+          "determinants": [
+            "\"id\""
+          ],
+          "isPrimaryKey": true
+        }
+      ],
+      "foreignKeys": [],
+      "columns": [
+        {
+          "name": "\"id\"",
+          "isNullable": false,
+          "datatype": "INTEGER"
+        }
+      ],
+      "name": [
+        "\"query_people\""
+      ],
+      "otherNames": [
+        [
+          "\"public\"",
+          "\"query_people\""
+        ]
+      ]
+    }
+  ]
+}

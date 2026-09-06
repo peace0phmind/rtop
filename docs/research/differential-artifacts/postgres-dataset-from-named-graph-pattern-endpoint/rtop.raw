@@ -1,0 +1,1 @@
+{"head":{"vars":["person","name"]},"results":{"bindings":[{"name":{"type":"literal","value":"Ada"},"person":{"type":"uri","value":"https://example.test/person/1"}}]}}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-dataset-graph-service-boundary-endpoint",
+  "mapping_behavior": "PostgreSQL FROM/FROM NAMED named graph visibility and unsupported SERVICE boundary",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边 HTTP JSON 结果及 SERVICE HTTP 500 未支持边界一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "tests/compat/postgres-http/{algebra-init.sql,mapping-algebra-bag.obda,dataset-graph.rq,dataset-named-graph.rq}; inline SERVICE query",
+  "query": "FROM, FROM NAMED/GRAPH, and SERVICE SELECT",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container endpoint",
+    "rtop": "Rust host endpoint"
+  },
+  "sha256": {
+    "ontop_raw": "c98e4e8a8deab02bc92d7bdb53a3af75ecb3134389bfa1324e048cdb99c3ee45",
+    "rtop_raw": "e738a4af9ac0f158ee42788a5093f616a072efe51f75f77d73fe5f3c06da1891",
+    "normalized": "87463fdfbe99cf52be40195ed7bfcadd30119a1ade6865c6de81f460fefad8f6"
+  }
+}

@@ -1,0 +1,1 @@
+{"format":"postgres-driver-cancellation-lifecycle","baseline_has_no_isomorphic_rust_driver_api":true,"rtop_gate_passed":true,"diagnostic":"query-cancelled","connection_reuse":{"query":"SELECT 7","result":"7"}}

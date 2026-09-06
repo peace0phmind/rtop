@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-ontology-domain-range-facts-endpoint",
+  "mapping_behavior": "OWL 2 QL teaches domain and range axioms infer Teacher and Course from endpoint facts",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "binding/rdf4j/src/test/{java/it/unibz/inf/ontop/rdf4j/repository/UniversityTBoxFactTest.java,resources/tbox-facts/{university.sql,university.obda,university-complete.ttl}}; tests/compat/postgres-ontology/{endpoint-imports-university.ttl,facts.ttl,domain-range-facts.rq}",
+  "query": "tests/compat/postgres-ontology/domain-range-facts.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "a944d549d5484ca10f28b93c969726d77a92592f8fdbe2686f66fb96b5e09695",
+    "rtop_raw": "f6a668f098c0e8aa1737488d12649600154b537f59ebdc9659a5d01debf80855",
+    "normalized": "08b48f296200568291bfc8774bfa3009a1dbb27f5840dce3eac4d9dd7f9dcac2"
+  }
+}

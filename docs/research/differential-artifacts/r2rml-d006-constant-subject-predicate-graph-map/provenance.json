@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d006-constant-subject-predicate-graph-map",
+  "mapping_behavior": "constant subject, predicate, object, and named graph maps",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D006/{create.sql,r2rmla.ttl}",
+  "query": "/home/mind/top/rtop/tests/compat/postgres-d006/differential-a.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "a76472c3b1e975af767fdd8401545c559aba925808563f708241167bb34a353f",
+    "rtop_raw": "57ed61d3b50cc296b39fe35481b4cb92a4285b1a122f1e5221d7b2bdd4c16d96",
+    "normalized": "618956e61ee076eb1cd5461f407673fa05d71bbdeba7d074c356c43571f55682"
+  }
+}

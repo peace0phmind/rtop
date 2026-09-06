@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-native-obda-terms-null-endpoint",
+  "mapping_behavior": "Native OBDA preserves language RDF terms and omits NULL source values through PostgreSQL endpoint",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "tests/compat/postgres-http/{mapping-algebra-bag.obda,algebra-init.sql,native-obda-terms-null.rq}",
+  "query": "tests/compat/postgres-http/native-obda-terms-null.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "b0f2cbecf73fa891638f64e3fca162843783df846773254631294a6382950797",
+    "rtop_raw": "d3b87dc5cd92ce57ec41f868726591e4cd9d227997127919f5260069e063379b",
+    "normalized": "a57f58aaa9c471a6fc48f7f4d9d575f7160899937a61b7b19cc5de4429c0d254"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-constraint-left-join-aggregate-endpoint",
+  "mapping_behavior": "PostgreSQL constraints preserve OPTIONAL unbound bindings, foreign-key LEFT JOIN bags, and aggregate mapping terms through the endpoint",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下三组独立 Ontop-vs-rtop endpoint 差分结果一致；本目录仅固定组成原始输出哈希。",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "ConstraintPostgreSQLTest professors fixture；AbstractLeftJoinProfTest redundant_join fixture；tests/compat/postgres-aggregates endpoint queries",
+  "query": "optional-simple-nickname.rq；course-join-left-2.rq；aggregation-mapping-prof-student-count-property.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {"ontop": "Java 17 container endpoint", "rtop": "Rust host endpoint"},
+  "component_artifacts": [
+    "docs/research/differential-artifacts/postgres-prof-optional-nickname-endpoint/provenance.json",
+    "docs/research/differential-artifacts/postgres-prof-fk-left-join-bag-endpoint/provenance.json",
+    "docs/research/differential-artifacts/postgres-prof-aggregate-mapping-endpoint/provenance.json"
+  ],
+  "sha256": {
+    "ontop_raw": "b39fa80d662962a3d3368d748c3cf321075f25a47be85b054d45d3bcc1a5069a",
+    "rtop_raw": "bd07a95da546d94fe7a859df43d95f9a58affa03c9df203d9775e0145a738345",
+    "normalized": "ac0b76c4424779431a019ed881186853364e593a7e8320fa367a5b7fa9c5312b"
+  }
+}

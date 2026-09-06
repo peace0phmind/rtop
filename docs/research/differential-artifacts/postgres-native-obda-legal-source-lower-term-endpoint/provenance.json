@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-native-obda-legal-source-lower-term-endpoint",
+  "mapping_behavior": "PostgreSQL lower() native source SQL preserves the MovieOntology title RDF literal through the endpoint",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/docker-tests/src/test/resources/pgsql/lowerMovie.obda; tests/compat/postgres-identifiers/lower-movie-init.sql; LowerMovieTest PostgreSQL fixture",
+  "query": "tests/compat/postgres-identifiers/lower-title.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "b7d02d62051850f9ff09022d7a2ff1606be2116447d6f75619187cf22175cabd",
+    "rtop_raw": "b9aa66dc6d170e10275c4744f57c8ae3440080ba198fdd2320017368c92a2f32",
+    "normalized": "eee417250901b7825c53aa6dae7c2b47525cb080d7f596130813d29b4a95315b"
+  }
+}

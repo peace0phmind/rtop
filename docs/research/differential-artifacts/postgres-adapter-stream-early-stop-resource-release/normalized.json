@@ -1,0 +1,1 @@
+{"format":"postgres-driver-stream-lifecycle","baseline_has_no_isomorphic_rust_driver_api":true,"rtop_gate_passed":true,"rows_observed":1,"early_stop":true,"connection_reuse":{"query":"SELECT 42","result":"42"}}

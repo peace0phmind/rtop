@@ -1,0 +1,16 @@
+{
+  "format": "direct-mapping-http-suite",
+  "cases": [
+    {
+      "case_id": "differential-direct-mapping-d009-pk-fk-null-http",
+      "status": "passed",
+      "mapping_behavior": "Direct Mapping HTTP D009 primary key, foreign key, and NULL omission"
+    },
+    {
+      "case_id": "differential-direct-mapping-d010-percent-encoding-http",
+      "status": "passed",
+      "mapping_behavior": "Direct Mapping HTTP D010 percent-encoded relation and column identifiers"
+    }
+  ],
+  "all_passed": true
+}

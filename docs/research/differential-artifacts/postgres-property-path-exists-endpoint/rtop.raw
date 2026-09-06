@@ -1,0 +1,3 @@
+### httppathexists
+{"head":{"vars":["person","friend"]},"results":{"bindings":[{"friend":{"type":"uri","value":"https://example.test/person/3"},"person":{"type":"uri","value":"https://example.test/person/1"}},{"friend":{"type":"uri","value":"https://example.test/person/3"},"person":{"type":"uri","value":"https://example.test/person/1"}}]}}### httppathnotexists
+500

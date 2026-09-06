@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d020-iri-template-component-encoding",
+  "mapping_behavior": "IRI template component percent-encoding",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D020/{create.sql,r2rmla.ttl}",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "be74c88205ea9de436149251525e11d7e3cd0c8945decc2872d2b55d49802a06",
+    "rtop_raw": "1ddcccc56713cab08a4195b1c85d55d34936a6cbb2ac91f80c8bdb28745d6f4e",
+    "normalized": "b77419464c723fba2d25a0a436b35b72230561582066deaa7131a20c8981f41a"
+  }
+}

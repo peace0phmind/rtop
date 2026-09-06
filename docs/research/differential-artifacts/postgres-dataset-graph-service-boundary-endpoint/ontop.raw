@@ -1,0 +1,46 @@
+### httpdatasetdefault
+{
+  "head" : {
+    "vars" : [
+      "person",
+      "name"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "person" : {
+          "type" : "uri",
+          "value" : "https://example.test/person/1"
+        },
+        "name" : {
+          "type" : "literal",
+          "value" : "Ada"
+        }
+      }
+    ]
+  }
+}### httpdatasetnamed
+{
+  "head" : {
+    "vars" : [
+      "person",
+      "name"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "person" : {
+          "type" : "uri",
+          "value" : "https://example.test/person/1"
+        },
+        "name" : {
+          "type" : "literal",
+          "value" : "Ada"
+        }
+      }
+    ]
+  }
+}### httpservice
+500

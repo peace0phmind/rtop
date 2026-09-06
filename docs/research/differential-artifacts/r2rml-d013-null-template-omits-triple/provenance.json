@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d013-null-template-omits-triple",
+  "mapping_behavior": "NULL template column omits RDF triple",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D013/{create.sql,r2rmla.ttl}",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "085ae78666f6042fd3d5d2070c7e573637656c4dbd1b8b6ee77821b4aaf7cacd",
+    "rtop_raw": "085ae78666f6042fd3d5d2070c7e573637656c4dbd1b8b6ee77821b4aaf7cacd",
+    "normalized": "36c2c485b01fd878b23d85fdf907c43a92eafc116c47c03b3afa832ad6dc3a9e"
+  }
+}

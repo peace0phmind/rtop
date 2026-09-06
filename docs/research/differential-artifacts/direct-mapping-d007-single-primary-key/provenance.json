@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-direct-mapping-d007-single-primary-key",
+  "mapping_behavior": "Direct Mapping integer primary-key IRI and text column",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D007/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "5b1d523b0ac832f5a2fac5c032b0f3e3a294572bd66ed55716207c7dabec6048",
+    "rtop_raw": "5b1d523b0ac832f5a2fac5c032b0f3e3a294572bd66ed55716207c7dabec6048",
+    "normalized": "7338d16694808ea3388b902b75d55971a7da31caaa04c7063780bdb580a481d0"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "format": "http-result-formats",
+  "select_formats": [
+    "application/sparql-results+json",
+    "application/sparql-results+xml",
+    "text/csv",
+    "text/tab-separated-values"
+  ],
+  "construct_format": "application/n-triples",
+  "unsupported_accept_status": 406,
+  "person": "https://example.test/person/1",
+  "name": "Ada"
+}

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-cli-v1-to-v3-native-obda",
+  "mapping_behavior": "v1-to-v3 rejects legacy native SourceDeclaration containing sourceUri",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopMappingV1ToV3.java; tests/compat/postgres-query-kinds/{init.sql,v1-to-v3.obda}; each CLI executes v1-to-v3 directly",
+  "query": "v1-to-v3 rejects legacy sourceUri input",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "d41d5614cc77187baa5828ec8c01eb2dbbc59a7ba0a34523f42ea1a82774bd88",
+    "rtop_raw": "0f23dc45657dc850f9d277f3266fd48830c00dc8794f6926bb7d14264e30a499",
+    "normalized": "8fed29672941c2ca46981e94808b878f1de220b35955a447b12a65cc3947f0c0"
+  }
+}

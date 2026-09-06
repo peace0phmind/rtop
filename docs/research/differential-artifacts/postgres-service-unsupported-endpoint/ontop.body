@@ -1,0 +1,6 @@
+it.unibz.inf.ontop.exception.OntopUnsupportedInputQueryException: Unsupported SPARQL operator: Service
+   Var (name=_const_bc73a97_uri, value=http://example.invalid/sparql, anonymous)
+   StatementPattern (new scope)
+      Var (name=person)
+      Var (name=p)
+      Var (name=o)

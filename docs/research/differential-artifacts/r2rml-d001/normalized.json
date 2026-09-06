@@ -1,0 +1,19 @@
+{
+  "vars": [
+    "name",
+    "student"
+  ],
+  "ordered": false,
+  "rows": [
+    {
+      "name": {
+        "kind": "literal",
+        "value": "Venus"
+      },
+      "student": {
+        "kind": "iri",
+        "value": "http://example.com/Venus"
+      }
+    }
+  ]
+}

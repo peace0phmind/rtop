@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-r2rml-term-map-join-graph-endpoint",
+  "mapping_behavior": "聚合 D014b RefObjectMap join/blank node、D008a template graphMap 与 D007h literal graphMap 拒绝",
+  "status": "passed",
+  "status_reason": "三个固定 PostgreSQL 17 双边差分均通过；本目录是引用原始输出哈希的聚合索引，不能把任一单项视为覆盖全部行为。",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D014/{create.sql,r2rmlb.ttl}; D008/{create.sql,r2rmla.ttl}; D007/{create.sql,r2rmlh.ttl}",
+  "query": "D014b、D007h materialize dataset as N-Quads；D008a SPARQL GRAPH term bindings",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "component_artifacts": [
+    "docs/research/differential-artifacts/r2rml-d014-ref-object-map-and-inline-terms/provenance.json",
+    "docs/research/differential-artifacts/r2rml-d008-template-named-graph/provenance.json",
+    "docs/research/differential-artifacts/r2rml-d007-reject-literal-column-graph/provenance.json"
+  ],
+  "sha256": {
+    "ontop_raw": "ff56d41dbd1eb3b43f715507e537aafc0bfc1aba2d04d511f1624a91c8fd3357",
+    "rtop_raw": "0ef63288b8bf114fcfd4aab455b797a5a42e4c61f19e5b75863f46172a16f157",
+    "normalized": "46a5e5f9f36c6f3cdfd1d43a4112562979ff349b3508a9e7b1de75996d19c614"
+  }
+}

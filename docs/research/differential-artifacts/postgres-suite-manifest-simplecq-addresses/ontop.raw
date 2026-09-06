@@ -1,0 +1,241 @@
+{
+  "head" : {
+    "vars" : [
+      "x",
+      "id",
+      "street",
+      "city",
+      "country",
+      "state",
+      "number"
+    ]
+  },
+  "results" : {
+    "bindings" : [
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#address-998"
+        },
+        "id" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "998"
+        },
+        "street" : {
+          "type" : "literal",
+          "value" : "Jalan Madura 12"
+        },
+        "city" : {
+          "type" : "literal",
+          "value" : "Jakarta"
+        },
+        "country" : {
+          "type" : "literal",
+          "value" : "Indonesia"
+        },
+        "state" : {
+          "type" : "literal",
+          "value" : "Jakarta"
+        },
+        "number" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "245"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#address-991"
+        },
+        "id" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "991"
+        },
+        "street" : {
+          "type" : "literal",
+          "value" : "Road street"
+        },
+        "city" : {
+          "type" : "literal",
+          "value" : "Chonala"
+        },
+        "country" : {
+          "type" : "literal",
+          "value" : "Mexico"
+        },
+        "state" : {
+          "type" : "literal",
+          "value" : "Veracruz"
+        },
+        "number" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "24"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#address-992"
+        },
+        "id" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "992"
+        },
+        "street" : {
+          "type" : "literal",
+          "value" : "Via Marconi"
+        },
+        "city" : {
+          "type" : "literal",
+          "value" : "Bolzano"
+        },
+        "country" : {
+          "type" : "literal",
+          "value" : "Italy"
+        },
+        "state" : {
+          "type" : "literal",
+          "value" : "Bolzano"
+        },
+        "number" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "3"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#address-995"
+        },
+        "id" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "995"
+        },
+        "street" : {
+          "type" : "literal",
+          "value" : "Huberg Strasse"
+        },
+        "city" : {
+          "type" : "literal",
+          "value" : "Bolzano"
+        },
+        "country" : {
+          "type" : "literal",
+          "value" : "Italy"
+        },
+        "state" : {
+          "type" : "literal",
+          "value" : "Bolzano"
+        },
+        "number" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "3"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#address-996"
+        },
+        "id" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "996"
+        },
+        "street" : {
+          "type" : "literal",
+          "value" : "Via Piani di Bolzano"
+        },
+        "city" : {
+          "type" : "literal",
+          "value" : "Marconi"
+        },
+        "country" : {
+          "type" : "literal",
+          "value" : "Italy"
+        },
+        "state" : {
+          "type" : "literal",
+          "value" : "Trentino"
+        },
+        "number" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "7"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#address-993"
+        },
+        "id" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "993"
+        },
+        "street" : {
+          "type" : "literal",
+          "value" : "Romer Street"
+        },
+        "city" : {
+          "type" : "literal",
+          "value" : "Malaga"
+        },
+        "country" : {
+          "type" : "literal",
+          "value" : "Spain"
+        },
+        "state" : {
+          "type" : "literal",
+          "value" : "Malaga"
+        },
+        "number" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "32"
+        }
+      },
+      {
+        "x" : {
+          "type" : "uri",
+          "value" : "http://www.owl-ontologies.com/Ontology1207768242.owl#address-997"
+        },
+        "id" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "997"
+        },
+        "street" : {
+          "type" : "literal",
+          "value" : "Samara road"
+        },
+        "city" : {
+          "type" : "literal",
+          "value" : "Puebla"
+        },
+        "country" : {
+          "type" : "literal",
+          "value" : "Mexico"
+        },
+        "state" : {
+          "type" : "literal",
+          "value" : "Puebla"
+        },
+        "number" : {
+          "datatype" : "http://www.w3.org/2001/XMLSchema#integer",
+          "type" : "literal",
+          "value" : "9976"
+        }
+      }
+    ]
+  }
+}

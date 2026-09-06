@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-postgres-prof-optional-nickname-endpoint",
+  "mapping_behavior": "ConstraintPostgreSQL professors primary key and nullable nickname preserve OPTIONAL unbound bindings through the endpoint",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/lightweight-tests/src/test/{java/it/unibz/inf/ontop/docker/lightweight/{AbstractConstraintTest,postgresql/ConstraintPostgreSQLTest}.java,resources/prof/{prof.obda,prof.owl}}; tests/compat/postgres-aggregates/{init.sql,optional-simple-nickname.rq}",
+  "query": "tests/compat/postgres-aggregates/optional-simple-nickname.rq",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "5972873fb8392f4209ec2a8e181178f7be83f8e11b9a85182cea6bcc5c0d2915",
+    "rtop_raw": "8208d9e91c25c6ba05a5e9b85426761d347198ca6ed49be8af26a0c8942044a5",
+    "normalized": "2f1cc6d8d93a589c8ef497a9ee5cbb639525a272d5cb487d12e14ffea5d350e3"
+  }
+}

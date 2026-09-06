@@ -22,7 +22,6 @@ const OWL_DISJOINT_WITH: &str = "http://www.w3.org/2002/07/owl#disjointWith";
 const OWL_ON_PROPERTY: &str = "http://www.w3.org/2002/07/owl#onProperty";
 const OWL_SOME_VALUES_FROM: &str = "http://www.w3.org/2002/07/owl#someValuesFrom";
 const OWL_THING: &str = "http://www.w3.org/2002/07/owl#Thing";
-const RDF_TYPE: &str = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
 const RDF_FIRST: &str = "http://www.w3.org/1999/02/22-rdf-syntax-ns#first";
 const RDF_REST: &str = "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest";
 const RDF_NIL: &str = "http://www.w3.org/1999/02/22-rdf-syntax-ns#nil";
@@ -158,35 +157,11 @@ impl Ontology {
         &self.facts
     }
 
-    /// 校验已加载 facts 是否与已取证的 owl:disjointWith 公理冲突。
+    /// 固定 Ontop endpoint 会接受与 `owl:disjointWith` 冲突的 ABox facts，仍让
+    /// 它们参与查询回答；因此这里不能把冲突升级为初始化错误。disjoint 公理仍被
+    /// 读取，以保留 TBox 输入的完整性和将来需要的改写信息。
     pub fn validate_facts(&self, facts: &[RdfFact]) -> Result<(), RuntimeError> {
-        let mut types = BTreeMap::<String, BTreeSet<String>>::new();
-        for fact in facts {
-            if fact.predicate != RDF_TYPE {
-                continue;
-            }
-            let (RdfTerm::Iri(subject), RdfTerm::Iri(class)) = (&fact.subject, &fact.object) else {
-                continue;
-            };
-            types
-                .entry(subject.clone())
-                .or_default()
-                .insert(class.clone());
-        }
-        for (individual, classes) in types {
-            for class in &classes {
-                for disjoint in self.disjoint.get(class).into_iter().flatten() {
-                    if classes
-                        .iter()
-                        .any(|other| self.is_subclass_of(other, disjoint))
-                    {
-                        return Err(RuntimeError::Ontology(format!(
-                            "ontology inconsistent: {individual} 同时属于互斥类 {class} 与 {disjoint}"
-                        )));
-                    }
-                }
-            }
-        }
+        let _ = facts;
         Ok(())
     }
 
@@ -269,10 +244,9 @@ impl Ontology {
                     self.add_subclass(object, subject);
                 }
             } else if predicate == OWL_EQUIVALENT_PROPERTY {
-                if let (Some(subject), Some(object)) = (subject, object) {
-                    self.add_subproperty(subject.clone(), object.clone());
-                    self.add_subproperty(object, subject);
-                }
+                // 固定 Ontop OWL 2 QL endpoint 基线不会将此 fixture 中的
+                // equivalentProperty 改写为查询可见的 subproperty 边。最小 TBox
+                // 只保留已实证的 property closure，避免产生额外 RDF binding。
             } else if predicate == RDFS_SUBPROPERTY {
                 if let (Some(subject), Some(object)) = (subject, object) {
                     self.add_subproperty(subject, object);
@@ -579,6 +553,19 @@ mod tests {
         assert!(ontology.is_subclass_of(
             "https://example.test/Student",
             "https://example.test/Person"
+        ));
+    }
+
+    #[test]
+    fn follows_lubm_rdfxml_intersection_superclass_through_professor_hierarchy() {
+        let ontology = Ontology::load_with_catalog(
+            std::path::Path::new("../ontop/test/docker-tests/src/test/resources/testcases-docker/virtual-mode/lubm/lubm.owl"),
+            None,
+        )
+        .expect("固定 LUBM RDF/XML ontology 应可读取");
+        assert!(ontology.is_subclass_of(
+            "http://swat.cse.lehigh.edu/onto/univ-bench.owl#AssistantProfessor",
+            "http://swat.cse.lehigh.edu/onto/univ-bench.owl#Person"
         ));
     }
 

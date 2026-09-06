@@ -1,0 +1,5 @@
+{
+  "format": "http-error",
+  "status": "400",
+  "category": "malformed-sparql"
+}

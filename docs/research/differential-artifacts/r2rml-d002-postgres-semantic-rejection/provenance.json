@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-r2rml-d002-postgres-semantic-rejection",
+  "mapping_behavior": "reject undefined SQL identifiers, unquoted identifiers, and duplicate aliases",
+  "status": "passed",
+  "status_reason": "四个固定 PostgreSQL 17 fixture 均由双方独立 CLI 拒绝",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D002/{create.sql,r2rmlc.ttl,r2rmle.ttl,r2rmlf.ttl,r2rmlh.ttl}",
+  "query": "materialize dataset as N-Quads (rejection suite)",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "09c7e2749c27d1712b65992093a568beff6bf2602537751bc4f2e3b21187a98b",
+    "rtop_raw": "dea37039aabc5fbd12eda5b6fb86cb4447fcaba4a20afa496a30dc0d5ba6c4db",
+    "normalized": "fe6475c991758e3b8aae50cd2d8f259c830f094ad65b7bdae8f161833b330b25"
+  }
+}

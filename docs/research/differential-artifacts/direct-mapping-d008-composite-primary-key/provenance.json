@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "case_id": "differential-direct-mapping-d008-composite-primary-key",
+  "mapping_behavior": "Direct Mapping composite primary-key percent-encoded IRI",
+  "status": "passed",
+  "status_reason": "固定 PostgreSQL 17 digest 下的双边结果一致",
+  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+  "fixture": "test/rdb2rdf-compliance/src/test/resources/D008/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
+  "query": "materialize dataset as N-Quads",
+  "postgres_extensions": "none",
+  "independent_processes": {
+    "ontop": "Java 17 container CLI",
+    "rtop": "Rust host CLI"
+  },
+  "sha256": {
+    "ontop_raw": "b339ec1077c78de298f2675926991fe812c5d0e939b5c7a29d1ef8c2d5c6525c",
+    "rtop_raw": "b339ec1077c78de298f2675926991fe812c5d0e939b5c7a29d1ef8c2d5c6525c",
+    "normalized": "40fc6f0f942ca59ef5d533b7eff29a87b1023ff949cea319debec36e898134fe"
+  }
+}

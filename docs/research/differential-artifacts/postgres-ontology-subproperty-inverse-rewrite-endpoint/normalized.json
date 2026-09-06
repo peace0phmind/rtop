@@ -1,0 +1,16 @@
+{
+  "format": "university-property-closure-http-suite",
+  "cases": [
+    {
+      "case_id": "differential-postgres-ontology-httpuniversitysubproperty-endpoint",
+      "status": "passed",
+      "mapping_behavior": "OWL 2 QL property closure rewrites givesLab mapping through teaches and isTaughtBy"
+    },
+    {
+      "case_id": "differential-postgres-ontology-httpuniversityinverse-endpoint",
+      "status": "passed",
+      "mapping_behavior": "OWL 2 QL property closure rewrites givesLab mapping through teaches and isTaughtBy"
+    }
+  ],
+  "all_passed": true
+}
