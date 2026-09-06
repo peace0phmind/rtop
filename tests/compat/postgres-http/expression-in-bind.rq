@@ -1,0 +1,9 @@
+SELECT ?person ?role WHERE {
+  ?person <https://example.test/type> <https://example.test/Person> .
+  FILTER(?person IN (<https://example.test/person/1>, 1 / 0))
+  OPTIONAL { ?person <https://example.test/name> ?name . }
+  FILTER(BOUND(?name))
+  BIND(CONCAT(UCASE(?name), "-", STRLEN(?name)) AS ?role)
+  FILTER(?role NOT IN ("NOPE"))
+}
+ORDER BY ?person

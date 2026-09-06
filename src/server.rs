@@ -4,18 +4,25 @@ use crate::{
 };
 use serde::Deserialize;
 use std::collections::BTreeMap;
-use std::io::{BufRead, BufReader, Read, Write};
+use std::io::{BufRead, BufReader, ErrorKind, Read, Write};
 use std::net::{TcpListener, TcpStream};
+use std::sync::{mpsc, Arc};
+use std::time::Duration;
 use uuid::Uuid;
 
 /// 启动最小 SPARQL HTTP adapter。每个请求独立创建 adapter，会话类型不会越过内核边界。
 pub fn serve(config: &str, bind: &str, development: bool) -> Result<(), RuntimeError> {
     let listener = TcpListener::bind(bind)
         .map_err(|e| RuntimeError::DataSource(format!("无法监听 {bind}：{e}")))?;
+    let config: Arc<str> = Arc::from(config);
     for stream in listener.incoming() {
         match stream {
-            Ok(mut stream) => {
-                let _ = handle(&mut stream, config, development);
+            Ok(stream) => {
+                let config = Arc::clone(&config);
+                std::thread::spawn(move || {
+                    let mut stream = stream;
+                    let _ = handle(&mut stream, &config, development);
+                });
             }
             Err(_) => continue,
         }
@@ -72,7 +79,14 @@ fn handle(stream: &mut TcpStream, config: &str, development: bool) -> std::io::R
     let response = match (path, query) {
         ("/healthz", _) => Ok(("200 OK", "text/plain", "ok".into())),
         ("/ontop/reformulate", Some(query)) if development => reformulate(config, &query),
-        ("/sparql", Some(query)) if method == "GET" || method == "POST" => execute(config, &query),
+        ("/sparql", Some(query)) if method == "GET" || method == "POST" => {
+            execute_until_disconnect(
+                config.to_owned(),
+                query,
+                accept.clone(),
+                stream.try_clone()?,
+            )
+        }
         ("/sparql", None) if method == "GET" || method == "POST" => {
             Err(RuntimeError::MalformedSparql("请求缺少 query 参数".into()))
         }
@@ -107,6 +121,49 @@ fn handle(stream: &mut TcpStream, config: &str, development: bool) -> std::io::R
     write!(stream, "HTTP/1.1 {status}\r\nContent-Type: {content_type}; charset=utf-8\r\nCache-Control: no-store\r\n{query_id}Content-Length: {}\r\nConnection: close\r\n\r\n{body}", body.len())
 }
 
+/// 查询在独立工作线程执行；连接关闭时由持有 cancel token 的监控方中断 PostgreSQL。
+/// 这样慢请求、失败请求和断开的请求都不会占用 listener 或其他请求的连接。
+fn execute_until_disconnect(
+    config: String,
+    query: String,
+    accept: String,
+    monitor: TcpStream,
+) -> Result<(&'static str, &'static str, String), RuntimeError> {
+    let (result_sender, result_receiver) = mpsc::sync_channel(1);
+    let (cancel_sender, cancel_receiver) = mpsc::sync_channel(1);
+    std::thread::spawn(move || {
+        let result = execute_cancellable(&config, &query, &accept, cancel_sender);
+        let _ = result_sender.send(result);
+    });
+
+    monitor
+        .set_nonblocking(true)
+        .map_err(|error| RuntimeError::DataSource(error.to_string()))?;
+    let cancellation = loop {
+        match result_receiver.recv_timeout(Duration::from_millis(10)) {
+            Ok(result) => return result,
+            Err(mpsc::RecvTimeoutError::Disconnected) => {
+                return Err(RuntimeError::DataSource("query-worker-disconnected".into()))
+            }
+            Err(mpsc::RecvTimeoutError::Timeout) => {}
+        }
+        let mut byte = [0_u8; 1];
+        match monitor.peek(&mut byte) {
+            Ok(0) => break cancel_receiver.recv_timeout(Duration::from_secs(1)).ok(),
+            Ok(_) => continue,
+            Err(error) if error.kind() == ErrorKind::WouldBlock => continue,
+            Err(error) => return Err(RuntimeError::DataSource(error.to_string())),
+        }
+    };
+    if let Some(cancellation) = cancellation {
+        let _ = cancellation.cancel();
+    }
+    // 客户端已不能接收响应；仍等待查询线程清理连接，避免遗留 PostgreSQL 执行单元。
+    result_receiver
+        .recv()
+        .unwrap_or_else(|_| Err(RuntimeError::DataSource("query-worker-disconnected".into())))
+}
+
 fn negotiate(
     accept: &str,
     response: (&'static str, &'static str, String),
@@ -125,45 +182,158 @@ fn negotiate(
     }
 }
 
-fn execute(
+fn execute_cancellable(
     config: &str,
     query: &str,
+    accept: &str,
+    cancellation_sender: mpsc::SyncSender<crate::QueryCancellation>,
 ) -> Result<(&'static str, &'static str, String), RuntimeError> {
     let loaded = load_configuration(config)?;
-    execute_loaded(loaded, query)
+    execute_loaded_cancellable(loaded, query, accept, cancellation_sender)
 }
 
 fn execute_loaded(
     loaded: crate::LoadedConfiguration,
     query: &str,
+    accept: &str,
 ) -> Result<(&'static str, &'static str, String), RuntimeError> {
     let source = PostgresDataSource::connect(&loaded.postgres)?;
-    let mut runtime = match loaded.direct_mapping {
+    let mut runtime = runtime_from_loaded(loaded, source)?;
+    render_query_result(runtime.query(query)?, accept)
+}
+
+fn execute_loaded_cancellable(
+    loaded: crate::LoadedConfiguration,
+    query: &str,
+    accept: &str,
+    cancellation_sender: mpsc::SyncSender<crate::QueryCancellation>,
+) -> Result<(&'static str, &'static str, String), RuntimeError> {
+    let source = PostgresDataSource::connect(&loaded.postgres)?;
+    // 无接收者表示客户端已经在建立连接期间断开；继续执行没有可观察价值。
+    if cancellation_sender.send(source.cancellation()).is_err() {
+        return Err(RuntimeError::DataSource("client-disconnected".into()));
+    }
+    let mut runtime = runtime_from_loaded(loaded, source)?;
+    render_query_result(runtime.query(query)?, accept)
+}
+
+/// 服务器入口唯一的运行时构造模块。它把 Direct Mapping 的分支留在内部，确保
+/// `/sparql`、预定义查询和 reformulation 共享同一配置语义。
+fn runtime_from_loaded(
+    loaded: crate::LoadedConfiguration,
+    source: PostgresDataSource,
+) -> Result<VkgRuntime<PostgresDataSource>, RuntimeError> {
+    match loaded.direct_mapping {
         Some(direct) => VkgRuntime::new_with_direct_mapping(
             loaded.spec,
             source,
             &direct.base_iri,
             &direct.relations,
-        )?,
-        None => VkgRuntime::new(loaded.spec, source)?,
-    };
-    Ok(match runtime.query(query)? {
-        QueryResult::Bindings(rows) => (
-            "200 OK",
-            "application/sparql-results+json",
-            bindings_json(&rows),
         ),
-        QueryResult::Boolean(value) => (
-            "200 OK",
+        None => VkgRuntime::new(loaded.spec, source),
+    }
+}
+
+fn render_query_result(
+    result: QueryResult,
+    accept: &str,
+) -> Result<(&'static str, &'static str, String), RuntimeError> {
+    Ok(match result {
+        QueryResult::Bindings(rows) => match select_media(
+            accept,
+            &[
+                "application/sparql-results+json",
+                "application/sparql-results+xml",
+                "text/csv",
+                "text/tab-separated-values",
+            ],
             "application/sparql-results+json",
-            format!("{{\"head\":{{}},\"boolean\":{value}}}"),
-        ),
-        QueryResult::Graph(facts) => (
-            "200 OK",
+        )? {
+            "application/sparql-results+json" => (
+                "200 OK",
+                "application/sparql-results+json",
+                bindings_json(&rows),
+            ),
+            "application/sparql-results+xml" => (
+                "200 OK",
+                "application/sparql-results+xml",
+                bindings_xml(&rows),
+            ),
+            "text/csv" => ("200 OK", "text/csv", bindings_delimited(&rows, ',', false)),
+            "text/tab-separated-values" => (
+                "200 OK",
+                "text/tab-separated-values",
+                bindings_delimited(&rows, '\t', true),
+            ),
+            _ => unreachable!(),
+        },
+        QueryResult::Boolean(value) => match select_media(
+            accept,
+            &[
+                "application/sparql-results+json",
+                "application/sparql-results+xml",
+                "text/csv",
+                "text/tab-separated-values",
+            ],
+            "application/sparql-results+json",
+        )? {
+            "application/sparql-results+json" => (
+                "200 OK",
+                "application/sparql-results+json",
+                format!("{{\"head\":{{}},\"boolean\":{value}}}"),
+            ),
+            "application/sparql-results+xml" => (
+                "200 OK",
+                "application/sparql-results+xml",
+                format!("<?xml version=\"1.0\"?><sparql xmlns=\"http://www.w3.org/2005/sparql-results#\"><head/><boolean>{value}</boolean></sparql>"),
+            ),
+            "text/csv" => ("200 OK", "text/csv", format!("boolean\n{value}\n")),
+            "text/tab-separated-values" => (
+                "200 OK",
+                "text/tab-separated-values",
+                format!("?boolean\n{value}\n"),
+            ),
+            _ => unreachable!(),
+        },
+        QueryResult::Graph(facts) => match select_media(
+            accept,
+            &["text/turtle", "application/n-triples"],
             "text/turtle",
-            facts.iter().map(turtle).collect::<Vec<_>>().join("\n"),
-        ),
+        )? {
+            "text/turtle" => (
+                "200 OK",
+                "text/turtle",
+                facts.iter().map(turtle).collect::<Vec<_>>().join("\n"),
+            ),
+            "application/n-triples" => (
+                "200 OK",
+                "application/n-triples",
+                facts.iter().map(turtle).collect::<Vec<_>>().join("\n"),
+            ),
+            _ => unreachable!(),
+        },
     })
+}
+
+fn select_media<'a>(
+    accept: &str,
+    supported: &'a [&'a str],
+    default: &'a str,
+) -> Result<&'a str, RuntimeError> {
+    if accept.is_empty() || accept.contains("*/*") {
+        return Ok(default);
+    }
+    for requested in accept
+        .split(',')
+        .map(|value| value.trim().split(';').next().unwrap_or_default())
+    {
+        if let Some(supported) = supported.iter().find(|supported| requested == **supported) {
+            return Ok(*supported);
+        }
+    }
+    Err(RuntimeError::NotAcceptable(
+        "请求的 Accept 不支持该结果格式".into(),
+    ))
 }
 
 fn ontology(config: &str) -> Result<(&'static str, &'static str, String), RuntimeError> {
@@ -247,7 +417,7 @@ fn predefined(
     // application/x-www-form-urlencoded POST 可在 body 提供或覆写参数。
     params.extend(form_parameters.clone());
     let query = bind_predefined_query(query, &definition.parameters, &params)?;
-    let response = execute_loaded(loaded, &query)?;
+    let response = execute_loaded(loaded, &query, accept)?;
     if accept.is_empty() || accept.contains("*/*") || accept.contains("text/turtle") {
         Ok(response)
     } else {
@@ -305,15 +475,7 @@ fn reformulate(
 ) -> Result<(&'static str, &'static str, String), RuntimeError> {
     let loaded = load_configuration(config)?;
     let source = PostgresDataSource::connect(&loaded.postgres)?;
-    let runtime = match loaded.direct_mapping {
-        Some(direct) => VkgRuntime::new_with_direct_mapping(
-            loaded.spec,
-            source,
-            &direct.base_iri,
-            &direct.relations,
-        )?,
-        None => VkgRuntime::new(loaded.spec, source)?,
-    };
+    let runtime = runtime_from_loaded(loaded, source)?;
     Ok(("200 OK", "text/plain", runtime.reformulate(query)?))
 }
 
@@ -349,6 +511,117 @@ fn bindings_json(rows: &[Binding]) -> String {
         .collect::<Vec<_>>()
         .join(",");
     format!("{{\"head\":{{\"vars\":[{head}]}},\"results\":{{\"bindings\":[{rows}]}}}}")
+}
+
+fn binding_variables(rows: &[Binding]) -> Vec<String> {
+    rows.first()
+        .map(|row| row.keys().cloned().collect())
+        .unwrap_or_default()
+}
+
+fn bindings_xml(rows: &[Binding]) -> String {
+    let variables = binding_variables(rows);
+    let head = variables
+        .iter()
+        .map(|name| format!("<variable name=\"{}\"/>", xml(name)))
+        .collect::<String>();
+    let results = rows
+        .iter()
+        .map(|row| {
+            let bindings = row
+                .iter()
+                .map(|(name, term)| {
+                    format!(
+                        "<binding name=\"{}\">{}</binding>",
+                        xml(name),
+                        term_xml(term)
+                    )
+                })
+                .collect::<String>();
+            if bindings.is_empty() {
+                "<result/>".into()
+            } else {
+                format!("<result>{bindings}</result>")
+            }
+        })
+        .collect::<String>();
+    format!("<?xml version=\"1.0\"?><sparql xmlns=\"http://www.w3.org/2005/sparql-results#\"><head>{head}</head><results>{results}</results></sparql>")
+}
+
+fn term_xml(term: &RdfTerm) -> String {
+    match term {
+        RdfTerm::Iri(value) => format!("<uri>{}</uri>", xml(value)),
+        RdfTerm::BlankNode(value) => format!("<bnode>{}</bnode>", xml(value)),
+        RdfTerm::Literal {
+            value,
+            datatype,
+            language,
+        } => match (language, datatype) {
+            (Some(language), _) => format!(
+                "<literal xml:lang=\"{}\">{}</literal>",
+                xml(language),
+                xml(value)
+            ),
+            (_, Some(datatype)) => format!(
+                "<literal datatype=\"{}\">{}</literal>",
+                xml(datatype),
+                xml(value)
+            ),
+            _ => format!("<literal>{}</literal>", xml(value)),
+        },
+    }
+}
+
+fn bindings_delimited(rows: &[Binding], separator: char, tsv: bool) -> String {
+    let variables = binding_variables(rows);
+    let header = variables
+        .iter()
+        .map(|name| if tsv { format!("?{name}") } else { csv(name) })
+        .collect::<Vec<_>>()
+        .join(&separator.to_string());
+    let rows = rows
+        .iter()
+        .map(|row| {
+            variables
+                .iter()
+                .map(|name| {
+                    row.get(name)
+                        .map(|term| term_delimited(term, tsv))
+                        .unwrap_or_default()
+                })
+                .collect::<Vec<_>>()
+                .join(&separator.to_string())
+        })
+        .collect::<Vec<_>>()
+        .join("\n");
+    format!("{header}\n{rows}\n")
+}
+
+fn term_delimited(term: &RdfTerm, tsv: bool) -> String {
+    if tsv {
+        format_rdf_term(term)
+    } else {
+        match term {
+            RdfTerm::Iri(value) | RdfTerm::BlankNode(value) => csv(value),
+            RdfTerm::Literal { value, .. } => csv(value),
+        }
+    }
+}
+
+fn csv(value: &str) -> String {
+    if value.contains(',') || value.contains('"') || value.contains('\n') || value.contains('\r') {
+        format!("\"{}\"", value.replace('"', "\"\""))
+    } else {
+        value.into()
+    }
+}
+
+fn xml(value: &str) -> String {
+    value
+        .replace('&', "&amp;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;")
+        .replace('"', "&quot;")
 }
 
 fn term_json(term: &RdfTerm) -> String {

@@ -1,0 +1,64 @@
+@prefix app: <https://example.org/intent-engine/ontology/> .
+@prefix fibo-loan: <https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/> .
+@prefix fibo-fbc-fe: <https://spec.edmcouncil.org/fibo/ontology/FBC/FunctionalEntities/FinancialServicesEntities/> .
+@prefix fibo-fbc-debt: <https://spec.edmcouncil.org/fibo/ontology/FBC/DebtAndEquities/Debt/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+app: a owl:Ontology .
+app:provenanceKind a owl:AnnotationProperty .
+app:sourceIri a owl:AnnotationProperty .
+
+app:LoanContract a owl:Class ;
+  rdfs:subClassOf fibo-loan:Loan ;
+  app:provenanceKind "logical-subclass" ;
+  app:sourceIri "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/Loan" .
+app:BookingInstitution a owl:Class ;
+  rdfs:subClassOf fibo-fbc-fe:FinancialInstitution ;
+  app:provenanceKind "logical-subclass" ;
+  app:sourceIri "https://spec.edmcouncil.org/fibo/ontology/FBC/FunctionalEntities/FinancialServicesEntities/FinancialInstitution" .
+app:Lender a owl:Class ;
+  rdfs:subClassOf fibo-fbc-debt:Lender ;
+  app:provenanceKind "logical-subclass" ;
+  app:sourceIri "https://spec.edmcouncil.org/fibo/ontology/FBC/DebtAndEquities/Debt/Lender" .
+app:Region a owl:Class ; app:provenanceKind "project-extension" .
+app:BalanceObservation a owl:Class ; app:provenanceKind "project-extension" .
+app:DisbursementEvent a owl:Class ; app:provenanceKind "project-extension" .
+app:SourceDescription a owl:Class ; app:provenanceKind "project-extension" .
+app:IdentityDecision a owl:Class ; app:provenanceKind "project-extension" .
+app:InternalLoanCategory a owl:Class ; skos:closeMatch fibo-loan:Loan ; app:provenanceKind "weak-close-match" ; app:sourceIri "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/Loan" .
+app:Party a owl:Class ; app:provenanceKind "project-extension" .
+app:QualifiedParticipation a owl:Class ; app:provenanceKind "project-extension" .
+
+app:bookedBy a owl:ObjectProperty ; rdfs:domain app:LoanContract ; rdfs:range app:BookingInstitution ; app:provenanceKind "project-extension" .
+app:hasLender a owl:ObjectProperty ; rdfs:domain app:LoanContract ; rdfs:range app:Lender ; app:provenanceKind "project-extension" .
+app:inRegion a owl:ObjectProperty ; rdfs:domain app:BookingInstitution ; rdfs:range app:Region ; app:provenanceKind "project-extension" .
+app:balanceOf a owl:ObjectProperty ; rdfs:domain app:BalanceObservation ; rdfs:range app:LoanContract ; app:provenanceKind "project-extension" .
+app:disbursementOf a owl:ObjectProperty ; rdfs:domain app:DisbursementEvent ; rdfs:range app:LoanContract ; app:provenanceKind "project-extension" .
+app:label a owl:DatatypeProperty ; rdfs:range xsd:string ; app:provenanceKind "project-extension" .
+app:amount a owl:DatatypeProperty ; rdfs:range xsd:decimal ; app:provenanceKind "lexical-approximation" ; app:sourceIri "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/MonetaryAmount" .
+app:currency a owl:DatatypeProperty ; rdfs:range xsd:string ; app:provenanceKind "project-extension" .
+app:validFrom a owl:DatatypeProperty ; rdfs:range xsd:date ; app:provenanceKind "project-extension" .
+app:validTo a owl:DatatypeProperty ; rdfs:range xsd:date ; app:provenanceKind "project-extension" .
+app:occurredAt a owl:DatatypeProperty ; rdfs:range xsd:date ; app:provenanceKind "project-extension" .
+app:alias a owl:DatatypeProperty ; rdfs:domain app:Region ; rdfs:range xsd:string ; app:provenanceKind "project-extension" .
+app:describesCanonical a owl:ObjectProperty ; rdfs:domain app:IdentityDecision ; app:provenanceKind "project-extension" .
+app:hasSourceDescription a owl:ObjectProperty ; rdfs:domain app:IdentityDecision ; rdfs:range app:SourceDescription ; app:provenanceKind "project-extension" .
+app:decisionVersion a owl:DatatypeProperty ; rdfs:domain app:IdentityDecision ; rdfs:range xsd:string ; app:provenanceKind "project-extension" .
+app:decisionStatus a owl:DatatypeProperty ; rdfs:domain app:IdentityDecision ; rdfs:range xsd:string ; app:provenanceKind "project-extension" .
+app:sourceSystem a owl:DatatypeProperty ; rdfs:domain app:SourceDescription ; rdfs:range xsd:string ; app:provenanceKind "project-extension" .
+app:sourceIdentifier a owl:DatatypeProperty ; rdfs:domain app:SourceDescription ; rdfs:range xsd:string ; app:provenanceKind "project-extension" .
+app:taxIdentifier a owl:DatatypeProperty ; rdfs:domain app:SourceDescription ; rdfs:range xsd:string ; app:provenanceKind "project-extension" .
+app:participationOf a owl:ObjectProperty ; rdfs:domain app:QualifiedParticipation ; rdfs:range app:LoanContract ; app:provenanceKind "project-extension" .
+app:participant a owl:ObjectProperty ; rdfs:domain app:QualifiedParticipation ; rdfs:range app:Party ; app:provenanceKind "project-extension" .
+app:partyInRegion a owl:ObjectProperty ; rdfs:domain app:Party ; rdfs:range app:Region ; app:provenanceKind "project-extension" .
+app:participationRole a owl:DatatypeProperty ; rdfs:domain app:QualifiedParticipation ; rdfs:range xsd:string ; app:provenanceKind "project-extension" .
+app:participationValidFrom a owl:DatatypeProperty ; rdfs:domain app:QualifiedParticipation ; rdfs:range xsd:date ; app:provenanceKind "project-extension" .
+app:participationValidTo a owl:DatatypeProperty ; rdfs:domain app:QualifiedParticipation ; rdfs:range xsd:date ; app:provenanceKind "project-extension" .
+app:allocationWeight a owl:DatatypeProperty ; rdfs:domain app:QualifiedParticipation ; rdfs:range xsd:decimal ; app:provenanceKind "project-extension" .
+app:allocationPolicy a owl:DatatypeProperty ; rdfs:domain app:QualifiedParticipation ; rdfs:range xsd:string ; app:provenanceKind "project-extension" .
+app:legalShare a owl:DatatypeProperty ; rdfs:domain app:QualifiedParticipation ; rdfs:range xsd:decimal ; app:provenanceKind "project-extension" .
+
+app:BookingInstitution owl:equivalentClass fibo-loan:Loan .

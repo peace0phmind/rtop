@@ -724,6 +724,7 @@ fn runs_a_select_bgp_through_the_datasource_port() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, source).unwrap();
     let result = runtime
@@ -748,6 +749,7 @@ fn omits_mapping_triples_with_sql_null_values() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     assert_eq!(format!("{:?}", runtime.query("SELECT ?person { ?person <https://example.com/type> <https://example.com/Person> . }").unwrap()), "Bindings([])");
@@ -764,6 +766,7 @@ fn distinguishes_invalid_and_unsupported_sparql() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, PairSource).unwrap();
     assert!(matches!(
@@ -793,6 +796,7 @@ fn queries_facts_together_with_mapping_results() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     let result = runtime
@@ -821,6 +825,7 @@ fn evaluates_bind_replace_without_a_graph_pattern() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime
@@ -854,6 +859,7 @@ fn evaluates_bind_string_functions_after_matching_and_preserves_replace_language
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime.query("SELECT ?replacement ?summary ?contains WHERE { ?x <https://example.test/title> ?title . BIND(REPLACE(?title, \"Second\", \"First\") AS ?replacement) BIND(CONCAT(UCASE(?title), \" / \", STRLEN(?title)) AS ?summary) BIND(CONTAINS(?title, \"Second\") AS ?contains) }").unwrap();
@@ -876,6 +882,7 @@ fn evaluates_bind_numeric_functions_as_decimal_literals() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime.query("SELECT ?abs ?ceil ?floor ?round WHERE { BIND(ABS(-1.5) AS ?abs) BIND(CEIL(0.2) AS ?ceil) BIND(FLOOR(0.8) AS ?floor) BIND(ROUND(1.6) AS ?round) }").unwrap();
@@ -900,6 +907,7 @@ fn evaluates_nested_arithmetic_before_numeric_bind_functions() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime.query("SELECT ?abs ?half WHERE { BIND(ABS((10 - 0.15 * 10) - 10) AS ?abs) BIND(10 / 2 AS ?half) }").unwrap();
@@ -922,6 +930,7 @@ fn evaluates_bind_datetime_extractors_with_their_sparql_datatypes() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime.query("SELECT ?year ?month ?day ?hours ?minutes ?seconds WHERE { BIND(YEAR(\"2014-06-05T18:47:52\") AS ?year) BIND(MONTH(\"2014-06-05T18:47:52\") AS ?month) BIND(DAY(\"2014-06-05T18:47:52\") AS ?day) BIND(HOURS(\"2014-06-05T18:47:52\") AS ?hours) BIND(MINUTES(\"2014-06-05T18:47:52\") AS ?minutes) BIND(SECONDS(\"2014-06-05T18:47:52\") AS ?seconds) }").unwrap();
@@ -948,6 +957,7 @@ fn evaluates_bind_sha256_as_a_lowercase_xsd_string() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime
@@ -972,6 +982,7 @@ fn evaluates_str_on_iri_and_literal_as_xsd_string() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime
@@ -998,6 +1009,7 @@ fn filters_sparql_regex_with_case_insensitive_flags_after_bgp() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime.query("SELECT ?title WHERE { ?x <https://example.test/title> ?title . FILTER(REGEX(?title, \"semantic\", \"i\")) }").unwrap();
@@ -1019,6 +1031,7 @@ fn evaluates_ontop_ofn_datetime_difference_functions_on_typed_literals() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime.query("PREFIX ofn: <http://www.ontotext.com/sparql/functions/>\nSELECT ?days ?weeks ?hours ?minutes ?seconds ?millis WHERE { BIND(\"1932-02-22T09:30:00\"^^<http://www.w3.org/2001/XMLSchema#dateTime> AS ?start) BIND(\"1999-12-14T09:00:00\"^^<http://www.w3.org/2001/XMLSchema#dateTime> AS ?end) BIND(ofn:daysBetween(?start, ?end) AS ?days) BIND(ofn:weeksBetween(?start, ?end) AS ?weeks) BIND(ofn:hoursBetween(?start, ?end) AS ?hours) BIND(ofn:minutesBetween(?start, ?end) AS ?minutes) BIND(ofn:secondsBetween(?start, ?end) AS ?seconds) BIND(ofn:millisBetween(?end, ?end) AS ?millis) }").unwrap();
@@ -1045,6 +1058,7 @@ fn evaluates_bind_now_as_an_xsd_datetime() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime
@@ -1066,6 +1080,7 @@ fn evaluates_select_projection_uuid_struuid_and_rand_expressions() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime
@@ -1090,6 +1105,7 @@ fn evaluates_single_variable_values_and_binds_each_value() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime.query("SELECT ?value ?string WHERE { VALUES ?value { 2 \"aa\" } BIND(STR(?value) AS ?string) }").unwrap();
@@ -1114,6 +1130,7 @@ fn preserves_left_rows_for_optional_patterns_and_merges_matches() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime.query("SELECT ?person ?name ?age WHERE { ?person <https://example.test/name> ?name . OPTIONAL { ?person <https://example.test/age> ?age . } }").unwrap();
@@ -1136,6 +1153,7 @@ fn unions_values_branches_before_following_bind() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime.query("SELECT ?value ?string WHERE { { VALUES ?value { 2 } } UNION { VALUES ?value { \"aa\" } } BIND(STR(?value) AS ?string) }").unwrap();
@@ -1160,6 +1178,7 @@ fn unions_bgp_branches_and_applies_select_distinct() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime.query("PREFIX ex: <https://example.test/>\nSELECT DISTINCT ?person WHERE {\n  { ?person ex:name ?value }\n  UNION\n  { ?person ex:ssn ?value }\n}").unwrap();
@@ -1182,6 +1201,7 @@ fn projects_and_deduplicates_a_whole_where_subquery() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime.query("SELECT ?value WHERE { { SELECT DISTINCT ?value WHERE { VALUES ?value { 2 2 \"aa\" } } } }").unwrap();
@@ -1204,6 +1224,7 @@ fn applies_limit_after_subquery_projection_and_distinct() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime.query("SELECT ?value WHERE { { SELECT DISTINCT ?value WHERE { VALUES ?value { 2 2 \"aa\" } } LIMIT 1 } }").unwrap();
@@ -1223,6 +1244,7 @@ fn keeps_rows_when_bind_substr_errors_after_nested_subquery_union() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime
@@ -1260,6 +1282,7 @@ fn evaluates_logical_bind_expressions_with_sparql_precedence() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime.query(r#"
@@ -1289,6 +1312,7 @@ fn evaluates_rdf_term_predicates_and_bound() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime
@@ -1334,6 +1358,7 @@ fn evaluates_lang_on_language_and_simple_literals() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime.query("SELECT ?language WHERE { VALUES ?title { \"title\"@en \"plain\" } BIND(LANG(?title) AS ?language) }").unwrap();
@@ -1356,6 +1381,7 @@ fn evaluates_datatype_as_an_iri_and_errors_for_language_literals() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime.query("SELECT ?value ?type WHERE { VALUES ?value { 2 \"plain\" \"english\"@en } BIND(DATATYPE(?value) AS ?type) }").unwrap();
@@ -1379,6 +1405,7 @@ fn evaluates_rdf_term_equality_and_inequality_in_logical_bind() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime.query("SELECT ?ok WHERE { VALUES ?left { \"same\" } VALUES ?right { \"same\" } VALUES ?other { \"other\" } BIND(?left = ?right && ?left != ?other AS ?ok) }").unwrap();
@@ -1398,6 +1425,7 @@ fn evaluates_same_term_with_rdf_term_identity() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime.query("SELECT ?same ?different WHERE { VALUES ?left { \"value\"@en } VALUES ?right { \"value\"@en } VALUES ?other { \"other\"@en } BIND(sameTerm(?left, ?right) AS ?same) BIND(!sameTerm(?left, ?other) AS ?different) }").unwrap();
@@ -1420,6 +1448,7 @@ fn converts_absolute_strings_and_iris_with_iri_and_uri() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime.query("SELECT ?iri ?uri WHERE { BIND(IRI(\"urn:john\") AS ?iri) BIND(URI(\"mailto:a@example.test\") AS ?uri) }").unwrap();
@@ -1439,6 +1468,7 @@ fn resolves_relative_iri_and_uri_against_sparql_base() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime.query("BASE <http://example.org/project1#data/>\nSELECT ?iri ?uri WHERE { BIND(IRI(\"john\") AS ?iri) BIND(URI(\"jane\") AS ?uri) }").unwrap();
@@ -1459,6 +1489,7 @@ fn evaluates_if_coalesce_and_numeric_relational_comparisons() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime.query("SELECT ?first ?second ?fallback ?short WHERE { BIND(IF(1 < 2, \"first\", \"second\") AS ?first) BIND(IF(1 > 2, \"first\", \"second\") AS ?second) BIND(COALESCE(IF(\"rrr\" * \"2\"^^xsd:integer, \"1\", \"2\"), \"other\") AS ?fallback) BIND(COALESCE(IF(1 > 2, \"rrr\" * \"2\"^^xsd:integer, \"second\"), \"other\") AS ?short) }").unwrap();
@@ -1478,6 +1509,7 @@ fn evaluates_distinct_grouped_aggregates() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime.query("SELECT ?p (SUM(DISTINCT ?n) AS ?sum) (AVG(DISTINCT ?n) AS ?avg) (COUNT(DISTINCT ?n) AS ?count) (GROUP_CONCAT(DISTINCT ?text; SEPARATOR=\"|\") AS ?concat) WHERE { VALUES (?p ?n ?text) { (<https://example.test/one> 10 \"10\") (<https://example.test/one> 11 \"11\") (<https://example.test/one> 10 \"10\") } } GROUP BY ?p").unwrap();
@@ -1503,6 +1535,7 @@ fn evaluates_min_max_and_empty_numeric_aggregates() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime
@@ -1535,6 +1568,7 @@ fn evaluates_minus_against_an_aggregate_subquery() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime
@@ -1568,6 +1602,7 @@ fn generates_fresh_and_labeled_blank_nodes() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NullSource).unwrap();
     let result = runtime.query("SELECT ?fresh ?named ?same WHERE { VALUES ?v { 1 2 } BIND(BNODE() AS ?fresh) BIND(BNODE(\"b1\") AS ?named) BIND(sameTerm(?named, BNODE(\"b1\")) AS ?same) }").unwrap();
@@ -1603,6 +1638,7 @@ fn expands_ontop_style_sparql_prefixes_and_rdf_type_shorthand() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     assert!(
@@ -1623,10 +1659,68 @@ fn applies_select_distinct_to_duplicate_fact_bindings() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     assert!(
         matches!(runtime.query("SELECT DISTINCT ?subject { ?subject <https://example.test/p> <https://example.test/b> }"), Ok(rtop::QueryResult::Bindings(rows)) if rows.len() == 1)
+    );
+}
+
+#[test]
+fn evaluates_bounded_property_paths_and_correlated_exists_against_facts() {
+    let dir = tempfile::tempdir().unwrap();
+    let mapping = dir.path().join("x.obda");
+    let facts = dir.path().join("facts.ttl");
+    std::fs::write(&mapping, "[MappingDeclaration]\ntarget <https://example.test/person/{id}> <https://example.test/type> <https://example.test/Person> .\nsource SELECT id FROM people\n").unwrap();
+    std::fs::write(
+        &facts,
+        "<https://example.test/a> <https://example.test/p> <https://example.test/b>, <https://example.test/d> .
+         <https://example.test/b> <https://example.test/q> <https://example.test/c> .
+         <https://example.test/d> <https://example.test/q> <https://example.test/c> .
+         <https://example.test/alice> <https://example.test/type> <https://example.test/Person> ; <https://example.test/name> \"Alice\" .
+         <https://example.test/bob> <https://example.test/type> <https://example.test/Person> ; <https://example.test/blocked> \"yes\" .
+         <https://example.test/charlie> <https://example.test/type> <https://example.test/Person> .
+         <https://example.test/a> <https://example.test/value> 1 ; <https://example.test/other> 1, 2 .
+         <https://example.test/b> <https://example.test/value> 3.0 ; <https://example.test/other> 4.0, 5.0 .",
+    )
+    .unwrap();
+    let spec = KnowledgeGraphSpec {
+        mapping_file: mapping,
+        facts_file: Some(facts),
+        facts_format: None,
+        facts_base_iri: None,
+        ontology_file: None,
+        xml_catalog_file: None,
+    };
+    let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
+
+    let paths = runtime
+        .query("PREFIX ex: <https://example.test/>\nSELECT ?target { ex:a ex:p/ex:q ?target }")
+        .unwrap();
+    assert!(
+        matches!(paths, rtop::QueryResult::Bindings(rows) if rows.len() == 2 && rows.iter().all(|row| row.get("target") == Some(&RdfTerm::Iri("https://example.test/c".into()))))
+    );
+
+    let exists = runtime
+        .query("PREFIX ex: <https://example.test/>\nSELECT ?person { ?person ex:type ex:Person . FILTER EXISTS { ?person ex:name ?name } FILTER NOT EXISTS { ?person ex:blocked ?blocked } }")
+        .unwrap();
+    assert!(
+        matches!(exists, rtop::QueryResult::Bindings(rows) if rows.len() == 1
+        && rows[0].get("person") == Some(&RdfTerm::Iri("https://example.test/alice".into())))
+    );
+
+    let correlated = runtime
+        .query("PREFIX ex: <https://example.test/>\nSELECT ?subject ?value { ?subject ex:value ?value FILTER NOT EXISTS { ?subject ex:other ?other . FILTER(?value = ?other) } }")
+        .unwrap();
+    assert!(
+        matches!(correlated, rtop::QueryResult::Bindings(rows) if rows.len() == 1
+        && rows[0].get("subject") == Some(&RdfTerm::Iri("https://example.test/b".into()))
+        && rows[0].get("value") == Some(&RdfTerm::Literal {
+            value: "3.0".into(),
+            datatype: Some("http://www.w3.org/2001/XMLSchema#decimal".into()),
+            language: None,
+        }))
     );
 }
 
@@ -1643,6 +1737,7 @@ fn orders_fact_bindings_by_an_ontop_style_order_by_variable() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     let result = runtime
@@ -1664,6 +1759,7 @@ fn orders_fact_bindings_by_multiple_asc_and_desc_terms() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     let result = runtime.query("SELECT ?person ?country ?number ?street { ?person <https://example.test/country> ?country . ?person <https://example.test/number> ?number . ?person <https://example.test/street> ?street } ORDER BY DESC(?country) ?number DESC(?street)").unwrap();
@@ -1678,19 +1774,22 @@ fn evaluates_manifest_style_equality_filters_and_semicolon_patterns() {
     let mapping = dir.path().join("x.obda");
     let facts = dir.path().join("facts.ttl");
     std::fs::write(&mapping, "[MappingDeclaration]\ntarget <https://example.test/person/{id}> <https://example.test/type> <https://example.test/Person> .\nsource SELECT id FROM people\n").unwrap();
-    std::fs::write(&facts, "<https://example.test/a> <https://example.test/type> <https://example.test/Row> . <https://example.test/a> <https://example.test/boolean> \"true\"^^<http://www.w3.org/2001/XMLSchema#boolean> . <https://example.test/a> <https://example.test/numeric> \"1.00\"^^<http://www.w3.org/2001/XMLSchema#decimal> . <https://example.test/a> <https://example.test/timestamp> \"2013-03-19T02:12:10Z\"^^<http://www.w3.org/2001/XMLSchema#dateTimeStamp> .").unwrap();
+    std::fs::write(&facts, "<https://example.test/a> <https://example.test/type> <https://example.test/Row> . <https://example.test/a> <https://example.test/boolean> \"true\"^^<http://www.w3.org/2001/XMLSchema#boolean> . <https://example.test/a> <https://example.test/numeric> \"1.00\"^^<http://www.w3.org/2001/XMLSchema#decimal> . <https://example.test/a> <https://example.test/timestamp> \"2013-03-19T02:12:10Z\"^^<http://www.w3.org/2001/XMLSchema#dateTimeStamp> . <https://example.test/a> <https://example.test/date> \"2025-12-31\"^^<http://www.w3.org/2001/XMLSchema#date> .").unwrap();
     let spec = KnowledgeGraphSpec {
         mapping_file: mapping,
         facts_file: Some(facts),
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     for query in [
         "SELECT ?x ?value { ?x <https://example.test/type> <https://example.test/Row> ; <https://example.test/boolean> ?value FILTER (?value = \"1\"^^<http://www.w3.org/2001/XMLSchema#boolean>) }",
         "SELECT ?x ?value { ?x <https://example.test/type> <https://example.test/Row> ; <https://example.test/numeric> ?value FILTER (?value = 1.0) }",
         "SELECT ?x ?value { ?x <https://example.test/type> <https://example.test/Row> ; <https://example.test/timestamp> ?value FILTER (?value = \"2013-03-19T03:12:10+01:00\"^^<http://www.w3.org/2001/XMLSchema#dateTimeStamp>) }",
+        "SELECT ?x ?value { ?x <https://example.test/type> <https://example.test/Row> ; <https://example.test/date> ?value FILTER (?value <= \"2025-12-31\"^^<http://www.w3.org/2001/XMLSchema#date>) }",
+        "SELECT ?x { ?x <https://example.test/type> <https://example.test/Row> . OPTIONAL { ?x <https://example.test/missing> ?end } FILTER (!BOUND(?end) || \"2025-12-31\"^^<http://www.w3.org/2001/XMLSchema#date> < ?end) }",
     ] {
         assert!(matches!(runtime.query(query), Ok(rtop::QueryResult::Bindings(rows)) if rows.len() == 1));
     }
@@ -1713,6 +1812,7 @@ fn evaluates_ask_construct_and_describe_against_facts() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     assert_eq!(
@@ -1743,6 +1843,7 @@ fn loads_prefixed_and_continued_native_obda_mappings() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     let result = runtime
@@ -1767,6 +1868,7 @@ fn rejects_deprecated_obda_source_declarations() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     assert!(
         matches!(VkgRuntime::new(spec, FakeSource { sql: String::new() }), Err(RuntimeError::Mapping(message)) if message.contains("SourceDeclaration"))
@@ -1784,6 +1886,7 @@ fn rejects_missing_native_obda_target_term_from_the_ontop_mistake_case() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     assert!(
         matches!(VkgRuntime::new(spec, FakeSource { sql: String::new() }), Err(RuntimeError::Mapping(message)) if message.contains("恰好包含一个三元组"))
@@ -1806,6 +1909,7 @@ fn distinguishes_invalid_and_unsupported_native_mapping_source_sql() {
             facts_format: None,
             facts_base_iri: None,
             ontology_file: None,
+            xml_catalog_file: None,
         };
         assert!(
             matches!(VkgRuntime::new(spec, FakeSource { sql: String::new() }), Err(RuntimeError::Mapping(message)) if message.contains(expected))
@@ -1824,6 +1928,7 @@ fn loads_a_turtle_r2rml_mapping_from_the_same_runtime_seam() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     assert!(
@@ -1839,6 +1944,7 @@ fn loads_relative_r2rml_iris_from_a_reader() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mapping = "@prefix rr: <http://www.w3.org/ns/r2rml#> . [] a rr:TriplesMap; rr:logicalTable [ rr:tableName \"people\" ]; rr:subjectMap [ rr:template \"http://example.test/person/{id}\" ]; rr:predicateObjectMap [ rr:predicate <kind>; rr:object <Person> ] .";
     let mut runtime = VkgRuntime::new_with_r2rml_reader(
@@ -1864,6 +1970,7 @@ fn loads_ontop_r2rml_d000_table_and_column_mapping() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     if let Err(error) = VkgRuntime::new(spec, FakeSource { sql: String::new() }) {
         panic!("{error}");
@@ -1881,6 +1988,7 @@ fn queries_each_predicate_object_map_from_ontop_r2rml_d002() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, PairSource).unwrap();
     for (predicate, object, projection) in [
@@ -1913,6 +2021,7 @@ fn preserves_r2rml_blank_node_subject_term_type_from_ontop_d002() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, PairSource).unwrap();
     let result = runtime
@@ -1932,6 +2041,7 @@ fn preserves_r2rml_multi_column_blank_node_subject_from_ontop_d005() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, D005Source).unwrap();
     let result = runtime
@@ -1954,6 +2064,7 @@ fn queries_r2rml_template_graph_map_from_ontop_d008() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, D008GraphTemplateSource).unwrap();
     let result = runtime
@@ -1976,6 +2087,7 @@ fn resolves_r2rml_ref_object_map_without_join_from_ontop_d008() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, D008RefObjectSource).unwrap();
     let result = runtime
@@ -1998,6 +2110,7 @@ fn expands_multiple_r2rml_predicates_in_one_object_map_from_ontop_d008() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, D008MultiplePredicateSource).unwrap();
     for predicate in [
@@ -2025,6 +2138,7 @@ fn resolves_named_sql_projection_column_from_ontop_d009() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, D009NamedSqlColumnSource).unwrap();
     let result = runtime
@@ -2047,6 +2161,7 @@ fn combines_subject_and_predicate_object_graphs_from_ontop_d009() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, D009PredicateGraphSource).unwrap();
     for graph in [
@@ -2074,6 +2189,7 @@ fn percent_encodes_iri_template_columns_from_ontop_d010() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, D010IriTemplateSource).unwrap();
     let result = runtime
@@ -2097,6 +2213,7 @@ fn preserves_escaped_braces_in_literal_template_from_ontop_d010() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, D010EscapedLiteralTemplateSource).unwrap();
     let result = runtime
@@ -2119,6 +2236,7 @@ fn maps_many_to_many_link_table_from_ontop_d011() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, D011LinkMapSource).unwrap();
     let result = runtime
@@ -2141,6 +2259,7 @@ fn maps_many_to_many_sql_view_rows_from_ontop_d011() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, D011SqlViewSource).unwrap();
     let result = runtime
@@ -2163,6 +2282,7 @@ fn rejects_multiple_subject_maps_from_ontop_d012() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     assert!(
         matches!(VkgRuntime::new(spec, PairSource), Err(RuntimeError::Mapping(message)) if message.contains("只能有一个 rr:subjectMap"))
@@ -2180,6 +2300,7 @@ fn joins_equivalent_blank_nodes_across_triples_maps_from_ontop_d012() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, D012CrossMapBlankNodeSource).unwrap();
     let result = runtime
@@ -2202,6 +2323,7 @@ fn omits_triples_with_null_template_columns_from_ontop_d013() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, D013NullTemplateSource).unwrap();
     let result = runtime
@@ -2224,6 +2346,7 @@ fn resolves_relative_iri_column_against_r2rml_base_from_ontop_d019() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, D019IriColumnSource).unwrap();
     let result = runtime
@@ -2246,6 +2369,7 @@ fn percent_encodes_iri_template_component_from_ontop_d020() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, D020IriTemplateSource).unwrap();
     let result = runtime
@@ -2268,6 +2392,7 @@ fn rejects_invalid_iri_column_data_from_ontop_d020() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, D020InvalidIriColumnSource).unwrap();
     assert!(
@@ -2286,6 +2411,7 @@ fn resolves_second_level_ref_object_map_from_ontop_d026() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, D026NestedJoinSource).unwrap();
     let result = runtime
@@ -2308,6 +2434,7 @@ fn resolves_composite_r2rml_ref_object_map_join() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, CompositeRefObjectSource).unwrap();
     let result = runtime
@@ -2327,6 +2454,7 @@ fn loads_each_native_obda_mapping_declaration() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, MultipleNativeMappingsSource).unwrap();
     for (class, person) in [
@@ -2354,6 +2482,7 @@ fn expands_native_obda_semicolon_and_multiple_target_triples() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NativeMultiTargetSource).unwrap();
     for (predicate, object) in [
@@ -2393,6 +2522,7 @@ fn queries_native_obda_constant_named_graph_target() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NativeNamedGraphSource).unwrap();
     let result = runtime.query("SELECT ?person { GRAPH <http://example.test/graph> { ?person <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.test/Person> } }").unwrap();
@@ -2414,6 +2544,7 @@ fn queries_native_obda_template_named_graph_target() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NativeNamedGraphSource).unwrap();
     let result = runtime.query("SELECT ?person { GRAPH <http://example.test/graph/7> { ?person <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.test/Person> } }").unwrap();
@@ -2431,6 +2562,7 @@ fn preserves_native_obda_literal_language_and_datatype() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NativeLiteralSource).unwrap();
     let name = runtime
@@ -2454,6 +2586,7 @@ fn preserves_native_obda_multi_column_bnode_subject() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NativeBnodeSource).unwrap();
     let result = runtime.query("SELECT ?coauthor { ?coauthor <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.test/Coauthor> }").unwrap();
@@ -2474,6 +2607,7 @@ fn queries_r2rml_literal_constant_from_ontop_d014() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     assert!(
@@ -2492,6 +2626,7 @@ fn queries_ontop_r2rml_d000_table_and_column_mapping() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, PairSource).unwrap();
     let result = runtime
@@ -2512,6 +2647,7 @@ fn resolves_relative_r2rml_predicates_against_the_mapping_file_iri() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     assert!(
@@ -2540,6 +2676,7 @@ fn distinguishes_r2rml_rdf_syntax_and_structure_errors_from_the_ontop_mistake_ca
             facts_format: None,
             facts_base_iri: None,
             ontology_file: None,
+            xml_catalog_file: None,
         };
         assert!(
             matches!(VkgRuntime::new(spec, FakeSource { sql: String::new() }), Err(RuntimeError::Mapping(message)) if message.contains(expected))
@@ -2568,6 +2705,7 @@ fn applies_imported_subclass_axioms_when_querying_facts() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: Some(ontology),
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     let result = runtime.query("SELECT ?person { ?person <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://example.test/Person> . }");
@@ -2596,6 +2734,7 @@ fn applies_imported_subproperty_axioms_when_querying_facts() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: Some(ontology),
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     assert!(
@@ -2635,6 +2774,7 @@ fn applies_subproperty_axioms_when_querying_mapping_results() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: Some(ontology),
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, Source).unwrap();
     assert!(
@@ -2668,6 +2808,7 @@ fn matches_a_native_obda_simple_literal_against_an_xsd_string_query_literal() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, Source).unwrap();
     let result = runtime.query("PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\nSELECT ?person { ?person <https://example.test/name> \"Ada\"^^xsd:string . }");
@@ -2692,6 +2833,7 @@ fn applies_ontology_domain_and_range_axioms_to_facts() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: Some(ontology),
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     assert!(
@@ -2717,6 +2859,7 @@ fn applies_ontology_inverse_property_axioms_to_facts() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: Some(ontology),
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     assert!(
@@ -2741,6 +2884,7 @@ fn queries_literal_and_blank_node_facts_without_losing_term_identity() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     let result = runtime
@@ -2765,6 +2909,7 @@ fn queries_nquads_facts_in_a_named_graph_without_mixing_the_default_graph() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     let result = runtime.query("SELECT ?value { GRAPH <https://example.test/extra> { <https://example.test/s> <https://example.test/p> ?value } }").unwrap();
@@ -2772,6 +2917,21 @@ fn queries_nquads_facts_in_a_named_graph_without_mixing_the_default_graph() {
         format!("{result:?}"),
         "Bindings([{\"value\": Literal { value: \"2022\", datatype: None, language: None }}])"
     );
+
+    let variable_graph = runtime
+        .query("SELECT ?graph ?value { GRAPH ?graph { <https://example.test/s> <https://example.test/p> ?value } }")
+        .unwrap();
+    assert!(
+        matches!(variable_graph, rtop::QueryResult::Bindings(rows) if rows == vec![std::collections::BTreeMap::from([
+            ("graph".into(), RdfTerm::Iri("https://example.test/extra".into())),
+            ("value".into(), RdfTerm::Literal { value: "2022".into(), datatype: None, language: None }),
+        ])])
+    );
+
+    let from_named = runtime
+        .query("SELECT ?value FROM NAMED <https://example.test/extra> { GRAPH <https://example.test/extra> { <https://example.test/s> <https://example.test/p> ?value } }")
+        .unwrap();
+    assert!(matches!(from_named, rtop::QueryResult::Bindings(rows) if rows.len() == 1));
 }
 
 #[test]
@@ -2787,6 +2947,7 @@ fn binds_a_variable_predicate_for_nquads_facts_in_a_named_graph() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     let result = runtime
@@ -2809,6 +2970,7 @@ fn answers_a_fully_bound_ask_against_a_template_mapping() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     let result = runtime
@@ -2830,6 +2992,7 @@ fn queries_rdfxml_facts_with_the_explicit_base_iri_from_the_ontop_facts_case() {
         facts_format: None,
         facts_base_iri: Some("https://data.example.test/facts/".into()),
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     let result = runtime
@@ -2854,6 +3017,7 @@ fn joins_basic_graph_patterns_on_shared_variables() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     let result = runtime.query("SELECT ?person ?label { ?person <https://example.test/knows> ?friend . ?friend <https://example.test/label> ?label . }").unwrap();
@@ -2871,6 +3035,7 @@ fn describes_facts_produced_by_a_mapping() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     assert!(
@@ -2895,6 +3060,7 @@ fn constructs_every_template_triple_from_a_basic_graph_pattern() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     assert!(
@@ -2917,6 +3083,7 @@ fn constructs_a_virtual_mapping_triple_with_a_variable_predicate() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FakeSource { sql: String::new() }).unwrap();
     let result = runtime
@@ -2952,6 +3119,7 @@ fn preserves_r2rml_constant_language_tags_from_ontop_rdf4j_case() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, ProfessorSource).unwrap();
     let result = runtime
@@ -2972,6 +3140,7 @@ fn filters_r2rml_language_tags_like_ontop_rdf4j_case() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, ProfessorSource).unwrap();
     let result = runtime.query("PREFIX : <http://example.org/voc#>\nSELECT * WHERE { ?p a :Professor . ?p :label ?v FILTER (lang(?v)='it') }").unwrap();
@@ -2995,6 +3164,7 @@ fn preserves_r2rml_column_datatypes_from_ontop_d014() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, PairSource).unwrap();
     let result = runtime
@@ -3021,6 +3191,7 @@ fn rejects_an_r2rml_object_map_with_both_datatype_and_language() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     assert!(
         matches!(VkgRuntime::new(spec, PairSource), Err(RuntimeError::Mapping(message)) if message.contains("rr:datatype 与 rr:language"))
@@ -3041,6 +3212,7 @@ fn preserves_r2rml_column_language_tags_from_ontop_d015() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, CountrySource).unwrap();
     let result = runtime
@@ -3061,6 +3233,7 @@ fn rejects_invalid_r2rml_language_tags_from_ontop_d015() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     assert!(
         matches!(VkgRuntime::new(spec, PairSource), Err(RuntimeError::Mapping(message)) if message.contains("有效的 BCP47"))
@@ -3080,6 +3253,7 @@ fn resolves_named_r2rml_object_templates_from_ontop_d014() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, EmployeeSource).unwrap();
     let result = runtime
@@ -3101,6 +3275,7 @@ fn resolves_r2rml_ref_object_map_joins_from_ontop_d014() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, RefObjectSource).unwrap();
     let result = runtime.query("SELECT ?employee ?department { ?employee <http://example.com/emp#c_ref_deptno> ?department }").unwrap();
@@ -3121,6 +3296,7 @@ fn combines_turtle_facts_and_mapping_results_from_ontop_facts_file_test() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, FactsFileSource).unwrap();
     let result = runtime.query("PREFIX : <http://www.semanticweb.org/ontop-facts#>\nSELECT DISTINCT ?v WHERE { ?c a :Company . ?c :name ?v. } ORDER BY ?v").unwrap();
@@ -3142,6 +3318,7 @@ fn rejects_disjoint_type_facts_from_ontop_university_tbox() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: Some(ontology),
+        xml_catalog_file: None,
     };
     assert!(
         matches!(VkgRuntime::new(spec, FakeSource { sql: String::new() }), Err(RuntimeError::Ontology(message)) if message.contains("ontology inconsistent"))
@@ -3160,6 +3337,7 @@ fn expands_multiple_r2rml_template_columns_from_ontop_d002() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, MultiTemplateSource).unwrap();
     let result = runtime
@@ -3180,6 +3358,7 @@ fn supports_r2rml_direct_object_from_ontop_d016() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, DirectObjectSource).unwrap();
     let result = runtime.query("SELECT ?patient { ?patient <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> }").unwrap();
@@ -3201,6 +3380,7 @@ fn preserves_data_iri_object_templates_from_ontop_d016() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, DataIriSource).unwrap();
     let result = runtime
@@ -3224,6 +3404,7 @@ rr:predicateObjectMap [ rr:predicate ex:paid; rr:objectMap [ rr:column "\"PaidIn
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, TypedD016Source).unwrap();
     let result = runtime.query("SELECT ?birth ?entrance ?paid { ?patient <http://example.com/birthdate> ?birth . ?patient <http://example.com/entrancedate> ?entrance . ?patient <http://example.com/paid> ?paid }").unwrap();
@@ -3242,6 +3423,7 @@ fn supports_r2rml_constant_subject_predicate_map_and_graph_map_from_ontop_d006()
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NamedGraphSource).unwrap();
     let result = runtime.query("SELECT ?student { GRAPH <http://example.com/graph/student> { ?student <http://example.com/description> \"Bad Student\" } }").unwrap();
@@ -3268,6 +3450,7 @@ fn supports_direct_r2rml_graph_and_rejects_literal_graph_map_from_ontop_d007() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, NamedGraphSource).unwrap();
     assert!(
@@ -3282,6 +3465,7 @@ fn supports_direct_r2rml_graph_and_rejects_literal_graph_map_from_ontop_d007() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     assert!(
         matches!(VkgRuntime::new(invalid_spec, NamedGraphSource), Err(RuntimeError::Mapping(message)) if message.contains("graphMap"))
@@ -3300,6 +3484,7 @@ fn preserves_literal_object_templates_from_ontop_d003() {
         facts_format: None,
         facts_base_iri: None,
         ontology_file: None,
+        xml_catalog_file: None,
     };
     let mut runtime = VkgRuntime::new(spec, LiteralTemplateSource).unwrap();
     let result = runtime

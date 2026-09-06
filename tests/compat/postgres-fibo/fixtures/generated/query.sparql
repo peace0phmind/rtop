@@ -1,0 +1,19 @@
+PREFIX app: <https://example.org/intent-engine/ontology/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?region ?label ((ROUND(SUM(?amount) * 100)) / 100 AS ?value)
+WHERE {
+  ?loan a app:LoanContract ; app:bookedBy ?institution .
+  ?institution app:inRegion ?region .
+  ?region app:label ?label .
+  ?observation a app:BalanceObservation ;
+    app:balanceOf ?loan ;
+    app:amount ?amount ;
+    app:currency "CNY" ;
+    app:validFrom ?validFrom .
+  OPTIONAL { ?observation app:validTo ?validTo }
+  FILTER (?validFrom <= "2025-12-31"^^xsd:date)
+  FILTER (!BOUND(?validTo) || "2025-12-31"^^xsd:date < ?validTo)
+}
+GROUP BY ?region ?label
+LIMIT 1000

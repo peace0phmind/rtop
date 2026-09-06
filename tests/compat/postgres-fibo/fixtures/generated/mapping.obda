@@ -1,0 +1,70 @@
+[PrefixDeclaration]
+app: https://example.org/intent-engine/ontology/
+data: https://example.org/intent-engine/data/
+xsd: http://www.w3.org/2001/XMLSchema#
+
+[MappingDeclaration] @collection [[
+mappingId loan-contract
+target data:loan/{loan_id} a app:LoanContract ; app:bookedBy data:institution/{booking_institution_id} ; app:hasLender data:lender/{lender_id} .
+source SELECT loan_id, booking_institution_id, lender_id FROM loan_contract
+
+mappingId booking-institution
+target data:institution/{institution_id} a app:BookingInstitution ; app:label {label} ; app:inRegion data:region/{region_id} .
+source SELECT institution_id, label, region_id FROM booking_institution
+
+mappingId lender
+target data:lender/{lender_id} a app:Lender ; app:label {label} .
+source SELECT lender_id, label FROM lender
+
+mappingId region
+target data:region/{region_id} a app:Region ; app:label {label} .
+source SELECT region_id, label FROM region
+
+mappingId balance-observation
+target data:balance/{fact_id} a app:BalanceObservation ; app:balanceOf data:loan/{loan_id} ; app:amount {amount}^^xsd:decimal ; app:currency {currency} ; app:validFrom {valid_from}^^xsd:date .
+source SELECT fact_id, loan_id, amount, currency, valid_from FROM balance_observation
+
+mappingId balance-valid-to
+target data:balance/{fact_id} app:validTo {valid_to}^^xsd:date .
+source SELECT fact_id, valid_to FROM balance_observation WHERE valid_to IS NOT NULL
+
+mappingId disbursement-event
+target data:disbursement/{event_id} a app:DisbursementEvent ; app:disbursementOf data:loan/{loan_id} ; app:amount {amount}^^xsd:decimal ; app:currency {currency} ; app:occurredAt {occurred_at}^^xsd:date .
+source SELECT event_id, loan_id, amount, currency, occurred_at FROM disbursement_event
+
+mappingId region-alias
+target data:region/{region_id} app:alias {alias} .
+source SELECT region_id, alias FROM region_alias
+
+mappingId source-lender-description
+target data:source-description/{description_id} a app:SourceDescription ; app:label {display_label} ; app:sourceSystem {source_system} ; app:sourceIdentifier {source_id} .
+source SELECT description_id, display_label, source_system, source_id FROM source_lender_description
+
+mappingId source-lender-tax-id
+target data:source-description/{description_id} app:taxIdentifier {tax_id} .
+source SELECT description_id, tax_id FROM source_lender_description WHERE tax_id IS NOT NULL
+
+mappingId identity-decision
+target data:identity-decision/{dataset_version}/{description_id} a app:IdentityDecision ; app:decisionVersion {dataset_version} ; app:decisionStatus {decision_status} ; app:describesCanonical data:lender/{canonical_lender_id} ; app:hasSourceDescription data:source-description/{description_id} .
+source SELECT dataset_version, description_id, canonical_lender_id, decision_status FROM identity_decision
+
+mappingId party
+target data:party/{party_id} a app:Party ; app:label {label} ; app:partyInRegion data:region/{region_id} .
+source SELECT party_id, label, region_id FROM party
+
+mappingId loan-participation
+target data:participation/{participation_id} a app:QualifiedParticipation ; app:participationOf data:loan/{loan_id} ; app:participant data:party/{party_id} ; app:participationRole {role} ; app:participationValidFrom {valid_from}^^xsd:date .
+source SELECT participation_id, loan_id, party_id, role, valid_from FROM loan_participation
+
+mappingId participation-valid-to
+target data:participation/{participation_id} app:participationValidTo {valid_to}^^xsd:date .
+source SELECT participation_id, valid_to FROM loan_participation WHERE valid_to IS NOT NULL
+
+mappingId participation-allocation
+target data:participation/{participation_id} app:allocationWeight {allocation_weight}^^xsd:decimal ; app:allocationPolicy {allocation_policy} .
+source SELECT participation_id, allocation_weight, allocation_policy FROM loan_participation WHERE allocation_weight IS NOT NULL AND allocation_policy IS NOT NULL
+
+mappingId participation-legal-share
+target data:participation/{participation_id} app:legalShare {legal_share}^^xsd:decimal .
+source SELECT participation_id, legal_share FROM loan_participation WHERE legal_share IS NOT NULL
+]]

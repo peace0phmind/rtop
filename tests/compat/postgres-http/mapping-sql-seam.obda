@@ -1,0 +1,8 @@
+[MappingDeclaration]
+mappingId person-type
+target <https://example.test/person/{id}> <https://example.test/type> <https://example.test/Person> .
+source SELECT id FROM query_people
+
+mappingId person-name
+target <https://example.test/person/{id}> <https://example.test/name> {name} .
+source SELECT id, name FROM query_named_people

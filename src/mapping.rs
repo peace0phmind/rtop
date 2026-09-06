@@ -61,7 +61,7 @@ pub struct Plan {
     /// 动态 object 的常量查询在 SQL text 预过滤后仍须以实际 RDF term 校验 datatype。
     pub object_validation: Option<String>,
 }
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Eq)]
 pub enum BindingTerm {
     Iri,
     BlankNode,

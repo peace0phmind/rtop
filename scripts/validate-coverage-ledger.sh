@@ -8,6 +8,8 @@ report="$root/compatibility-report.json"
 jq -e '
   .schema_version == 1
   and (.ontop_baseline | type == "string" and length > 0)
+  and (.replacement_kernel.consumer == "外部 endpoint 兼容 profile（无运行时或测试反向依赖）")
+  and (.replacement_kernel.acceptance_seam == "原生 rtop PostgreSQL SPARQL HTTP endpoint")
   and (.entries | type == "array" and length > 0)
   and (([.entries[].asset_id] | length) == ([.entries[].asset_id] | unique | length))
   and all(.entries[]; (.in_scope | not) or .status == "passed")
@@ -32,6 +34,210 @@ jq -e '
     and (.issue | type == "number")
     and (.reviewed_on | test("^[0-9]{4}-[0-9]{2}-[0-9]{2}$"))
   )
+' "$ledger" >/dev/null
+
+# #54 建立替换内核账本入口。它必须固定 Ontop endpoint controller 源码、真实
+# PostgreSQL endpoint case 与三种 HTTP 请求形状的可观察结果；不得把 Rust
+# 内部结构、SQL 文本或普通 CLI 成功冒充为 endpoint 证据。
+jq -e '
+  .entries as $entries
+  | any($entries[];
+      .asset_id == "intent-engine-replacement-http-protocol-anchor"
+      and .issue == 54
+      and .in_scope == true
+      and .status == "passed"
+      and .scope == "replacement-kernel/http/query"
+      and .assertion_strength == "boolean"
+      and .rtop_case_id == "postgres-http-sparql-get-and-post-protocol"
+      and .source_path == "client/endpoint/src/main/java/it/unibz/inf/ontop/endpoint/controllers/SparqlQueryController.java"
+      and .command == "./scripts/test-delivery-compat.sh"
+    )
+' "$ledger" >/dev/null
+
+# #86 使用 rtop 版本控制的固定 FIBO mapping、ontology、schema 和查询资产；余额、
+# 放款、归属、货币反例与两种 ROUND 结果均在 HTTP JSON seam 比较。
+jq -e '
+  .entries as $entries
+  | any($entries[];
+      .asset_id == "intent-engine-fibo-main-postgres-endpoint"
+      and .issue == 86
+      and .in_scope == true
+      and .status == "passed"
+      and .scope == "replacement-kernel/integration/fibo-main"
+      and .assertion_strength == "full-term"
+      and .rtop_case_id == "intent-engine-fibo-main-postgres-endpoint"
+      and .reference_result.source == "tests/compat/postgres-fibo/fixtures/generated/query.sparql"
+      and .command == "./scripts/test-delivery-compat.sh"
+    )
+' "$ledger" >/dev/null
+
+# #87 必须保留 FIBO 本体和身份的正确结果及四个反例：删除 subclass、错误
+# equivalentClass、删除 weak alignment 和 unsafe owl:sameAs 都经真实 HTTP endpoint
+# 比较，不能以静态 ontology 审阅替代。
+jq -e '
+  .entries as $entries
+  | any($entries[];
+      .asset_id == "intent-engine-fibo-ontology-identity-counterexamples-postgres-endpoint"
+      and .issue == 87
+      and .in_scope == true
+      and .status == "passed"
+      and .scope == "replacement-kernel/integration/fibo-ontology-identity-counterexamples"
+      and .assertion_strength == "full-term"
+      and .rtop_case_id == "intent-engine-fibo-ontology-identity-counterexamples-postgres-endpoint"
+      and .reference_result.source == "tests/compat/postgres-fibo/fixtures/generated/fibo-loan-count-query.sparql"
+      and .command == "./scripts/test-delivery-compat.sh"
+    )
+' "$ledger" >/dev/null
+
+# #88 必须使用固定 scale facts 制品与原始三项 FIBO 查询，在隔离 PostgreSQL
+# endpoint 比较完整 RDF term；质量门槛和 30 秒资源上限属于同一交付场景。
+jq -e '
+  .entries as $entries
+  | any($entries[];
+      .asset_id == "intent-engine-fibo-scale-postgres-endpoint"
+      and .issue == 88
+      and .in_scope == true
+      and .status == "passed"
+      and .scope == "replacement-kernel/integration/fibo-scale"
+      and .assertion_strength == "full-term"
+      and .rtop_case_id == "intent-engine-fibo-scale-postgres-endpoint"
+      and .reference_result.source == "tests/compat/postgres-fibo/fixtures/scale/generated/facts.sql"
+      and .environment.timeout_seconds == 30
+      and .command == "./scripts/test-delivery-compat.sh"
+    )
+' "$ledger" >/dev/null
+
+# #85 必须下载并 hash 校验固定 NPD 制品，在完整 PostgreSQL dataset/mapping/OWL
+# 上以 HTTP JSON 和独立 SQL oracle 观察 BGP、VALUES+OPTIONAL 和 subclass 蕴含。
+jq -e '
+  .entries as $entries
+  | any($entries[];
+      .asset_id == "intent-engine-npd-postgres-endpoint"
+      and .issue == 85
+      and .in_scope == true
+      and .status == "passed"
+      and .scope == "replacement-kernel/integration/npd"
+      and .assertion_strength == "full-term"
+      and .rtop_case_id == "intent-engine-npd-postgres-endpoint"
+      and .reference_result.source == "tests/compat/postgres-npd-fixture.json"
+      and .environment.timeout_seconds == 30
+      and .command == "./scripts/test-delivery-compat.sh"
+    )
+' "$ledger" >/dev/null
+
+# #56 必须把关系图模式作为一个真实 PostgreSQL endpoint 情景验收：VALUES 的
+# multiset、OPTIONAL 的未绑定变量、MINUS 的共享变量负匹配和 UNION 的分支重数
+# 都必须以完整 RDF binding 与 ORDER BY 序列比较。
+jq -e '
+  .entries as $entries
+  | any($entries[];
+      .asset_id == "intent-engine-postgres-relational-pattern-bag"
+      and .issue == 56
+      and .in_scope == true
+      and .status == "passed"
+      and .scope == "replacement-kernel/query/relational-patterns"
+      and .assertion_strength == "full-term"
+      and .rtop_case_id == "postgres-relational-pattern-bag-endpoint"
+      and .command == "./scripts/test-delivery-compat.sh"
+    )
+' "$ledger" >/dev/null
+
+# #55 的最小纵切必须由真实 PostgreSQL endpoint 返回完整 RDF binding。账本只接受
+# 两个 native mapping source 的共享变量 BGP；SQL 文本、reformulate diagnostics 或
+# 旧的逐三元组内存 join 均不能替代该证据。
+jq -e '
+  .entries as $entries
+  | any($entries[];
+      .asset_id == "intent-engine-postgres-sql-reformulated-bgp"
+      and .issue == 55
+      and .in_scope == true
+      and .status == "passed"
+      and .scope == "replacement-kernel/query/sql-reformulation"
+      and .assertion_strength == "full-term"
+      and .rtop_case_id == "postgres-sql-reformulated-bgp-endpoint"
+      and .command == "./scripts/test-delivery-compat.sh"
+    )
+' "$ledger" >/dev/null
+
+# #57 必须以真实 PostgreSQL endpoint 验收 IN/NOT IN 的短路 error 规则，以及
+# BOUND、BIND 和字符串函数的组合结果；单元测试或纯 VALUES 不能替代 mapping 输入。
+jq -e '
+  .entries as $entries
+  | any($entries[];
+      .asset_id == "intent-engine-postgres-expression-in-bind-error"
+      and .issue == 57
+      and .in_scope == true
+      and .status == "passed"
+      and .scope == "replacement-kernel/query/expressions"
+      and .assertion_strength == "full-term"
+      and .rtop_case_id == "postgres-expression-in-bind-error-endpoint"
+      and .command == "./scripts/test-delivery-compat.sh"
+    )
+' "$ledger" >/dev/null
+
+# #58 必须在 PostgreSQL numeric mapping 输入上验收精确 decimal、正负 ROUND
+# 边界和聚合前/后舍入；不能用 f64 单元测试、SQL 文本或纯 BIND 替代。
+jq -e '
+  .entries as $entries
+  | any($entries[];
+      .asset_id == "intent-engine-postgres-decimal-round-exact"
+      and .issue == 58
+      and .in_scope == true
+      and .status == "passed"
+      and .scope == "replacement-kernel/query/decimal"
+      and .assertion_strength == "full-term"
+      and .rtop_case_id == "postgres-decimal-round-exact-endpoint"
+      and .command == "./scripts/test-delivery-compat.sh"
+    )
+' "$ledger" >/dev/null
+
+# #59 必须在真实 PostgreSQL mapping endpoint 中组合验收聚合子查询、HAVING
+# 以及聚合/算术表达式 ORDER BY；不能只由 parser 或内存 VALUES 测试替代。
+jq -e '
+  .entries as $entries
+  | any($entries[];
+      .asset_id == "intent-engine-postgres-aggregate-having-expression-order"
+      and .issue == 59
+      and .in_scope == true
+      and .status == "passed"
+      and .scope == "replacement-kernel/query/aggregation"
+      and .assertion_strength == "full-term"
+      and .rtop_case_id == "postgres-aggregate-having-expression-order-endpoint"
+      and .command == "./scripts/test-delivery-compat.sh"
+    )
+' "$ledger" >/dev/null
+
+# #60 必须以 PostgreSQL mapping endpoint 验收有界 path 的 bag 重数，以及与
+# outer binding 关联的 EXISTS/NOT EXISTS；parser 成功、SQL 文本或无关子查询均不足。
+jq -e '
+  .entries as $entries
+  | any($entries[];
+      .asset_id == "intent-engine-postgres-property-path-exists"
+      and .issue == 60
+      and .in_scope == true
+      and .status == "passed"
+      and .scope == "replacement-kernel/query/property-path-and-exists"
+      and .assertion_strength == "full-term"
+      and .rtop_case_id == "postgres-property-path-exists-endpoint"
+      and .command == "./scripts/test-delivery-compat.sh"
+    )
+' "$ledger" >/dev/null
+
+# #61 必须以真实 PostgreSQL endpoint 验收 FROM/FROM NAMED 对 named graph 的
+# 可见性；SERVICE 的固定 Ontop baseline 未支持边界也必须是稳定请求错误，不能向
+# 公网发起隐式请求或把 parser 成功冒充 federation 结果。
+jq -e '
+  .entries as $entries
+  | any($entries[];
+      .asset_id == "intent-engine-postgres-dataset-graph-and-service-boundary"
+      and .issue == 61
+      and .in_scope == true
+      and .status == "passed"
+      and .scope == "replacement-kernel/query/dataset-and-graph"
+      and .assertion_strength == "full-term"
+      and .rtop_case_id == "postgres-dataset-graph-service-boundary-endpoint"
+      and .command == "./scripts/test-delivery-compat.sh"
+    )
 ' "$ledger" >/dev/null
 
 # PostgreSQL 范围保留的 11 个非元 CLI 命令不能只凭文档叙述完成：每个
@@ -60,6 +266,22 @@ jq -e '
   | all(.[]; . as $asset_id | any($entries[]; .asset_id == $asset_id and .status == "passed"))
 ' "$ledger" >/dev/null
 
+# #83 的 endpoint 生命周期证据必须来自真实 PostgreSQL HTTP 请求：慢请求不能
+# 阻塞成功请求，失败不能污染成功结果，断开必须取消 pg_sleep 并保留后续请求能力。
+jq -e '
+  .entries as $entries
+  | any($entries[];
+      .asset_id == "postgres-http-request-isolation-cancellation-and-disconnect"
+      and .issue == 83
+      and .in_scope == true
+      and .status == "passed"
+      and .scope == "replacement-kernel/http/request-lifecycle"
+      and .assertion_strength == "boolean"
+      and .rtop_case_id == "postgres-http-request-isolation-cancellation-and-disconnect"
+      and .command == "./scripts/test-delivery-compat.sh"
+    )
+' "$ledger" >/dev/null
+
 # #44 的 PostgreSQL 类型、标识符和复杂值范围不能只由 compatibility report
 # 摘要声明：这些原子分别钉住 scalar datatype、identifier folding/quoted alias、
 # 正负 cast、服务器 regex、JSON/JSONB/array、动态 mapping expansion，以及
@@ -82,6 +304,46 @@ jq -e '
 ' "$ledger" >/dev/null
 
 jq -e '.entries as $e | ["postgres-facts-turtle-mapping-union","postgres-facts-nquads-named-graph","postgres-facts-rdfxml-explicit-base","postgres-facts-missing-malformed-error"] | all(.[]; . as $id | any($e[]; .asset_id == $id and .issue == 42 and .status == "passed"))' "$ledger" >/dev/null
+
+# #62 的 URL input、XML Catalog 与 imports closure 必须由真实 PostgreSQL
+# endpoint 证明；远程 IRI 经本地 catalog 映射，避免把公网可达性当成测试前提。
+jq -e '.entries as $e | any($e[]; .asset_id == "postgres-ontology-imports-url-catalog-endpoint" and .issue == 62 and .status == "passed" and .assertion_strength == "full-term")' "$ledger" >/dev/null
+
+# #63 必须同时钉住 OWL 2 QL TBox 的等价/无 filler 存在限制改写，以及限定
+# existential 的基线限制；不得用纯内存断言代替 PostgreSQL endpoint 观测。
+jq -e '.entries as $e | any($e[]; .asset_id == "postgres-owl-ql-tbox-closure-and-limit-endpoint" and .issue == 63 and .status == "passed" and .assertion_strength == "full-term")' "$ledger" >/dev/null
+
+# #64 的 native OBDA 不能只靠 runtime/CLI：template、NULL、named graph 及
+# source SQL 的加载期/执行期诊断均须由 PostgreSQL HTTP endpoint 保留。
+jq -e '.entries as $e | any($e[]; .asset_id == "postgres-native-obda-template-null-graph-source-endpoint" and .issue == 64 and .status == "passed" and .assertion_strength == "full-term")' "$ledger" >/dev/null
+
+# #67 将固定 EPNet native OBDA 的动态 class IRI 放到真实 PostgreSQL HTTP
+# endpoint 中验收；metadata 仍是 CLI schema catalog 契约，不能凭空扩展 endpoint
+# route。成功结果必须保留完整 URI term，而非仅比较基线的 countResults(1)。
+jq -e '.entries as $e | any($e[]; .asset_id == "postgres-epnet-dynamic-meta-mapping-endpoint" and .issue == 67 and .status == "passed" and .assertion_strength == "full-term" and .rtop_case_id == "postgres-epnet-meta-mapping-template-endpoint" and .command == "./scripts/test-delivery-compat.sh")' "$ledger" >/dev/null
+
+# #71 不能把 R2RML CLI 图对照冒充 endpoint 证据：原始 D014b 与 D008a
+# 必须分别经 PostgreSQL HTTP 返回 join/blank node/typed literal 和 GRAPH
+# template binding，同时 D007h 的 literal graphMap 必须保留 invalid-mapping 分类。
+jq -e '.entries as $e | any($e[]; .asset_id == "postgres-r2rml-term-map-join-graph-endpoint" and .issue == 71 and .status == "passed" and .assertion_strength == "full-term" and .rtop_case_id == "postgres-r2rml-term-map-join-graph-endpoint" and .command == "./scripts/test-delivery-compat.sh && ./scripts/test-postgres-compat.sh")' "$ledger" >/dev/null
+
+jq -e '.entries as $e | any($e[]; .asset_id == "postgres-direct-mapping-pk-fk-null-encoding-endpoint" and .issue == 74 and .status == "passed" and .assertion_strength == "full-term" and .rtop_case_id == "postgres-direct-mapping-pk-fk-null-encoding-endpoint")' "$ledger" >/dev/null
+
+# #77 的 PostgreSQL 类型、cast、regex 和标识符必须在真实 endpoint 返回 RDF
+# terms；metadata 是 Ontop CLI JSON 的可观察边界，不能被误报为虚构 HTTP route。
+jq -e '.entries as $e | any($e[]; .asset_id == "postgres-type-cast-identifier-regex-metadata-endpoint" and .issue == 77 and .status == "passed" and .assertion_strength == "full-term" and .rtop_case_id == "postgres-type-cast-identifier-regex-metadata-endpoint" and .command == "./scripts/test-delivery-compat.sh && ./scripts/test-postgres-compat.sh")' "$ledger" >/dev/null
+
+# #79 的 JSON、JSONB、array 和 PostGIS 均必须由真实 PostgreSQL endpoint 的
+# RDF term/空结果验收；不能退回 source SQL、CLI 行数或模拟 PostGIS 函数。
+jq -e '.entries as $e | any($e[]; .asset_id == "postgres-nested-json-jsonb-array-postgis-endpoint" and .issue == 79 and .status == "passed" and .assertion_strength == "full-term" and .rtop_case_id == "postgres-nested-json-jsonb-array-postgis-endpoint" and .command == "./scripts/test-delivery-compat.sh && ./scripts/test-postgres-compat.sh")' "$ledger" >/dev/null
+
+# #81 只把 PostgreSQL 约束保持的结果和请求可完成性视为 endpoint 契约；不得用
+# Ontop 内部 SQL 计划文字替代 NULL、FK join bag 与 aggregate RDF term 证据。
+jq -e '.entries as $e | any($e[]; .asset_id == "postgres-constraint-left-join-aggregate-endpoint" and .issue == 81 and .status == "passed" and .assertion_strength == "full-term" and .rtop_case_id == "postgres-constraint-left-join-aggregate-endpoint" and .command == "./scripts/test-delivery-compat.sh && ./scripts/test-postgres-compat.sh")' "$ledger" >/dev/null
+
+# #82 需要真实 PostgreSQL endpoint 的协议格式与 Accept 协商证据；JSON 的单一
+# happy path 不能替代 XML/CSV/TSV、N-Triples、dataset/config 与 406 边界。
+jq -e '.entries as $e | any($e[]; .asset_id == "postgres-http-result-formats-dataset-config-endpoint" and .issue == 82 and .status == "passed" and .assertion_strength == "full-term" and .rtop_case_id == "postgres-http-result-formats-dataset-config-endpoint" and .command == "./scripts/test-delivery-compat.sh && ./scripts/test-postgres-compat.sh")' "$ledger" >/dev/null
 
 jq -e '.entries as $e | any($e[]; .asset_id == "postgres-oci-no-jvm-default-endpoint-cli-secret-healthcheck" and .issue == 49 and .status == "passed")' "$ledger" >/dev/null
 

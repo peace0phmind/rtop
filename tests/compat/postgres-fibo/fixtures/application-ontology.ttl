@@ -1,0 +1,317 @@
+@prefix : <https://example.org/intent-engine/ontology/> .
+@prefix app: <https://example.org/intent-engine/ontology/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix fibo-loan: <https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/> .
+@prefix fibo-fbc-fe: <https://spec.edmcouncil.org/fibo/ontology/FBC/FunctionalEntities/FinancialServicesEntities/> .
+@prefix fibo-fbc-debt: <https://spec.edmcouncil.org/fibo/ontology/FBC/DebtAndEquities/Debt/> .
+@base <https://example.org/intent-engine/ontology/> .
+
+<https://example.org/intent-engine/ontology/> rdf:type owl:Ontology .
+
+#################################################################
+#    Annotation properties
+#################################################################
+
+###  http://www.w3.org/2004/02/skos/core#closeMatch
+skos:closeMatch rdf:type owl:AnnotationProperty .
+
+
+###  https://example.org/intent-engine/ontology/provenanceKind
+app:provenanceKind rdf:type owl:AnnotationProperty .
+
+
+###  https://example.org/intent-engine/ontology/sourceIri
+app:sourceIri rdf:type owl:AnnotationProperty .
+
+
+#################################################################
+#    Datatypes
+#################################################################
+
+###  http://www.w3.org/2001/XMLSchema#date
+xsd:date rdf:type rdfs:Datatype .
+
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  https://example.org/intent-engine/ontology/balanceOf
+app:balanceOf rdf:type owl:ObjectProperty ;
+              rdfs:domain app:BalanceObservation ;
+              rdfs:range app:LoanContract ;
+              app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/bookedBy
+app:bookedBy rdf:type owl:ObjectProperty ;
+             rdfs:domain app:LoanContract ;
+             rdfs:range app:BookingInstitution ;
+             app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/describesCanonical
+app:describesCanonical rdf:type owl:ObjectProperty ;
+                       rdfs:domain app:IdentityDecision ;
+                       app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/disbursementOf
+app:disbursementOf rdf:type owl:ObjectProperty ;
+                   rdfs:domain app:DisbursementEvent ;
+                   rdfs:range app:LoanContract ;
+                   app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/hasLender
+app:hasLender rdf:type owl:ObjectProperty ;
+              rdfs:domain app:LoanContract ;
+              rdfs:range app:Lender ;
+              app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/hasSourceDescription
+app:hasSourceDescription rdf:type owl:ObjectProperty ;
+                         rdfs:domain app:IdentityDecision ;
+                         rdfs:range app:SourceDescription ;
+                         app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/inRegion
+app:inRegion rdf:type owl:ObjectProperty ;
+             rdfs:domain app:BookingInstitution ;
+             rdfs:range app:Region ;
+             app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/participant
+app:participant rdf:type owl:ObjectProperty ;
+                rdfs:domain app:QualifiedParticipation ;
+                rdfs:range app:Party ;
+                app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/participationOf
+app:participationOf rdf:type owl:ObjectProperty ;
+                    rdfs:domain app:QualifiedParticipation ;
+                    rdfs:range app:LoanContract ;
+                    app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/partyInRegion
+app:partyInRegion rdf:type owl:ObjectProperty ;
+                  rdfs:domain app:Party ;
+                  rdfs:range app:Region ;
+                  app:provenanceKind "project-extension" .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  https://example.org/intent-engine/ontology/alias
+app:alias rdf:type owl:DatatypeProperty ;
+          rdfs:domain app:Region ;
+          rdfs:range xsd:string ;
+          app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/allocationPolicy
+app:allocationPolicy rdf:type owl:DatatypeProperty ;
+                     rdfs:domain app:QualifiedParticipation ;
+                     rdfs:range xsd:string ;
+                     app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/allocationWeight
+app:allocationWeight rdf:type owl:DatatypeProperty ;
+                     rdfs:domain app:QualifiedParticipation ;
+                     rdfs:range xsd:decimal ;
+                     app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/amount
+app:amount rdf:type owl:DatatypeProperty ;
+           rdfs:range xsd:decimal ;
+           app:provenanceKind "lexical-approximation" ;
+           app:sourceIri "https://spec.edmcouncil.org/fibo/ontology/FND/Accounting/CurrencyAmount/MonetaryAmount" .
+
+
+###  https://example.org/intent-engine/ontology/currency
+app:currency rdf:type owl:DatatypeProperty ;
+             rdfs:range xsd:string ;
+             app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/decisionStatus
+app:decisionStatus rdf:type owl:DatatypeProperty ;
+                   rdfs:domain app:IdentityDecision ;
+                   rdfs:range xsd:string ;
+                   app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/decisionVersion
+app:decisionVersion rdf:type owl:DatatypeProperty ;
+                    rdfs:domain app:IdentityDecision ;
+                    rdfs:range xsd:string ;
+                    app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/label
+app:label rdf:type owl:DatatypeProperty ;
+          rdfs:range xsd:string ;
+          app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/legalShare
+app:legalShare rdf:type owl:DatatypeProperty ;
+               rdfs:domain app:QualifiedParticipation ;
+               rdfs:range xsd:decimal ;
+               app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/occurredAt
+app:occurredAt rdf:type owl:DatatypeProperty ;
+               rdfs:range xsd:date ;
+               app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/participationRole
+app:participationRole rdf:type owl:DatatypeProperty ;
+                      rdfs:domain app:QualifiedParticipation ;
+                      rdfs:range xsd:string ;
+                      app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/participationValidFrom
+app:participationValidFrom rdf:type owl:DatatypeProperty ;
+                           rdfs:domain app:QualifiedParticipation ;
+                           rdfs:range xsd:date ;
+                           app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/participationValidTo
+app:participationValidTo rdf:type owl:DatatypeProperty ;
+                         rdfs:domain app:QualifiedParticipation ;
+                         rdfs:range xsd:date ;
+                         app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/sourceIdentifier
+app:sourceIdentifier rdf:type owl:DatatypeProperty ;
+                     rdfs:domain app:SourceDescription ;
+                     rdfs:range xsd:string ;
+                     app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/sourceSystem
+app:sourceSystem rdf:type owl:DatatypeProperty ;
+                 rdfs:domain app:SourceDescription ;
+                 rdfs:range xsd:string ;
+                 app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/taxIdentifier
+app:taxIdentifier rdf:type owl:DatatypeProperty ;
+                  rdfs:domain app:SourceDescription ;
+                  rdfs:range xsd:string ;
+                  app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/validFrom
+app:validFrom rdf:type owl:DatatypeProperty ;
+              rdfs:range xsd:date ;
+              app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/validTo
+app:validTo rdf:type owl:DatatypeProperty ;
+            rdfs:range xsd:date ;
+            app:provenanceKind "project-extension" .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  https://example.org/intent-engine/ontology/BalanceObservation
+app:BalanceObservation rdf:type owl:Class ;
+                       app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/BookingInstitution
+app:BookingInstitution rdf:type owl:Class ;
+                       rdfs:subClassOf fibo-fbc-fe:FinancialInstitution ;
+                       app:provenanceKind "logical-subclass" ;
+                       app:sourceIri "https://spec.edmcouncil.org/fibo/ontology/FBC/FunctionalEntities/FinancialServicesEntities/FinancialInstitution" .
+
+
+###  https://example.org/intent-engine/ontology/DisbursementEvent
+app:DisbursementEvent rdf:type owl:Class ;
+                      app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/IdentityDecision
+app:IdentityDecision rdf:type owl:Class ;
+                     app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/InternalLoanCategory
+app:InternalLoanCategory rdf:type owl:Class ;
+                         skos:closeMatch fibo-loan:Loan ;
+                         app:provenanceKind "weak-close-match" ;
+                         app:sourceIri "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/Loan" .
+
+
+###  https://example.org/intent-engine/ontology/Lender
+app:Lender rdf:type owl:Class ;
+           rdfs:subClassOf fibo-fbc-debt:Lender ;
+           app:provenanceKind "logical-subclass" ;
+           app:sourceIri "https://spec.edmcouncil.org/fibo/ontology/FBC/DebtAndEquities/Debt/Lender" .
+
+
+###  https://example.org/intent-engine/ontology/LoanContract
+app:LoanContract rdf:type owl:Class ;
+                 rdfs:subClassOf fibo-loan:Loan ;
+                 app:provenanceKind "logical-subclass" ;
+                 app:sourceIri "https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/Loan" .
+
+
+###  https://example.org/intent-engine/ontology/Party
+app:Party rdf:type owl:Class ;
+          app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/QualifiedParticipation
+app:QualifiedParticipation rdf:type owl:Class ;
+                           app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/Region
+app:Region rdf:type owl:Class ;
+           app:provenanceKind "project-extension" .
+
+
+###  https://example.org/intent-engine/ontology/SourceDescription
+app:SourceDescription rdf:type owl:Class ;
+                      app:provenanceKind "project-extension" .
+
+
+###  https://spec.edmcouncil.org/fibo/ontology/FBC/DebtAndEquities/Debt/Lender
+fibo-fbc-debt:Lender rdf:type owl:Class .
+
+
+###  https://spec.edmcouncil.org/fibo/ontology/FBC/FunctionalEntities/FinancialServicesEntities/FinancialInstitution
+fibo-fbc-fe:FinancialInstitution rdf:type owl:Class .
+
+
+###  https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/Loan
+fibo-loan:Loan rdf:type owl:Class .
+
+
+###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi

@@ -2,7 +2,222 @@
   "schema_version": 1,
   "purpose": "PostgreSQL 限定对照范围的增量覆盖账本骨架；不是全量发现集，也不以条目数宣称功能等价。",
   "ontop_baseline": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+  "replacement_kernel": {
+    "consumer": "外部 endpoint 兼容 profile（无运行时或测试反向依赖）",
+    "deployment_anchor": "固定 FIBO/NPD 兼容夹具与 Ontop 5.1.0 观察结果；其结果与固定 Ontop 源码基线分别记录，不互相替代。",
+    "acceptance_seam": "原生 rtop PostgreSQL SPARQL HTTP endpoint",
+    "result_ordering": "无 ORDER BY 的 tuple 按 bag/multiset 比较；含 ORDER BY 的 tuple 按规范化序列比较。",
+    "external_dependencies": "imports 和 SERVICE 仅通过固定本地服务、XML Catalog 或受控夹具验收。"
+  },
   "entries": [
+    {
+      "asset_id": "intent-engine-replacement-http-protocol-anchor",
+      "source_path": "client/endpoint/src/main/java/it/unibz/inf/ontop/endpoint/controllers/SparqlQueryController.java",
+      "baseline_asset": "替换内核最小端点锚：/sparql GET、form POST 与 application/sparql-query POST 的 PostgreSQL 可观察协议",
+      "scope": "replacement-kernel/http/query",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "受控 PostgreSQL 17 Docker 夹具启动原生 rtop endpoint；三种请求形状均以 HTTP 200 返回 SPARQL Results JSON ASK true，malformed query 返回 400、不可达数据源返回 500，且响应携带 no-store。",
+      "assertion_strength": "boolean",
+      "rtop_case_id": "postgres-http-sparql-get-and-post-protocol",
+      "reference_result": {
+        "source": "client/endpoint/src/main/java/it/unibz/inf/ontop/endpoint/controllers/SparqlQueryController.java",
+        "sha256": "d7d696481b71011f580071f1581d0efd7a3d228d90741605d1bb47486b7149be"
+      },
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl；固定 Ontop 源码和部署镜像双锚",
+        "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
+        "timeout_seconds": 300,
+        "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
+      },
+      "command": "./scripts/test-delivery-compat.sh",
+      "issue": 54,
+      "reviewed_on": "2026-09-06"
+    },
+    {
+      "asset_id": "intent-engine-postgres-sql-reformulated-bgp",
+      "source_path": "client/endpoint/src/main/java/it/unibz/inf/ontop/endpoint/controllers/SparqlQueryController.java",
+      "baseline_asset": "替换内核 native mapping 两 triple BGP、投影和 LIMIT 的 PostgreSQL endpoint 结果",
+      "scope": "replacement-kernel/query/sql-reformulation",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "受控 PostgreSQL 17 Docker 夹具经 POST /sparql 返回完整 person/name RDF binding；两个 native mapping source SQL 在 PostgreSQL 以共享 ?person JOIN 执行，Rust 只解码最终 bindings。",
+      "assertion_strength": "full-term",
+      "rtop_case_id": "postgres-sql-reformulated-bgp-endpoint",
+      "reference_result": {
+        "source": "tests/compat/postgres-http/sql-seam.rq",
+        "sha256": "9a1210afab7e01dd1c5ffc9ffb7db5e53c461fbdc822761af64a60a27199ca9c"
+      },
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl；固定 Ontop 源码和部署镜像双锚",
+        "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
+        "timeout_seconds": 300,
+        "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
+      },
+      "command": "./scripts/test-delivery-compat.sh",
+      "issue": 55,
+      "reviewed_on": "2026-09-06"
+    },
+    {
+      "asset_id": "intent-engine-postgres-relational-pattern-bag",
+      "source_path": "test/sparql-compliance/src/test/resources/testcases-sparql-1.1/negation/sparql11-minus-01.rq; test/sparql-compliance/src/test/resources/testcases-dawg/data-r2/optional/q-opt-1.rq",
+      "baseline_asset": "SPARQL JOIN、OPTIONAL、UNION、MINUS 与 VALUES 的 PostgreSQL endpoint bag/未绑定变量/负匹配语义",
+      "scope": "replacement-kernel/query/relational-patterns",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "受控 PostgreSQL 17 Docker endpoint 对重复 VALUES、NULL/未绑定 OPTIONAL、MINUS 负匹配和 UNION 分支逐项比较完整 RDF binding 与 ORDER BY 序列。",
+      "assertion_strength": "full-term",
+      "rtop_case_id": "postgres-relational-pattern-bag-endpoint",
+      "reference_result": {
+        "source": "tests/compat/postgres-http/algebra-bag.rq",
+        "sha256": "2a69521a3c761b4b26539c6298ecd86a8ac4ee36d4d9cff9e2687f6d843ac2eb"
+      },
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl；固定 Ontop 源码和部署镜像双锚",
+        "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
+        "timeout_seconds": 300,
+        "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
+      },
+      "command": "./scripts/test-delivery-compat.sh",
+      "issue": 56,
+      "reviewed_on": "2026-09-06"
+    },
+    {
+      "asset_id": "intent-engine-postgres-expression-in-bind-error",
+      "source_path": "test/sparql-compliance/src/test/resources/testcases-dawg-sparql-1.1/functions/in01.rq; test/sparql-compliance/src/test/resources/testcases-dawg-sparql-1.1/functions/notin01.rq; test/sparql-compliance/src/test/resources/testcases-dawg-sparql-1.1/functions/notin02.rq",
+      "baseline_asset": "SPARQL 1.1 FILTER IN/NOT IN、BIND 字符串函数与 expression error 短路的 PostgreSQL endpoint 语义",
+      "scope": "replacement-kernel/query/expressions",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "受控 PostgreSQL 17 Docker endpoint 逐项比较完整 RDF binding；IN 的首项命中短路忽略后续除零 error，未命中且含 error 的 binding 被 FILTER 排除，随后验证 BOUND、BIND、UCASE、STRLEN、CONCAT 与 NOT IN。",
+      "assertion_strength": "full-term",
+      "rtop_case_id": "postgres-expression-in-bind-error-endpoint",
+      "reference_result": {
+        "source": "tests/compat/postgres-http/expression-in-bind.rq",
+        "sha256": "565efd61743248ce8eb01fcfcf40e206cfdd6fec662bfb63e52dd6b03be9ba75"
+      },
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl；固定 Ontop 源码和部署镜像双锚",
+        "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
+        "timeout_seconds": 300,
+        "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
+      },
+      "command": "./scripts/test-delivery-compat.sh",
+      "issue": 57,
+      "reviewed_on": "2026-09-06"
+    },
+    {
+      "asset_id": "intent-engine-postgres-decimal-round-exact",
+      "source_path": "test/docker-tests/src/test/java/it/unibz/inf/ontop/docker/postgres/BindWithFunctionsPostgreSQLTest.java; test/sparql-compliance/src/test/resources/testcases-dawg-sparql-1.1/functions/round01.rq; test/sparql-compliance/src/test/resources/testcases-sparql-1.1/builtin/sparql11-round-01.rq; test/sparql-compliance/src/test/resources/testcases-sparql-1.1/builtin/sparql11-round-02.rq",
+      "baseline_asset": "PostgreSQL numeric 映射输入上的精确 xsd:decimal 算术、ROUND 边界与聚合前/后舍入 endpoint 语义",
+      "scope": "replacement-kernel/query/decimal",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "受控 PostgreSQL 17 Docker endpoint 对完整 RDF decimal binding 验证 0.10+0.20、正负 ROUND、SPARQL 负半值 ROUND(-2.5)=-2，以及 SUM、ROUND(SUM)、SUM(ROUND) 的不同结果；decimal/integer 路径不经过 f64。",
+      "assertion_strength": "full-term",
+      "rtop_case_id": "postgres-decimal-round-exact-endpoint",
+      "reference_result": {
+        "source": "tests/compat/postgres-http/decimal-round-aggregate.rq",
+        "sha256": "505311c2c0f69d10e0b17ec311c84e5ff94758494c8126f462ea3285ca2e1fb6"
+      },
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl；固定 Ontop 源码和部署镜像双锚",
+        "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
+        "timeout_seconds": 300,
+        "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
+      },
+      "command": "./scripts/test-delivery-compat.sh",
+      "issue": 58,
+      "reviewed_on": "2026-09-06"
+    },
+    {
+      "asset_id": "intent-engine-postgres-aggregate-having-expression-order",
+      "source_path": "test/sparql-compliance/src/test/resources/testcases-sparql-1.1/aggregates/sparql11-having-01.rq; test/sparql-compliance/src/test/resources/testcases-dawg/data-r2/sort/query-sort-numbers.rq; test/sparql-compliance/src/test/resources/testcases-dawg/data-r2/sort/query-sort-builtin.rq; test/sparql-compliance/src/test/resources/testcases-sparql-1.1/subquery/sparql11-subquery-03.rq; test/sparql-compliance/src/test/resources/testcases-sparql-1.1/subquery/sparql11-subquery-04.rq",
+      "baseline_asset": "SPARQL 1.1 聚合子查询、HAVING 与聚合/算术表达式 ORDER BY 的 PostgreSQL endpoint 语义",
+      "scope": "replacement-kernel/query/aggregation",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "受控 PostgreSQL 17 Docker endpoint 对同一 mapping 的分类 decimal 聚合执行子查询；HAVING 以聚合表达式筛选分组，内层 DESC(SUM()) 与外层 DESC(?total + 0.1) 均按数值表达式排序，并逐项比较完整 RDF binding。",
+      "assertion_strength": "full-term",
+      "rtop_case_id": "postgres-aggregate-having-expression-order-endpoint",
+      "reference_result": {
+        "source": "tests/compat/postgres-http/aggregate-having-order.rq",
+        "sha256": "8d5cb4b6682765911bb39bedb102b4aa9ca9bc8391db1eccdd93ce130139ccd9"
+      },
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl；固定 Ontop 源码和部署镜像双锚",
+        "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
+        "timeout_seconds": 300,
+        "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
+      },
+      "command": "./scripts/test-delivery-compat.sh",
+      "issue": 59,
+      "reviewed_on": "2026-09-06"
+    },
+    {
+      "asset_id": "intent-engine-postgres-property-path-exists",
+      "source_path": "test/sparql-compliance/src/test/resources/testcases-dawg-sparql-1.1/property-path/pp11.rq; test/sparql-compliance/src/test/resources/testcases-sparql-1.1/negation/exists-01.rq; test/sparql-compliance/src/test/resources/testcases-sparql-1.1/negation/exists-02.rq; test/sparql-compliance/src/test/resources/testcases-sparql-1.1/negation/sparql11-exists-06.rq; binding/rdf4j/src/test/java/it/unibz/inf/ontop/rdf4j/repository/ExistsTest.java",
+      "baseline_asset": "SPARQL 有界 property path 与关联 EXISTS/NOT EXISTS 的 PostgreSQL endpoint 语义",
+      "scope": "replacement-kernel/query/property-path-and-exists",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "受控 PostgreSQL 17 Docker endpoint 在 native OBDA mapping 输入上验证两条不同中间节点的 sequence path 保留两条同终点 binding；FILTER EXISTS 与 FILTER NOT EXISTS 按 outer person 关联，并以内部 FILTER 的相关 NOT EXISTS 仅保留 person/3、decimal 3.0。",
+      "assertion_strength": "full-term",
+      "rtop_case_id": "postgres-property-path-exists-endpoint",
+      "reference_result": {
+        "source": "tests/compat/postgres-http/property-path-exists.rq",
+        "sha256": "0d86404959e58afda083d522414988b758b1f0079286d4786ff92592694a6467"
+      },
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl；固定 Ontop 源码和部署镜像双锚",
+        "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
+        "timeout_seconds": 300,
+        "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
+      },
+      "command": "./scripts/test-delivery-compat.sh",
+      "issue": 60,
+      "reviewed_on": "2026-09-06"
+    },
+    {
+      "asset_id": "intent-engine-postgres-dataset-graph-and-service-boundary",
+      "source_path": "test/rdb2rdf-compliance/src/test/resources/D007/{create.sql,r2rmlb.ttl,mappedb.nq}; test/sparql-compliance/src/test/resources/testcases-dawg/data-r2/graph/{graph-03.rq,graph-04.rq,graph-07.rq,graph-08.rq}; test/sparql-compliance/src/test/resources/testcases-dawg/data-r2/dataset/{dataset-04.rq,dataset-06.rq,dataset-07.rq,dataset-08.rq}; test/sparql-compliance/src/test/resources/testcases-dawg-sparql-1.1/service/service07.rq; test/sparql-compliance/src/test/java/it/unibz/inf/ontop/test/sparql11/MemorySPARQL11QueryTest.java",
+      "baseline_asset": "PostgreSQL named graph、FROM/FROM NAMED dataset 与 Ontop SERVICE 未支持边界的 endpoint 语义",
+      "scope": "replacement-kernel/query/dataset-and-graph",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "受控 PostgreSQL 17 Docker endpoint 对 native OBDA named-graph mapping 验证 FROM 将该图作为默认图、FROM NAMED 仅对 GRAPH IRI 可见；完整 RDF binding 与默认图隔离均由 HTTP JSON 比较。GRAPH variable 在 N-Quads runtime 回归中仅枚举 named graph。Ontop 固定基线明确忽略 SERVICE tests，endpoint 对 SERVICE 稳定返回 unsupported-sparql 而不进行公网访问。",
+      "assertion_strength": "full-term",
+      "rtop_case_id": "postgres-dataset-graph-service-boundary-endpoint",
+      "reference_result": {
+        "source": "tests/compat/postgres-http/dataset-graph.rq",
+        "sha256": "496f2230de851ac9dc4521ed46712861378be3f2b351065e33c7c1d7c3dd3b58"
+      },
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl；固定 Ontop 源码和部署镜像双锚",
+        "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
+        "timeout_seconds": 300,
+        "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
+      },
+      "command": "./scripts/test-delivery-compat.sh",
+      "issue": 61,
+      "reviewed_on": "2026-09-06"
+    },
     {
       "asset_id": "cli-simplemapping-select-bgp",
       "source_path": "client/cli/src/test/resources/test/simplemapping.obda",
@@ -2259,7 +2474,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 停止 endpoint 并删除按 PID 命名的 Docker PostgreSQL 容器"
       },
@@ -2285,7 +2500,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 停止 endpoint 并删除按 PID 命名的 Docker PostgreSQL 容器"
       },
@@ -2311,7 +2526,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust CLI",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 停止 endpoint 并删除按 PID 命名的 Docker PostgreSQL 容器；数据库端口由 Docker 自动分配"
       },
@@ -2337,7 +2552,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust CLI",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 停止 endpoint 并删除按 PID 命名的 Docker PostgreSQL 容器；数据库端口由 Docker 自动分配"
       },
@@ -2363,7 +2578,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust CLI",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 停止 endpoint 并删除按 PID 命名的 Docker PostgreSQL 容器；数据库端口由 Docker 自动分配"
       },
@@ -2389,7 +2604,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust CLI",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 停止 endpoint 并删除按 PID 命名的 Docker PostgreSQL 容器；输出文件位于 mktemp 目录"
       },
@@ -2415,7 +2630,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust CLI",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器；格式化输出位于 mktemp 目录"
       },
@@ -2441,7 +2656,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust CLI",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器；转换 mapping 与 properties 位于 mktemp 目录"
       },
@@ -2467,7 +2682,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust CLI",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器；native 输出位于 mktemp 目录"
       },
@@ -2493,7 +2708,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust CLI",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器；R2RML 输出位于 mktemp 目录"
       },
@@ -2519,7 +2734,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust CLI",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器；R2RML 输出位于 mktemp 目录"
       },
@@ -2545,7 +2760,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust CLI",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器；R2RML 输出位于 mktemp 目录"
       },
@@ -2571,7 +2786,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust CLI",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器；转换输出位于 mktemp 目录"
       },
@@ -2597,7 +2812,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust CLI",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器；转换输出位于 mktemp 目录"
       },
@@ -2623,7 +2838,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust CLI",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器；转换输出位于 mktemp 目录"
       },
@@ -2649,7 +2864,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust CLI",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器；R2RML 输出位于 mktemp 目录"
       },
@@ -2675,7 +2890,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust CLI",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器和 mktemp 输出目录"
       },
@@ -2701,7 +2916,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust CLI",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器；R2RML 输出位于 mktemp 目录"
       },
@@ -2727,7 +2942,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust CLI",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器；native 输出位于 mktemp 目录"
       },
@@ -2753,7 +2968,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
       },
@@ -2779,7 +2994,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
       },
@@ -2805,7 +3020,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust CLI",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器；数据库端口由 Docker 自动分配"
       },
@@ -2831,7 +3046,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust CLI",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器；数据库端口由 Docker 自动分配"
       },
@@ -2857,7 +3072,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
       },
@@ -2883,7 +3098,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust integration test",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器；测试仅查询，容器销毁后无 fixture 残留"
       },
@@ -2909,7 +3124,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust integration test",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器；测试仅查询，容器销毁后无 fixture 残留"
       },
@@ -3533,7 +3748,7 @@
       "environment": {
         "jdk_or_container": "Docker OCI image；postgres:17 Docker；Rust endpoint/CLI",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除 endpoint/database 容器、Docker network 和 mktemp 配置目录"
       },
@@ -3559,7 +3774,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
       },
@@ -3585,7 +3800,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl；RTOP_DEVELOPMENT=1",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
       },
@@ -3611,7 +3826,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
       },
@@ -3637,7 +3852,7 @@
       "environment": {
         "jdk_or_container": "postgres:17 Docker；Rust CLI",
         "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
-        "initialization_sql_sha256": "092e49ae297c9ad3d228ac7cbe9252da51d94c0bed858c4ce1c12dfb5590c1f6",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器和 mktemp 输出目录"
       },
@@ -8064,6 +8279,388 @@
       "command": "./scripts/test-postgres-compat.sh",
       "issue": 44,
       "reviewed_on": "2026-09-05"
+    },
+    {
+      "asset_id": "postgres-ontology-imports-url-catalog-endpoint",
+      "source_path": "mapping/owlapi/src/main/java/it/unibz/inf/ontop/injection/impl/OntopMappingOntologyConfigurationImpl.java; mapping/owlapi/src/main/java/it/unibz/inf/ontop/injection/OntopMappingOntologyConfiguration.java; client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopMappingOntologyRelatedCommand.java; client/docker/README.md; ontology/owlapi/src/main/java/it/unibz/inf/ontop/spec/ontology/owlapi/OWLAPITranslatorOWL2QL.java",
+      "baseline_asset": "Ontop OWLAPI imports closure、ontology URL 和 --xml-catalog IRI 重定向入口",
+      "scope": "replacement-kernel/ontology/imports-catalog",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "PostgreSQL 17 Docker endpoint 将顶层 HTTPS ontology IRI 和其 owl:imports 子 IRI 精确重定向至本地 XML Catalog；child 回指 root 的循环由 canonical path 去重。Child mapping 以 Parent 查询获得三个完整 IRI term。未映射远程 import 的 unit 回归稳定拒绝且不访问网络。",
+      "assertion_strength": "full-term",
+      "rtop_case_id": "postgres-ontology-imports-url-catalog-endpoint",
+      "reference_result": {
+        "source": "tests/compat/postgres-http/imports-catalog.rq",
+        "sha256": "251760448c601d3b1ba0fdb181388baa0d793345d905a188c0f96227740ddd87"
+      },
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl；固定 Ontop 源码和部署镜像双锚",
+        "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
+        "timeout_seconds": 300,
+        "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
+      },
+      "command": "./scripts/test-delivery-compat.sh",
+      "issue": 62,
+      "reviewed_on": "2026-09-06"
+    },
+    {
+      "asset_id": "postgres-owl-ql-tbox-closure-and-limit-endpoint",
+      "source_path": "ontology/owlapi/src/main/java/it/unibz/inf/ontop/spec/ontology/owlapi/OWLAPITranslatorOWL2QL.java; binding/rdf4j/src/test/resources/tbox-facts/university-complete.ttl; binding/rdf4j/src/test/java/it/unibz/inf/ontop/rdf4j/repository/UniversityTBoxFactTest.java",
+      "baseline_asset": "OWLAPITranslatorOWL2QL 的 equivalent、property closure、exists R.Thing domain 归一化与非 2 QL 限制",
+      "scope": "replacement-kernel/ontology/owl-ql-tbox",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "PostgreSQL 17 Docker endpoint 对 native OBDA mapping 比较完整 RDF term：equivalentClass、equivalentProperty 和 exists R.owl:Thing subclass 均返回三个 person IRI；带 Professor filler 的左侧 existential 不产生类型蕴含。既有同一 PostgreSQL TBox gate 覆盖 subclass、subproperty、domain/range、inverse 与 disjoint inconsistency。",
+      "assertion_strength": "full-term",
+      "rtop_case_id": "postgres-owl-ql-tbox-closure-and-limit-endpoint",
+      "reference_result": {
+        "source": "tests/compat/postgres-http/tbox-equivalent-class.rq; tests/compat/postgres-http/tbox-equivalent-property.rq; tests/compat/postgres-http/tbox-existential-domain.rq; tests/compat/postgres-http/tbox-qualified-existential-limit.rq",
+        "sha256": "7fec37f37d797c27e2fc5a1807380ddd72f96fbd505bd198169ad274904afc0e;cc934b08de635ad4ffffd89c3f6b6419a3583362859263f121743c87a80eba8c;9635eb6cdd5ece397bd4ab360c2a073fee117fb94a6158e0eb9f7e2b0312a56e;a3fab7f51fbe60d7eeedd6c0ea29d43aeddac0c26f1249670ce4c5fe8e5084bd"
+      },
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl；固定 Ontop 源码和部署镜像双锚",
+        "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
+        "timeout_seconds": 300,
+        "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
+      },
+      "command": "./scripts/test-delivery-compat.sh && ./scripts/test-postgres-compat.sh",
+      "issue": 63,
+      "reviewed_on": "2026-09-06"
+    },
+    {
+      "asset_id": "postgres-direct-mapping-pk-fk-null-encoding-endpoint",
+      "source_path": "test/rdb2rdf-compliance/src/test/resources/D009/{create.sql,directGraph.ttl,manifest.ttl}; test/rdb2rdf-compliance/src/test/resources/D010/{create.sql,directGraph.ttl,manifest.ttl}",
+      "baseline_asset": "RDB2RDF DirectGraph D009 primary key/foreign key/NULL 与 D010 空格标识 percent encoding",
+      "scope": "replacement-kernel/direct-mapping",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "PostgreSQL 17 Docker endpoint 由 catalog 原生生成 Direct Mapping：D009 返回完整 PK/FK URI，NULL FK 的 ASK 为 false；D010 以 percent-encoded relation/column URI 返回完整 xsd:string binding。",
+      "assertion_strength": "full-term",
+      "rtop_case_id": "postgres-direct-mapping-pk-fk-null-encoding-endpoint",
+      "reference_result": {"source": "../ontop/test/rdb2rdf-compliance/src/test/resources/D009/directGraph.ttl", "sha256": "e34f424c8f2e044de25b9a16ee25c5afae7ad18314dfc6275191fbd387ed1ea8"},
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {"jdk_or_container":"postgres:17 Docker；Rust endpoint；curl；固定 Ontop 源码和部署镜像双锚","database_image_digest":"postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675","initialization_sql_sha256":"2ac1e882d0307a64e298869838b19fbed740defbaef952a8bf365666b76964bd","timeout_seconds":300,"cleanup_strategy":"shell trap 删除 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"},
+      "command": "./scripts/test-delivery-compat.sh && ./scripts/test-postgres-compat.sh",
+      "issue": 74,
+      "reviewed_on": "2026-09-06"
+    },
+    {
+      "asset_id": "postgres-r2rml-term-map-join-graph-endpoint",
+      "source_path": "test/rdb2rdf-compliance/src/test/resources/D014/{create.sql,r2rmlb.ttl,mappedb.nq,manifest.ttl}; test/rdb2rdf-compliance/src/test/resources/D008/{create.sql,r2rmla.ttl,mappeda.nq,manifest.ttl}; test/rdb2rdf-compliance/src/test/resources/D007/r2rmlh.ttl",
+      "baseline_asset": "R2RML D014b RefObjectMap join/blank node、D008a template graphMap，以及 D007h literal graphMap 非法映射",
+      "scope": "replacement-kernel/mapping/r2rml",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "PostgreSQL 17 Docker endpoint 直接加载固定 R2RML Turtle：D014b 的跨 TriplesMap join 返回 employee URI、department bnode 与 integer RDF term；D008a 的 GRAPH 模式返回 percent-encoded subject URI 与 string RDF term；D007h 的 literal graphMap 在请求时稳定归类为 HTTP 500 invalid-mapping。CLI 完整图对照仍覆盖该组资产的全部 triples 和 blank-node 同构。",
+      "assertion_strength": "full-term",
+      "rtop_case_id": "postgres-r2rml-term-map-join-graph-endpoint",
+      "reference_result": {
+        "source": "../ontop/test/rdb2rdf-compliance/src/test/resources/D014/mappedb.nq",
+        "sha256": "455637bc22b9f07b7d6e0eea68e687578b1a918b83750ab06a8b7aacdff4789f"
+      },
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl；固定 Ontop 源码和部署镜像双锚",
+        "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+        "initialization_sql_sha256": "cc419e93368fe55a8009468021ef797b842c829e92d04cab3643e3be70cb8742",
+        "timeout_seconds": 300,
+        "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录；D001 Student 在后续 D008 schema 前显式 DROP"
+      },
+      "command": "./scripts/test-delivery-compat.sh && ./scripts/test-postgres-compat.sh",
+      "issue": 71,
+      "reviewed_on": "2026-09-06"
+    },
+    {
+      "asset_id": "postgres-epnet-dynamic-meta-mapping-endpoint",
+      "source_path": "test/docker-tests/src/test/java/it/unibz/inf/ontop/docker/postgres/MetaMappingExpanderTest.java; test/docker-tests/src/test/resources/pgsql/EPNet.obda",
+      "baseline_asset": "EPNet native OBDA 的 {rp_id} 动态 class IRI 与 {i_id} 动态 subject IRI 元映射展开；基线以 countResults(1) 观察 :AmphoraSection4-4",
+      "scope": "replacement-kernel/mapping/native-obda/meta-mapping",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "PostgreSQL 17 Docker 中装载固定 EPNet schema 和原始 Ontop native OBDA，Rust SPARQL endpoint 对 :AmphoraSection4-4 返回唯一完整 Inscription-101 URI binding。metadata snapshot/bootstrapping 保持既有 CLI 边界；endpoint 不伪造 Ontop 未提供的 metadata route，mapping 读取期与运行期错误仍由 #64 的 invalid-mapping/datasource-failure endpoint evidence 分类。",
+      "assertion_strength": "full-term",
+      "rtop_case_id": "postgres-epnet-meta-mapping-template-endpoint",
+      "reference_result": {
+        "source": "tests/compat/postgres-metamapping/expected.txt",
+        "sha256": "b298a526010ecb4f3cb4cece182128a186d5118abe896db6d5c7b785b5b35596"
+      },
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl；固定 Ontop 源码和部署镜像双锚",
+        "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+        "initialization_sql_sha256": "52148318dbd61057efd7f36e31a7513c8025fb37aa5680e0eadae6f74f0b803f",
+        "timeout_seconds": 300,
+        "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
+      },
+      "command": "./scripts/test-delivery-compat.sh",
+      "issue": 67,
+      "reviewed_on": "2026-09-06"
+    },
+    {
+      "asset_id": "postgres-type-cast-identifier-regex-metadata-endpoint",
+      "source_path": "test/lightweight-tests/src/test/java/it/unibz/inf/ontop/docker/lightweight/postgresql/CastPostgreSQLTest.java; test/docker-tests/src/test/java/it/unibz/inf/ontop/docker/postgres/RegexPostgresSQLTest.java; test/docker-tests/src/test/java/it/unibz/inf/ontop/docker/postgres/PostgresIdentifierTest.java; client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopExtractDBMetadata.java",
+      "baseline_asset": "CastPostgreSQLTest 的 date cast、RegexPostgresSQLTest 的 regex RDF 查询、PostgresIdentifierTest 的 quoted/unquoted identifier 与 extract-db-metadata JSON catalog 边界",
+      "scope": "replacement-kernel/postgresql/types-identifiers-metadata",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "PostgreSQL 17 Docker endpoint 直接加载固定 books、regex、identifiers native OBDA：精确返回四个 xsd:date lexical term、person/2 URI、Country-a 与 Country4-a URI。前者覆盖带引号 Characters relation 的未引号列折叠，后者覆盖显式带引号 LETTER alias。metadata 不伪造 HTTP route，而由既有 extract-db-metadata CLI 精确输出 relation/column/constraint JSON；CLI gate 同时保留非法 cast、regex negation 和其余 identifier/constraint 证据。",
+      "assertion_strength": "full-term",
+      "rtop_case_id": "postgres-type-cast-identifier-regex-metadata-endpoint",
+      "reference_result": {
+        "source": "tests/compat/postgres-cast/cast-date-from-mapped-datetime.expected",
+        "sha256": "68b0e247832fa50caf864fa6f8a90bc210c3253510b5d9ffc5b93e06958b41ce"
+      },
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker；Rust endpoint、curl 与 Rust CLI；固定 Ontop 源码和部署镜像双锚",
+        "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+        "initialization_sql_sha256": "52a7f53e57c3df394a0a39c4f383843f7c0b760872c782c282b0e0815d0b8c13",
+        "timeout_seconds": 300,
+        "cleanup_strategy": "shell trap 删除 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
+      },
+      "command": "./scripts/test-delivery-compat.sh && ./scripts/test-postgres-compat.sh",
+      "issue": 77,
+      "reviewed_on": "2026-09-06"
+    },
+    {
+      "asset_id": "postgres-nested-json-jsonb-array-postgis-endpoint",
+      "source_path": "test/lightweight-tests/src/test/java/it/unibz/inf/ontop/docker/lightweight/postgresql/NestedDataJSONPostgreSQLTest.java; test/lightweight-tests/src/test/java/it/unibz/inf/ontop/docker/lightweight/postgresql/NestedDataJSONBPostgreSQLTest.java; test/lightweight-tests/src/test/java/it/unibz/inf/ontop/docker/lightweight/postgresql/NestedDataArrayPostgreSQLTest.java; test/lightweight-tests/src/test/java/it/unibz/inf/ontop/docker/lightweight/postgresql/other/GeoSPARQLPostGISTest.java",
+      "baseline_asset": "AbstractNestedDataTest 的 JSON/JSONB/array 展开和 GeoSPARQLPostGISTest 的 geometry/geography buffer/intersection",
+      "scope": "replacement-kernel/postgresql/nested-geospatial",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "PostgreSQL 17 Docker endpoint 直接加载三种 native OBDA，完整比较 worker simple-literal bag 与 id=2 空内层数组的两项反事实结果。真实 PostGIS 17/3.5 endpoint 则比较 geometry/geography buffer-intersection 的完整 geo:wktLiteral，并对两个 NewGeom 混合类型场景断言无 binding；不把 SQL 文本、CLI 行数或模拟函数当作 endpoint 证据。",
+      "assertion_strength": "full-term",
+      "rtop_case_id": "postgres-nested-json-jsonb-array-postgis-endpoint",
+      "reference_result": {
+        "source": "tests/compat/postgres-geospatial/intersection-2.rq",
+        "sha256": "f65a86488ac9feccb100b36e5ef0028bf8821a02486968bb0e37aceb0f8f9acd"
+      },
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker 与 PostGIS 3.5 / PostgreSQL 17 Docker；Rust endpoint；curl；固定 Ontop 源码和部署镜像双锚",
+        "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+        "postgis_image_digest": "postgis:17-3.5@sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6",
+        "initialization_sql_sha256": "fdf45d35f6e081bb950c4e19ae034ce19860d10b2159d32f9efba384bf846b0b",
+        "timeout_seconds": 300,
+        "cleanup_strategy": "shell trap 删除 PostgreSQL 与 PostGIS Docker 容器、endpoint 进程和 mktemp 输出目录"
+      },
+      "command": "./scripts/test-delivery-compat.sh && ./scripts/test-postgres-compat.sh",
+      "issue": 79,
+      "reviewed_on": "2026-09-06"
+    },
+    {
+      "asset_id": "postgres-constraint-left-join-aggregate-endpoint",
+      "source_path": "test/lightweight-tests/src/test/java/it/unibz/inf/ontop/docker/lightweight/AbstractConstraintTest.java; test/lightweight-tests/src/test/java/it/unibz/inf/ontop/docker/lightweight/postgresql/ConstraintPostgreSQLTest.java; test/docker-tests/src/test/java/it/unibz/inf/ontop/docker/AbstractLeftJoinProfTest.java; test/docker-tests/src/test/java/it/unibz/inf/ontop/docker/postgres/LeftJoinProfPgSQLTest.java",
+      "baseline_asset": "ConstraintPostgreSQLTest 的 PostgreSQL key/FK metadata 与 AbstractLeftJoinProfTest 的 OPTIONAL、FK join bag、aggregate mapping 可观察结果",
+      "scope": "replacement-kernel/postgresql/constraint-preserving-query",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "PostgreSQL 17 Docker endpoint 在固定 course/professors primary key 与 teaching 双 foreign key 输入上，精确比较 OPTIONAL NULL 反事实的四个 simple literal、FK join 保留重数的四个 binding，以及 aggregate mapping 的 12/13/31 xsd:integer terms。优化是否删除 LEFT 或缩减表出现次数不属于 Rust 的稳定公开契约；请求结果可观察且可完成。",
+      "assertion_strength": "full-term",
+      "rtop_case_id": "postgres-constraint-left-join-aggregate-endpoint",
+      "reference_result": {
+        "source": "tests/compat/postgres-aggregates/aggregation-mapping-prof-student-count-property.expected",
+        "sha256": "9edeba1582ea29c8729b778044ed2cd9d548dce05fee2092671b32a31d404448"
+      },
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl；固定 Ontop 源码和部署镜像双锚",
+        "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+        "initialization_sql_sha256": "b386dd9fe261246d5f3d94617e1765587099c7b9c583f9751ee66b71a36bca0a",
+        "timeout_seconds": 300,
+        "cleanup_strategy": "shell trap 删除 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
+      },
+      "command": "./scripts/test-delivery-compat.sh && ./scripts/test-postgres-compat.sh",
+      "issue": 81,
+      "reviewed_on": "2026-09-06"
+    },
+    {
+      "asset_id": "postgres-http-result-formats-dataset-config-endpoint",
+      "source_path": "client/endpoint/src/main/java/it/unibz/inf/ontop/endpoint/controllers/SparqlQueryController.java; client/endpoint/src/main/java/it/unibz/inf/ontop/endpoint/OntopEndpointApplication.java; client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopEndpoint.java",
+      "baseline_asset": "Ontop endpoint 的 SPARQL HTTP 请求/结果协商、dataset 参数与原生 endpoint 配置边界",
+      "scope": "replacement-kernel/http/protocol-negotiation",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "PostgreSQL 17 Docker endpoint 对同一完整 name/person RDF binding 协商 JSON、XML、CSV、TSV，并以 N-Triples 返回 CONSTRUCT 三元组；unsupported Accept 稳定为 HTTP 406。既有同一 gate 还验证 GET、form/query-body POST、FROM/FROM NAMED、TOML 配置、Turtle 与 400/500/no-store，未以内部 serializer 或 SQL 文本替代协议结果。",
+      "assertion_strength": "full-term",
+      "rtop_case_id": "postgres-http-result-formats-dataset-config-endpoint",
+      "reference_result": {
+        "source": "tests/compat/postgres-http/sql-seam.rq",
+        "sha256": "9a1210afab7e01dd1c5ffc9ffb7db5e53c461fbdc822761af64a60a27199ca9c"
+      },
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl；固定 Ontop 源码和部署镜像双锚",
+        "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+        "initialization_sql_sha256": "ee1603fa1e7bf488fbb937e915f9f0ea3603631d2a93b08a27749b5ffb851512",
+        "timeout_seconds": 300,
+        "cleanup_strategy": "shell trap 删除 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
+      },
+      "command": "./scripts/test-delivery-compat.sh && ./scripts/test-postgres-compat.sh",
+      "issue": 82,
+      "reviewed_on": "2026-09-06"
+    },
+    {
+      "asset_id": "postgres-http-request-isolation-cancellation-and-disconnect",
+      "source_path": "test/docker-tests/src/test/java/it/unibz/inf/ontop/docker/QuestParallelScenario.java; client/endpoint/src/main/java/it/unibz/inf/ontop/endpoint/OntopEndpointApplication.java",
+      "baseline_asset": "Ontop endpoint 并发请求隔离、取消和客户端断开后的 PostgreSQL 清理边界",
+      "scope": "replacement-kernel/http/request-lifecycle",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "PostgreSQL 17 Docker 的同一 rtop endpoint 中，pg_sleep(5) 映射请求持续执行时，ASK true 可立即完成；缺失 relation 的 datasource-failure 与成功 ASK 并发而不互相污染。curl 一秒超时主动关闭慢请求后，pg_stat_activity 不再有该 pg_sleep，endpoint 随后仍返回 ASK true，证明取消传播、清理及后续连接可用。",
+      "assertion_strength": "boolean",
+      "rtop_case_id": "postgres-http-request-isolation-cancellation-and-disconnect",
+      "reference_result": {
+        "source": "tests/compat/postgres-concurrency/delayed.rq",
+        "sha256": "76907dd746782b83a524ff02ccb0db66c40e23a6e6c266a38920cc7d807b24fa"
+      },
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl；固定 Ontop 源码和部署镜像双锚",
+        "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+        "initialization_sql_sha256": "2f8c8db1b3d4e125207128d1d326c2490db5348f13d55f51a231c4f44a3d4959",
+        "timeout_seconds": 300,
+        "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
+      },
+      "command": "./scripts/test-delivery-compat.sh",
+      "issue": 83,
+      "reviewed_on": "2026-09-06"
+    },
+    {
+      "asset_id": "intent-engine-fibo-main-postgres-endpoint",
+      "source_path": "tests/compat/postgres-fibo/fixtures/{application-ontology.ttl,generated/{mapping.obda,schema.sql,query.sparql,disbursement-query.sparql,primary-attribution-query.sparql,allocated-attribution-query.sparql,boundary-rounding-query.sparql,per-fact-rounding-query.sparql}}",
+      "baseline_asset": "intent-engine-ontop 主 FIBO 服务的贷款余额、放款、归属、时态、货币与金额舍入 SPARQL HTTP/SQL oracle 场景",
+      "scope": "replacement-kernel/integration/fibo-main",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "以原始 FIBO application ontology、native OBDA mapping 和 PostgreSQL schema/facts 启动 rtop endpoint；form POST JSON 精确返回 2025-12-31 CNY 余额 130、2025 放款 100、主借款人归属 150、分配归属华东 110/华南 40。2040 三条放款的聚合后 ROUND 为 0.01，而逐事实 ROUND 为 0.02；USD ASK 为 false，保留金额与货币反例。",
+      "assertion_strength": "full-term",
+      "rtop_case_id": "intent-engine-fibo-main-postgres-endpoint",
+      "reference_result": {
+        "source": "tests/compat/postgres-fibo/fixtures/generated/query.sparql",
+        "sha256": "0861f5bf2f302ad037bee8fc10d08f8f1d815589e57368500d0261d6b71bb78b"
+      },
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl/jq；rtop 版本控制的固定 FIBO 兼容夹具",
+        "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+        "initialization_sql_sha256": "fef0dd2f3183937d34d3b82087c49b0e4379acc64eb8d3309c4e6f1f651ad86f",
+        "timeout_seconds": 300,
+        "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
+      },
+      "command": "./scripts/test-delivery-compat.sh",
+      "issue": 86,
+      "reviewed_on": "2026-09-06"
+    },
+    {
+      "asset_id": "intent-engine-fibo-ontology-identity-counterexamples-postgres-endpoint",
+      "source_path": "tests/compat/postgres-fibo/fixtures/generated/{fibo-loan-count-query.sparql,no-loan-entailment-ontology.ttl,wrong-equivalence-ontology.ttl,no-weak-alignment-ontology.ttl,unsafe-identity-ontology.ttl,unsafe-identity-mapping.obda,schema.sql}",
+      "baseline_asset": "intent-engine-ontop FIBO 删除 subclass、错误 equivalentClass、删除 weak alignment 和 unsafe owl:sameAs identity 的原始 endpoint 反例",
+      "scope": "replacement-kernel/integration/fibo-ontology-identity-counterexamples",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "原始 schema/facts、COUNT query 与四个原始 ontology/mapping 变体经 rtop PostgreSQL HTTP endpoint 完整 RDF term 验收：正确 subclass=2，删除 subclass=0，错误 equivalentClass=3，删除 weak closeMatch=2；unsafe identity 返回 lender.alpha/同名贷款人/2，保留未经批准 sameAs 合并的污染反例。",
+      "assertion_strength": "full-term",
+      "rtop_case_id": "intent-engine-fibo-ontology-identity-counterexamples-postgres-endpoint",
+      "reference_result": {
+        "source": "tests/compat/postgres-fibo/fixtures/generated/fibo-loan-count-query.sparql",
+        "sha256": "b4716440575cf0ac0087864bd09f44a1db3b42d68b5e6b8cd665b9e67c2675f3"
+      },
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl/jq；rtop 版本控制的固定 FIBO 兼容夹具",
+        "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+        "initialization_sql_sha256": "fef0dd2f3183937d34d3b82087c49b0e4379acc64eb8d3309c4e6f1f651ad86f",
+        "timeout_seconds": 300,
+        "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
+      },
+      "command": "./scripts/test-delivery-compat.sh",
+      "issue": 87,
+      "reviewed_on": "2026-09-06"
+    },
+    {
+      "asset_id": "intent-engine-fibo-scale-postgres-endpoint",
+      "source_path": "tests/compat/postgres-fibo/fixtures/{application-ontology.ttl,generated/{mapping.obda,query.sparql,disbursement-query.sparql,allocated-attribution-query.sparql},scale/generated/{facts.sql,manifest.json}}",
+      "baseline_asset": "intent-engine-ontop 固定 FIBO scale-factor 100 的 PostgreSQL SQL oracle、质量门槛与三项聚合 SPARQL endpoint 场景",
+      "scope": "replacement-kernel/integration/fibo-scale",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "在隔离 fibo_scale PostgreSQL 数据库加载原始固定虚构 facts.sql，manifest 的 590 行/220 金融事实、有效期 overlap 与当前余额 grain 质量检查均通过。三项原始 SPARQL 在 rtop HTTP endpoint 的 30 秒资源上限内，以完整 RDF decimal term 返回独立 SQL oracle 的华东/华南余额 6542397.01/11766095.40、放款 23777.00/17860.00、分配归属 8837752.83/9470749.58。",
+      "assertion_strength": "full-term",
+      "rtop_case_id": "intent-engine-fibo-scale-postgres-endpoint",
+      "reference_result": {
+        "source": "tests/compat/postgres-fibo/fixtures/scale/generated/facts.sql",
+        "sha256": "68d8a7c2b4a26886caee2586dfb2a662d0ba247dd115670abba80cc380fd75a6"
+      },
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl/jq；rtop 版本控制的固定 FIBO scale 兼容夹具；独立 PostgreSQL SQL oracle",
+        "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+        "initialization_sql_sha256": "68d8a7c2b4a26886caee2586dfb2a662d0ba247dd115670abba80cc380fd75a6",
+        "timeout_seconds": 30,
+        "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
+      },
+      "command": "./scripts/test-delivery-compat.sh",
+      "issue": 88,
+      "reviewed_on": "2026-09-06"
+    },
+    {
+      "asset_id": "intent-engine-npd-postgres-endpoint",
+      "source_path": "tests/compat/postgres-npd-fixture.json；https://github.com/ontop/npd-benchmark.git@5b1eeb39c36c0dd5c69c835fd93d204d19be30dd",
+      "baseline_asset": "intent-engine-ontop 固定 NPD PostgreSQL 基线的 licence BGP、VALUES+OPTIONAL dateUpdated 与 ProductionLicence subclass Agent SPARQL HTTP/SQL oracle",
+      "scope": "replacement-kernel/integration/npd",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "gate 从公开 NPD 固定 commit 下载并 git-blob 校验完整 npd.psql、OBDA 与 OWL，在隔离 npd PostgreSQL 数据库加载。rtop HTTP endpoint 全 RDF term 返回 BGP 20756/20764/20772、VALUES+OPTIONAL 的未绑定 20756 和 2012-07-04 20980，以及 ProductionLicence -> Agent subclass 正例 20756；每项同时与独立 PostgreSQL SQL oracle 比较。",
+      "assertion_strength": "full-term",
+      "rtop_case_id": "intent-engine-npd-postgres-endpoint",
+      "reference_result": {
+        "source": "tests/compat/postgres-npd-fixture.json",
+        "sha256": "4af1846de330c9fd7422c11631d53f4c9738f59f42cec45b32bf948323f2c02b"
+      },
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl/jq；公开固定 NPD 制品；独立 PostgreSQL SQL oracle",
+        "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+        "initialization_sql_sha256": "de318f9a8e0a0f8530c730fa9775c8fbb3027046ea95ea57488407121de807a3",
+        "timeout_seconds": 30,
+        "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
+      },
+      "command": "./scripts/test-delivery-compat.sh",
+      "issue": 85,
+      "reviewed_on": "2026-09-06"
+    },
+    {
+      "asset_id": "postgres-native-obda-template-null-graph-source-endpoint",
+      "source_path": "mapping/sql/all/src/test/resources/mistake/{invalid-sql1.obda,missing-target-term.obda,correct.obda}; test/rdb2rdf-compliance/src/test/resources/D007/{create.sql,r2rmlb.ttl,mappedb.nq}",
+      "baseline_asset": "native OBDA template/language/NULL/named graph 与 mapping source 的读取期、执行期诊断边界",
+      "scope": "replacement-kernel/mapping/native-obda",
+      "in_scope": true,
+      "status": "passed",
+      "status_reason": "PostgreSQL 17 Docker endpoint 的 native OBDA mapping 对 language 与 typed RDF term 比较完整 binding，NULL row 不产生 triple；named graph 由同一 HTTP fixture 的 dataset case 验收。直接引用固定 Ontop mistake assets，input SQL/target 错误稳定为 invalid-mapping，已可解析但 relation 缺失的 source 稳定为 datasource-failure。",
+      "assertion_strength": "full-term",
+      "rtop_case_id": "postgres-native-obda-template-null-graph-source-endpoint",
+      "reference_result": {
+        "source": "tests/compat/postgres-http/native-obda-terms-null.rq",
+        "sha256": "35eeebc7772556dde0291d84a59a6e290eab8321972bfb8597006e2818d3859d"
+      },
+      "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl；固定 Ontop 源码和部署镜像双锚",
+        "database_image_digest": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675",
+        "initialization_sql_sha256": "ee1603fa1e7bf488fbb937e915f9f0ea3603631d2a93b08a27749b5ffb851512",
+        "timeout_seconds": 300,
+        "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
+      },
+      "command": "./scripts/test-delivery-compat.sh && ./scripts/test-postgres-compat.sh",
+      "issue": 64,
+      "reviewed_on": "2026-09-06"
     }
   ]
 }

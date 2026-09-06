@@ -4,16 +4,18 @@ CREATE TABLE course (
   nb_students integer NOT NULL,
   duration numeric(38,4) NOT NULL
 );
-CREATE TABLE teaching (
-  course_id varchar(100) NOT NULL,
-  prof_id integer NOT NULL,
-  PRIMARY KEY (course_id, prof_id)
-);
 CREATE TABLE professors (
   prof_id integer PRIMARY KEY,
   first_name varchar(100) NOT NULL,
   last_name varchar(100) NOT NULL,
   nickname varchar(100)
+);
+CREATE TABLE teaching (
+  course_id varchar(100) NOT NULL,
+  prof_id integer NOT NULL,
+  PRIMARY KEY (course_id, prof_id),
+  FOREIGN KEY (prof_id) REFERENCES professors(prof_id),
+  FOREIGN KEY (course_id) REFERENCES course(course_id)
 );
 INSERT INTO course (course_id, nb_students, duration) VALUES
   ('LinearAlgebra', 10, 24.5),
@@ -21,12 +23,6 @@ INSERT INTO course (course_id, nb_students, duration) VALUES
   ('AdvancedDatabases', 12, 20),
   ('ScientificWriting', 13, 18),
   ('OperatingSystems', 10, 30);
-INSERT INTO teaching (course_id, prof_id) VALUES
-  ('LinearAlgebra', 1),
-  ('DiscreteMathematics', 1),
-  ('AdvancedDatabases', 3),
-  ('ScientificWriting', 8),
-  ('OperatingSystems', 1);
 INSERT INTO professors (prof_id, first_name, last_name, nickname) VALUES
   (1, 'Roger', 'Smith', 'Rog'),
   (2, 'Frank', 'Pitt', 'Frankie'),
@@ -36,3 +32,9 @@ INSERT INTO professors (prof_id, first_name, last_name, nickname) VALUES
   (6, 'Johann', 'Helmer', NULL),
   (7, 'Barbara', 'Dodero', NULL),
   (8, 'Mary', 'Poppins', NULL);
+INSERT INTO teaching (course_id, prof_id) VALUES
+  ('LinearAlgebra', 1),
+  ('DiscreteMathematics', 1),
+  ('AdvancedDatabases', 3),
+  ('ScientificWriting', 8),
+  ('OperatingSystems', 1);

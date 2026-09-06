@@ -1,0 +1,7 @@
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+SELECT ?student ?name WHERE {
+  GRAPH <http://example.com/graph/Student/10/Venus%20Williams> {
+    ?student foaf:name ?name .
+  }
+}

@@ -1,0 +1,3 @@
+SELECT (SUM(?amount) AS ?total) (ROUND(SUM(?amount)) AS ?roundAfterSum) (SUM(ROUND(?amount)) AS ?sumAfterRound) WHERE {
+  ?entry <https://example.test/amount> ?amount .
+}

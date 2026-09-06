@@ -1,0 +1,15 @@
+PREFIX app: <https://example.org/intent-engine/ontology/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?region ?label ((ROUND(SUM(?amount) * 100)) / 100 AS ?value)
+WHERE {
+  ?loan a app:LoanContract ; app:bookedBy ?institution .
+  ?institution app:inRegion ?region .
+  ?region app:label ?label .
+  ?event a app:DisbursementEvent ; app:disbursementOf ?loan ;
+    app:amount ?amount ; app:currency "CNY" ; app:occurredAt ?occurredAt .
+  FILTER (?occurredAt >= "2025-01-01"^^xsd:date)
+  FILTER (?occurredAt < "2026-01-01"^^xsd:date)
+}
+GROUP BY ?region ?label
+LIMIT 1000

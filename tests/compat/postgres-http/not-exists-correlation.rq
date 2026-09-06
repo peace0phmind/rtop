@@ -1,0 +1,7 @@
+SELECT ?person ?value WHERE {
+  ?person <https://example.test/value> ?value .
+  FILTER NOT EXISTS {
+    ?person <https://example.test/otherValue> ?other .
+    FILTER(?value = ?other)
+  }
+}

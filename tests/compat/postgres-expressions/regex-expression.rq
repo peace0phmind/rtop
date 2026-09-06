@@ -1,5 +1,5 @@
-PREFIX ex: <http://example.test/>
+PREFIX ex: <http://www.owl-ontologies.com/Ontology1207768242.owl#>
 SELECT ?person WHERE {
-  ?person ex:name ?name .
+  ?person ex:firstName ?name .
   FILTER(REGEX(?name, "walter", "i"))
 }

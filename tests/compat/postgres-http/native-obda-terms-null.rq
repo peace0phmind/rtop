@@ -1,0 +1,4 @@
+SELECT ?person ?label WHERE {
+  ?person <https://example.test/label> ?label .
+}
+ORDER BY ?person

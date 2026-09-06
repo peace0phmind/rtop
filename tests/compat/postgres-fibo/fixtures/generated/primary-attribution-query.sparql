@@ -1,0 +1,15 @@
+PREFIX app: <https://example.org/intent-engine/ontology/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?region ?label ((ROUND(SUM(?amount) * 100)) / 100 AS ?value) WHERE {
+  ?observation a app:BalanceObservation ; app:balanceOf ?loan ; app:amount ?amount ;
+    app:currency "CNY" ; app:validFrom ?balanceFrom .
+  OPTIONAL { ?observation app:validTo ?balanceTo }
+  ?participation a app:QualifiedParticipation ; app:participationOf ?loan ;
+    app:participant ?party ; app:participationRole ?role ;
+    app:participationValidFrom ?participationFrom .
+  OPTIONAL { ?participation app:participationValidTo ?participationTo }
+  ?party app:partyInRegion ?region . ?region app:label ?label .
+  FILTER (?role = "primary-borrower")
+  FILTER (?balanceFrom <= "2025-06-30"^^xsd:date && (!BOUND(?balanceTo) || "2025-06-30"^^xsd:date < ?balanceTo))
+  FILTER (?participationFrom <= "2025-06-30"^^xsd:date && (!BOUND(?participationTo) || "2025-06-30"^^xsd:date < ?participationTo))
+} GROUP BY ?region ?label ORDER BY ?region

@@ -1,0 +1,13 @@
+PREFIX app: <https://example.org/intent-engine/ontology/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?region ?label (SUM((ROUND(?amount * 100)) / 100) AS ?value) (COUNT(?event) AS ?factCount)
+WHERE {
+  ?loan a app:LoanContract ; app:bookedBy ?institution .
+  ?institution app:inRegion ?region .
+  ?region app:label ?label .
+  ?event a app:DisbursementEvent ; app:disbursementOf ?loan ;
+    app:amount ?amount ; app:currency "CNY" ; app:occurredAt ?occurredAt .
+  FILTER (?occurredAt >= "2040-01-01"^^xsd:date && ?occurredAt < "2041-01-01"^^xsd:date)
+}
+GROUP BY ?region ?label
+ORDER BY ?region

@@ -1,4 +1,4 @@
-mapping = "../postgres-query-kinds/mapping.obda"
+mapping = "mapping-algebra-bag.obda"
 ontology = "ontology.ttl"
 
 [endpoint]

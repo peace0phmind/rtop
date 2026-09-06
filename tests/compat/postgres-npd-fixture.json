@@ -1,0 +1,9 @@
+{
+  "source": "https://github.com/ontop/npd-benchmark.git",
+  "commit": "5b1eeb39c36c0dd5c69c835fd93d204d19be30dd",
+  "artifacts": {
+    "data/postgres/npd.psql": "f9fd2cf2f8fcd635cf77ba678d67c971adc339e2",
+    "mappings/postgres/npd-v2-ql.obda": "0661b1930238fd2c78241af3a83702090626b3da",
+    "ontology/npd-v2-ql.owl": "8940b9109245b95204ef4ee89d15ce2a2b2dc47c"
+  }
+}

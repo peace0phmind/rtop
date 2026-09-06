@@ -1,0 +1,7 @@
+PREFIX emp: <http://example.com/emp#>
+PREFIX dept: <http://example.com/dept#>
+
+SELECT ?employee ?department ?departmentNumber WHERE {
+  ?employee emp:c_ref_deptno ?department .
+  ?department dept:deptno ?departmentNumber .
+}

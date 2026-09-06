@@ -24,6 +24,7 @@ pub use model::{Binding, QueryResult, RdfFact, RdfTerm, RuntimeError};
 pub use rdf::format_rdf_term;
 pub use server::serve;
 
+use bigdecimal::{BigDecimal, RoundingMode, Signed, Zero};
 use chrono::{Datelike, NaiveDate, NaiveDateTime, NaiveTime, Timelike};
 use mapping::BindingTerm;
 use rand::random;
@@ -34,7 +35,7 @@ use sparql::{
     Expression, Filter, FilterValue, GraphPattern, LogicalOperator, OrderByTerm, Query,
     TriplePattern,
 };
-use std::{cmp::Reverse, collections::BTreeMap, io::Read};
+use std::{cmp::Reverse, collections::BTreeMap, io::Read, str::FromStr};
 use uuid::Uuid;
 
 /// VKG 的唯一高层 seam：加载配置并执行查询。
@@ -92,7 +93,9 @@ impl<D: DataSource> VkgRuntime<D> {
             }
         };
         let ontology = match &spec.ontology_file {
-            Some(path) => ontology::Ontology::load(path)?,
+            Some(path) => {
+                ontology::Ontology::load_with_catalog(path, spec.xml_catalog_file.as_deref())?
+            }
             None => ontology::Ontology::default(),
         };
         ontology.validate_facts(&facts)?;
@@ -113,6 +116,7 @@ impl<D: DataSource> VkgRuntime<D> {
                 aggregates,
                 projection_binds,
                 group_by,
+                having,
                 distinct,
                 order_by,
                 offset,
@@ -120,11 +124,18 @@ impl<D: DataSource> VkgRuntime<D> {
             } => {
                 let mut rows = self.evaluate_graph_pattern(&pattern, vec![Binding::new()])?;
                 if !aggregates.is_empty()
+                    || !having.is_empty()
                     || projection_binds
                         .iter()
                         .any(|bind| expression_contains_aggregate(&bind.expression))
                 {
-                    rows = aggregate_bindings(rows, &aggregates, &group_by, &projection_binds);
+                    rows = aggregate_bindings(
+                        rows,
+                        &aggregates,
+                        &group_by,
+                        &projection_binds,
+                        &having,
+                    );
                 } else if !group_by.is_empty() {
                     rows = group_binding_representatives(rows, &group_by);
                     rows = apply_projection_binds(rows, &projection_binds);
@@ -560,6 +571,9 @@ impl<D: DataSource> VkgRuntime<D> {
                 })
                 .collect());
         }
+        if let Some(rows) = self.select_bgp_postgres_sql(patterns, projections)? {
+            return Ok(rows);
+        }
         // BGP 中 triple 的书写顺序不改变语义。先取每个 pattern 的候选，再优先沿已
         // 绑定变量连接，避免 IMDB 这类高基数 mapping 形成平方级中间结果。
         let mut candidates = patterns
@@ -583,6 +597,133 @@ impl<D: DataSource> VkgRuntime<D> {
             .collect())
     }
 
+    /// #55 的最小 SQL 改写纵切。每个 triple 都先由 native mapping 改写为一个
+    /// PostgreSQL 子查询，再以共享 SPARQL 变量的 RDF-term 列在数据库内 JOIN。
+    ///
+    /// 只有在不存在 facts/TBox 扩展、每个 triple 有唯一 mapping plan，且重复变量的
+    /// term kind/base 一致时才进入该路径；否则由既有通用 evaluator 保持语义。这样不
+    /// 会把受限 SQL 下推错误扩大为对 GRAPH、推理或混合事实图的支持声明。
+    fn select_bgp_postgres_sql(
+        &mut self,
+        patterns: &[TriplePattern],
+        projections: &[String],
+    ) -> Result<Option<Vec<Binding>>, RuntimeError> {
+        if !self.source.supports_postgres_bgp_pushdown()
+            || !self.facts.is_empty()
+            || self.spec.ontology_file.is_some()
+        {
+            return Ok(None);
+        }
+        let mut plans = Vec::with_capacity(patterns.len());
+        for pattern in patterns {
+            if pattern.predicate.starts_with('?') {
+                return Ok(None);
+            }
+            let Ok(candidate_plans) = self.mapping.reformulate(pattern, &variables(pattern)) else {
+                return Ok(None);
+            };
+            if candidate_plans.len() != 1 || candidate_plans[0].object_validation.is_some() {
+                return Ok(None);
+            }
+            // 完全绑定的 triple plan 不投影 RDF term。最小纵切不把它与可投影
+            // plan 混合成 SELECT 空列；此类 ASK/约束 BGP 继续走通用 evaluator。
+            if candidate_plans[0].variables.is_empty() {
+                return Ok(None);
+            }
+            plans.push(candidate_plans.into_iter().next().expect("single plan"));
+        }
+
+        let mut parameters = Vec::new();
+        let mut from = String::new();
+        let mut select_columns = Vec::new();
+        let mut variable_order = Vec::new();
+        let mut bindings: BTreeMap<String, (BindingTerm, Option<String>, String)> = BTreeMap::new();
+        for (plan_index, plan) in plans.iter().enumerate() {
+            let alias = format!("p{plan_index}");
+            let columns = (0..plan.variables.len())
+                .map(|index| format!("c{index}"))
+                .collect::<Vec<_>>();
+            let sql = renumber_postgres_parameters(&plan.sql, parameters.len());
+            parameters.extend(plan.parameters.iter().cloned());
+            let relation = format!("({sql}) AS {alias}({})", columns.join(", "));
+            if plan_index == 0 {
+                from.push_str(&relation);
+            } else {
+                let mut conditions = Vec::new();
+                for (column_index, variable) in plan.variables.iter().enumerate() {
+                    if let Some((term, iri_base, reference)) = bindings.get(variable) {
+                        if term != &plan.terms[column_index]
+                            || iri_base != &plan.iri_bases[column_index]
+                        {
+                            return Ok(None);
+                        }
+                        conditions.push(format!("{reference} = {alias}.{}", columns[column_index]));
+                    }
+                }
+                from.push_str(&format!(
+                    " JOIN {relation} ON {}",
+                    if conditions.is_empty() {
+                        "TRUE".into()
+                    } else {
+                        conditions.join(" AND ")
+                    }
+                ));
+            }
+            for (column_index, variable) in plan.variables.iter().enumerate() {
+                let reference = format!("{alias}.{}", columns[column_index]);
+                if !bindings.contains_key(variable) {
+                    let output = format!("__rtop_bgp_{}", bindings.len());
+                    select_columns.push(format!("{reference} AS {output}"));
+                    variable_order.push(variable.clone());
+                    bindings.insert(
+                        variable.clone(),
+                        (
+                            plan.terms[column_index].clone(),
+                            plan.iri_bases[column_index].clone(),
+                            reference,
+                        ),
+                    );
+                }
+            }
+        }
+        let projected = projections
+            .iter()
+            .filter_map(|variable| bindings.get(variable).map(|_| variable))
+            .collect::<Vec<_>>();
+        let sql = format!("SELECT {} FROM {from}", select_columns.join(", "));
+        let rows = self.source.execute_typed(&sql, &parameters)?;
+        let mut decoded = Vec::with_capacity(rows.len());
+        for row in rows {
+            if row.iter().any(Option::is_none) {
+                continue;
+            }
+            let mut binding = Binding::new();
+            for (index, variable) in variable_order.iter().enumerate() {
+                let (term, iri_base, _) = bindings.get(variable).expect("binding metadata");
+                binding.insert(
+                    variable.clone(),
+                    decode_mapping_term(
+                        row[index].as_ref().expect("NULL rows are filtered"),
+                        term,
+                        iri_base.as_deref(),
+                    )?,
+                );
+            }
+            decoded.push(
+                projected
+                    .iter()
+                    .filter_map(|variable| {
+                        binding
+                            .get(*variable)
+                            .cloned()
+                            .map(|term| ((*variable).clone(), term))
+                    })
+                    .collect(),
+            );
+        }
+        Ok(Some(decoded))
+    }
+
     fn evaluate_graph_pattern(
         &mut self,
         pattern: &GraphPattern,
@@ -591,6 +732,20 @@ impl<D: DataSource> VkgRuntime<D> {
         match pattern {
             GraphPattern::Empty => Ok(input),
             GraphPattern::Bgp(patterns) => {
+                // 顶层 SELECT 的空 binding BGP 与 ASK/CONSTRUCT 使用同一个执行
+                // seam。这样可让可安全下推的 native mapping BGP 在 PostgreSQL 内
+                // JOIN，同时保留后续带输入 binding 的 OPTIONAL/UNION 通用路径。
+                if input.len() == 1 && input[0].is_empty() && patterns.len() > 1 {
+                    let mut projections = Vec::new();
+                    for triple in patterns {
+                        for variable in variables(triple) {
+                            if !projections.contains(&variable) {
+                                projections.push(variable);
+                            }
+                        }
+                    }
+                    return self.select_bgp(patterns, &projections);
+                }
                 // Basic graph pattern 是交换律 join；优先有共享变量的候选会显著压低
                 // 虚拟 mapping 的中间 binding 数量，同时保留输入 binding 的兼容性语义。
                 let mut candidates = patterns
@@ -656,14 +811,21 @@ impl<D: DataSource> VkgRuntime<D> {
                 aggregates,
                 projection_binds,
                 group_by,
+                having,
                 distinct,
                 order_by,
                 offset,
                 limit,
             } => {
                 let mut inner = self.evaluate_graph_pattern(pattern, vec![Binding::new()])?;
-                if !aggregates.is_empty() {
-                    inner = aggregate_bindings(inner, aggregates, group_by, projection_binds);
+                if !aggregates.is_empty()
+                    || !having.is_empty()
+                    || projection_binds
+                        .iter()
+                        .any(|bind| expression_contains_aggregate(&bind.expression))
+                {
+                    inner =
+                        aggregate_bindings(inner, aggregates, group_by, projection_binds, having);
                 } else if !group_by.is_empty() {
                     inner = group_binding_representatives(inner, group_by);
                     inner = apply_projection_binds(inner, projection_binds);
@@ -710,6 +872,27 @@ impl<D: DataSource> VkgRuntime<D> {
                     rows.retain(|row| matches_filter(row, filter));
                 }
                 Ok(rows)
+            }
+            GraphPattern::Exists {
+                pattern,
+                exists,
+                negated,
+            } => {
+                let rows = self.evaluate_graph_pattern(pattern, input)?;
+                let mut output = Vec::new();
+                for row in rows {
+                    let matches = match self.evaluate_graph_pattern(exists, vec![row.clone()]) {
+                        Ok(matches) => !matches.is_empty(),
+                        // 虚拟图中没有对应 mapping rule 的 EXISTS pattern 等价于空图，
+                        // 而非令整个 outer query 出错。
+                        Err(RuntimeError::NotFullyTranslatable(_)) => false,
+                        Err(error) => return Err(error),
+                    };
+                    if matches != *negated {
+                        output.push(row);
+                    }
+                }
+                Ok(output)
             }
         }
     }
@@ -786,16 +969,15 @@ fn sort_bindings_by(rows: &mut [Binding], order_by: &[OrderByTerm]) {
     }
     rows.sort_by(|left, right| {
         for term in order_by {
-            let ordering = left
-                .get(&term.variable)
-                .map(format_rdf_term)
-                .unwrap_or_default()
-                .cmp(
-                    &right
-                        .get(&term.variable)
-                        .map(format_rdf_term)
-                        .unwrap_or_default(),
-                );
+            let left_value = evaluate_expression(left, &term.expression);
+            let right_value = evaluate_expression(right, &term.expression);
+            let ordering = match (&left_value, &right_value) {
+                (Some(left), Some(right)) => sparql_value_ordering(left, right)
+                    .unwrap_or_else(|| format_rdf_term(left).cmp(&format_rdf_term(right))),
+                (None, Some(_)) => std::cmp::Ordering::Less,
+                (Some(_), None) => std::cmp::Ordering::Greater,
+                (None, None) => std::cmp::Ordering::Equal,
+            };
             if ordering != Ordering::Equal {
                 return if term.descending {
                     ordering.reverse()
@@ -878,6 +1060,12 @@ fn expression_contains_aggregate(expression: &Expression) -> bool {
         | Expression::Comparison { left, right, .. } => {
             expression_contains_aggregate(left) || expression_contains_aggregate(right)
         }
+        Expression::In {
+            value, candidates, ..
+        } => {
+            expression_contains_aggregate(value)
+                || candidates.iter().any(expression_contains_aggregate)
+        }
         Expression::Function { arguments, .. } => {
             arguments.iter().any(expression_contains_aggregate)
         }
@@ -899,6 +1087,7 @@ fn aggregate_bindings(
     aggregates: &[Aggregate],
     group_by: &[String],
     projection_binds: &[Bind],
+    having: &[Expression],
 ) -> Vec<Binding> {
     let mut groups: Vec<(Binding, Vec<Binding>)> = Vec::new();
     for row in rows {
@@ -921,7 +1110,7 @@ fn aggregate_bindings(
     }
     groups
         .into_iter()
-        .map(|(mut key, members)| {
+        .filter_map(|(mut key, members)| {
             for aggregate in aggregates {
                 if let Some(value) = evaluate_aggregate(&members, aggregate).or_else(|| {
                     aggregate
@@ -939,7 +1128,16 @@ fn aggregate_bindings(
                     key.insert(bind.variable.clone(), value);
                 }
             }
-            key
+            having
+                .iter()
+                .all(|expression| {
+                    let mut bindings = key.clone();
+                    let mut next = 0usize;
+                    materialize_aggregates(expression, &members, &mut bindings, &mut next)
+                        .and_then(|expression| expression_boolean(&bindings, &expression))
+                        == Some(true)
+                })
+                .then_some(key)
         })
         .collect()
 }
@@ -1011,6 +1209,18 @@ fn materialize_aggregates(
             operator: *operator,
             left: Box::new(recurse(left, bindings, next)?),
             right: Box::new(recurse(right, bindings, next)?),
+        },
+        Expression::In {
+            value,
+            candidates,
+            negated,
+        } => Expression::In {
+            value: Box::new(recurse(value, bindings, next)?),
+            candidates: candidates
+                .iter()
+                .map(|candidate| recurse(candidate, bindings, next))
+                .collect::<Option<Vec<_>>>()?,
+            negated: *negated,
         },
         Expression::Function {
             name,
@@ -1166,6 +1376,31 @@ fn evaluate_aggregate(rows: &[Binding], aggregate: &Aggregate) -> Option<RdfTerm
                     _ => unreachable!("aggregate kind was matched above"),
                 };
             }
+            // SUM 直接消费 PostgreSQL numeric 时也必须避开 f64。否则聚合前/后
+            // ROUND 的值会受二进制误差影响，即使单行 BIND 已经是精确 decimal。
+            if matches!(aggregate.kind, AggregateKind::Sum) {
+                let exact = values
+                    .iter()
+                    .map(exact_decimal_from_term)
+                    .collect::<Option<Vec<_>>>();
+                if let Some(exact) = exact {
+                    let all_integers = exact
+                        .iter()
+                        .all(|(_, datatype)| is_integer_datatype(datatype));
+                    let sum = exact
+                        .into_iter()
+                        .map(|(value, _)| value)
+                        .fold(BigDecimal::zero(), |sum, value| sum + value);
+                    return exact_numeric_result_term(
+                        sum,
+                        if all_integers {
+                            "http://www.w3.org/2001/XMLSchema#integer"
+                        } else {
+                            "http://www.w3.org/2001/XMLSchema#decimal"
+                        },
+                    );
+                }
+            }
             let sum = numeric.iter().map(|(value, _)| value).sum::<f64>();
             if matches!(aggregate.kind, AggregateKind::Sum)
                 && numeric
@@ -1239,6 +1474,25 @@ fn evaluate_expression(row: &Binding, expression: &Expression) -> Option<RdfTerm
             left,
             right,
         } => {
+            // PostgreSQL numeric 与 xsd:decimal 不能先落到 f64：金额的 0.1 +
+            // 0.2、边界 2.5 及长小数会在二进制浮点中失真。float/double 则仍由
+            // 既有 IEEE 754 路径处理。
+            if let (Some((left, left_datatype)), Some((right, right_datatype))) = (
+                exact_decimal_value(row, left),
+                exact_decimal_value(row, right),
+            ) {
+                let value = match operator {
+                    ArithmeticOperator::Add => left + right,
+                    ArithmeticOperator::Subtract => left - right,
+                    ArithmeticOperator::Multiply => left * right,
+                    ArithmeticOperator::Divide if !right.is_zero() => left / right,
+                    ArithmeticOperator::Divide => return None,
+                };
+                return exact_numeric_result_term(
+                    value,
+                    arithmetic_result_datatype(*operator, &left_datatype, &right_datatype),
+                );
+            }
             let (left, left_datatype) = numeric_value(row, left)?;
             let (right, right_datatype) = numeric_value(row, right)?;
             let value = match operator {
@@ -1299,6 +1553,26 @@ fn evaluate_expression(row: &Binding, expression: &Expression) -> Option<RdfTerm
                 }
             };
             boolean_term(value)
+        }
+        Expression::In {
+            value,
+            candidates,
+            negated,
+        } => {
+            let value = evaluate_expression(row, value)?;
+            let mut expression_error = false;
+            for candidate in candidates {
+                match evaluate_expression(row, candidate) {
+                    Some(candidate) if sparql_value_equal(&value, &candidate) => {
+                        return boolean_term(!negated);
+                    }
+                    Some(_) => {}
+                    None => expression_error = true,
+                }
+            }
+            (!expression_error)
+                .then(|| boolean_term(*negated))
+                .flatten()
         }
         Expression::Function {
             name,
@@ -1368,9 +1642,9 @@ fn sparql_term_equal(left: &RdfTerm, right: &RdfTerm) -> bool {
     }
 }
 
-/// SPARQL 的 `=`/`!=` 先按数值与 dateTime 的 value space 比较；其余 RDF term
-/// 保留 term equality。这让 PostgreSQL integer/numeric/timestamp 的自然 datatype
-/// 能与 query 中的 xsd:decimal/dateTime 常量正确比较。
+/// SPARQL 的 `=`/`!=` 先按数值与 XSD temporal value space 比较；其余 RDF term
+/// 保留 term equality。这让 PostgreSQL integer/numeric/date/timestamp 的自然 datatype
+/// 能与 query 中的 xsd:decimal/date/dateTime 常量正确比较。
 fn sparql_value_equal(left: &RdfTerm, right: &RdfTerm) -> bool {
     sparql_value_ordering(left, right).is_some_and(std::cmp::Ordering::is_eq)
         || sparql_term_equal(left, right)
@@ -1395,9 +1669,14 @@ fn sparql_value_ordering(left: &RdfTerm, right: &RdfTerm) -> Option<std::cmp::Or
     else {
         return None;
     };
-    (left_datatype == "http://www.w3.org/2001/XMLSchema#dateTime"
-        && right_datatype == "http://www.w3.org/2001/XMLSchema#dateTime")
-        .then(|| temporal_datetime(left_value)?.partial_cmp(&temporal_datetime(right_value)?))?
+    (left_datatype == right_datatype
+        && matches!(
+            left_datatype.as_str(),
+            "http://www.w3.org/2001/XMLSchema#date"
+                | "http://www.w3.org/2001/XMLSchema#dateTime"
+                | "http://www.w3.org/2001/XMLSchema#dateTimeStamp"
+        ))
+    .then(|| temporal_datetime(left_value)?.partial_cmp(&temporal_datetime(right_value)?))?
 }
 
 fn expression_boolean(row: &Binding, expression: &Expression) -> Option<bool> {
@@ -1548,10 +1827,34 @@ fn evaluate_function(
                 } if is_numeric_datatype(datatype)
             ))
         }
-        "ABS" if arguments.len() == 1 => decimal_term(numeric(row, &arguments[0])?.abs()),
-        "CEIL" if arguments.len() == 1 => decimal_term(numeric(row, &arguments[0])?.ceil()),
-        "FLOOR" if arguments.len() == 1 => decimal_term(numeric(row, &arguments[0])?.floor()),
-        "ROUND" if arguments.len() == 1 => decimal_term(numeric(row, &arguments[0])?.round()),
+        "ABS" if arguments.len() == 1 => exact_decimal_value(row, &arguments[0])
+            .and_then(|(value, datatype)| exact_numeric_result_term(value.abs(), &datatype))
+            .or_else(|| decimal_term(numeric(row, &arguments[0])?.abs())),
+        "CEIL" if arguments.len() == 1 => exact_decimal_value(row, &arguments[0])
+            .and_then(|(value, datatype)| {
+                exact_numeric_result_term(
+                    value.with_scale_round(0, RoundingMode::Ceiling),
+                    &datatype,
+                )
+            })
+            .or_else(|| decimal_term(numeric(row, &arguments[0])?.ceil())),
+        "FLOOR" if arguments.len() == 1 => exact_decimal_value(row, &arguments[0])
+            .and_then(|(value, datatype)| {
+                exact_numeric_result_term(value.with_scale_round(0, RoundingMode::Floor), &datatype)
+            })
+            .or_else(|| decimal_term(numeric(row, &arguments[0])?.floor())),
+        "ROUND" if arguments.len() == 1 => exact_decimal_value(row, &arguments[0])
+            .and_then(|(value, datatype)| {
+                // SPARQL ROUND 的平分规则是趋向正无穷：2.5 -> 3，-2.5 -> -2。
+                // BigDecimal 的 HalfUp 会把负半值远离零，故负数必须改用 HalfDown。
+                let mode = if value.is_negative() {
+                    RoundingMode::HalfDown
+                } else {
+                    RoundingMode::HalfUp
+                };
+                exact_numeric_result_term(value.with_scale_round(0, mode), &datatype)
+            })
+            .or_else(|| decimal_term(numeric(row, &arguments[0])?.round())),
         "YEAR" if arguments.len() == 1 => {
             temporal_integer(row, &arguments[0], |date, _| date.year())
         }
@@ -1921,6 +2224,52 @@ fn numeric_value(row: &Binding, expression: &Expression) -> Option<(f64, String)
     Some((value.parse().ok()?, datatype))
 }
 
+/// 将 PostgreSQL numeric 映射出的 xsd:decimal 以及 SPARQL 整数提升为精确十进制。
+/// float/double 必须留在 IEEE 754 语义，不能借此改变 NaN、INF 或浮点 promotion。
+fn exact_decimal_value(row: &Binding, expression: &Expression) -> Option<(BigDecimal, String)> {
+    exact_decimal_from_term(&evaluate_expression(row, expression)?)
+}
+
+fn exact_decimal_from_term(term: &RdfTerm) -> Option<(BigDecimal, String)> {
+    let RdfTerm::Literal {
+        value, datatype, ..
+    } = term
+    else {
+        return None;
+    };
+    let datatype = datatype.clone()?;
+    if datatype.ends_with("#float")
+        || datatype.ends_with("#double")
+        || !is_numeric_datatype(&datatype)
+    {
+        return None;
+    }
+    Some((BigDecimal::from_str(value).ok()?, datatype))
+}
+
+fn arithmetic_result_datatype(
+    operator: ArithmeticOperator,
+    left: &str,
+    right: &str,
+) -> &'static str {
+    if matches!(operator, ArithmeticOperator::Divide) {
+        "http://www.w3.org/2001/XMLSchema#decimal"
+    } else if is_integer_datatype(left) && is_integer_datatype(right) {
+        "http://www.w3.org/2001/XMLSchema#integer"
+    } else {
+        "http://www.w3.org/2001/XMLSchema#decimal"
+    }
+}
+
+fn exact_numeric_result_term(value: BigDecimal, datatype: &str) -> Option<RdfTerm> {
+    let value = value.normalized().to_string();
+    Some(RdfTerm::Literal {
+        value: if value == "-0" { "0".into() } else { value },
+        datatype: Some(datatype.into()),
+        language: None,
+    })
+}
+
 fn promoted_numeric_datatype(left: &str, right: &str) -> &'static str {
     if left.ends_with("#double") || right.ends_with("#double") {
         "http://www.w3.org/2001/XMLSchema#double"
@@ -1976,6 +2325,25 @@ fn is_numeric_datatype(datatype: &str) -> bool {
             | "http://www.w3.org/2001/XMLSchema#decimal"
             | "http://www.w3.org/2001/XMLSchema#float"
             | "http://www.w3.org/2001/XMLSchema#double"
+            | "http://www.w3.org/2001/XMLSchema#nonPositiveInteger"
+            | "http://www.w3.org/2001/XMLSchema#negativeInteger"
+            | "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
+            | "http://www.w3.org/2001/XMLSchema#positiveInteger"
+            | "http://www.w3.org/2001/XMLSchema#unsignedByte"
+            | "http://www.w3.org/2001/XMLSchema#unsignedShort"
+            | "http://www.w3.org/2001/XMLSchema#unsignedInt"
+            | "http://www.w3.org/2001/XMLSchema#unsignedLong"
+    )
+}
+
+fn is_integer_datatype(datatype: &str) -> bool {
+    matches!(
+        datatype,
+        "http://www.w3.org/2001/XMLSchema#byte"
+            | "http://www.w3.org/2001/XMLSchema#short"
+            | "http://www.w3.org/2001/XMLSchema#int"
+            | "http://www.w3.org/2001/XMLSchema#integer"
+            | "http://www.w3.org/2001/XMLSchema#long"
             | "http://www.w3.org/2001/XMLSchema#nonPositiveInteger"
             | "http://www.w3.org/2001/XMLSchema#negativeInteger"
             | "http://www.w3.org/2001/XMLSchema#nonNegativeInteger"
@@ -2316,6 +2684,13 @@ fn fact_binding(
     if let Some(name) = pattern.predicate.strip_prefix('?') {
         binding.insert(name.into(), RdfTerm::Iri(fact.predicate.clone()));
     }
+    if let Some(name) = pattern
+        .graph
+        .as_deref()
+        .and_then(|graph| graph.strip_prefix('?'))
+    {
+        binding.insert(name.into(), fact.graph.clone()?);
+    }
     Some(binding)
 }
 
@@ -2391,6 +2766,7 @@ fn bare_numeric_literal(token: &str) -> Option<(&str, &'static str)> {
 fn graph_matches(query_graph: Option<&str>, fact_graph: Option<&RdfTerm>) -> bool {
     match (query_graph, fact_graph) {
         (None, None) => true,
+        (Some(variable), Some(_)) if variable.starts_with('?') => true,
         (Some(expected), Some(RdfTerm::Iri(actual))) => expected == actual,
         (Some(expected), Some(RdfTerm::BlankNode(actual))) => expected == format!("_:{actual}"),
         _ => false,
@@ -2406,6 +2782,87 @@ fn variables(pattern: &TriplePattern) -> Vec<String> {
     .into_iter()
     .filter_map(|value| value.strip_prefix('?').map(str::to_owned))
     .collect()
+}
+
+fn decode_mapping_term(
+    value: &DataValue,
+    term: &BindingTerm,
+    iri_base: Option<&str>,
+) -> Result<RdfTerm, RuntimeError> {
+    Ok(match term {
+        BindingTerm::Iri => RdfTerm::Iri(resolve_mapping_iri(&value.value, iri_base)?),
+        BindingTerm::BlankNode => RdfTerm::BlankNode(value.value.clone()),
+        BindingTerm::Literal {
+            datatype,
+            language,
+            infer_datatype,
+        } => RdfTerm::Literal {
+            value: canonical_floating_lexical(
+                &value.value,
+                datatype.as_deref().or_else(|| {
+                    (*infer_datatype)
+                        .then(|| value.datatype.as_deref())
+                        .flatten()
+                }),
+            ),
+            datatype: datatype
+                .clone()
+                .or_else(|| (*infer_datatype).then(|| value.datatype.clone()).flatten()),
+            language: language.clone(),
+        },
+    })
+}
+
+/// 将一个 mapping plan 放入组合 SQL 时重编号其 PostgreSQL 参数。mapping source
+/// 本身不接受运行时参数；此处只改写 parser 生成、位于 SQL 字符串/标识符之外的 `$n`。
+fn renumber_postgres_parameters(sql: &str, offset: usize) -> String {
+    let bytes = sql.as_bytes();
+    let mut output = String::with_capacity(sql.len());
+    let mut index = 0;
+    let mut quote = None;
+    while index < bytes.len() {
+        let byte = bytes[index];
+        let character = sql[index..]
+            .chars()
+            .next()
+            .expect("index always points to a UTF-8 boundary");
+        if let Some(delimiter) = quote {
+            output.push(character);
+            if byte == delimiter {
+                if index + 1 < bytes.len() && bytes[index + 1] == delimiter {
+                    output.push(delimiter as char);
+                    index += 2;
+                    continue;
+                }
+                quote = None;
+            }
+            index += character.len_utf8();
+            continue;
+        }
+        if byte == b'\'' || byte == b'"' {
+            quote = Some(byte);
+            output.push(character);
+            index += 1;
+            continue;
+        }
+        if byte == b'$' {
+            let end = bytes[index + 1..]
+                .iter()
+                .position(|byte| !byte.is_ascii_digit())
+                .map(|length| index + 1 + length)
+                .unwrap_or(bytes.len());
+            if end > index + 1 {
+                let parameter = sql[index + 1..end].parse::<usize>().expect("digits");
+                output.push('$');
+                output.push_str(&(parameter + offset).to_string());
+                index = end;
+                continue;
+            }
+        }
+        output.push(character);
+        index += character.len_utf8();
+    }
+    output
 }
 
 /// Ontop 的 Direct Mapping 将 PostgreSQL float/double 投影为 canonical XSD

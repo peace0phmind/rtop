@@ -1,0 +1,24 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<https://example.test/imports/child>
+  owl:imports <https://example.test/imports/root> .
+
+<https://example.test/imports/Child>
+  rdfs:subClassOf <https://example.test/imports/Parent> .
+
+<https://example.test/imports/Child>
+  owl:equivalentClass <https://example.test/imports/ChildAlias> .
+
+<https://example.test/imports/alternateMentor>
+  owl:equivalentProperty <https://example.test/imports/mentor> .
+
+[
+  owl:onProperty <https://example.test/imports/mentor> ;
+  owl:someValuesFrom owl:Thing
+] rdfs:subClassOf <https://example.test/imports/Mentor> .
+
+[
+  owl:onProperty <https://example.test/imports/mentor> ;
+  owl:someValuesFrom <https://example.test/imports/Professor>
+] rdfs:subClassOf <https://example.test/imports/QualifiedMentor> .

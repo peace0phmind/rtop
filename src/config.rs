@@ -11,6 +11,7 @@ struct FileConfig {
     facts_format: Option<String>,
     facts_base_iri: Option<String>,
     ontology: Option<String>,
+    xml_catalog: Option<String>,
     endpoint: Option<FileEndpoint>,
     datasource: FileDataSource,
 }
@@ -44,6 +45,8 @@ pub struct KnowledgeGraphSpec {
     pub facts_format: Option<String>,
     pub facts_base_iri: Option<String>,
     pub ontology_file: Option<PathBuf>,
+    /// OWL imports 的本地 XML Catalog；仅用于把 IRI 映射到本地文档。
+    pub xml_catalog_file: Option<PathBuf>,
 }
 
 /// 配置 adapter 的产物；连接信息只交给 PostgreSQL adapter，不进入 `VkgRuntime`。
@@ -146,6 +149,11 @@ pub fn load_configuration(path: impl AsRef<Path>) -> Result<LoadedConfiguration,
             ));
         }
     }
+    let xml_catalog_file = config.xml_catalog.map(|file| base.join(file));
+    let ontology_file = config
+        .ontology
+        .map(|file| crate::ontology::resolve_input(base, &file, xml_catalog_file.as_deref()))
+        .transpose()?;
     let mapping_file = config
         .mapping
         .map(|mapping| base.join(mapping))
@@ -186,7 +194,8 @@ pub fn load_configuration(path: impl AsRef<Path>) -> Result<LoadedConfiguration,
             facts_file,
             facts_format: config.facts_format,
             facts_base_iri: config.facts_base_iri,
-            ontology_file: config.ontology.map(|file| base.join(file)),
+            ontology_file,
+            xml_catalog_file,
         },
         postgres,
         direct_mapping,

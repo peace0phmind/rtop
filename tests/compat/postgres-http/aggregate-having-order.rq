@@ -1,0 +1,12 @@
+SELECT ?category ?total WHERE {
+  {
+    SELECT ?category (SUM(?amount) AS ?total) WHERE {
+      ?entry <https://example.test/amount> ?amount .
+      ?entry <https://example.test/category> ?category .
+    }
+    GROUP BY ?category
+    HAVING (SUM(?amount) > -2)
+    ORDER BY DESC(SUM(?amount))
+  }
+}
+ORDER BY DESC(?total + 0.1)

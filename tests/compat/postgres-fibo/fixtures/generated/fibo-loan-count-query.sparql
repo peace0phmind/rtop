@@ -1,0 +1,5 @@
+SELECT (COUNT(DISTINCT ?loan) AS ?value)
+WHERE {
+  ?loan a <https://spec.edmcouncil.org/fibo/ontology/LOAN/LoansGeneral/Loans/Loan> .
+}
+LIMIT 1000

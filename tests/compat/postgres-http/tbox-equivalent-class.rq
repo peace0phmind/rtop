@@ -1,0 +1,4 @@
+SELECT ?person WHERE {
+  ?person a <https://example.test/imports/ChildAlias> .
+}
+ORDER BY ?person

@@ -1121,6 +1121,120 @@
       "difference": "保留 SPARQL HTTP 协议形状、状态与缓存语义；不迁移 Spring、Servlet 或 RDF4J repository API。"
     },
     {
+      "id": "postgres-sql-reformulated-bgp-endpoint",
+      "scope": "replacement-kernel/query/sql-reformulation",
+      "status": "passed",
+      "adapter": "postgres-native",
+      "dialect": "postgresql",
+      "source_paths": [
+        "client/endpoint/src/main/java/it/unibz/inf/ontop/endpoint/controllers/SparqlQueryController.java"
+      ],
+      "server_environment": "postgres:17 Docker 本地服务端；Rust endpoint 进程；curl；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "result": "POST /sparql 执行含两个共享 ?person 的 native OBDA BGP，并返回一个完整 SPARQL Results JSON binding：person=https://example.test/person/1、name=Ada；执行路径将两个 mapping source SQL 子查询以 PostgreSQL JOIN 合并，再解码为 RDF term。",
+      "difference": "验收比较 HTTP 结果的变量和 RDF term，而不比较 SQL 文本或计划；facts、本体改写、多个 mapping plan、动态 literal 常量和 term kind 不一致时明确回退既有通用 evaluator。"
+    },
+    {
+      "id": "postgres-relational-pattern-bag-endpoint",
+      "scope": "replacement-kernel/query/relational-patterns",
+      "status": "passed",
+      "adapter": "postgres-native",
+      "dialect": "postgresql",
+      "source_paths": [
+        "client/endpoint/src/main/java/it/unibz/inf/ontop/endpoint/controllers/SparqlQueryController.java",
+        "test/sparql-compliance/src/test/resources/testcases-sparql-1.1/negation/sparql11-minus-01.rq",
+        "test/sparql-compliance/src/test/resources/testcases-dawg/data-r2/optional/q-opt-1.rq"
+      ],
+      "server_environment": "postgres:17 Docker 本地服务端；Rust endpoint 进程；curl；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "result": "POST /sparql 在同一 PostgreSQL 映射夹具中执行 VALUES、BGP、OPTIONAL、MINUS 与 UNION：重复 person/2 被 MINUS 全部排除，person/1 保留 name=Ada，person/3 保留未绑定 name；两个 UNION 分支保留为 left/right 四行有序 SPARQL Results JSON bindings。",
+      "difference": "结果按 SPARQL bag 与显式 ORDER BY 序列比较；不以 SQL 文本或 Java algebra 对象断言替代。每个 mapping BGP 经 PostgreSQL adapter 执行，复杂 algebra 的合并保持 Rust 内核中的 RDF-term 语义。"
+    },
+    {
+      "id": "postgres-expression-in-bind-error-endpoint",
+      "scope": "replacement-kernel/query/expressions",
+      "status": "passed",
+      "adapter": "postgres-native",
+      "dialect": "postgresql",
+      "source_paths": [
+        "test/sparql-compliance/src/test/resources/testcases-dawg-sparql-1.1/functions/in01.rq",
+        "test/sparql-compliance/src/test/resources/testcases-dawg-sparql-1.1/functions/notin01.rq",
+        "test/sparql-compliance/src/test/resources/testcases-dawg-sparql-1.1/functions/notin02.rq"
+      ],
+      "server_environment": "postgres:17 Docker 本地服务端；Rust endpoint 进程；curl；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "result": "POST /sparql 在 PostgreSQL mapping 输入上返回 person/1 与 \"ADA-3\"^^xsd:string：IN 在第一个 IRI 候选匹配后短路并忽略后续 1/0 error；未匹配的 person/2、person/3 因候选 error 被 FILTER 排除。随后验证 OPTIONAL、BOUND、BIND(CONCAT/UCASE/STRLEN) 与 NOT IN。",
+      "difference": "以 endpoint 的完整 RDF binding 验收 SPARQL expression error 和短路规则；不迁移 Java DAWG harness。"
+    },
+    {
+      "id": "postgres-decimal-round-exact-endpoint",
+      "scope": "replacement-kernel/query/decimal",
+      "status": "passed",
+      "adapter": "postgres-native",
+      "dialect": "postgresql",
+      "source_paths": [
+        "test/docker-tests/src/test/java/it/unibz/inf/ontop/docker/postgres/BindWithFunctionsPostgreSQLTest.java",
+        "test/sparql-compliance/src/test/resources/testcases-dawg-sparql-1.1/functions/round01.rq",
+        "test/sparql-compliance/src/test/resources/testcases-sparql-1.1/builtin/sparql11-round-01.rq",
+        "test/sparql-compliance/src/test/resources/testcases-sparql-1.1/builtin/sparql11-round-02.rq"
+      ],
+      "server_environment": "postgres:17 Docker 本地服务端；Rust endpoint 进程；curl；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "result": "POST /sparql 从 PostgreSQL numeric(38,2) mapping 输入读取 -1.50、0.10、2.50；精确比较 0.10 + 0.20 = 0.3，ROUND 分别返回 -1、0、3，且 ROUND(-2.5)=-2。聚合情景同时比较 SUM(amount)=1.1、ROUND(SUM(amount))=1 与 SUM(ROUND(amount))=2 的不同完整 RDF decimal binding。",
+      "difference": "decimal/integer 算术与 SUM 使用无损十进制值；float/double 继续保留 IEEE 754 路径。ROUND 的负半值按 SPARQL 规范趋向正无穷，而非直接委托 PostgreSQL numeric round。"
+    },
+    {
+      "id": "postgres-aggregate-having-expression-order-endpoint",
+      "scope": "replacement-kernel/query/aggregation",
+      "status": "passed",
+      "adapter": "postgres-native",
+      "dialect": "postgresql",
+      "source_paths": [
+        "test/sparql-compliance/src/test/resources/testcases-sparql-1.1/aggregates/sparql11-having-01.rq",
+        "test/sparql-compliance/src/test/resources/testcases-dawg/data-r2/sort/query-sort-numbers.rq",
+        "test/sparql-compliance/src/test/resources/testcases-dawg/data-r2/sort/query-sort-builtin.rq",
+        "test/sparql-compliance/src/test/resources/testcases-sparql-1.1/subquery/sparql11-subquery-03.rq",
+        "test/sparql-compliance/src/test/resources/testcases-sparql-1.1/subquery/sparql11-subquery-04.rq"
+      ],
+      "server_environment": "postgres:17 Docker 本地服务端；Rust endpoint 进程；curl；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "result": "POST /sparql 从 PostgreSQL numeric mapping 输入按 category 运行聚合子查询；profit 的 SUM(amount)=2.6、loss=-1.5 均满足 HAVING (SUM(?amount) > -2)，内层 DESC(SUM(?amount)) 和外层 DESC(?total + 0.1) 返回相同的 profit、loss 有序完整 RDF decimal binding。",
+      "difference": "聚合、HAVING 与 ORDER BY 在 Rust SPARQL 内核计算，mapping 读取仍由原生 PostgreSQL adapter 完成；以 endpoint RDF 结果而非 SQL 文本或 Java algebra 对象验收。"
+    },
+    {
+      "id": "postgres-property-path-exists-endpoint",
+      "scope": "replacement-kernel/query/property-path-and-exists",
+      "status": "passed",
+      "adapter": "postgres-native",
+      "dialect": "postgresql",
+      "source_paths": [
+        "test/sparql-compliance/src/test/resources/testcases-dawg-sparql-1.1/property-path/pp11.rq",
+        "test/sparql-compliance/src/test/resources/testcases-sparql-1.1/negation/exists-01.rq",
+        "test/sparql-compliance/src/test/resources/testcases-sparql-1.1/negation/exists-02.rq",
+        "test/sparql-compliance/src/test/resources/testcases-sparql-1.1/negation/sparql11-exists-06.rq",
+        "binding/rdf4j/src/test/java/it/unibz/inf/ontop/rdf4j/repository/ExistsTest.java"
+      ],
+      "server_environment": "postgres:17 Docker 本地服务端；Rust endpoint 进程；curl；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "result": "POST /sparql 在 PostgreSQL mapping 输入中执行 person/1 knows/knows ?friend，两个不同中间节点均到达 person/3，返回两条完整且相同的 binding；同一请求还以 FILTER EXISTS(name) 和 FILTER NOT EXISTS(blocked) 相关筛选 person/1。第二个 endpoint 请求在内部 FILTER(?value=?other) 的 NOT EXISTS 中只保留 person/3 的 \"3.0\"^^xsd:decimal。",
+      "difference": "交付有界 IRI sequence、alternative、inverse 和精确 {n} 的 path 降解；任意长度与零长度 path 仍须单独取证，未被本 case 宣称支持。EXISTS 逐 outer binding 执行，不以全局子查询结果替代相关语义。"
+    },
+    {
+      "id": "postgres-dataset-graph-service-boundary-endpoint",
+      "scope": "replacement-kernel/query/dataset-and-graph",
+      "status": "passed",
+      "adapter": "postgres-native",
+      "dialect": "postgresql",
+      "source_paths": [
+        "test/rdb2rdf-compliance/src/test/resources/D007/create.sql",
+        "test/rdb2rdf-compliance/src/test/resources/D007/r2rmlb.ttl",
+        "test/rdb2rdf-compliance/src/test/resources/D007/mappedb.nq",
+        "test/sparql-compliance/src/test/resources/testcases-dawg/data-r2/graph/graph-03.rq",
+        "test/sparql-compliance/src/test/resources/testcases-dawg/data-r2/graph/graph-04.rq",
+        "test/sparql-compliance/src/test/resources/testcases-dawg/data-r2/dataset/dataset-06.rq",
+        "test/sparql-compliance/src/test/resources/testcases-dawg/data-r2/dataset/dataset-08.rq",
+        "test/sparql-compliance/src/test/resources/testcases-dawg-sparql-1.1/service/service07.rq",
+        "test/sparql-compliance/src/test/java/it/unibz/inf/ontop/test/sparql11/MemorySPARQL11QueryTest.java"
+      ],
+      "server_environment": "postgres:17 Docker 本地服务端；Rust endpoint 进程；curl；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "result": "POST /sparql 对 GRAPH <https://example.test/graph/people> 的 native OBDA mapping：FROM graph 将其作为唯一默认图，FROM NAMED graph 仅允许同一 GRAPH IRI，二者均返回 person/1 与 \"Ada\"^^xsd:string；默认 name mapping 不会混入 FROM 数据集。SERVICE 查询稳定返回 HTTP 400 unsupported-sparql，不触发网络访问。",
+      "difference": "固定 Ontop Memory SPARQL 1.1 runner 将 service1–7 标为 unsupported；rtop 保留这一已取证边界而非无证扩展 federation。GRAPH variable 的具名图枚举由 N-Quads runtime 回归验证；本 PostgreSQL mapping endpoint case 验证常量 named graph 与 dataset 隔离。"
+    },
+    {
       "id": "postgres-cli-query-validate-and-exit-categories",
       "scope": "cli/query",
       "status": "passed",
@@ -3540,6 +3654,238 @@
       "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust CLI",
       "result": "boolean、character、datetime、numeric 四份 PostgreSQL manifest 共 34 条 qt:query 均逐条执行，行数与原始 Turtle rsi:size 一致。",
       "difference": "每条 query 均有独立 ledger asset 和 reference_result 哈希；general Type: all 仍按 Java IGNORE 基线排除。"
+    },
+    {
+      "id": "postgres-ontology-imports-url-catalog-endpoint",
+      "scope": "replacement-kernel/ontology/imports-catalog",
+      "status": "passed",
+      "adapter": "postgres-native",
+      "dialect": "postgresql",
+      "source_paths": [
+        "mapping/owlapi/src/main/java/it/unibz/inf/ontop/injection/impl/OntopMappingOntologyConfigurationImpl.java",
+        "mapping/owlapi/src/main/java/it/unibz/inf/ontop/injection/OntopMappingOntologyConfiguration.java",
+        "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopMappingOntologyRelatedCommand.java",
+        "client/docker/README.md",
+        "ontology/owlapi/src/main/java/it/unibz/inf/ontop/spec/ontology/owlapi/OWLAPITranslatorOWL2QL.java"
+      ],
+      "server_environment": "postgres:17 Docker 本地服务端；Rust HTTP endpoint；curl；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "result": "顶层 HTTPS ontology IRI 经 XML Catalog 映射到本地 root；root 再经 Catalog 导入 child，child 回指 root 的循环被 canonical path 去重。POST /sparql 对 PostgreSQL native OBDA 的 Child type mapping 查询 Parent，返回 person/1、person/2、person/3 三个完整 IRI RDF term。",
+      "difference": "仅支持本地 file/file:// 文档和 XML Catalog 的精确 uri 映射；未映射 HTTP(S) import 在启动时稳定拒绝，不复制 OWLAPI 的隐式网络下载行为，以维持 endpoint 请求隔离。"
+    },
+    {
+      "id": "postgres-owl-ql-tbox-closure-and-limit-endpoint",
+      "scope": "replacement-kernel/ontology/owl-ql-tbox",
+      "status": "passed",
+      "adapter": "postgres-native",
+      "dialect": "postgresql",
+      "source_paths": [
+        "ontology/owlapi/src/main/java/it/unibz/inf/ontop/spec/ontology/owlapi/OWLAPITranslatorOWL2QL.java",
+        "binding/rdf4j/src/test/resources/tbox-facts/university-complete.ttl",
+        "binding/rdf4j/src/test/java/it/unibz/inf/ontop/rdf4j/repository/UniversityTBoxFactTest.java"
+      ],
+      "server_environment": "postgres:17 Docker 本地服务端；Rust HTTP endpoint；curl；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "result": "POST /sparql 对 native OBDA mapping 验证 equivalentClass、equivalentProperty 与无 filler 的 exists R.Thing subclass 归一化，均返回 person/1、person/2、person/3 的完整 IRI RDF term；限定 filler 的 exists R.Professor subclass 与基线 OWL 2 QL translator 一致不产生蕴含，返回空结果。既有 PostgreSQL gate 同时保留 subclass、subproperty、domain/range、inverse 与 disjoint inconsistency 证据。",
+      "difference": "不迁移完整 OWL 2 DL；Ontop translator 对超出可安全 OWL 2 QL 子集的公理记录 NOT_SUPPORTED，rtop 对限定 left-existential 保持无蕴含而非伪造推理。"
+    },
+    {
+      "id": "postgres-direct-mapping-pk-fk-null-encoding-endpoint",
+      "scope": "replacement-kernel/direct-mapping",
+      "status": "passed",
+      "adapter": "postgres-native",
+      "dialect": "postgresql",
+      "source_paths": [
+        "test/rdb2rdf-compliance/src/test/resources/D009/{create.sql,directGraph.ttl,manifest.ttl}",
+        "test/rdb2rdf-compliance/src/test/resources/D010/{create.sql,directGraph.ttl,manifest.ttl}"
+      ],
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust SPARQL HTTP endpoint；固定 Ontop 源码和部署镜像双锚",
+      "result": "D009 的 catalog Direct Mapping endpoint 返回 Student/ID=10 与 Sport/ID=100 的完整外键 URI，且 Student/ID=20 的 NULL 外键 ASK 为 false；D010 对含空格 relation/column 的 percent-encoded URI 返回完整 xsd:string binding。",
+      "difference": "既有 CLI gate 完整比较全部 Direct Graph；本情景补充 PostgreSQL HTTP 可观察的主键、外键、NULL 反事实及 percent-encoding RDF term。"
+    },
+    {
+      "id": "postgres-r2rml-term-map-join-graph-endpoint",
+      "scope": "replacement-kernel/mapping/r2rml",
+      "status": "passed",
+      "adapter": "postgres-native",
+      "dialect": "postgresql",
+      "source_paths": [
+        "test/rdb2rdf-compliance/src/test/resources/D014/{create.sql,r2rmlb.ttl,mappedb.nq,manifest.ttl}",
+        "test/rdb2rdf-compliance/src/test/resources/D008/{create.sql,r2rmla.ttl,mappeda.nq,manifest.ttl}",
+        "test/rdb2rdf-compliance/src/test/resources/D007/r2rmlh.ttl"
+      ],
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust SPARQL HTTP endpoint；固定 Ontop 源码和部署镜像双锚",
+      "result": "endpoint 直接加载原始 D014b R2RML 后，RefObjectMap join 返回 employee URI、同一 department blank node 和 xsd:integer 10；直接加载 D008a 后，GRAPH template IRI 中返回 percent-encoded student URI 与 xsd:string name。D007h literal graphMap 的 endpoint 请求稳定返回 HTTP 500 invalid-mapping。",
+      "difference": "既有 CLI gate 保留完整图/blank-node 同构对照；本情景补充 HTTP JSON 可观察 term 与读取期错误分类，不依赖 SQL 文本或内部 mapping 结构。"
+    },
+    {
+      "id": "postgres-epnet-meta-mapping-template-endpoint",
+      "scope": "replacement-kernel/mapping/native-obda/meta-mapping",
+      "status": "passed",
+      "adapter": "postgres-native",
+      "dialect": "postgresql",
+      "source_paths": [
+        "test/docker-tests/src/test/java/it/unibz/inf/ontop/docker/postgres/MetaMappingExpanderTest.java",
+        "test/docker-tests/src/test/resources/pgsql/EPNet.obda"
+      ],
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust SPARQL HTTP endpoint；固定 Ontop 源码和部署镜像双锚",
+      "result": "endpoint 加载固定 EPNet native OBDA 后，POST :AmphoraSection4-4 查询返回唯一完整 URI binding http://www.semanticweb.org/ontologies/2015/1/EPNet-ONTOP_Ontology#Inscription-101，证明 {rp_id} 动态 class IRI 与 {i_id} 动态 subject IRI 共同经 PostgreSQL relation 映射可观察。",
+      "difference": "Ontop Java 基线只断言 countResults(1)；rtop 以更强的完整 RDF URI term 断言验收。数据库 metadata 的读取/序列化继续由既有 extract-db-metadata CLI 契约覆盖，未新增 Ontop 不存在的 HTTP metadata 路由。"
+    },
+    {
+      "id": "postgres-type-cast-identifier-regex-metadata-endpoint",
+      "scope": "replacement-kernel/postgresql/types-identifiers-metadata",
+      "status": "passed",
+      "adapter": "postgres-native",
+      "dialect": "postgresql",
+      "source_paths": [
+        "test/lightweight-tests/src/test/java/it/unibz/inf/ontop/docker/lightweight/postgresql/CastPostgreSQLTest.java",
+        "test/docker-tests/src/test/java/it/unibz/inf/ontop/docker/postgres/RegexPostgresSQLTest.java",
+        "test/docker-tests/src/test/java/it/unibz/inf/ontop/docker/postgres/PostgresIdentifierTest.java",
+        "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopExtractDBMetadata.java",
+        "test/docker-tests/src/test/resources/pgsql/identifiers/identifiers-postgres.obda",
+        "test/docker-tests/src/test/resources/pgsql/regex/stockexchangeRegex.obda",
+        "test/lightweight-tests/src/test/resources/books/books.obda"
+      ],
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust SPARQL HTTP endpoint 与 CLI；固定 Ontop 源码和部署镜像双锚",
+      "result": "endpoint 以原始 books OBDA 返回四个精确 xsd:date cast lexical term，以原始 regex OBDA 返回唯一 person/2 URI；以原始 identifiers OBDA 同时返回 Country-a（带引号 relation 加未引号列折叠）与 Country4-a（显式带引号 alias）。metadata 保持 Ontop 的 CLI 边界：extract-db-metadata JSON 精确断言 query_people 的 relation、INTEGER NOT NULL column，而未虚构 HTTP metadata route。",
+      "difference": "HTTP 仅验收 Ontop endpoint 已有的 RDF 查询面；metadata 不被冒充为 endpoint 成功。既有 PostgreSQL CLI gate 继续覆盖非法 cast 的 expression-error、regex negation、全部 identifier 变体及 constraint catalog。"
+    },
+    {
+      "id": "postgres-nested-json-jsonb-array-postgis-endpoint",
+      "scope": "replacement-kernel/postgresql/nested-geospatial",
+      "status": "passed",
+      "adapter": "postgres-native",
+      "dialect": "postgresql; postgresql-postgis",
+      "source_paths": [
+        "test/lightweight-tests/src/test/java/it/unibz/inf/ontop/docker/lightweight/postgresql/NestedDataJSONPostgreSQLTest.java",
+        "test/lightweight-tests/src/test/java/it/unibz/inf/ontop/docker/lightweight/postgresql/NestedDataJSONBPostgreSQLTest.java",
+        "test/lightweight-tests/src/test/java/it/unibz/inf/ontop/docker/lightweight/postgresql/NestedDataArrayPostgreSQLTest.java",
+        "test/lightweight-tests/src/test/java/it/unibz/inf/ontop/docker/lightweight/postgresql/other/GeoSPARQLPostGISTest.java",
+        "test/lightweight-tests/src/test/resources/nested/nested.obda",
+        "test/lightweight-tests/lightweight-db-test-images/pgsql/sql/geospatial-postgis.sql"
+      ],
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675 与 docker.m.daocloud.io/postgis/postgis:17-3.5@sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6；Docker 本地服务端；Rust SPARQL HTTP endpoint；固定 Ontop 源码和部署镜像双锚",
+      "result": "endpoint 直接加载 JSON、JSONB、二维 array 的 native OBDA，三者都精确返回保留重数的 11 个 worker simple-literal binding；id=2 的空内层 array 仅返回 Cynthia/Jim，证明空值未伪造额外 term。独立 PostGIS endpoint 返回 geometry/geography buffer-intersection 的完整 geo:wktLiteral POLYGON((2 5,7 5,7 2,2 2,2 5))，而 Geom+NewGeom 与 Geog+NewGeom 两个混合组合均为无 binding。",
+      "difference": "不以 source SQL 或 CLI 行数替代 endpoint 证据；PostGIS 使用真实扩展镜像。既有 PostgreSQL CLI gate 继续覆盖全部 nested position/date/integer/SPO/aggregate 结果及 36 个 sfIntersects boolean binding。"
+    },
+    {
+      "id": "postgres-constraint-left-join-aggregate-endpoint",
+      "scope": "replacement-kernel/postgresql/constraint-preserving-query",
+      "status": "passed",
+      "adapter": "postgres-native",
+      "dialect": "postgresql",
+      "source_paths": [
+        "test/lightweight-tests/src/test/java/it/unibz/inf/ontop/docker/lightweight/AbstractConstraintTest.java",
+        "test/lightweight-tests/src/test/java/it/unibz/inf/ontop/docker/lightweight/postgresql/ConstraintPostgreSQLTest.java",
+        "test/docker-tests/src/test/java/it/unibz/inf/ontop/docker/AbstractLeftJoinProfTest.java",
+        "test/docker-tests/src/test/java/it/unibz/inf/ontop/docker/postgres/LeftJoinProfPgSQLTest.java",
+        "test/docker-tests/src/test/resources/redundant_join/redundant_join_fk_test.obda"
+      ],
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust SPARQL HTTP endpoint；固定 Ontop 源码和部署镜像双锚",
+      "result": "具有 course/professors 主键及 teaching 双外键的 PostgreSQL endpoint，对 OPTIONAL nickname 的 NULL 反事实返回 Barbara、Diego、Johann、Mary；对 professor-teaching join 保留 Roger/Rog 三次和 John/Johnny 一次的 bag；对 join aggregate mapping 返回精确 xsd:integer 12、13、31。",
+      "difference": "约束优化的稳定外部契约是等价 RDF 结果与可完成的请求，而非 Ontop 内部 SQL 是否含 LEFT、表出现次数或执行计划文本；既有 CLI gate 继续完整覆盖 left join、MIN/MAX、SUM/AVG 与 metadata constraint catalog。"
+    },
+    {
+      "id": "postgres-http-result-formats-dataset-config-endpoint",
+      "scope": "replacement-kernel/http/protocol-negotiation",
+      "status": "passed",
+      "adapter": "postgres-native",
+      "dialect": "postgresql",
+      "source_paths": [
+        "client/endpoint/src/main/java/it/unibz/inf/ontop/endpoint/controllers/SparqlQueryController.java",
+        "client/endpoint/src/main/java/it/unibz/inf/ontop/endpoint/OntopEndpointApplication.java",
+        "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopEndpoint.java"
+      ],
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust SPARQL HTTP endpoint；curl；固定 Ontop 源码和部署镜像双锚",
+      "result": "同一 PostgreSQL SELECT binding 通过 Accept 分别返回 SPARQL Results JSON、XML、CSV 与 TSV，完整保留 name=Ada、person IRI；CONSTRUCT 通过 application/n-triples 返回完整三元组；未支持 Accept 返回 HTTP 406。既有 endpoint 同时覆盖 GET/form/query-body、dataset default/named graph 参数、Turtle、no-store、400/500 及 rtop TOML 配置加载。",
+      "difference": "首期提供 Ontop endpoint 所需的协议格式与协商面，不迁移 Spring MVC、Servlet streaming、JSON-LD frame 或 RDF4J repository API。"
+    },
+    {
+      "id": "postgres-native-obda-template-null-graph-source-endpoint",
+      "scope": "replacement-kernel/mapping/native-obda",
+      "status": "passed",
+      "adapter": "postgres-native",
+      "dialect": "postgresql",
+      "source_paths": [
+        "mapping/sql/all/src/test/resources/mistake/invalid-sql1.obda",
+        "mapping/sql/all/src/test/resources/mistake/missing-target-term.obda",
+        "mapping/sql/all/src/test/resources/mistake/correct.obda",
+        "test/rdb2rdf-compliance/src/test/resources/D007/{create.sql,r2rmlb.ttl,mappedb.nq}"
+      ],
+      "server_environment": "postgres:17 Docker 本地服务端；Rust HTTP endpoint；curl；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "result": "POST /sparql 对 native OBDA 返回 language literal Ada@en 与 xsd:string visible，并省略 NULL label 的 person/2；既有同一 endpoint case 验证常量 named graph。固定 invalid-sql1 与 missing-target-term mapping 在加载期返回 HTTP 500 invalid-mapping；correct.obda 的缺失 PERSON relation 在 PostgreSQL 执行期返回 HTTP 500 datasource-failure: db error。",
+      "difference": "保留输入 reader 失败与数据源执行失败的可观察分类，不将 source SQL 的关系不存在错误提前误分类为 mapping 语法错误。"
+    },
+    {
+      "id": "postgres-http-request-isolation-cancellation-and-disconnect",
+      "scope": "replacement-kernel/http/request-lifecycle",
+      "status": "passed",
+      "adapter": "postgres-native",
+      "dialect": "postgresql",
+      "source_paths": [
+        "test/docker-tests/src/test/java/it/unibz/inf/ontop/docker/QuestParallelScenario.java",
+        "client/endpoint/src/main/java/it/unibz/inf/ontop/endpoint/OntopEndpointApplication.java"
+      ],
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust SPARQL HTTP endpoint；curl；固定 Ontop 源码和部署镜像双锚",
+      "result": "同一 endpoint 的 pg_sleep(5) ASK 尚在执行时，person type ASK 返回 true；缺失 relation 的 datasource-failure 与成功 ASK 并发且成功结果未受污染。curl 在一秒主动断开慢请求后，PostgreSQL pg_stat_activity 不保留该 pg_sleep，后续 ASK 仍返回 true。",
+      "difference": "以 HTTP 成功、失败、断开和 PostgreSQL 执行单元清理的可观察结果验收；不复制 Ontop 的 Java 宿主 API、线程池实现或 SQL 文本。"
+    },
+    {
+      "id": "intent-engine-fibo-main-postgres-endpoint",
+      "scope": "replacement-kernel/integration/fibo-main",
+      "status": "passed",
+      "adapter": "postgres-native",
+      "dialect": "postgresql",
+      "source_paths": [
+        "tests/compat/postgres-fibo/fixtures/application-ontology.ttl",
+        "tests/compat/postgres-fibo/fixtures/generated/mapping.obda",
+        "tests/compat/postgres-fibo/fixtures/generated/schema.sql",
+        "tests/compat/postgres-fibo/fixtures/generated/{query.sparql,disbursement-query.sparql,primary-attribution-query.sparql,allocated-attribution-query.sparql,boundary-rounding-query.sparql,per-fact-rounding-query.sparql}"
+      ],
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust SPARQL HTTP endpoint；rtop 版本控制的固定 FIBO 兼容夹具",
+      "result": "原始 FIBO mapping/ontology 上，POST form JSON 精确返回 CNY 时态余额华东 130、2025 放款 100、主借款人归属 150、分配归属华东 110/华南 40。三条 2040 事实的聚合后 ROUND=0.01、逐事实 ROUND=0.02，USD ASK=false。",
+      "difference": "夹具作为 rtop 的本地兼容 profile 验收完整 RDF term、金额词法值、货币反例和 HTTP JSON；不读取外部消费者工作树，也不以内部 SQL 或 Java 实现作为证据。"
+    },
+    {
+      "id": "intent-engine-fibo-ontology-identity-counterexamples-postgres-endpoint",
+      "scope": "replacement-kernel/integration/fibo-ontology-identity-counterexamples",
+      "status": "passed",
+      "adapter": "postgres-native",
+      "dialect": "postgresql",
+      "source_paths": [
+        "tests/compat/postgres-fibo/fixtures/generated/fibo-loan-count-query.sparql",
+        "tests/compat/postgres-fibo/fixtures/generated/{no-loan-entailment-ontology.ttl,wrong-equivalence-ontology.ttl,no-weak-alignment-ontology.ttl,unsafe-identity-ontology.ttl,unsafe-identity-mapping.obda}"
+      ],
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地服务端；Rust SPARQL HTTP endpoint；rtop 版本控制的固定 FIBO 兼容夹具",
+      "result": "原始 FIBO schema 上，Loan 的 COUNT(DISTINCT ?loan) 在主本体为 2、删除 subclass 为 0、错误 equivalentClass 为 3、删除 weak closeMatch 仍为 2；原始 unsafe identity ontology/mapping 的 owl:sameAs 反例精确返回 lender.alpha、标签“同名贷款人”和整数 2。",
+      "difference": "所有变体仅切换部署输入而保持 PostgreSQL 数据和 HTTP Results JSON seam；既验证正确 subclass 蕴含，也保留过强 equivalence、weak alignment 无蕴含及 unsafe identity 污染的可观察反例。"
+    },
+    {
+      "id": "intent-engine-fibo-scale-postgres-endpoint",
+      "scope": "replacement-kernel/integration/fibo-scale",
+      "status": "passed",
+      "adapter": "postgres-native",
+      "dialect": "postgresql",
+      "source_paths": [
+        "tests/compat/postgres-fibo/fixtures/scale/generated/{facts.sql,manifest.json}",
+        "tests/compat/postgres-fibo/fixtures/{application-ontology.ttl,generated/mapping.obda,generated/query.sparql,generated/disbursement-query.sparql,generated/allocated-attribution-query.sparql}"
+      ],
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地 fibo_scale；Rust SPARQL HTTP endpoint；单请求 30 秒上限；rtop 版本控制的固定 scale 兼容夹具和独立 SQL oracle",
+      "result": "固定虚构 scale-factor 100 制品的 590 行、220 金融事实及有效期/唯一 grain 质量门槛通过；HTTP JSON 精确返回余额华东 6542397.01、华南 11766095.40，放款华东 23777.00、华南 17860.00，分配归属华东 8837752.83、华南 9470749.58。",
+      "difference": "结果以原始 PostgreSQL 独立 SQL oracle 和完整 RDF decimal term 比较；不把规模数据集的生成器内部结构或 Java 运行时实现当作 endpoint 兼容性证据。"
+    },
+    {
+      "id": "intent-engine-npd-postgres-endpoint",
+      "scope": "replacement-kernel/integration/npd",
+      "status": "passed",
+      "adapter": "postgres-native",
+      "dialect": "postgresql",
+      "source_paths": [
+        "tests/compat/postgres-npd-fixture.json",
+        "https://github.com/ontop/npd-benchmark.git@5b1eeb39c36c0dd5c69c835fd93d204d19be30dd"
+      ],
+      "server_environment": "postgres:17@sha256:67f41722b7a8cbdb868a44a4995c846eddfdc2973bccb291ce937dce88ad5675；Docker 本地 npd；Rust SPARQL HTTP endpoint；单请求 30 秒上限；公开固定 NPD 制品和独立 SQL oracle",
+      "result": "固定 NPD commit 的完整 PostgreSQL 数据集、OBDA mapping 与 OWL 上，HTTP JSON 精确返回前三个 ProductionLicence 20756/20764/20772，VALUES+OPTIONAL 保留 20756 未绑定 dateUpdated 且返回 20980 的 xsd:date 2012-07-04，并由 subclass 蕴含使 20756 命中 npdv:Agent。",
+      "difference": "以完整 RDF term、未绑定 OPTIONAL 和 subclass 正例比较独立 SQL oracle；不读取外部消费者工作树或迁移 Java 宿主层。"
     }
   ]
 }

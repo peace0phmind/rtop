@@ -1,0 +1,5 @@
+SELECT ?person ?name WHERE {
+  ?person <https://example.test/type> <https://example.test/Person> .
+  ?person <https://example.test/name> ?name .
+}
+LIMIT 1

@@ -14,6 +14,13 @@ pub struct TriplePattern {
     pub graph: Option<String>,
 }
 
+#[derive(Debug, Default)]
+struct DatasetClauses {
+    default_graphs: Vec<String>,
+    named_graphs: Vec<String>,
+    declared: bool,
+}
+
 #[derive(Debug, Clone)]
 pub enum Query {
     Select {
@@ -22,6 +29,7 @@ pub enum Query {
         aggregates: Vec<Aggregate>,
         projection_binds: Vec<Bind>,
         group_by: Vec<String>,
+        having: Vec<Expression>,
         distinct: bool,
         order_by: Vec<OrderByTerm>,
         offset: Option<usize>,
@@ -54,6 +62,7 @@ pub enum GraphPattern {
         aggregates: Vec<Aggregate>,
         projection_binds: Vec<Bind>,
         group_by: Vec<String>,
+        having: Vec<Expression>,
         distinct: bool,
         order_by: Vec<OrderByTerm>,
         offset: Option<usize>,
@@ -63,6 +72,12 @@ pub enum GraphPattern {
     Values(Vec<Binding>),
     Bind(Box<GraphPattern>, Vec<Bind>),
     Filter(Box<GraphPattern>, Vec<Filter>),
+    /// `FILTER EXISTS` / `FILTER NOT EXISTS` 的右侧必须以当前 outer binding 关联求值。
+    Exists {
+        pattern: Box<GraphPattern>,
+        exists: Box<GraphPattern>,
+        negated: bool,
+    },
 }
 
 #[derive(Debug, Clone)]
@@ -132,6 +147,11 @@ pub enum Expression {
         left: Box<Expression>,
         right: Box<Expression>,
     },
+    In {
+        value: Box<Expression>,
+        candidates: Vec<Expression>,
+        negated: bool,
+    },
     Function {
         name: String,
         arguments: Vec<Expression>,
@@ -193,7 +213,7 @@ pub enum FilterValue {
 
 #[derive(Debug, Clone)]
 pub struct OrderByTerm {
-    pub variable: String,
+    pub expression: Expression,
     pub descending: bool,
 }
 
@@ -218,18 +238,19 @@ pub fn parse(input: &str) -> Result<Query, RuntimeError> {
         let open = compact
             .find('{')
             .ok_or_else(|| RuntimeError::MalformedSparql("缺少 `{`".into()))?;
-        let (selected, mut binds, aggregates, distinct) =
-            parse_select_projection(compact[6..open].trim())?;
+        let (projection, dataset) = parse_dataset_clauses(compact[6..open].trim())?;
+        let (selected, mut binds, aggregates, distinct) = parse_select_projection(&projection)?;
         let close = compact
             .rfind('}')
             .ok_or_else(|| RuntimeError::MalformedSparql("缺少 `}`".into()))?;
-        let mut pattern = parse_graph_pattern(&compact[open..=close])?;
+        let mut pattern =
+            apply_dataset_clauses(parse_graph_pattern(&compact[open..=close])?, &dataset);
         set_pattern_base_iri(&mut pattern, base_iri.as_deref());
         for bind in &mut binds {
             set_expression_base_iri(&mut bind.expression, base_iri.as_deref());
         }
         let tail = compact[close + 1..].trim();
-        let (group_by, order_by, offset, limit) = parse_modifiers(tail)?;
+        let (group_by, having, order_by, offset, limit) = parse_modifiers(tail)?;
         let variables = if selected.is_none() {
             graph_pattern_variables(&pattern)
                 .into_iter()
@@ -249,6 +270,7 @@ pub fn parse(input: &str) -> Result<Query, RuntimeError> {
             aggregates,
             projection_binds: binds,
             group_by,
+            having,
             distinct,
             order_by,
             offset,
@@ -294,6 +316,104 @@ pub fn parse(input: &str) -> Result<Query, RuntimeError> {
     Err(RuntimeError::UnsupportedSparql(
         "仅支持 SELECT、ASK、CONSTRUCT 与 DESCRIBE".into(),
     ))
+}
+
+fn parse_dataset_clauses(input: &str) -> Result<(String, DatasetClauses), RuntimeError> {
+    let matcher =
+        Regex::new(r"(?i)\s+FROM\s+(?:(NAMED)\s+)?<([^>]+)>").expect("dataset clause 正则固定有效");
+    let mut dataset = DatasetClauses::default();
+    let mut projection = String::with_capacity(input.len());
+    let mut end = 0usize;
+    for captures in matcher.captures_iter(input) {
+        let matched = captures.get(0).expect("dataset clause match");
+        projection.push_str(&input[end..matched.start()]);
+        let iri = captures.get(2).expect("dataset IRI").as_str().to_owned();
+        if captures.get(1).is_some() {
+            dataset.named_graphs.push(iri);
+        } else {
+            dataset.default_graphs.push(iri);
+        }
+        dataset.declared = true;
+        end = matched.end();
+    }
+    projection.push_str(&input[end..]);
+    Ok((projection, dataset))
+}
+
+/// 将显式 dataset 施加到基本图模式。每一个未限定图的 triple 都从 FROM 的 RDF
+/// merge 中读取；这里保留为各图 BGP 的 UNION，因而自然保持 SPARQL 的 bag join。
+/// FROM NAMED 仅限定 GRAPH IRI 的可见集合，不会泄漏到默认图。
+fn apply_dataset_clauses(pattern: GraphPattern, dataset: &DatasetClauses) -> GraphPattern {
+    match pattern {
+        GraphPattern::Bgp(patterns) => {
+            patterns
+                .into_iter()
+                .fold(GraphPattern::Empty, |current, triple| {
+                    let item = match triple.graph.as_deref() {
+                        None if dataset.declared && dataset.default_graphs.is_empty() => {
+                            GraphPattern::Values(Vec::new())
+                        }
+                        None if dataset.default_graphs.is_empty() => {
+                            GraphPattern::Bgp(vec![triple])
+                        }
+                        None => dataset
+                            .default_graphs
+                            .iter()
+                            .cloned()
+                            .map(|graph| {
+                                let mut triple = triple.clone();
+                                triple.graph = Some(graph);
+                                GraphPattern::Bgp(vec![triple])
+                            })
+                            .reduce(|left, right| {
+                                GraphPattern::Union(Box::new(left), Box::new(right))
+                            })
+                            .expect("non-empty dataset default graphs"),
+                        Some(graph)
+                            if dataset.declared
+                                && !dataset.named_graphs.is_empty()
+                                && !dataset.named_graphs.iter().any(|named| named == graph) =>
+                        {
+                            GraphPattern::Values(Vec::new())
+                        }
+                        _ => GraphPattern::Bgp(vec![triple]),
+                    };
+                    join_graph_patterns(current, item)
+                })
+        }
+        GraphPattern::Join(left, right) => GraphPattern::Join(
+            Box::new(apply_dataset_clauses(*left, dataset)),
+            Box::new(apply_dataset_clauses(*right, dataset)),
+        ),
+        GraphPattern::LeftJoin(left, right) => GraphPattern::LeftJoin(
+            Box::new(apply_dataset_clauses(*left, dataset)),
+            Box::new(apply_dataset_clauses(*right, dataset)),
+        ),
+        GraphPattern::Minus(left, right) => GraphPattern::Minus(
+            Box::new(apply_dataset_clauses(*left, dataset)),
+            Box::new(apply_dataset_clauses(*right, dataset)),
+        ),
+        GraphPattern::Union(left, right) => GraphPattern::Union(
+            Box::new(apply_dataset_clauses(*left, dataset)),
+            Box::new(apply_dataset_clauses(*right, dataset)),
+        ),
+        GraphPattern::Subquery { .. } | GraphPattern::Values(_) | GraphPattern::Empty => pattern,
+        GraphPattern::Bind(pattern, binds) => {
+            GraphPattern::Bind(Box::new(apply_dataset_clauses(*pattern, dataset)), binds)
+        }
+        GraphPattern::Filter(pattern, filters) => {
+            GraphPattern::Filter(Box::new(apply_dataset_clauses(*pattern, dataset)), filters)
+        }
+        GraphPattern::Exists {
+            pattern,
+            exists,
+            negated,
+        } => GraphPattern::Exists {
+            pattern: Box::new(apply_dataset_clauses(*pattern, dataset)),
+            exists: Box::new(apply_dataset_clauses(*exists, dataset)),
+            negated,
+        },
+    }
 }
 
 fn validate_typed_boolean_literals(input: &str) -> Result<(), RuntimeError> {
@@ -443,6 +563,7 @@ fn parse_graph_pattern(input: &str) -> Result<GraphPattern, RuntimeError> {
 fn parse_group_content(content: &str) -> Result<GraphPattern, RuntimeError> {
     let mut current = GraphPattern::Empty;
     let mut index = 0usize;
+    let mut path_variable_index = 0usize;
     while index < content.len() {
         index = skip_group_separators(content, index);
         if index == content.len() {
@@ -468,6 +589,7 @@ fn parse_group_content(content: &str) -> Result<GraphPattern, RuntimeError> {
                     aggregates,
                     projection_binds,
                     group_by,
+                    having,
                     distinct,
                     order_by,
                     offset,
@@ -482,6 +604,7 @@ fn parse_group_content(content: &str) -> Result<GraphPattern, RuntimeError> {
                     aggregates,
                     projection_binds,
                     group_by,
+                    having,
                     distinct,
                     order_by,
                     offset,
@@ -517,6 +640,7 @@ fn parse_group_content(content: &str) -> Result<GraphPattern, RuntimeError> {
                     aggregates,
                     projection_binds,
                     group_by,
+                    having,
                     distinct,
                     order_by,
                     offset,
@@ -531,6 +655,7 @@ fn parse_group_content(content: &str) -> Result<GraphPattern, RuntimeError> {
                     aggregates,
                     projection_binds,
                     group_by,
+                    having,
                     distinct,
                     order_by,
                     offset,
@@ -548,6 +673,15 @@ fn parse_group_content(content: &str) -> Result<GraphPattern, RuntimeError> {
             index = next;
             continue;
         } else if starts_keyword_at(content, index, "FILTER") {
+            if let Some((exists, negated, next)) = parse_filter_exists_at(content, index)? {
+                current = GraphPattern::Exists {
+                    pattern: Box::new(current),
+                    exists: Box::new(exists),
+                    negated,
+                };
+                index = next;
+                continue;
+            }
             let (filter, next) = parse_filter_at(content, index)?;
             current = GraphPattern::Filter(Box::new(current), vec![filter]);
             index = next;
@@ -557,13 +691,21 @@ fn parse_group_content(content: &str) -> Result<GraphPattern, RuntimeError> {
             current = join_graph_patterns(current, GraphPattern::Values(values));
             index = next;
             continue;
+        } else if starts_keyword_at(content, index, "SERVICE") {
+            return Err(RuntimeError::UnsupportedSparql(
+                "SERVICE 在固定 Ontop PostgreSQL 基线中未支持；仅允许独立受控 federation 票据实现"
+                    .into(),
+            ));
         } else {
             let end = next_group_construct(content, index);
             if end == index {
                 return Err(RuntimeError::UnsupportedSparql("无法解析图模式项".into()));
             }
             let patterns = group(&format!("{{{}}}", content[index..end].trim()))?;
-            (GraphPattern::Bgp(patterns), end)
+            (
+                graph_pattern_from_triples(patterns, &mut path_variable_index)?,
+                end,
+            )
         };
 
         // UNION 的分支可以是任意 group pattern（包括 nested SELECT、VALUES 或 BIND）。
@@ -583,6 +725,7 @@ fn parse_group_content(content: &str) -> Result<GraphPattern, RuntimeError> {
                     aggregates,
                     projection_binds,
                     group_by,
+                    having,
                     distinct,
                     order_by,
                     offset,
@@ -597,6 +740,7 @@ fn parse_group_content(content: &str) -> Result<GraphPattern, RuntimeError> {
                     aggregates,
                     projection_binds,
                     group_by,
+                    having,
                     distinct,
                     order_by,
                     offset,
@@ -612,6 +756,193 @@ fn parse_group_content(content: &str) -> Result<GraphPattern, RuntimeError> {
         index = after;
     }
     Ok(current)
+}
+
+/// 将有界 property path 降为现有图模式代数。此处刻意保留每个 sequence 中间节点：
+/// SPARQL path 的有界 sequence 与普通 join 一样保留不同中间节点带来的 bag 重数。
+/// Ontop 基线的 pp11 正是这一反例，不能把终点对预先去重。
+fn graph_pattern_from_triples(
+    patterns: Vec<TriplePattern>,
+    path_variable_index: &mut usize,
+) -> Result<GraphPattern, RuntimeError> {
+    patterns
+        .into_iter()
+        .try_fold(GraphPattern::Empty, |current, pattern| {
+            let item = property_path_graph_pattern(pattern, path_variable_index)?;
+            Ok(join_graph_patterns(current, item))
+        })
+}
+
+fn property_path_graph_pattern(
+    pattern: TriplePattern,
+    path_variable_index: &mut usize,
+) -> Result<GraphPattern, RuntimeError> {
+    if !contains_property_path_operator(&pattern.predicate) {
+        return Ok(GraphPattern::Bgp(vec![pattern]));
+    }
+    property_path_to_graph_pattern(
+        &pattern.subject,
+        &pattern.predicate,
+        &pattern.object,
+        pattern.graph.as_deref(),
+        path_variable_index,
+    )
+}
+
+fn contains_property_path_operator(path: &str) -> bool {
+    path.starts_with('^')
+        || path.contains(['/', '|', '(', ')', '{', '}', '+', '*'])
+        || path.ends_with('?')
+}
+
+fn property_path_to_graph_pattern(
+    subject: &str,
+    path: &str,
+    object: &str,
+    graph: Option<&str>,
+    path_variable_index: &mut usize,
+) -> Result<GraphPattern, RuntimeError> {
+    let path = strip_property_path_parentheses(path.trim())?;
+    if let Some((left, right)) = split_property_path(path, '|') {
+        return Ok(GraphPattern::Union(
+            Box::new(property_path_to_graph_pattern(
+                subject,
+                left,
+                object,
+                graph,
+                path_variable_index,
+            )?),
+            Box::new(property_path_to_graph_pattern(
+                subject,
+                right,
+                object,
+                graph,
+                path_variable_index,
+            )?),
+        ));
+    }
+    if let Some((left, right)) = split_property_path(path, '/') {
+        let middle = format!("?__rtop_path_{}", *path_variable_index);
+        *path_variable_index += 1;
+        return Ok(join_graph_patterns(
+            property_path_to_graph_pattern(subject, left, &middle, graph, path_variable_index)?,
+            property_path_to_graph_pattern(&middle, right, object, graph, path_variable_index)?,
+        ));
+    }
+    if let Some((base, repetitions)) = property_path_exact_repetitions(path) {
+        if repetitions == 0 {
+            return Err(RuntimeError::UnsupportedSparql(
+                "property path {0} 需要零长度 identity 语义，尚未在 PostgreSQL 范围验收".into(),
+            ));
+        }
+        let mut current = GraphPattern::Empty;
+        let mut start = subject.to_owned();
+        for index in 0..repetitions {
+            let end = if index + 1 == repetitions {
+                object.to_owned()
+            } else {
+                let value = format!("?__rtop_path_{}", *path_variable_index);
+                *path_variable_index += 1;
+                value
+            };
+            current = join_graph_patterns(
+                current,
+                property_path_to_graph_pattern(&start, base, &end, graph, path_variable_index)?,
+            );
+            start = end;
+        }
+        return Ok(current);
+    }
+    if path.ends_with(['+', '*', '?']) {
+        return Err(RuntimeError::UnsupportedSparql(
+            "任意长度 property path 尚未由固定 Ontop PostgreSQL 基线验收".into(),
+        ));
+    }
+    if let Some(predicate) = path.strip_prefix('^') {
+        if predicate.is_empty() || !is_iri_token(predicate) {
+            return Err(RuntimeError::UnsupportedSparql(
+                "property path inverse 需要一个 IRI predicate".into(),
+            ));
+        }
+        return Ok(GraphPattern::Bgp(vec![TriplePattern {
+            subject: object.into(),
+            predicate: predicate.into(),
+            object: subject.into(),
+            graph: graph.map(str::to_owned),
+        }]));
+    }
+    if !is_iri_token(path) {
+        return Err(RuntimeError::UnsupportedSparql(
+            "property path 仅支持 IRI、inverse、alternative、sequence 与 {n}".into(),
+        ));
+    }
+    Ok(GraphPattern::Bgp(vec![TriplePattern {
+        subject: subject.into(),
+        predicate: path.into(),
+        object: object.into(),
+        graph: graph.map(str::to_owned),
+    }]))
+}
+
+fn is_iri_token(value: &str) -> bool {
+    value.starts_with('<') && value.ends_with('>')
+}
+
+fn strip_property_path_parentheses(mut path: &str) -> Result<&str, RuntimeError> {
+    while path.starts_with('(') {
+        let close = matching_property_path_parenthesis(path, 0)?;
+        if close + 1 != path.len() {
+            break;
+        }
+        path = path[1..close].trim();
+    }
+    Ok(path)
+}
+
+fn split_property_path(path: &str, operator: char) -> Option<(&str, &str)> {
+    let mut depth = 0usize;
+    let mut iri = false;
+    for (index, character) in path.char_indices() {
+        match character {
+            '<' => iri = true,
+            '>' => iri = false,
+            '(' if !iri => depth += 1,
+            ')' if !iri => depth = depth.saturating_sub(1),
+            value if !iri && depth == 0 && value == operator => {
+                return Some((&path[..index], &path[index + value.len_utf8()..]));
+            }
+            _ => {}
+        }
+    }
+    None
+}
+
+fn matching_property_path_parenthesis(input: &str, open: usize) -> Result<usize, RuntimeError> {
+    let mut depth = 0usize;
+    let mut iri = false;
+    for (offset, character) in input[open..].char_indices() {
+        match character {
+            '<' => iri = true,
+            '>' => iri = false,
+            '(' if !iri => depth += 1,
+            ')' if !iri => {
+                depth -= 1;
+                if depth == 0 {
+                    return Ok(open + offset);
+                }
+            }
+            _ => {}
+        }
+    }
+    Err(RuntimeError::MalformedSparql(
+        "property path 缺少 `)`".into(),
+    ))
+}
+
+fn property_path_exact_repetitions(path: &str) -> Option<(&str, usize)> {
+    let open = path.rfind('{')?;
+    let repetitions = path[open + 1..].strip_suffix('}')?.parse().ok()?;
+    Some((&path[..open], repetitions))
 }
 
 fn join_graph_patterns(left: GraphPattern, right: GraphPattern) -> GraphPattern {
@@ -655,7 +986,7 @@ fn next_group_construct(input: &str, start: usize) -> usize {
             '"' if !iri => quoted = !quoted,
             '<' if !quoted => iri = true,
             '>' if iri => iri = false,
-            '{' if !quoted && !iri => return index,
+            '{' if !quoted && !iri && !property_path_quantifier_at(input, index) => return index,
             _ if !quoted
                 && !iri
                 && ["OPTIONAL", "MINUS", "BIND", "FILTER", "VALUES", "UNION"]
@@ -668,6 +999,16 @@ fn next_group_construct(input: &str, start: usize) -> usize {
         }
     }
     input.len()
+}
+
+fn property_path_quantifier_at(input: &str, open: usize) -> bool {
+    let Some(close) = input[open + 1..].find('}').map(|offset| open + offset + 1) else {
+        return false;
+    };
+    !input[open + 1..close].is_empty()
+        && input[open + 1..close]
+            .bytes()
+            .all(|byte| byte.is_ascii_digit())
 }
 
 fn parse_bind_at(input: &str, start: usize) -> Result<(Bind, usize), RuntimeError> {
@@ -703,6 +1044,34 @@ fn parse_filter_at(input: &str, start: usize) -> Result<(Filter, usize), Runtime
             .expect("a complete FILTER expression produces one filter"),
         close + 1,
     ))
+}
+
+fn parse_filter_exists_at(
+    input: &str,
+    start: usize,
+) -> Result<Option<(GraphPattern, bool, usize)>, RuntimeError> {
+    let mut index = skip_group_separators(input, start + "FILTER".len());
+    let negated = if starts_keyword_at(input, index, "NOT") {
+        index = skip_group_separators(input, index + "NOT".len());
+        true
+    } else {
+        false
+    };
+    if !starts_keyword_at(input, index, "EXISTS") {
+        return Ok(None);
+    }
+    index = skip_group_separators(input, index + "EXISTS".len());
+    if input.as_bytes().get(index) != Some(&b'{') {
+        return Err(RuntimeError::MalformedSparql(
+            "FILTER EXISTS 后缺少 `{`".into(),
+        ));
+    }
+    let close = matching_brace(input, index)?;
+    Ok(Some((
+        parse_group_content(&input[index + 1..close])?,
+        negated,
+        close + 1,
+    )))
 }
 
 fn parse_values_at(input: &str, start: usize) -> Result<(Vec<Binding>, usize), RuntimeError> {
@@ -800,6 +1169,7 @@ fn graph_pattern_variables(pattern: &GraphPattern) -> Vec<String> {
             variables
         }
         GraphPattern::Filter(pattern, _) => graph_pattern_variables(pattern),
+        GraphPattern::Exists { pattern, .. } => graph_pattern_variables(pattern),
     }
 }
 
@@ -829,6 +1199,7 @@ fn parse_subquery(input: &str) -> Result<Option<GraphPattern>, RuntimeError> {
         aggregates,
         projection_binds,
         group_by,
+        having,
         distinct,
         order_by,
         offset,
@@ -843,6 +1214,7 @@ fn parse_subquery(input: &str) -> Result<Option<GraphPattern>, RuntimeError> {
         aggregates,
         projection_binds,
         group_by,
+        having,
         distinct,
         order_by,
         offset,
@@ -1275,6 +1647,16 @@ fn matching_paren(input: &str, open: usize) -> Result<usize, RuntimeError> {
 
 fn parse_expression(input: &str) -> Result<Expression, RuntimeError> {
     let input = strip_expression_parentheses(input.trim())?;
+    // `||` 的优先级低于一元 `!`。必须先分割逻辑表达式，才能把
+    // `!BOUND(?end) || ?asOf < ?end` 解析为 OR(Not(BOUND(...)), ...)，而不是
+    // 将整个右侧错误吞进 NOT 的操作数。
+    if let Some((left, operator, right)) = split_logical_expression(input) {
+        return Ok(Expression::Logical {
+            operator,
+            left: Box::new(parse_expression(left)?),
+            right: Box::new(parse_expression(right)?),
+        });
+    }
     if let Some(inner) = input.strip_prefix('!').filter(|_| !input.starts_with("!=")) {
         return Ok(Expression::Not(Box::new(parse_expression(inner.trim())?)));
     }
@@ -1304,11 +1686,14 @@ fn parse_expression(input: &str) -> Result<Expression, RuntimeError> {
     if input.parse::<f64>().is_ok() {
         return Ok(Expression::Number(input.into()));
     }
-    if let Some((left, operator, right)) = split_logical_expression(input) {
-        return Ok(Expression::Logical {
-            operator,
-            left: Box::new(parse_expression(left)?),
-            right: Box::new(parse_expression(right)?),
+    if let Some((left, negated, candidates)) = split_in_expression(input) {
+        return Ok(Expression::In {
+            value: Box::new(parse_expression(left)?),
+            candidates: split_expression_arguments(candidates)?
+                .into_iter()
+                .map(parse_expression)
+                .collect::<Result<_, _>>()?,
+            negated,
         });
     }
     if let Some((left, operator, right)) = split_comparison_expression(input) {
@@ -1439,6 +1824,12 @@ fn set_pattern_base_iri(pattern: &mut GraphPattern, base_iri: Option<&str>) {
                 }
             }
         }
+        GraphPattern::Exists {
+            pattern, exists, ..
+        } => {
+            set_pattern_base_iri(pattern, base_iri);
+            set_pattern_base_iri(exists, base_iri);
+        }
     }
 }
 
@@ -1450,6 +1841,14 @@ fn set_expression_base_iri(expression: &mut Expression, base_iri: Option<&str>) 
         | Expression::Comparison { left, right, .. } => {
             set_expression_base_iri(left, base_iri);
             set_expression_base_iri(right, base_iri);
+        }
+        Expression::In {
+            value, candidates, ..
+        } => {
+            set_expression_base_iri(value, base_iri);
+            for candidate in candidates {
+                set_expression_base_iri(candidate, base_iri);
+            }
         }
         Expression::Function {
             name,
@@ -1479,6 +1878,51 @@ fn set_expression_base_iri(expression: &mut Expression, base_iri: Option<&str>) 
         | Expression::Iri(_)
         | Expression::Number(_) => {}
     }
+}
+
+/// 在最外层识别 SPARQL 1.1 `IN`/`NOT IN`。列表中的 expression 留给既有
+/// 参数拆分器处理，因此嵌套函数、括号和带逗号的字符串不会改变列表边界。
+fn split_in_expression(input: &str) -> Option<(&str, bool, &str)> {
+    let mut depth = 0usize;
+    let mut quoted = false;
+    let mut iri = false;
+    for (index, character) in input.char_indices() {
+        match character {
+            '\'' | '"' => quoted = !quoted,
+            '<' if !quoted && starts_iri(input, index) => iri = true,
+            '>' if iri => iri = false,
+            '(' if !quoted && !iri => depth += 1,
+            ')' if !quoted && !iri => depth = depth.checked_sub(1)?,
+            _ if quoted || iri || depth != 0 => {}
+            _ => {
+                let before = input[..index].chars().next_back();
+                if before
+                    .is_some_and(|character| character.is_ascii_alphanumeric() || character == '_')
+                {
+                    continue;
+                }
+                let tail = &input[index..];
+                let upper = tail.to_ascii_uppercase();
+                let (negated, width) = if upper.starts_with("NOT IN")
+                    && upper.as_bytes().get(6).is_none_or(u8::is_ascii_whitespace)
+                {
+                    (true, 6)
+                } else if upper.starts_with("IN")
+                    && upper.as_bytes().get(2).is_none_or(u8::is_ascii_whitespace)
+                {
+                    (false, 2)
+                } else {
+                    continue;
+                };
+                let list = tail[width..].trim_start();
+                if !list.starts_with('(') || matching_paren(list, 0).ok()? != list.len() - 1 {
+                    continue;
+                }
+                return Some((input[..index].trim_end(), negated, &list[1..list.len() - 1]));
+            }
+        }
+    }
+    None
 }
 
 fn strip_expression_parentheses(input: &str) -> Result<&str, RuntimeError> {
@@ -1675,12 +2119,22 @@ fn starts_iri(input: &str, index: usize) -> bool {
 
 fn parse_modifiers(
     tail: &str,
-) -> Result<(Vec<String>, Vec<OrderByTerm>, Option<usize>, Option<usize>), RuntimeError> {
+) -> Result<
+    (
+        Vec<String>,
+        Vec<Expression>,
+        Vec<OrderByTerm>,
+        Option<usize>,
+        Option<usize>,
+    ),
+    RuntimeError,
+> {
     let mut tail = tail.trim();
     let mut group_by = Vec::new();
     if tail.to_ascii_uppercase().starts_with("GROUP BY") {
         let rest = tail[8..].trim_start();
         let end = [
+            keyword_position(rest, "HAVING"),
             keyword_position(rest, "ORDER BY"),
             keyword_position(rest, "OFFSET"),
             keyword_position(rest, "LIMIT"),
@@ -1691,6 +2145,47 @@ fn parse_modifiers(
         .unwrap_or(rest.len());
         for token in rest[..end].split_whitespace() {
             group_by.push(variable(token)?);
+        }
+        tail = rest[end..].trim_start();
+    }
+    let mut having = Vec::new();
+    if tail.to_ascii_uppercase().starts_with("HAVING")
+        && tail
+            .as_bytes()
+            .get("HAVING".len())
+            .is_none_or(u8::is_ascii_whitespace)
+    {
+        let rest = tail["HAVING".len()..].trim_start();
+        let end = [
+            keyword_position(rest, "ORDER BY"),
+            keyword_position(rest, "OFFSET"),
+            keyword_position(rest, "LIMIT"),
+        ]
+        .into_iter()
+        .flatten()
+        .min()
+        .unwrap_or(rest.len());
+        let expressions = rest[..end].trim();
+        let mut index = 0usize;
+        while index < expressions.len() {
+            while expressions
+                .as_bytes()
+                .get(index)
+                .is_some_and(u8::is_ascii_whitespace)
+            {
+                index += 1;
+            }
+            if index == expressions.len() {
+                break;
+            }
+            if expressions.as_bytes().get(index) != Some(&b'(') {
+                return Err(RuntimeError::MalformedSparql(
+                    "HAVING expression 必须包在 `()` 中".into(),
+                ));
+            }
+            let close = matching_paren(expressions, index)?;
+            having.push(parse_expression(expressions[index + 1..close].trim())?);
+            index = close + 1;
         }
         tail = rest[end..].trim_start();
     }
@@ -1723,24 +2218,26 @@ fn parse_modifiers(
             "modifier 仅支持一次 OFFSET 和 LIMIT".into(),
         ));
     }
-    Ok((group_by, order_by, offset, limit))
+    Ok((group_by, having, order_by, offset, limit))
 }
 
 fn parse_order_by(tail: &str) -> Result<Vec<OrderByTerm>, RuntimeError> {
     if tail.is_empty() {
         return Ok(Vec::new());
     }
-    let terms = tail.split_whitespace().collect::<Vec<_>>();
-    if terms.len() < 3
-        || !terms[0].eq_ignore_ascii_case("ORDER")
-        || !terms[1].eq_ignore_ascii_case("BY")
+    let prefix = tail.trim_start();
+    if !prefix.to_ascii_uppercase().starts_with("ORDER BY")
+        || prefix
+            .as_bytes()
+            .get("ORDER BY".len())
+            .is_some_and(|byte| !byte.is_ascii_whitespace())
     {
         return Err(RuntimeError::UnsupportedSparql(
             "目前仅支持 ORDER BY ?variable、ASC(?variable) 与 DESC(?variable)".into(),
         ));
     }
-    terms[2..]
-        .iter()
+    split_order_terms(prefix["ORDER BY".len()..].trim())
+        .into_iter()
         .map(|term| {
             let upper = term.to_ascii_uppercase();
             let (value, descending) = if upper.starts_with("ASC(") && term.ends_with(')') {
@@ -1748,14 +2245,43 @@ fn parse_order_by(tail: &str) -> Result<Vec<OrderByTerm>, RuntimeError> {
             } else if upper.starts_with("DESC(") && term.ends_with(')') {
                 (&term[5..term.len() - 1], true)
             } else {
-                (*term, false)
+                (term, false)
             };
             Ok(OrderByTerm {
-                variable: variable(value)?,
+                expression: parse_expression(value.trim())?,
                 descending,
             })
         })
         .collect()
+}
+
+/// ORDER BY term 可是带空格的算术/函数 expression，不能以 split_whitespace 切分。
+fn split_order_terms(input: &str) -> Vec<&str> {
+    let mut terms = Vec::new();
+    let mut start = 0usize;
+    let mut depth = 0usize;
+    let mut quoted = false;
+    let mut iri = false;
+    for (index, character) in input.char_indices() {
+        match character {
+            '\'' | '"' => quoted = !quoted,
+            '<' if !quoted && starts_iri(input, index) => iri = true,
+            '>' if iri => iri = false,
+            '(' if !quoted && !iri => depth += 1,
+            ')' if !quoted && !iri => depth = depth.saturating_sub(1),
+            character if character.is_ascii_whitespace() && !quoted && !iri && depth == 0 => {
+                if !input[start..index].trim().is_empty() {
+                    terms.push(input[start..index].trim());
+                }
+                start = index + character.len_utf8();
+            }
+            _ => {}
+        }
+    }
+    if !input[start..].trim().is_empty() {
+        terms.push(input[start..].trim());
+    }
+    terms
 }
 
 fn extract_filters(input: &str) -> Result<(String, Vec<Filter>), RuntimeError> {
@@ -2017,21 +2543,43 @@ fn expand_prefixes(input: &str) -> Result<String, RuntimeError> {
                 } else if bytes.get(index) == Some(&b'(') {
                     // `ofn:daysBetween(...)` 之类的函数名不是 RDF term，不能展开成 IRI。
                     output.push_str(token);
-                } else if let Some((prefix, local)) = token.split_once(':') {
-                    let key = format!("{prefix}:");
-                    let iri = prefixes.get(&key).ok_or_else(|| {
-                        RuntimeError::MalformedSparql(format!("未声明的 PREFIX：{key}"))
-                    })?;
-                    output.push('<');
-                    output.push_str(iri);
-                    output.push_str(local);
-                    output.push('>');
                 } else {
-                    output.push_str(token);
+                    output.push_str(&expand_prefixed_path_token(token, &prefixes)?);
                 }
             }
         }
     }
+    Ok(output)
+}
+
+/// path token 内可能并列多个 prefixed name（`ex:p1/ex:p2`、`^ex:p`）。逐个
+/// 展开而非对第一个 `:` 做 split，确保 path operator 不会被吞进 local name。
+fn expand_prefixed_path_token(
+    token: &str,
+    prefixes: &BTreeMap<String, String>,
+) -> Result<String, RuntimeError> {
+    let names =
+        Regex::new(r"(?P<prefix>[A-Za-z_][A-Za-z0-9_-]*|):(?P<local>[A-Za-z_][A-Za-z0-9_.-]*)")
+            .expect("prefixed path name 正则固定有效");
+    let mut output = String::with_capacity(token.len());
+    let mut end = 0usize;
+    for capture in names.captures_iter(token) {
+        let matched = capture.get(0).expect("regex match");
+        output.push_str(&token[end..matched.start()]);
+        let key = format!("{}:", &capture["prefix"]);
+        let iri = prefixes
+            .get(&key)
+            .ok_or_else(|| RuntimeError::MalformedSparql(format!("未声明的 PREFIX：{key}")))?;
+        output.push('<');
+        output.push_str(iri);
+        output.push_str(&capture["local"]);
+        output.push('>');
+        end = matched.end();
+    }
+    if end == 0 {
+        return Ok(token.into());
+    }
+    output.push_str(&token[end..]);
     Ok(output)
 }
 
@@ -2077,13 +2625,21 @@ fn group(input: &str) -> Result<Vec<TriplePattern>, RuntimeError> {
             ));
         }
         let graph = terms[1];
-        if !graph.starts_with('<') || !graph.ends_with('>') {
+        if (!graph.starts_with('<') || !graph.ends_with('>')) && !graph.starts_with('?') {
             return Err(RuntimeError::UnsupportedSparql(
-                "目前仅支持 IRI 具名图".into(),
+                "GRAPH 仅支持 IRI 或变量具名图".into(),
             ));
         }
         let inner = terms[3..terms.len() - 1].to_vec();
-        (inner, Some(graph.trim_matches(['<', '>']).to_owned()))
+        (
+            inner,
+            Some(
+                graph
+                    .strip_prefix('?')
+                    .map(|name| format!("?{name}"))
+                    .unwrap_or_else(|| graph.trim_matches(['<', '>']).to_owned()),
+            ),
+        )
     } else {
         (terms, None)
     };
@@ -2182,8 +2738,32 @@ fn tokens(input: &str) -> Result<Vec<&str>, RuntimeError> {
                     .find('>')
                     .map(|offset| index + offset + 1)
                     .ok_or_else(|| RuntimeError::MalformedSparql("IRI 缺少 `>`".into()))?;
-                result.push(&input[index..=end]);
-                index = end + 1;
+                // `<p>/<q>` 等 property path 必须作为一个 predicate token；逐个 IRI
+                // 切分会让三元组 parser 把 `/` 误解为缺少分隔符。
+                if input
+                    .as_bytes()
+                    .get(end + 1)
+                    .is_some_and(|byte| matches!(*byte, b'/' | b'|' | b'+' | b'*' | b'?' | b'{'))
+                {
+                    let path_start = index;
+                    index = end + 1;
+                    let mut iri = false;
+                    while index < bytes.len() && !bytes[index].is_ascii_whitespace() {
+                        if matches!(bytes[index], b'.' | b';') && !iri {
+                            break;
+                        }
+                        if bytes[index] == b'<' {
+                            iri = true;
+                        } else if bytes[index] == b'>' {
+                            iri = false;
+                        }
+                        index += 1;
+                    }
+                    result.push(&input[path_start..index]);
+                } else {
+                    result.push(&input[index..=end]);
+                    index = end + 1;
+                }
             }
             b'"' => {
                 if start.is_some() {
@@ -2220,6 +2800,27 @@ fn tokens(input: &str) -> Result<Vec<&str>, RuntimeError> {
                     index = end + 1;
                 }
                 result.push(&input[literal_start..index]);
+            }
+            // inverse 或括号包围的 property path 可在 IRI 之前开始；将整个无空白
+            // path token 保留，避免后面的 `<...>` 被误判为缺少分隔符。
+            b'^' | b'(' if start.is_none() => {
+                let path_start = index;
+                let mut depth = 0usize;
+                let mut iri = false;
+                while index < bytes.len() && !bytes[index].is_ascii_whitespace() {
+                    if matches!(bytes[index], b'.' | b';') && !iri && depth == 0 {
+                        break;
+                    }
+                    match bytes[index] {
+                        b'<' => iri = true,
+                        b'>' => iri = false,
+                        b'(' if !iri => depth += 1,
+                        b')' if !iri => depth = depth.saturating_sub(1),
+                        _ => {}
+                    }
+                    index += 1;
+                }
+                result.push(&input[path_start..index]);
             }
             _ => {
                 start.get_or_insert(index);
@@ -2288,6 +2889,7 @@ mod tests {
         expand_blank_node_property_lists, parse, tokens, ComparisonOperator, Expression, Filter,
         GraphPattern, Query,
     };
+    use crate::RuntimeError;
 
     #[test]
     fn accepts_dollar_prefixed_variables_in_select_bgp_and_filter() {
@@ -2354,6 +2956,103 @@ mod tests {
         assert_eq!(order_by.len(), 1);
         assert_eq!(offset, Some(2));
         assert_eq!(limit, Some(3));
+    }
+
+    #[test]
+    fn parses_having_and_expression_order_by_terms() {
+        let query = parse(
+            "SELECT ?category (SUM(?value) AS ?total) WHERE { ?entry <https://example.test/value> ?value ; <https://example.test/category> ?category } GROUP BY ?category HAVING (SUM(?value) > 10) ORDER BY DESC(SUM(?value)) (?value + 1)",
+        )
+        .expect("HAVING 与表达式 ORDER BY 应可解析");
+        let Query::Select {
+            having, order_by, ..
+        } = query
+        else {
+            panic!("应解析为 SELECT");
+        };
+        assert_eq!(having.len(), 1);
+        assert!(matches!(
+            having.as_slice(),
+            [Expression::Comparison {
+                operator: ComparisonOperator::Greater,
+                ..
+            }]
+        ));
+        assert_eq!(order_by.len(), 2);
+        assert!(order_by[0].descending);
+        assert!(matches!(
+            order_by[0].expression,
+            Expression::Aggregate { .. }
+        ));
+        assert!(!order_by[1].descending);
+        assert!(matches!(order_by[1].expression, Expression::Binary { .. }));
+    }
+
+    #[test]
+    fn parses_prefixed_property_paths_and_correlated_filter_exists() {
+        let query = parse(
+            "PREFIX ex: <https://example.test/>\nSELECT ?person ?friend WHERE { ?person ex:knows/ex:knows ?friend . FILTER NOT EXISTS { ?friend ex:blocked ?blocked } }",
+        )
+        .expect("有界 prefixed property path 与 FILTER NOT EXISTS 应可解析");
+        let Query::Select { pattern, .. } = query else {
+            panic!("应解析为 SELECT");
+        };
+        let GraphPattern::Exists {
+            pattern, negated, ..
+        } = pattern
+        else {
+            panic!("应保留相关 EXISTS 图模式：{pattern:?}");
+        };
+        assert!(negated);
+        assert!(matches!(*pattern, GraphPattern::Join(_, _)));
+
+        for path in [
+            "ex:knows|^ex:knownBy",
+            "(ex:knows|ex:related)/ex:name",
+            "ex:knows{2}",
+        ] {
+            parse(&format!(
+                "PREFIX ex: <https://example.test/>\nSELECT ?value WHERE {{ ex:a {path} ?value }}"
+            ))
+            .unwrap_or_else(|error| panic!("property path {path} 应可解析：{error:?}"));
+        }
+    }
+
+    #[test]
+    fn applies_from_and_from_named_to_their_respective_graph_domains() {
+        let default_query = parse(
+            "SELECT ?person FROM <https://example.test/graph/default> WHERE { ?person <https://example.test/name> ?name }",
+        )
+        .expect("FROM 应作为默认图 dataset 解析");
+        let Query::Select {
+            pattern: GraphPattern::Bgp(patterns),
+            ..
+        } = default_query
+        else {
+            panic!("单一 FROM 应生成单一具名 BGP");
+        };
+        assert_eq!(
+            patterns[0].graph.as_deref(),
+            Some("https://example.test/graph/default")
+        );
+
+        let named_query = parse(
+            "SELECT ?person FROM NAMED <https://example.test/graph/named> WHERE { GRAPH <https://example.test/graph/named> { ?person <https://example.test/name> ?name } }",
+        )
+        .expect("FROM NAMED 与 GRAPH 应可解析");
+        assert!(matches!(named_query, Query::Select { .. }));
+
+        let graph_variable = parse(
+            "SELECT ?graph ?person WHERE { GRAPH ?graph { ?person <https://example.test/name> ?name } }",
+        )
+        .expect("GRAPH variable 应可解析");
+        assert!(matches!(graph_variable, Query::Select { .. }));
+
+        let service =
+            parse("SELECT ?person { SERVICE <http://example.invalid/sparql> { ?person ?p ?o } }");
+        assert!(
+            matches!(service, Err(RuntimeError::UnsupportedSparql(message)) if message.starts_with("SERVICE"))
+        );
     }
 
     #[test]

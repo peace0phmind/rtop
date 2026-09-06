@@ -1,0 +1,15 @@
+SELECT ?person ?name ?tag WHERE {
+  VALUES ?person {
+    <https://example.test/person/1>
+    <https://example.test/person/2>
+    <https://example.test/person/2>
+    <https://example.test/person/3>
+  }
+  ?person <https://example.test/type> <https://example.test/Person> .
+  OPTIONAL { ?person <https://example.test/name> ?name . }
+  MINUS { ?person <https://example.test/blocked> ?blocked . }
+  { VALUES ?tag { "left" } }
+  UNION
+  { VALUES ?tag { "right" } }
+}
+ORDER BY ?person ?tag

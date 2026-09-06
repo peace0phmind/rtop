@@ -1,0 +1,7 @@
+SELECT ?person ?friend WHERE {
+  ?person <https://example.test/type> <https://example.test/Person> .
+  FILTER EXISTS { ?person <https://example.test/name> ?name }
+  FILTER NOT EXISTS { ?person <https://example.test/blocked> ?blocked }
+  ?person <https://example.test/knows>/<https://example.test/knows> ?friend .
+}
+ORDER BY ?friend

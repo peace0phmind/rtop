@@ -1,0 +1,118 @@
+{
+  "facts_sql_sha256": "68d8a7c2b4a26886caee2586dfb2a662d0ba247dd115670abba80cc380fd75a6",
+  "fictional": true,
+  "fictional_id_prefix": "scale.fictional.",
+  "financial_fact_count": 220,
+  "generator_version": "scale-generator-v1",
+  "isolation": {
+    "benchmark_database": "fibo",
+    "database": "fibo_scale"
+  },
+  "oracle_policy": "scale generator emits no expected answers",
+  "profile": {
+    "boundary_scenarios": [
+      "zero-amount",
+      "equal-amounts",
+      "effective-boundary",
+      "multi-role"
+    ],
+    "correlations": {
+      "borrower_matches_booking_region": 0.7,
+      "co_borrower_cross_region": 0.5
+    },
+    "distributions": {
+      "balance_minor_units": {
+        "maximum": 50000000,
+        "minimum": 0
+      },
+      "booking_region": {
+        "east": 0.6,
+        "south": 0.4
+      },
+      "co_borrower_rate": 0.2
+    },
+    "fictional": true,
+    "lifecycle": {
+      "balance_version_rate": 0.2,
+      "disbursement_window": "[2025-01-01,2026-01-01)",
+      "effective_storage": "left-closed-right-open"
+    },
+    "random_seed": 20260802,
+    "scale_factor": 100,
+    "version": "scale-profile-v1"
+  },
+  "realized_boundary_scenarios": {
+    "effective-boundary": {
+      "effective_at": "2025-07-01",
+      "transition_count": 1
+    },
+    "equal-amounts": {
+      "current_balance_observation_count": 2
+    },
+    "multi-role": {
+      "loan_count": 20
+    },
+    "zero-amount": {
+      "current_balance_observation_count": 1,
+      "disbursement_event_count": 1
+    }
+  },
+  "realized_correlations": {
+    "borrower_matches_booking_region": {
+      "configured_rate": 0.7,
+      "eligible_count": 100,
+      "matched_count": 73,
+      "realized_rate": 0.73
+    },
+    "co_borrower_cross_region": {
+      "configured_rate": 0.5,
+      "eligible_count": 20,
+      "matched_count": 10,
+      "realized_rate": 0.5
+    }
+  },
+  "realized_distributions": {
+    "booking_region": {
+      "east": {
+        "configured_rate": 0.6,
+        "count": 60,
+        "realized_rate": 0.6
+      },
+      "south": {
+        "configured_rate": 0.4,
+        "count": 40,
+        "realized_rate": 0.4
+      }
+    },
+    "co_borrower_rate": {
+      "configured_rate": 0.2,
+      "count": 20,
+      "realized_rate": 0.2
+    }
+  },
+  "realized_lifecycle": {
+    "balance_version_rate": {
+      "configured_rate": 0.2,
+      "count": 20,
+      "realized_rate": 0.2
+    }
+  },
+  "relation_contract_version": "relation-contract-v1",
+  "row_counts": {
+    "balance_observation": 120,
+    "booking_institution": 2,
+    "disbursement_event": 100,
+    "identity_dataset_version": 1,
+    "identity_decision": 10,
+    "lender": 5,
+    "loan_contract": 100,
+    "loan_participation": 120,
+    "party": 120,
+    "region": 2,
+    "source_lender_description": 10
+  },
+  "semantic_facts_sha256": "b0e410e2ebfe3ec8c9522c75f31b8d1173a7c544b9458c6886108c43297212e6",
+  "source_policy": "generated fictional distributions only; no production samples",
+  "total_rows": 590,
+  "version": "fibo-scale-facts-v1"
+}

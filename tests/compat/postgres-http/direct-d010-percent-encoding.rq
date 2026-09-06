@@ -1,0 +1,6 @@
+PREFIX base: <http://example.com/base/>
+
+SELECT ?name WHERE {
+  <http://example.com/base/Country%20Info/Country%20Code=1>
+    <http://example.com/base/Country%20Info#Name> ?name .
+}

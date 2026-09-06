@@ -120,6 +120,12 @@ impl QueryCancellation {
 
 /// 数据源端口只接收已方言化的 SQL 和值；不泄漏驱动连接/行类型。
 pub trait DataSource {
+    /// 是否可以执行由多个 mapping plan 组合出的 PostgreSQL BGP JOIN。默认关闭，
+    /// 以免内存/测试 adapter 把单条 SQL fixture 误当作数据库查询计划。
+    fn supports_postgres_bgp_pushdown(&self) -> bool {
+        false
+    }
+
     fn execute(
         &mut self,
         sql: &str,
@@ -436,6 +442,10 @@ fn quoted_identifier(value: String) -> String {
     format!("\"{}\"", value.replace('"', "\"\""))
 }
 impl DataSource for PostgresDataSource {
+    fn supports_postgres_bgp_pushdown(&self) -> bool {
+        true
+    }
+
     fn execute(
         &mut self,
         sql: &str,

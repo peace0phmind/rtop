@@ -1,0 +1,5 @@
+SELECT ?person ?name
+FROM <https://example.test/graph/people>
+WHERE {
+  ?person <https://example.test/name> ?name .
+}

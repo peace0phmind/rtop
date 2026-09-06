@@ -1,0 +1,56 @@
+[MappingDeclaration]
+mappingId person-type
+target <https://example.test/person/{id}> <https://example.test/type> <https://example.test/Person> .
+source SELECT id FROM algebra_people
+
+mappingId person-imported-child-type
+target <https://example.test/person/{id}> a <https://example.test/imports/Child> .
+source SELECT id FROM algebra_people
+
+mappingId person-mentor
+target <https://example.test/person/{id}> <https://example.test/imports/mentor> <https://example.test/person/1> .
+source SELECT id FROM algebra_people
+
+mappingId person-professor
+target <https://example.test/person/{id}> a <https://example.test/imports/Professor> .
+source SELECT id FROM algebra_people WHERE id = 1
+
+mappingId person-name
+target <https://example.test/person/{id}> <https://example.test/name> {name} .
+source SELECT id, name FROM algebra_names
+
+mappingId person-name-language
+target <https://example.test/person/{id}> <https://example.test/label> {name}@en .
+source SELECT id, name FROM algebra_names
+
+mappingId nullable-label
+target <https://example.test/nullable/{id}> <https://example.test/label> {label} .
+source SELECT id, label FROM algebra_nullable
+
+mappingId person-name-named-graph
+target GRAPH <https://example.test/graph/people> { <https://example.test/person/{id}> <https://example.test/name> {name} . }
+source SELECT id, name FROM algebra_names
+
+mappingId person-blocked
+target <https://example.test/person/{id}> <https://example.test/blocked> {id} .
+source SELECT id FROM algebra_blocked
+
+mappingId person-knows
+target <https://example.test/person/{source_id}> <https://example.test/knows> <https://example.test/person/{target_id}> .
+source SELECT source_id, target_id FROM algebra_links
+
+mappingId person-value
+target <https://example.test/person/{id}> <https://example.test/value> {value} .
+source SELECT id, value FROM algebra_values
+
+mappingId person-other-value
+target <https://example.test/person/{id}> <https://example.test/otherValue> {value} .
+source SELECT id, value FROM algebra_other_values
+
+mappingId money-amount
+target <https://example.test/money/{id}> <https://example.test/amount> {amount} .
+source SELECT id, amount, category FROM algebra_money
+
+mappingId money-category
+target <https://example.test/money/{id}> <https://example.test/category> {category} .
+source SELECT id, amount, category FROM algebra_money

@@ -1,0 +1,5 @@
+PREFIX base: <http://example.com/base/>
+
+SELECT ?student ?sport WHERE {
+  ?student <http://example.com/base/Student#ref-Sport> ?sport .
+}

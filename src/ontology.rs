@@ -1,4 +1,5 @@
 use crate::{RdfFact, RdfTerm, RuntimeError};
+use regex::Regex;
 use rio_api::{model::Term, parser::TriplesParser};
 use rio_turtle::TurtleParser;
 use rio_xml::RdfXmlParser;
@@ -15,8 +16,12 @@ const RDFS_DOMAIN: &str = "http://www.w3.org/2000/01/rdf-schema#domain";
 const RDFS_RANGE: &str = "http://www.w3.org/2000/01/rdf-schema#range";
 const OWL_INVERSE_OF: &str = "http://www.w3.org/2002/07/owl#inverseOf";
 const OWL_EQUIVALENT_CLASS: &str = "http://www.w3.org/2002/07/owl#equivalentClass";
+const OWL_EQUIVALENT_PROPERTY: &str = "http://www.w3.org/2002/07/owl#equivalentProperty";
 const OWL_INTERSECTION_OF: &str = "http://www.w3.org/2002/07/owl#intersectionOf";
 const OWL_DISJOINT_WITH: &str = "http://www.w3.org/2002/07/owl#disjointWith";
+const OWL_ON_PROPERTY: &str = "http://www.w3.org/2002/07/owl#onProperty";
+const OWL_SOME_VALUES_FROM: &str = "http://www.w3.org/2002/07/owl#someValuesFrom";
+const OWL_THING: &str = "http://www.w3.org/2002/07/owl#Thing";
 const RDF_TYPE: &str = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
 const RDF_FIRST: &str = "http://www.w3.org/1999/02/22-rdf-syntax-ns#first";
 const RDF_REST: &str = "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest";
@@ -36,9 +41,18 @@ pub struct Ontology {
 
 impl Ontology {
     pub fn load(path: &Path) -> Result<Self, RuntimeError> {
+        Self::load_with_catalog(path, None)
+    }
+
+    pub fn load_with_catalog(path: &Path, catalog: Option<&Path>) -> Result<Self, RuntimeError> {
         let mut ontology = Self::default();
         let mut visited = BTreeSet::new();
-        ontology.load_closure(path, &mut visited)?;
+        let catalog = match catalog {
+            Some(path) => Catalog::load(path)?,
+            None => Catalog::default(),
+        };
+        let path = catalog.resolve_root(path)?;
+        ontology.load_closure(&path, &catalog, &mut visited)?;
         Ok(ontology)
     }
 
@@ -179,6 +193,7 @@ impl Ontology {
     fn load_closure(
         &mut self,
         path: &Path,
+        catalog: &Catalog,
         visited: &mut BTreeSet<PathBuf>,
     ) -> Result<(), RuntimeError> {
         let path = path
@@ -232,6 +247,9 @@ impl Ontology {
         // 这条安全方向便可让 mapping type assertion 回答父类查询，无需把存在限制
         // 错误地降格为普通 class assertion。
         self.normalize_intersection_superclasses(&triples);
+        // Ontop 将 `exists R.owl:Thing subClassOf A` 归一化为 R 的 domain 是 A。
+        // 带限定 filler 的左侧存在限制不属于这一可安全降解的子集，保留为无蕴含。
+        self.normalize_unqualified_existential_domains(&triples);
         for (subject, predicate, object, fact_subject, fact_object) in triples {
             self.facts.push(RdfFact {
                 subject: fact_subject,
@@ -249,6 +267,11 @@ impl Ontology {
                 if let (Some(subject), Some(object)) = (subject, object) {
                     self.add_subclass(subject.clone(), object.clone());
                     self.add_subclass(object, subject);
+                }
+            } else if predicate == OWL_EQUIVALENT_PROPERTY {
+                if let (Some(subject), Some(object)) = (subject, object) {
+                    self.add_subproperty(subject.clone(), object.clone());
+                    self.add_subproperty(object, subject);
                 }
             } else if predicate == RDFS_SUBPROPERTY {
                 if let (Some(subject), Some(object)) = (subject, object) {
@@ -280,10 +303,8 @@ impl Ontology {
                 }
             } else if predicate == OWL_IMPORTS {
                 let Some(object) = object else { continue };
-                let imported = object.strip_prefix("file://").ok_or_else(|| {
-                    RuntimeError::Ontology(format!("不支持非文件 ontology import：{object}"))
-                })?;
-                self.load_closure(Path::new(imported), visited)?;
+                let imported = catalog.resolve_import(&object)?;
+                self.load_closure(&imported, catalog, visited)?;
             }
         }
         Ok(())
@@ -353,6 +374,114 @@ impl Ontology {
             }
         }
     }
+
+    fn normalize_unqualified_existential_domains(
+        &mut self,
+        triples: &[(Option<String>, String, Option<String>, RdfTerm, RdfTerm)],
+    ) {
+        let mut property = BTreeMap::<RdfTerm, RdfTerm>::new();
+        let mut filler = BTreeMap::<RdfTerm, RdfTerm>::new();
+        let mut parents = Vec::<(RdfTerm, String)>::new();
+        for (subject, predicate, object, fact_subject, fact_object) in triples {
+            match predicate.as_str() {
+                OWL_ON_PROPERTY => {
+                    property.insert(fact_subject.clone(), fact_object.clone());
+                }
+                OWL_SOME_VALUES_FROM => {
+                    filler.insert(fact_subject.clone(), fact_object.clone());
+                }
+                RDFS_SUBCLASS => {
+                    if let (None, Some(parent)) = (subject, object) {
+                        parents.push((fact_subject.clone(), parent.clone()));
+                    }
+                }
+                _ => {}
+            }
+        }
+        for (restriction, parent) in parents {
+            let (Some(RdfTerm::Iri(property)), Some(RdfTerm::Iri(filler))) =
+                (property.get(&restriction), filler.get(&restriction))
+            else {
+                continue;
+            };
+            if filler == OWL_THING {
+                self.domain
+                    .entry(property.clone())
+                    .or_default()
+                    .insert(parent);
+            }
+        }
+    }
+}
+
+#[derive(Default)]
+struct Catalog {
+    mappings: BTreeMap<String, PathBuf>,
+}
+
+impl Catalog {
+    fn load(path: &Path) -> Result<Self, RuntimeError> {
+        let content = std::fs::read_to_string(path)
+            .map_err(|error| RuntimeError::Ontology(format!("无法读取 XML Catalog：{error}")))?;
+        let directory = path.parent().unwrap_or(Path::new("."));
+        let entry = Regex::new(r#"<uri\s+[^>]*name=[\"']([^\"']+)[\"'][^>]*uri=[\"']([^\"']+)[\"'][^>]*/?>|<uri\s+[^>]*uri=[\"']([^\"']+)[\"'][^>]*name=[\"']([^\"']+)[\"'][^>]*/?>"#)
+            .expect("catalog uri regex");
+        let mut mappings = BTreeMap::new();
+        for captures in entry.captures_iter(&content) {
+            let (name, target) = match (captures.get(1), captures.get(2)) {
+                (Some(name), Some(target)) => (name.as_str(), target.as_str()),
+                _ => (
+                    captures.get(4).unwrap().as_str(),
+                    captures.get(3).unwrap().as_str(),
+                ),
+            };
+            let target = target
+                .strip_prefix("file://")
+                .map(PathBuf::from)
+                .unwrap_or_else(|| directory.join(target));
+            mappings.insert(name.to_owned(), target);
+        }
+        Ok(Self { mappings })
+    }
+
+    fn resolve_root(&self, path: &Path) -> Result<PathBuf, RuntimeError> {
+        path.canonicalize()
+            .map_err(|error| RuntimeError::Ontology(format!("无法读取 ontology：{error}")))
+    }
+
+    fn resolve_import(&self, iri: &str) -> Result<PathBuf, RuntimeError> {
+        if let Some(path) = self.mappings.get(iri) {
+            return path.canonicalize().map_err(|error| {
+                RuntimeError::Ontology(format!("无法读取 XML Catalog 映射 {iri}：{error}"))
+            });
+        }
+        if let Some(path) = iri.strip_prefix("file://") {
+            return Ok(PathBuf::from(path));
+        }
+        Err(RuntimeError::Ontology(format!(
+            "未映射的远程 ontology import：{iri}"
+        )))
+    }
+}
+
+/// URL 形式的顶层 ontology 只能经本地 Catalog 解析，避免配置加载阶段访问网络。
+pub(crate) fn resolve_input(
+    base: &Path,
+    input: &str,
+    catalog: Option<&Path>,
+) -> Result<PathBuf, RuntimeError> {
+    if let Some(path) = input.strip_prefix("file://") {
+        return Ok(PathBuf::from(path));
+    }
+    if !(input.starts_with("http://") || input.starts_with("https://")) {
+        return Ok(base.join(input));
+    }
+    let Some(path) = catalog else {
+        return Err(RuntimeError::Ontology(format!(
+            "远程 ontology URL 必须由 xml_catalog 映射：{input}"
+        )));
+    };
+    Catalog::load(path)?.resolve_import(input)
 }
 
 fn rdf_list_members(
@@ -451,5 +580,52 @@ mod tests {
             "https://example.test/Student",
             "https://example.test/Person"
         ));
+    }
+
+    #[test]
+    fn follows_catalog_mapped_imports_and_stops_cycles() {
+        let directory = tempfile::tempdir().expect("temporary ontology directory");
+        let root = directory.path().join("root.ttl");
+        let imported = directory.path().join("imported.ttl");
+        let catalog = directory.path().join("catalog.xml");
+        std::fs::write(
+            &root,
+            "@prefix owl: <http://www.w3.org/2002/07/owl#> .\n<https://example.test/root> owl:imports <https://example.test/imported> .",
+        )
+        .expect("write root ontology");
+        std::fs::write(
+            &imported,
+            format!(
+                "@prefix owl: <http://www.w3.org/2002/07/owl#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n<https://example.test/imported> owl:imports <file://{}> .\n<https://example.test/Child> rdfs:subClassOf <https://example.test/Parent> .",
+                root.display()
+            ),
+        )
+        .expect("write imported ontology");
+        std::fs::write(
+            &catalog,
+            "<catalog xmlns=\"urn:oasis:names:tc:entity:xmlns:xml:catalog\"><uri name=\"https://example.test/imported\" uri=\"imported.ttl\"/></catalog>",
+        )
+        .expect("write catalog");
+
+        let ontology = Ontology::load_with_catalog(&root, Some(&catalog)).expect("load closure");
+        assert!(
+            ontology.is_subclass_of("https://example.test/Child", "https://example.test/Parent")
+        );
+    }
+
+    #[test]
+    fn rejects_unmapped_remote_import_without_network_access() {
+        let directory = tempfile::tempdir().expect("temporary ontology directory");
+        let root = directory.path().join("root.ttl");
+        std::fs::write(
+            &root,
+            "@prefix owl: <http://www.w3.org/2002/07/owl#> . <https://example.test/root> owl:imports <https://example.test/unmapped> .",
+        )
+        .expect("write root ontology");
+        let error = match Ontology::load(&root) {
+            Ok(_) => panic!("unmapped import must fail"),
+            Err(error) => error,
+        };
+        assert!(error.to_string().contains("未映射的远程 ontology import"));
     }
 }

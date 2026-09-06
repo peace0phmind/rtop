@@ -1,0 +1,7 @@
+SELECT ?amount ?sum ?rounded ?negativeHalf WHERE {
+  ?entry <https://example.test/amount> ?amount .
+  BIND(?amount + 0.20 AS ?sum)
+  BIND(ROUND(?amount) AS ?rounded)
+  BIND(ROUND(-2.5) AS ?negativeHalf)
+}
+ORDER BY ?amount
