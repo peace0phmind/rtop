@@ -4809,13 +4809,13 @@
       "adapter": "postgres-native",
       "dialect": "postgresql",
       "source_paths": [
-        "client/docker/Dockerfile",
-        "client/docker/entrypoint.sh",
-        "client/docker/healthcheck.sh"
+        "Dockerfile",
+        "scripts/test-oci-compat.sh",
+        "tests/compat/postgres-query-kinds"
       ],
-      "server_environment": "Docker Engine 29.2.1；maven:3.9-eclipse-temurin-17 builder 中固定 Rust 1.85.1；postgres:17 Docker 服务端与无 JVM final image；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
-      "result": "scripts/test-oci-compat.sh 成功构建镜像；检查 final image 不含 java 可执行文件或 Java/JRE/JDK 环境变量，并含 /healthz healthcheck。默认 endpoint 以 password_file 挂载的 secret 连接 PostgreSQL 并返回 ASK true；--entrypoint rtop 的镜像内 CLI query 同样返回 true。缺少 password/password_file 的挂载配置在 /sparql 返回 invalid-config:，不可解析的 PostgreSQL host 返回 datasource-failure:；两种情形下 healthcheck 仍为进程可用。",
-      "difference": "保留无 JVM、默认 endpoint、healthcheck、secret-file 与 CLI 覆写效果。固定 Ontop Java 源码没有同构 OCI runtime artifact，因此不伪造 Java 镜像比较；Rust OCI 外部 gate 的可复核证据见 docs/research/differential-artifacts/postgres-oci-no-jvm-default-endpoint-cli-secret-healthcheck/provenance.json。"
+      "server_environment": "Docker Engine 29.2.1；Linux/amd64；rust:1.85.1-alpine3.21@sha256:813376c206852d4250641eb86720c04fd20fbc6547d1a030c93a45b22a1303a3 builder（build-base）；busybox:1.37.0-musl@sha256:29989570aeecad61a019f684218ea74d4b8c1c74f9e0abeb34ca926b81174ee1；postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e 独立服务端；固定 Ontop 基线 5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
+      "result": "scripts/test-oci-compat.sh 成功构建 scratch 最终镜像。docker export 测得 rootfs 为 12,755,968 bytes（≤20 MiB），docker image inspect .Size 为 4,814,713 bytes（≤6 MiB）。文件清单仅含静态 /rtop、/busybox 与容器平台注入项；配置以 UID 10001、/rtop endpoint、BusyBox wget exec healthcheck 运行，不含 shell、JVM、PostgreSQL 服务端、curl 或凭证。默认 endpoint 在 --read-only 根文件系统下以只读 password_file 挂载连接独立 PostgreSQL 并返回 ASK true；--entrypoint /rtop 的 CLI query 同样返回 true，显式 /busybox wget probe 成功。缺少 password_file 的配置在 /sparql 返回 invalid-config:，不可达 PostgreSQL 返回 datasource-failure:；两种情形下 healthcheck 都仍为进程可用。验证命令：scripts/test-oci-compat.sh。",
+      "difference": "保留无 JVM、默认 endpoint、healthcheck、secret-file 与 CLI 覆写效果。固定 Ontop Java 源码没有同构 OCI runtime artifact，因此不伪造 Java 镜像比较；本 OCI gate 的来源、固定环境、成功与反例、大小度量和命令均记录于此，未记录 secret 内容或数据库凭证。"
     },
     {
       "id": "postgres-postgis-geosparql-geometry-geography",

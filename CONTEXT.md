@@ -10,6 +10,9 @@ _Avoid_: RDF 数据库
 **关系数据源**：保存业务数据并执行改写后 SQL 的关系数据库或查询引擎。
 _Avoid_: 本体库, 三元组库
 
+**endpoint 运行时镜像**：只承载 `rtop` CLI 或 HTTP endpoint 及其必要运行时依赖的 OCI 镜像；它通过网络连接关系数据源，不包含或启动 PostgreSQL 服务端。
+_Avoid_: 一体化 PostgreSQL 镜像, 内置数据库镜像
+
 **映射**：将关系数据源中的行或 SQL 查询结果解释为 RDF 术语和 RDF facts 的规则。
 _Avoid_: ETL
 
