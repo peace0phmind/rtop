@@ -7,33 +7,73 @@ use serde::Deserialize;
 use std::collections::BTreeMap;
 use std::io::{BufRead, BufReader, ErrorKind, Read, Write};
 use std::net::{TcpListener, TcpStream};
+use std::path::Path;
 use std::sync::{mpsc, Arc};
 use std::time::Duration;
 use uuid::Uuid;
 
 /// 启动最小 SPARQL HTTP adapter。每个请求独立创建 adapter，会话类型不会越过内核边界。
 pub fn serve(config: &str, bind: &str, development: bool) -> Result<(), RuntimeError> {
-    let loaded = load_configuration(config)?;
-    crate::validate_static_inputs(&loaded.spec, loaded.direct_mapping.is_none(), true)?;
     let listener = TcpListener::bind(bind)
         .map_err(|e| RuntimeError::DataSource(format!("无法监听 {bind}：{e}")))?;
     let config: Arc<str> = Arc::from(config);
+    // endpoint 的存活和配置有效性是两个可观察状态。先监听使 healthcheck 能
+    // 区分进程不可用与配置不可用；后者由查询请求返回稳定诊断。CLI 入口仍在
+    // 调用 load_configuration 时严格失败。
+    let startup_error: Option<Arc<str>> = match load_configuration(Path::new(&*config)) {
+        Ok(loaded) => {
+            crate::validate_static_inputs(&loaded.spec, loaded.direct_mapping.is_none(), true)?;
+            None
+        }
+        Err(error) => Some(Arc::from(error.to_string())),
+    };
+    // 覆盖率 runner 必须让真实 HTTP server 正常结束，LLVM profiler 才会落盘。该
+    // 控制变量只编译进 `cargo llvm-cov` 的 cfg(coverage) 二进制，发布 endpoint 不会
+    // 读取或暴露它；请求仍完整经过真实 TCP/HTTP handler。
+    #[cfg(coverage)]
+    let coverage_max_requests = std::env::var("RTOP_COVERAGE_SERVER_MAX_REQUESTS")
+        .ok()
+        .and_then(|value| value.parse::<usize>().ok())
+        .filter(|value| *value > 0);
+    #[cfg(not(coverage))]
+    let coverage_max_requests: Option<usize> = None;
+    #[cfg(coverage)]
+    let mut coverage_workers = Vec::new();
+    let mut accepted_requests = 0usize;
     for stream in listener.incoming() {
         match stream {
             Ok(stream) => {
                 let config = Arc::clone(&config);
-                std::thread::spawn(move || {
+                let startup_error = startup_error.clone();
+                let worker = std::thread::spawn(move || {
                     let mut stream = stream;
-                    let _ = handle(&mut stream, &config, development);
+                    let _ = handle(&mut stream, &config, development, startup_error.as_deref());
                 });
+                #[cfg(coverage)]
+                coverage_workers.push(worker);
+                #[cfg(not(coverage))]
+                drop(worker);
+                accepted_requests += 1;
+                if coverage_max_requests.is_some_and(|limit| accepted_requests >= limit) {
+                    break;
+                }
             }
             Err(_) => continue,
         }
     }
+    #[cfg(coverage)]
+    for worker in coverage_workers {
+        let _ = worker.join();
+    }
     Ok(())
 }
 
-fn handle(stream: &mut TcpStream, config: &str, development: bool) -> std::io::Result<()> {
+fn handle(
+    stream: &mut TcpStream,
+    config: &str,
+    development: bool,
+    startup_error: Option<&str>,
+) -> std::io::Result<()> {
     let mut reader = BufReader::new(stream.try_clone()?);
     let mut request_line = String::new();
     reader.read_line(&mut request_line)?;
@@ -79,30 +119,24 @@ fn handle(stream: &mut TcpStream, config: &str, development: bool) -> std::io::R
         None
     };
     let path = target.split('?').next().unwrap_or_default();
-    let response = match (path, query) {
-        ("/healthz", _) => Ok(("200 OK", "text/plain", "ok".into())),
-        ("/ontop/reformulate", Some(query)) if development => reformulate(config, &query),
-        ("/sparql", Some(query)) if method == "GET" || method == "POST" => {
-            execute_until_disconnect(
-                config.to_owned(),
+    let response = if path != "/healthz" {
+        if let Some(error) = startup_error {
+            Ok(("500 Internal Server Error", "text/plain", error.into()))
+        } else {
+            handle_route(
+                path,
                 query,
-                accept.clone(),
-                stream.try_clone()?,
+                method,
+                config,
+                development,
+                target,
+                &form_parameters,
+                &accept,
+                stream,
             )
         }
-        ("/sparql", None) if method == "GET" || method == "POST" => {
-            Err(RuntimeError::MalformedSparql("请求缺少 query 参数".into()))
-        }
-        ("/sparql", _) => Ok((
-            "405 Method Not Allowed",
-            "text/plain",
-            "method not allowed".into(),
-        )),
-        _ if path == "/ontology" => ontology(config),
-        _ if path.starts_with("/predefined/") => {
-            predefined(config, &path[12..], target, &form_parameters, &accept)
-        }
-        _ => Ok(("404 Not Found", "text/plain", "not found".into())),
+    } else {
+        Ok(("200 OK", "text/plain", "ok".into()))
     };
     let (status, content_type, body) = match response
         .and_then(|response| negotiate(&accept, response))
@@ -122,6 +156,45 @@ fn handle(stream: &mut TcpStream, config: &str, development: bool) -> std::io::R
         String::new()
     };
     write!(stream, "HTTP/1.1 {status}\r\nContent-Type: {content_type}; charset=utf-8\r\nCache-Control: no-store\r\n{query_id}Content-Length: {}\r\nConnection: close\r\n\r\n{body}", body.len())
+}
+
+fn handle_route(
+    path: &str,
+    query: Option<String>,
+    method: &str,
+    config: &str,
+    development: bool,
+    target: &str,
+    form_parameters: &BTreeMap<String, String>,
+    accept: &str,
+    stream: &TcpStream,
+) -> Result<(&'static str, &'static str, String), RuntimeError> {
+    match (path, query) {
+        ("/ontop/reformulate", Some(query)) if development => reformulate(config, &query),
+        ("/sparql", Some(query)) if method == "GET" || method == "POST" => {
+            execute_until_disconnect(
+                config.to_owned(),
+                query,
+                accept.to_owned(),
+                stream
+                    .try_clone()
+                    .map_err(|error| RuntimeError::DataSource(error.to_string()))?,
+            )
+        }
+        ("/sparql", None) if method == "GET" || method == "POST" => {
+            Err(RuntimeError::MalformedSparql("请求缺少 query 参数".into()))
+        }
+        ("/sparql", _) => Ok((
+            "405 Method Not Allowed",
+            "text/plain",
+            "method not allowed".into(),
+        )),
+        _ if path == "/ontology" => ontology(config),
+        _ if path.starts_with("/predefined/") => {
+            predefined(config, &path[12..], target, &form_parameters, &accept)
+        }
+        _ => Ok(("404 Not Found", "text/plain", "not found".into())),
+    }
 }
 
 /// 查询在独立工作线程执行；连接关闭时由持有 cancel token 的监控方中断 PostgreSQL。
@@ -191,7 +264,7 @@ fn execute_cancellable(
     accept: &str,
     cancellation_sender: mpsc::SyncSender<crate::QueryCancellation>,
 ) -> Result<(&'static str, &'static str, String), RuntimeError> {
-    let loaded = load_configuration(config)?;
+    let loaded = load_configuration(Path::new(config))?;
     execute_loaded_cancellable(loaded, query, accept, cancellation_sender)
 }
 
@@ -349,7 +422,7 @@ fn select_media<'a>(
 }
 
 fn ontology(config: &str) -> Result<(&'static str, &'static str, String), RuntimeError> {
-    let loaded = load_configuration(config)?;
+    let loaded = load_configuration(Path::new(config))?;
     if !loaded.endpoint.enable_download_ontology {
         return Ok(("404 Not Found", "text/plain", "not found".into()));
     }
@@ -388,7 +461,7 @@ fn predefined(
     form_parameters: &BTreeMap<String, String>,
     accept: &str,
 ) -> Result<(&'static str, &'static str, String), RuntimeError> {
-    let loaded = load_configuration(config)?;
+    let loaded = load_configuration(Path::new(config))?;
     let (Some(config_path), Some(queries_path)) = (
         loaded.endpoint.predefined_config.as_ref(),
         loaded.endpoint.predefined_queries.as_ref(),
@@ -488,7 +561,7 @@ fn reformulate(
     config: &str,
     query: &str,
 ) -> Result<(&'static str, &'static str, String), RuntimeError> {
-    let loaded = load_configuration(config)?;
+    let loaded = load_configuration(Path::new(config))?;
     let source = PostgresDataSource::connect(&loaded.postgres)?;
     let runtime = runtime_from_loaded(loaded, source)?;
     Ok(("200 OK", "text/plain", runtime.reformulate(query)?))
@@ -736,10 +809,91 @@ fn percent_decode(value: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::{
-        bind_predefined_query, bindings_json, negotiate, percent_decode, PredefinedParameter,
+        bind_predefined_query, binding_variables, bindings_delimited, bindings_json, bindings_xml,
+        form_values, handle, negotiate, percent_decode, PredefinedParameter,
     };
     use crate::{Binding, RdfTerm};
     use std::collections::BTreeMap;
+    use std::io::{Read, Write};
+    use std::net::{TcpListener, TcpStream};
+
+    #[cfg(coverage)]
+    #[test]
+    fn coverage_server_entrypoint_accepts_healthcheck_and_exits_normally() {
+        let directory = tempfile::tempdir().unwrap();
+        let mapping = directory.path().join("mapping.obda");
+        let config = directory.path().join("rtop.toml");
+        std::fs::write(
+            &mapping,
+            "[MappingDeclaration] @collection [[\nmappingId health\ntarget <https://example.test/s> <https://example.test/p> <https://example.test/o> .\nsource SELECT 1\n]]\n",
+        )
+        .unwrap();
+        std::fs::write(
+            &config,
+            "mapping = \"mapping.obda\"\n\n[datasource]\nkind = \"postgres\"\nhost = \"127.0.0.1\"\nport = 1\ndatabase = \"rtop\"\nuser = \"rtop\"\npassword = \"rtop\"\n",
+        )
+        .unwrap();
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        drop(listener);
+        // This test is compiled only when serve reads the coverage control
+        // variable.  The full runner executes this test before its delivery
+        // endpoint, so one accepted request is sufficient and deterministic.
+        unsafe { std::env::set_var("RTOP_COVERAGE_SERVER_MAX_REQUESTS", "1") };
+        let config_for_server = config.clone();
+        let worker = std::thread::spawn(move || {
+            super::serve(
+                config_for_server.to_str().unwrap(),
+                &address.to_string(),
+                false,
+            )
+        });
+        let mut client = loop {
+            match TcpStream::connect(address) {
+                Ok(client) => break client,
+                Err(_) => std::thread::sleep(std::time::Duration::from_millis(5)),
+            }
+        };
+        write!(client, "GET /healthz HTTP/1.1\r\nHost: localhost\r\n\r\n").unwrap();
+        let mut response = String::new();
+        client.read_to_string(&mut response).unwrap();
+        assert!(response.starts_with("HTTP/1.1 200 OK\r\n"));
+        assert_eq!(worker.join().unwrap(), Ok(()));
+        unsafe { std::env::remove_var("RTOP_COVERAGE_SERVER_MAX_REQUESTS") };
+    }
+
+    fn response_with_startup_error(path: &str) -> String {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let address = listener.local_addr().unwrap();
+        let worker = std::thread::spawn(move || {
+            let (mut stream, _) = listener.accept().unwrap();
+            handle(
+                &mut stream,
+                "/definitely/missing.toml",
+                false,
+                Some("invalid-config: datasource 必须指定 password 或 password_file"),
+            )
+            .unwrap();
+        });
+        let mut client = TcpStream::connect(address).unwrap();
+        write!(client, "GET {path} HTTP/1.1\r\nHost: localhost\r\n\r\n").unwrap();
+        let mut response = String::new();
+        client.read_to_string(&mut response).unwrap();
+        worker.join().unwrap();
+        response
+    }
+
+    #[test]
+    fn keeps_healthcheck_available_and_reports_invalid_startup_configuration_to_queries() {
+        let health = response_with_startup_error("/healthz");
+        assert!(health.starts_with("HTTP/1.1 200 OK\r\n"));
+        assert!(health.ends_with("\r\n\r\nok"));
+
+        let query = response_with_startup_error("/sparql?query=ASK%20%7B%7D");
+        assert!(query.starts_with("HTTP/1.1 500 Internal Server Error\r\n"));
+        assert!(query
+            .ends_with("\r\n\r\ninvalid-config: datasource 必须指定 password 或 password_file"));
+    }
 
     #[test]
     fn binds_predefined_iri_in_construct_template_and_where() {
@@ -781,10 +935,64 @@ mod tests {
     }
 
     #[test]
+    fn binds_typed_predefined_parameters_and_rejects_missing_required_values() {
+        let definitions = BTreeMap::from([
+            (
+                "label".into(),
+                PredefinedParameter {
+                    kind: "xsd:string".into(),
+                    required: true,
+                },
+            ),
+            (
+                "optional".into(),
+                PredefinedParameter {
+                    kind: "xsd:integer".into(),
+                    required: false,
+                },
+            ),
+        ]);
+        let values = BTreeMap::from([("label".into(), "A \"quoted\" label".into())]);
+        assert_eq!(
+            bind_predefined_query("CONSTRUCT { ?item ?p ?label } WHERE { ?item ?p ?label }", &definitions, &values).unwrap(),
+            "CONSTRUCT { ?item ?p \"A \\\"quoted\\\" label\"^^<http://www.w3.org/2001/XMLSchema#string> } WHERE { ?item ?p \"A \\\"quoted\\\" label\"^^<http://www.w3.org/2001/XMLSchema#string> }"
+        );
+        assert!(matches!(
+            bind_predefined_query("CONSTRUCT { ?item ?p ?label } WHERE { ?item ?p ?label }", &definitions, &BTreeMap::new()),
+            Err(crate::RuntimeError::MalformedSparql(message)) if message == "缺少必填预定义参数：label"
+        ));
+    }
+
+    #[test]
+    fn preserves_custom_predefined_datatype_and_rejects_a_query_without_graph_pattern() {
+        let definitions = BTreeMap::from([(
+            "code".into(),
+            PredefinedParameter {
+                kind: "https://example.test/datatype/code".into(),
+                required: true,
+            },
+        )]);
+        let values = BTreeMap::from([("code".into(), "A\\B\"C".into())]);
+        assert_eq!(
+            bind_predefined_query("SELECT ?code", &definitions, &values),
+            Err(crate::RuntimeError::MalformedSparql(
+                "预定义查询缺少图模式".into()
+            ))
+        );
+    }
+
+    #[test]
     fn decodes_a_leading_escaped_comment_marker_in_a_sparql_query() {
         assert_eq!(
             percent_decode("%23%20comment%0APREFIX%20%3A%20%3Chttps%3A%2F%2Fexample.test%2F%3E"),
             "# comment\nPREFIX : <https://example.test/>"
+        );
+        assert_eq!(
+            form_values("person=https%3A%2F%2Fexample.test%2Fperson%2F1&label=Ada+Lovelace"),
+            BTreeMap::from([
+                ("person".into(), "https://example.test/person/1".into()),
+                ("label".into(), "Ada Lovelace".into()),
+            ])
         );
     }
 
@@ -821,6 +1029,51 @@ mod tests {
             bindings_json(&[], &["person".into(), "role".into()]),
             "{\"head\":{\"vars\":[\"person\",\"role\"]},\"results\":{\"bindings\":[]}}"
         );
+    }
+
+    #[test]
+    fn serializes_all_rdf_term_forms_in_sparql_result_protocols() {
+        let mut row = Binding::new();
+        row.insert("blank".into(), RdfTerm::BlankNode("row-1".into()));
+        row.insert(
+            "label".into(),
+            RdfTerm::Literal {
+                value: "A, \"quoted\" label".into(),
+                datatype: None,
+                language: Some("en".into()),
+            },
+        );
+        row.insert(
+            "count".into(),
+            RdfTerm::Literal {
+                value: "2".into(),
+                datatype: Some("http://www.w3.org/2001/XMLSchema#integer".into()),
+                language: None,
+            },
+        );
+
+        let variables = vec!["blank".into(), "label".into(), "count".into()];
+        let xml = bindings_xml(&[row.clone()], &variables);
+        assert!(xml.contains("<bnode>row-1</bnode>"));
+        assert!(xml.contains("xml:lang=\"en\""));
+        assert!(xml.contains("datatype=\"http://www.w3.org/2001/XMLSchema#integer\""));
+        let csv = bindings_delimited(&[row.clone()], &variables, ',', false);
+        assert!(csv.contains("\"A, \"\"quoted\"\" label\""));
+        let json = bindings_json(&[row], &variables);
+        assert!(json.contains("\"type\":\"bnode\""));
+        assert!(json.contains("\"xml:lang\":\"en\""));
+        assert!(json.contains("\"datatype\":\"http://www.w3.org/2001/XMLSchema#integer\""));
+    }
+
+    #[test]
+    fn derives_variables_when_a_result_has_no_select_projection() {
+        let mut row = Binding::new();
+        row.insert(
+            "derived".into(),
+            RdfTerm::Iri("https://example.test/value".into()),
+        );
+        assert_eq!(binding_variables(&[row], &[]), vec!["derived"]);
+        assert!(binding_variables(&[], &[]).is_empty());
     }
 
     #[test]

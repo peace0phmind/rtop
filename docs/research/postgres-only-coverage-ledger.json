@@ -3156,7 +3156,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpidentifierfolding ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpidentifierfolding"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-quoted-identifier-alias",
@@ -3182,7 +3189,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpquotedalias ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpquotedalias"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-cast-lexical-and-invalid-input",
@@ -3208,7 +3222,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpcast ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpcast"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-source-sql-regex-negation",
@@ -3234,7 +3255,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpregex ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpregex"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-nested-json-jsonb-array-aggregate",
@@ -3242,25 +3270,32 @@
       "baseline_asset": "JSON、JSONB、array 原始列的 LATERAL/unnest 展开、NULL、二维 array 与 aggregate lexical result",
       "scope": "adapter/mapping/query/complex-value",
       "in_scope": true,
-  "status": "passed",
-  "status_reason": "固定 Ontop Java 17 endpoint 使用原始 nested.obda 与 PostgreSQL lenses；Rust endpoint 使用语义等价的原生 JSON/JSONB/array source SQL。双方在同一 PostgreSQL 17 数据上对三组 aggregate query 的完整 SPARQL JSON bindings 经规范化后一致。",
+      "status": "passed",
+      "status_reason": "固定 Ontop Java 17 endpoint 使用原始 nested.obda 与 PostgreSQL lenses；Rust endpoint 使用语义等价的原生 JSON/JSONB/array source SQL。双方在同一 PostgreSQL 17 数据上对三组 aggregate query 的完整 SPARQL JSON bindings 经规范化后一致。",
       "assertion_strength": "full-term",
-  "rtop_case_id": "differential-postgres-nested-json-jsonb-array-aggregate-endpoint",
+      "rtop_case_id": "differential-postgres-nested-json-jsonb-array-aggregate-endpoint",
       "reference_result": {
         "source": "tests/compat/postgres-nested/flatten-aggregate.expected",
-        "sha256": "39c707af0b5bb5d929b186cc3fbee4a52c738afc0354b09c3ac8a1004bd6c2c0"
+        "sha256": "f2738b95c137d29e17df670d05fc5c4c3424bb332d60de93f86e1e9e32b72139"
       },
       "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "environment": {
-    "jdk_or_container": "postgres:17 固定 digest Docker；Java 17 Ontop endpoint（原始 lenses）；Rust endpoint；curl",
+        "jdk_or_container": "postgres:17 固定 digest Docker；Java 17 Ontop endpoint（原始 lenses）；Rust endpoint；curl",
         "database_image_digest": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
-    "initialization_sql_sha256": "38c44b39bf022d55724daf023b3a7e1773ae730a187d14f92895a6e8ea64c592",
+        "initialization_sql_sha256": "38c44b39bf022d55724daf023b3a7e1773ae730a187d14f92895a6e8ea64c592",
         "timeout_seconds": 300,
         "cleanup_strategy": "shell trap 删除按 PID 命名的 Docker PostgreSQL 容器"
       },
-  "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpnestedaggregate ./scripts/test-ontop-rtop-differential.sh",
+      "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpnestedaggregate ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-  "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpnestedaggregate"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-epnet-dynamic-meta-mapping-expansion",
@@ -3286,7 +3321,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpepnet ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpepnet"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-direct-d010-identifier-percent-encoding",
@@ -3364,7 +3406,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpuniversitysubclass ./scripts/test-ontop-rtop-differential.sh",
       "issue": 43,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpuniversitysubclass"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-ontology-domain-range-facts",
@@ -3390,7 +3439,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpuniversitydomainrange ./scripts/test-ontop-rtop-differential.sh",
       "issue": 43,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpuniversitydomainrange"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-ontology-subproperty-inverse-rewrite",
@@ -3416,7 +3472,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpuniversityproperty ./scripts/test-ontop-rtop-differential.sh",
       "issue": 43,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpuniversityproperty"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-ontology-disjoint-inconsistency",
@@ -3442,7 +3505,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpontologydisjoint ./scripts/test-ontop-rtop-differential.sh",
       "issue": 43,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpontologydisjoint"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-facts-turtle-mapping-union",
@@ -3468,7 +3538,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpfactsturtle ./scripts/test-ontop-rtop-differential.sh",
       "issue": 42,
-      "reviewed_on": "2026-09-05"
+      "reviewed_on": "2026-09-05",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpfactsturtle"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-facts-nquads-named-graph",
@@ -3494,7 +3571,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpfactsnquads ./scripts/test-ontop-rtop-differential.sh",
       "issue": 42,
-      "reviewed_on": "2026-09-05"
+      "reviewed_on": "2026-09-05",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpfactsnquads"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-facts-rdfxml-explicit-base",
@@ -3520,7 +3604,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpfactsrdfxml ./scripts/test-ontop-rtop-differential.sh",
       "issue": 42,
-      "reviewed_on": "2026-09-05"
+      "reviewed_on": "2026-09-05",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpfactsrdfxml"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-facts-missing-malformed-error",
@@ -3546,7 +3637,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpfactserrors ./scripts/test-ontop-rtop-differential.sh",
       "issue": 42,
-      "reviewed_on": "2026-09-05"
+      "reviewed_on": "2026-09-05",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpfactserrors"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-native-obda-prefix-declaration-iri-term",
@@ -3572,7 +3670,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpprefixsource ./scripts/test-ontop-rtop-differential.sh",
       "issue": 41,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpprefixsource"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-native-obda-legal-source-lower-term",
@@ -3598,7 +3703,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httplowermovie ./scripts/test-ontop-rtop-differential.sh",
       "issue": 41,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httplowermovie"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-native-obda-invalid-source-sql",
@@ -3624,7 +3736,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpnativeinvalidsql ./scripts/test-ontop-rtop-differential.sh",
       "issue": 41,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpnativeinvalidsql"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-native-obda-reader-missing-target",
@@ -3638,7 +3757,7 @@
       "rtop_case_id": "differential-postgres-native-obda-reader-missing-target",
       "reference_result": {
         "source": "docs/research/differential-artifacts/postgres-native-obda-reader-missing-target/normalized.json",
-        "sha256": "828fe98af68df802ca641bff3823fdaaf76be7f048334a1d48b7e0a2963cf718"
+        "sha256": "3785efbbef6952f3ecb83846b8db9584c2f99137b1d375d55996657beb0b2928"
       },
       "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "environment": {
@@ -3650,7 +3769,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=nativemissingtarget ./scripts/test-ontop-rtop-differential.sh",
       "issue": 41,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "nativemissingtarget"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-native-obda-runtime-source-relation-error",
@@ -3664,7 +3790,7 @@
       "rtop_case_id": "differential-postgres-native-obda-runtime-source-relation-error",
       "reference_result": {
         "source": "docs/research/differential-artifacts/postgres-native-obda-runtime-source-relation-error/normalized.json",
-        "sha256": "70ab8fcd9ea53212303899f8f0f50f63675f86a717a4574d221bc1651c999a0a"
+        "sha256": "802104050a903fbeea9d266d176df2cf37adc3f5eff032e7216131b88ef7f88b"
       },
       "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
       "environment": {
@@ -3676,7 +3802,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=nativeruntimemissingrelation ./scripts/test-ontop-rtop-differential.sh",
       "issue": 41,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "nativeruntimemissingrelation"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "r2rml-d016-tc0016c-date-timestamp",
@@ -3806,7 +3939,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpreformulate ./scripts/test-ontop-rtop-differential.sh",
       "issue": 48,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpreformulate"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "http-sparql-protocol-forms-and-errors",
@@ -3858,7 +3998,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=clisharedinput ./scripts/test-ontop-rtop-differential.sh",
       "issue": 46,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "clisharedinput"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-lubm-query-1",
@@ -3884,7 +4031,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=lubm LUBM_QUERY=1 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 52,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "lubm"
+        ],
+        "parameters": {
+          "LUBM_QUERY": "1"
+        }
+      }
     },
     {
       "asset_id": "postgres-lubm-query-2",
@@ -3910,7 +4066,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=lubm LUBM_QUERY=2 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 52,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "lubm"
+        ],
+        "parameters": {
+          "LUBM_QUERY": "2"
+        }
+      }
     },
     {
       "asset_id": "postgres-lubm-query-3",
@@ -3936,7 +4101,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=lubm LUBM_QUERY=3 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 52,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "lubm"
+        ],
+        "parameters": {
+          "LUBM_QUERY": "3"
+        }
+      }
     },
     {
       "asset_id": "postgres-lubm-query-4",
@@ -3962,7 +4136,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=lubm LUBM_QUERY=4 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 52,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "lubm"
+        ],
+        "parameters": {
+          "LUBM_QUERY": "4"
+        }
+      }
     },
     {
       "asset_id": "postgres-lubm-query-5",
@@ -3988,7 +4171,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=lubm LUBM_QUERY=5 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 52,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "lubm"
+        ],
+        "parameters": {
+          "LUBM_QUERY": "5"
+        }
+      }
     },
     {
       "asset_id": "postgres-lubm-query-6",
@@ -4014,7 +4206,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=lubm LUBM_QUERY=6 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 52,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "lubm"
+        ],
+        "parameters": {
+          "LUBM_QUERY": "6"
+        }
+      }
     },
     {
       "asset_id": "postgres-lubm-query-7",
@@ -4040,7 +4241,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=lubm LUBM_QUERY=7 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 52,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "lubm"
+        ],
+        "parameters": {
+          "LUBM_QUERY": "7"
+        }
+      }
     },
     {
       "asset_id": "postgres-lubm-query-8",
@@ -4092,7 +4302,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=lubm LUBM_QUERY=8 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 52,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "lubm"
+        ],
+        "parameters": {
+          "LUBM_QUERY": "8"
+        }
+      }
     },
     {
       "asset_id": "postgres-lubm-query-10",
@@ -4118,7 +4337,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=lubm LUBM_QUERY=10 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 52,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "lubm"
+        ],
+        "parameters": {
+          "LUBM_QUERY": "10"
+        }
+      }
     },
     {
       "asset_id": "postgres-lubm-query-11",
@@ -4144,7 +4372,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=lubm LUBM_QUERY=11 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 52,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "lubm"
+        ],
+        "parameters": {
+          "LUBM_QUERY": "11"
+        }
+      }
     },
     {
       "asset_id": "postgres-lubm-query-12",
@@ -4170,7 +4407,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=lubm LUBM_QUERY=12 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 52,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "lubm"
+        ],
+        "parameters": {
+          "LUBM_QUERY": "12"
+        }
+      }
     },
     {
       "asset_id": "postgres-lubm-query-13",
@@ -4196,7 +4442,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=lubm LUBM_QUERY=13 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 52,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "lubm"
+        ],
+        "parameters": {
+          "LUBM_QUERY": "13"
+        }
+      }
     },
     {
       "asset_id": "postgres-lubm-query-14",
@@ -4222,7 +4477,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=lubm LUBM_QUERY=14 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 52,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "lubm"
+        ],
+        "parameters": {
+          "LUBM_QUERY": "14"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-ask-ask",
@@ -4248,7 +4512,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suiteask ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suiteask"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-boolean-and",
@@ -4274,7 +4545,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilterbooleanand ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilterbooleanand"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-boolean-or",
@@ -4300,7 +4578,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=boolean-or ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "boolean-or"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-boolean-nested-1",
@@ -4326,7 +4613,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=boolean-nested-1 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "boolean-nested-1"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-boolean-nested-2",
@@ -4352,7 +4648,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=boolean-nested-2 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "boolean-nested-2"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-boolean-nested-3",
@@ -4378,7 +4683,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=boolean-nested-3 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "boolean-nested-3"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-string-eq",
@@ -4404,7 +4718,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=string-eq ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "string-eq"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-string-neq",
@@ -4430,7 +4753,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=string-neq ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "string-neq"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-integer-eq",
@@ -4456,7 +4788,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=integer-eq ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "integer-eq"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-integer-neq",
@@ -4482,7 +4823,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=integer-neq ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "integer-neq"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-integer-gt",
@@ -4508,7 +4858,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=integer-gt ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "integer-gt"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-integer-gte",
@@ -4534,7 +4893,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=integer-gte ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "integer-gte"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-integer-lt",
@@ -4560,7 +4928,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=integer-lt ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "integer-lt"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-integer-lte",
@@ -4586,7 +4963,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=integer-lte ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "integer-lte"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-decimal-eq",
@@ -4612,7 +4998,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=decimal-eq ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "decimal-eq"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-decimal-neq",
@@ -4638,7 +5033,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=decimal-neq ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "decimal-neq"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-decimal-gt",
@@ -4664,7 +5068,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=decimal-gt ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "decimal-gt"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-decimal-gte",
@@ -4690,7 +5103,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=decimal-gte ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "decimal-gte"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-decimal-lt",
@@ -4716,7 +5138,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=decimal-lt ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "decimal-lt"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-decimal-lte",
@@ -4742,7 +5173,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=decimal-lte ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "decimal-lte"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-double-eq",
@@ -4768,7 +5208,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=double-eq ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "double-eq"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-double-neq",
@@ -4794,7 +5243,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=double-neq ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "double-neq"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-double-gt",
@@ -4820,7 +5278,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=double-gt ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "double-gt"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-double-gte",
@@ -4846,7 +5313,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=double-gte ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "double-gte"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-double-lt",
@@ -4872,7 +5348,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=double-lt ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "double-lt"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-double-lte",
@@ -4898,7 +5383,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=double-lte ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "double-lte"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-datetime-eq",
@@ -4924,7 +5418,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=datetime-eq ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "datetime-eq"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-datetime-neq",
@@ -4950,7 +5453,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=datetime-neq ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "datetime-neq"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-datetime-gt",
@@ -4976,7 +5488,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=datetime-gt ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "datetime-gt"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-datetime-gte",
@@ -5002,7 +5523,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=datetime-gte ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "datetime-gte"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-datetime-lt",
@@ -5028,7 +5558,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=datetime-lt ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "datetime-lt"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-datetime-lte",
@@ -5054,7 +5593,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=datetime-lte ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "datetime-lte"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-boolean-eq",
@@ -5080,7 +5628,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=boolean-eq ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "boolean-eq"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-boolean-neq",
@@ -5106,7 +5663,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=boolean-neq ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "boolean-neq"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-filters-literal-langmatch",
@@ -5132,7 +5698,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitefilter SUITE_FILTER_QUERY=literal-langmatch ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitefilter"
+        ],
+        "parameters": {
+          "SUITE_FILTER_QUERY": "literal-langmatch"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-literal-1",
@@ -5158,7 +5733,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=literal-1 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "literal-1"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-literal-2",
@@ -5184,7 +5768,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=literal-2 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "literal-2"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-string-1",
@@ -5210,7 +5803,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=string-1 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "string-1"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-string-2",
@@ -5236,7 +5838,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=string-2 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "string-2"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-string-3",
@@ -5262,7 +5873,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=string-3 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "string-3"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-integer-1",
@@ -5288,7 +5908,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=integer-1 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "integer-1"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-integer-2",
@@ -5314,7 +5943,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=integer-2 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "integer-2"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-integer-3",
@@ -5340,7 +5978,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=integer-3 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "integer-3"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-pos-integer-1",
@@ -5366,7 +6013,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=pos-integer-1 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "pos-integer-1"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-pos-integer-2",
@@ -5392,7 +6048,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=pos-integer-2 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "pos-integer-2"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-pos-integer-2-bis",
@@ -5418,7 +6083,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=pos-integer-2-bis ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "pos-integer-2-bis"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-pos-integer-3",
@@ -5444,7 +6118,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=pos-integer-3 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "pos-integer-3"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-pos-integer-3-bis",
@@ -5470,7 +6153,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=pos-integer-3-bis ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "pos-integer-3-bis"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-neg-integer-1",
@@ -5496,7 +6188,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=neg-integer-1 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "neg-integer-1"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-neg-integer-2",
@@ -5522,7 +6223,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=neg-integer-2 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "neg-integer-2"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-neg-integer-3",
@@ -5548,7 +6258,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=neg-integer-3 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "neg-integer-3"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-decimal-1",
@@ -5574,7 +6293,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=decimal-1 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "decimal-1"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-decimal-2",
@@ -5600,7 +6328,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=decimal-2 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "decimal-2"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-decimal-2-bis",
@@ -5626,7 +6363,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=decimal-2-bis ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "decimal-2-bis"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-decimal-3",
@@ -5652,7 +6398,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=decimal-3 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "decimal-3"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-decimal-3-bis",
@@ -5678,7 +6433,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=decimal-3-bis ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "decimal-3-bis"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-pos-decimal-1",
@@ -5704,7 +6468,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=pos-decimal-1 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "pos-decimal-1"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-pos-decimal-2",
@@ -5730,7 +6503,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=pos-decimal-2 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "pos-decimal-2"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-pos-decimal-3",
@@ -5756,7 +6538,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=pos-decimal-3 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "pos-decimal-3"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-neg-decimal-1",
@@ -5782,7 +6573,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=neg-decimal-1 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "neg-decimal-1"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-neg-decimal-2",
@@ -5808,7 +6608,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=neg-decimal-2 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "neg-decimal-2"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-neg-decimal-3",
@@ -5834,7 +6643,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=neg-decimal-3 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "neg-decimal-3"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-double-1",
@@ -5860,7 +6678,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=double-1 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "double-1"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-double-2",
@@ -5886,7 +6713,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=double-2 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "double-2"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-double-3",
@@ -5912,7 +6748,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=double-3 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "double-3"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-pos-double-1",
@@ -5938,7 +6783,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=pos-double-1 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "pos-double-1"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-pos-double-2",
@@ -5964,7 +6818,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=pos-double-2 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "pos-double-2"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-pos-double-3",
@@ -5990,7 +6853,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=pos-double-3 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "pos-double-3"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-neg-double-1",
@@ -6016,7 +6888,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=neg-double-1 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "neg-double-1"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-neg-double-2",
@@ -6042,7 +6923,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=neg-double-2 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "neg-double-2"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-neg-double-3",
@@ -6068,7 +6958,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=neg-double-3 ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "neg-double-3"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-datetime-1a",
@@ -6094,7 +6993,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=datetime-1a ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "datetime-1a"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-datetime-1b",
@@ -6120,7 +7028,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=datetime-1b ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "datetime-1b"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-datetime-1c",
@@ -6146,7 +7063,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=datetime-1c ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "datetime-1c"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-datetime-2a",
@@ -6172,7 +7098,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=datetime-2a ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "datetime-2a"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-datetime-2b",
@@ -6198,7 +7133,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=datetime-2b ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "datetime-2b"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-datetime-2c",
@@ -6224,7 +7168,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=datetime-2c ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "datetime-2c"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-datetime-3a",
@@ -6250,7 +7203,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=datetime-3a ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "datetime-3a"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-datetime-3b",
@@ -6276,7 +7238,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=datetime-3b ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "datetime-3b"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-datetime-3c",
@@ -6302,7 +7273,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=datetime-3c ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "datetime-3c"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-datetime-3d",
@@ -6328,7 +7308,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=datetime-3d ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "datetime-3d"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-datetime-3e",
@@ -6354,7 +7343,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=datetime-3e ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "datetime-3e"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-datetime-3f",
@@ -6380,7 +7378,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=datetime-3f ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "datetime-3f"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-datetime-3g",
@@ -6406,7 +7413,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=datetime-3g ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "datetime-3g"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-datetime-3h",
@@ -6432,7 +7448,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=datetime-3h ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "datetime-3h"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-datetime-3i",
@@ -6458,7 +7483,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=datetime-3i ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "datetime-3i"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-datetime-3j",
@@ -6484,7 +7518,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=datetime-3j ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "datetime-3j"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-boolean-1a",
@@ -6510,7 +7553,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=boolean-1a ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "boolean-1a"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-boolean-1b",
@@ -6536,7 +7588,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=boolean-1b ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "boolean-1b"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-boolean-1c",
@@ -6562,7 +7623,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=boolean-1c ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "boolean-1c"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-boolean-1d",
@@ -6588,7 +7658,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=boolean-1d ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "boolean-1d"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-boolean-2a",
@@ -6614,7 +7693,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=boolean-2a ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "boolean-2a"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-boolean-2b",
@@ -6640,7 +7728,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=boolean-2b ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "boolean-2b"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-boolean-2c",
@@ -6666,7 +7763,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=boolean-2c ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "boolean-2c"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-boolean-2d",
@@ -6692,7 +7798,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=boolean-2d ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "boolean-2d"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-boolean-3a",
@@ -6718,7 +7833,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=boolean-3a ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "boolean-3a"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-boolean-3b",
@@ -6744,7 +7868,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=boolean-3b ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "boolean-3b"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-boolean-3c",
@@ -6770,7 +7903,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=boolean-3c ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "boolean-3c"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-boolean-3d",
@@ -6796,7 +7938,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=boolean-3d ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "boolean-3d"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-boolean-3e",
@@ -6822,7 +7973,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=boolean-3e ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "boolean-3e"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-datatypes-boolean-3f",
@@ -6848,7 +8008,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitedatatype SUITE_DATATYPE_QUERY=boolean-3f ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitedatatype"
+        ],
+        "parameters": {
+          "SUITE_DATATYPE_QUERY": "boolean-3f"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-modifiers-slice-test",
@@ -6874,7 +8043,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitemodifier SUITE_MODIFIER_QUERY=slice-test ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitemodifier"
+        ],
+        "parameters": {
+          "SUITE_MODIFIER_QUERY": "slice-test"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-modifiers-limit-test",
@@ -6900,7 +8078,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitemodifier SUITE_MODIFIER_QUERY=limit-test ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitemodifier"
+        ],
+        "parameters": {
+          "SUITE_MODIFIER_QUERY": "limit-test"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-modifiers-offset-test",
@@ -6926,7 +8113,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitemodifier SUITE_MODIFIER_QUERY=offset-test ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitemodifier"
+        ],
+        "parameters": {
+          "SUITE_MODIFIER_QUERY": "offset-test"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-modifiers-limit0-offsetn",
@@ -7134,7 +8330,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitesimplecq SUITE_SIMPLECQ_QUERY=addresses ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitesimplecq"
+        ],
+        "parameters": {
+          "SUITE_SIMPLECQ_QUERY": "addresses"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-simplecq-addresses-id",
@@ -7160,7 +8365,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitesimplecq SUITE_SIMPLECQ_QUERY=addresses-id ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitesimplecq"
+        ],
+        "parameters": {
+          "SUITE_SIMPLECQ_QUERY": "addresses-id"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-simplecq-person-addresses",
@@ -7186,7 +8400,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitesimplecq SUITE_SIMPLECQ_QUERY=person-addresses ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitesimplecq"
+        ],
+        "parameters": {
+          "SUITE_SIMPLECQ_QUERY": "person-addresses"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-simplecq-stocktraders",
@@ -7212,7 +8435,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitesimplecq SUITE_SIMPLECQ_QUERY=stocktraders ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitesimplecq"
+        ],
+        "parameters": {
+          "SUITE_SIMPLECQ_QUERY": "stocktraders"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-simplecq-brokers-workfor-themselves",
@@ -7238,7 +8470,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitesimplecq SUITE_SIMPLECQ_QUERY=brokers-workfor-themselves ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitesimplecq"
+        ],
+        "parameters": {
+          "SUITE_SIMPLECQ_QUERY": "brokers-workfor-themselves"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-simplecq-brokers-workfor-physical",
@@ -7264,7 +8505,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitesimplecq SUITE_SIMPLECQ_QUERY=brokers-workfor-physical ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitesimplecq"
+        ],
+        "parameters": {
+          "SUITE_SIMPLECQ_QUERY": "brokers-workfor-physical"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-simplecq-brokers-workfor-legal",
@@ -7290,7 +8540,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitesimplecq SUITE_SIMPLECQ_QUERY=brokers-workfor-legal ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitesimplecq"
+        ],
+        "parameters": {
+          "SUITE_SIMPLECQ_QUERY": "brokers-workfor-legal"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-simplecq-brokers-workfor-legal-physical",
@@ -7316,7 +8575,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitesimplecq SUITE_SIMPLECQ_QUERY=brokers-workfor-legal-physical ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitesimplecq"
+        ],
+        "parameters": {
+          "SUITE_SIMPLECQ_QUERY": "brokers-workfor-legal-physical"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-simplecq-transactions-finantialinstrument",
@@ -7342,7 +8610,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitesimplecq SUITE_SIMPLECQ_QUERY=transactions-finantialinstrument ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitesimplecq"
+        ],
+        "parameters": {
+          "SUITE_SIMPLECQ_QUERY": "transactions-finantialinstrument"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-simplecq-transaction-stock-type",
@@ -7368,7 +8645,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitesimplecq SUITE_SIMPLECQ_QUERY=transaction-stock-type ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitesimplecq"
+        ],
+        "parameters": {
+          "SUITE_SIMPLECQ_QUERY": "transaction-stock-type"
+        }
+      }
     },
     {
       "asset_id": "postgres-suite-manifest-simplecq-transaction-offer-stock",
@@ -7394,7 +8680,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=suitesimplecq SUITE_SIMPLECQ_QUERY=transaction-offer-stock ./scripts/test-ontop-rtop-differential.sh",
       "issue": 36,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "suitesimplecq"
+        ],
+        "parameters": {
+          "SUITE_SIMPLECQ_QUERY": "transaction-offer-stock"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-boolean-boolean",
@@ -7420,7 +8715,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypeboolean ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypeboolean"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-character-char",
@@ -7446,7 +8748,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypecharacterchar ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypecharacterchar"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-character-char-graph",
@@ -7472,7 +8781,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypecharacterchargraph ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypecharacterchargraph"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-character-varchar",
@@ -7498,7 +8814,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypecharactervarchar ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypecharactervarchar"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-character-varchar-graph",
@@ -7524,7 +8847,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypecharactervarchargraph ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypecharactervarchargraph"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-character-text",
@@ -7550,7 +8880,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypecharactertext ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypecharactertext"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-character-text-graph",
@@ -7576,7 +8913,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypecharactertextgraph ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypecharactertextgraph"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-character-character",
@@ -7602,7 +8946,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypecharactercharacter ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypecharactercharacter"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-character-character-graph",
@@ -7628,7 +8979,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypecharactercharactergraph ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypecharactercharactergraph"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-character-name",
@@ -7654,7 +9012,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypecharactername ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypecharactername"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-character-name-graph",
@@ -7680,7 +9045,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypecharacternamegraph ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypecharacternamegraph"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-datetime-dateLiteral",
@@ -7706,7 +9078,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=datetime DATATYPE_MANIFEST_QUERY=dateLiteral ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "datetime",
+          "DATATYPE_MANIFEST_QUERY": "dateLiteral"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-datetime-date",
@@ -7732,7 +9114,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=datetime DATATYPE_MANIFEST_QUERY=date ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "datetime",
+          "DATATYPE_MANIFEST_QUERY": "date"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-datetime-date-str",
@@ -7758,7 +9150,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=datetime DATATYPE_MANIFEST_QUERY=date-str ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "datetime",
+          "DATATYPE_MANIFEST_QUERY": "date-str"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-datetime-date-bgp",
@@ -7784,7 +9186,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=datetime DATATYPE_MANIFEST_QUERY=date-bgp ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "datetime",
+          "DATATYPE_MANIFEST_QUERY": "date-bgp"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-datetime-timeLiteral",
@@ -7810,7 +9222,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=datetime DATATYPE_MANIFEST_QUERY=timeLiteral ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "datetime",
+          "DATATYPE_MANIFEST_QUERY": "timeLiteral"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-datetime-time",
@@ -7836,7 +9258,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=datetime DATATYPE_MANIFEST_QUERY=time ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "datetime",
+          "DATATYPE_MANIFEST_QUERY": "time"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-datetime-time-str",
@@ -7862,7 +9294,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=datetime DATATYPE_MANIFEST_QUERY=time-str ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "datetime",
+          "DATATYPE_MANIFEST_QUERY": "time-str"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-datetime-time-bgp",
@@ -7888,7 +9330,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=datetime DATATYPE_MANIFEST_QUERY=time-bgp ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "datetime",
+          "DATATYPE_MANIFEST_QUERY": "time-bgp"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-datetime-time_tz_Literal",
@@ -7914,7 +9366,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=datetime DATATYPE_MANIFEST_QUERY=time_tz_Literal ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "datetime",
+          "DATATYPE_MANIFEST_QUERY": "time_tz_Literal"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-datetime-time_tz",
@@ -7940,7 +9402,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=datetime DATATYPE_MANIFEST_QUERY=time_tz ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-07"
+      "reviewed_on": "2026-09-07",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "datetime",
+          "DATATYPE_MANIFEST_QUERY": "time_tz"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-datetime-time_tz-bgp",
@@ -7966,7 +9438,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=datetime DATATYPE_MANIFEST_QUERY=time_tz-bgp ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-07"
+      "reviewed_on": "2026-09-07",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "datetime",
+          "DATATYPE_MANIFEST_QUERY": "time_tz-bgp"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-datetime-timestamp",
@@ -7992,7 +9474,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=datetime DATATYPE_MANIFEST_QUERY=timestamp ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-07"
+      "reviewed_on": "2026-09-07",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "datetime",
+          "DATATYPE_MANIFEST_QUERY": "timestamp"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-datetime-timestamp-str",
@@ -8018,7 +9510,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=datetime DATATYPE_MANIFEST_QUERY=timestamp-str ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-07"
+      "reviewed_on": "2026-09-07",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "datetime",
+          "DATATYPE_MANIFEST_QUERY": "timestamp-str"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-datetime-timestamp_tz",
@@ -8044,7 +9546,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=datetime DATATYPE_MANIFEST_QUERY=timestamp_tz ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-07"
+      "reviewed_on": "2026-09-07",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "datetime",
+          "DATATYPE_MANIFEST_QUERY": "timestamp_tz"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-datetime-timestamp_tz-str",
@@ -8070,7 +9582,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=datetime DATATYPE_MANIFEST_QUERY=timestamp_tz-str ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-07"
+      "reviewed_on": "2026-09-07",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "datetime",
+          "DATATYPE_MANIFEST_QUERY": "timestamp_tz-str"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-numeric-integer",
@@ -8096,7 +9618,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=numeric DATATYPE_MANIFEST_QUERY=integer ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-07"
+      "reviewed_on": "2026-09-07",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "numeric",
+          "DATATYPE_MANIFEST_QUERY": "integer"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-numeric-smallint",
@@ -8122,7 +9654,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=numeric DATATYPE_MANIFEST_QUERY=smallint ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-07"
+      "reviewed_on": "2026-09-07",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "numeric",
+          "DATATYPE_MANIFEST_QUERY": "smallint"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-numeric-bigint",
@@ -8148,7 +9690,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=numeric DATATYPE_MANIFEST_QUERY=bigint ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-07"
+      "reviewed_on": "2026-09-07",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "numeric",
+          "DATATYPE_MANIFEST_QUERY": "bigint"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-numeric-numeric",
@@ -8174,7 +9726,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=numeric DATATYPE_MANIFEST_QUERY=numeric ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-07"
+      "reviewed_on": "2026-09-07",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "numeric",
+          "DATATYPE_MANIFEST_QUERY": "numeric"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-numeric-real",
@@ -8200,7 +9762,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=numeric DATATYPE_MANIFEST_QUERY=real ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-07"
+      "reviewed_on": "2026-09-07",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "numeric",
+          "DATATYPE_MANIFEST_QUERY": "real"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-numeric-double",
@@ -8226,7 +9798,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=numeric DATATYPE_MANIFEST_QUERY=double ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-07"
+      "reviewed_on": "2026-09-07",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "numeric",
+          "DATATYPE_MANIFEST_QUERY": "double"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-numeric-serial",
@@ -8252,7 +9834,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=numeric DATATYPE_MANIFEST_QUERY=serial ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-07"
+      "reviewed_on": "2026-09-07",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "numeric",
+          "DATATYPE_MANIFEST_QUERY": "serial"
+        }
+      }
     },
     {
       "asset_id": "postgres-datatype-manifest-numeric-bigserial",
@@ -8278,7 +9870,17 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpdatatypemanifest DATATYPE_MANIFEST_GROUP=numeric DATATYPE_MANIFEST_QUERY=bigserial ./scripts/test-ontop-rtop-differential.sh",
       "issue": 44,
-      "reviewed_on": "2026-09-07"
+      "reviewed_on": "2026-09-07",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpdatatypemanifest"
+        ],
+        "parameters": {
+          "DATATYPE_MANIFEST_GROUP": "numeric",
+          "DATATYPE_MANIFEST_QUERY": "bigserial"
+        }
+      }
     },
     {
       "asset_id": "postgres-ontology-imports-url-catalog-endpoint",
@@ -8304,7 +9906,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpimportscatalog ./scripts/test-ontop-rtop-differential.sh",
       "issue": 62,
-      "reviewed_on": "2026-09-07"
+      "reviewed_on": "2026-09-07",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpimportscatalog"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-owl-ql-tbox-closure-and-limit-endpoint",
@@ -8342,9 +9951,18 @@
       "status_reason": "PostgreSQL 17 Docker endpoint 由 catalog 原生生成 Direct Mapping：D009 返回完整 PK/FK URI，NULL FK 的 ASK 为 false；D010 以 percent-encoded relation/column URI 返回完整 xsd:string binding。",
       "assertion_strength": "full-term",
       "rtop_case_id": "postgres-direct-mapping-pk-fk-null-encoding-endpoint",
-      "reference_result": {"source": "../ontop/test/rdb2rdf-compliance/src/test/resources/D009/directGraph.ttl", "sha256": "e34f424c8f2e044de25b9a16ee25c5afae7ad18314dfc6275191fbd387ed1ea8"},
+      "reference_result": {
+        "source": "../ontop/test/rdb2rdf-compliance/src/test/resources/D009/directGraph.ttl",
+        "sha256": "e34f424c8f2e044de25b9a16ee25c5afae7ad18314dfc6275191fbd387ed1ea8"
+      },
       "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
-      "environment": {"jdk_or_container":"postgres:17 Docker；Rust endpoint；curl；固定 Ontop 源码和部署镜像双锚","database_image_digest":"postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e","initialization_sql_sha256":"2ac1e882d0307a64e298869838b19fbed740defbaef952a8bf365666b76964bd","timeout_seconds":300,"cleanup_strategy":"shell trap 删除 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"},
+      "environment": {
+        "jdk_or_container": "postgres:17 Docker；Rust endpoint；curl；固定 Ontop 源码和部署镜像双锚",
+        "database_image_digest": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+        "initialization_sql_sha256": "2ac1e882d0307a64e298869838b19fbed740defbaef952a8bf365666b76964bd",
+        "timeout_seconds": 300,
+        "cleanup_strategy": "shell trap 删除 Docker PostgreSQL 容器、endpoint 进程和 mktemp 输出目录"
+      },
       "command": "./scripts/test-delivery-compat.sh && ./scripts/test-postgres-compat.sh",
       "issue": 74,
       "reviewed_on": "2026-09-06"
@@ -8373,7 +9991,16 @@
       },
       "command": "./scripts/test-delivery-compat.sh && ./scripts/test-postgres-compat.sh；DIFFERENTIAL_CASE=d014b|d008a|d007h ./scripts/test-ontop-rtop-differential.sh",
       "issue": 71,
-      "reviewed_on": "2026-09-07"
+      "reviewed_on": "2026-09-07",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "d014b",
+          "d008a",
+          "d007h"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-epnet-dynamic-meta-mapping-endpoint",
@@ -8399,7 +10026,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpepnet ./scripts/test-ontop-rtop-differential.sh",
       "issue": 67,
-      "reviewed_on": "2026-09-06"
+      "reviewed_on": "2026-09-06",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpepnet"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-type-cast-identifier-regex-metadata-endpoint",
@@ -8425,7 +10059,19 @@
       },
       "command": "./scripts/test-delivery-compat.sh && ./scripts/test-postgres-compat.sh；DIFFERENTIAL_CASE=httpcastmappeddate|httpcast|httpregex|httpidentifierfolding|httpquotedalias|cliextractmetadata ./scripts/test-ontop-rtop-differential.sh",
       "issue": 77,
-      "reviewed_on": "2026-09-07"
+      "reviewed_on": "2026-09-07",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpcastmappeddate",
+          "httpcast",
+          "httpregex",
+          "httpidentifierfolding",
+          "httpquotedalias",
+          "cliextractmetadata"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-nested-json-jsonb-array-postgis-endpoint",
@@ -8452,7 +10098,15 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpnestedaggregate|httppostgisintersection ./scripts/test-ontop-rtop-differential.sh",
       "issue": 79,
-      "reviewed_on": "2026-09-07"
+      "reviewed_on": "2026-09-07",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpnestedaggregate",
+          "httppostgisintersection"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-constraint-left-join-aggregate-endpoint",
@@ -8478,7 +10132,16 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpprofoptional ./scripts/test-ontop-rtop-differential.sh && ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpproffkjoin ./scripts/test-ontop-rtop-differential.sh && ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpprofaggregate ./scripts/test-ontop-rtop-differential.sh",
       "issue": 81,
-      "reviewed_on": "2026-09-07"
+      "reviewed_on": "2026-09-07",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpprofoptional",
+          "httpproffkjoin",
+          "httpprofaggregate"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-http-result-formats-dataset-config-endpoint",
@@ -8504,7 +10167,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpformats DIFFERENTIAL_ARTIFACT_DIR=docs/research/differential-artifacts/postgres-http-result-formats-endpoint ./scripts/test-ontop-rtop-differential.sh",
       "issue": 82,
-      "reviewed_on": "2026-09-07"
+      "reviewed_on": "2026-09-07",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpformats"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "postgres-http-request-isolation-cancellation-and-disconnect",
@@ -8530,7 +10200,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpconcurrencyisolation DIFFERENTIAL_ARTIFACT_DIR=docs/research/differential-artifacts/postgres-http-concurrency-isolation-endpoint ./scripts/test-ontop-rtop-differential.sh && ./scripts/test-delivery-compat.sh",
       "issue": 83,
-      "reviewed_on": "2026-09-07"
+      "reviewed_on": "2026-09-07",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpconcurrencyisolation"
+        ],
+        "parameters": {}
+      }
     },
     {
       "asset_id": "intent-engine-fibo-main-postgres-endpoint",
@@ -8660,7 +10337,14 @@
       },
       "command": "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpnativetermsnull DIFFERENTIAL_ARTIFACT_DIR=$PWD/docs/research/differential-artifacts/postgres-native-obda-terms-null-endpoint ./scripts/test-ontop-rtop-differential.sh；其余四份已存 component artifact 聚合见 docs/research/differential-artifacts/postgres-native-obda-template-null-graph-source-endpoint/provenance.json",
       "issue": 64,
-      "reviewed_on": "2026-09-07"
+      "reviewed_on": "2026-09-07",
+      "replay": {
+        "runner": "./scripts/test-ontop-rtop-differential.sh",
+        "cases": [
+          "httpnativetermsnull"
+        ],
+        "parameters": {}
+      }
     }
   ]
 }

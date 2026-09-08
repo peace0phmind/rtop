@@ -1,1 +1,30 @@
-{"format":"fibo-scale-postgres-endpoint-sql-oracle","baseline_has_no_isomorphic_fibo_service":true,"rtop_gate_passed":true,"quality":{"rows":590,"financial_facts":220,"overlap":0,"invalid_current_balance_grain":0},"request_timeout_seconds":30,"balance":{"华东":"6542397.01","华南":"11766095.40"},"disbursement":{"华东":"23777.00","华南":"17860.00"},"allocated_attribution":{"华东":"8837752.83","华南":"9470749.58"}}
+{
+  "case_name": "fibo-scale",
+  "format": "replacement-contract",
+  "ontop_has_no_isomorphic_artifact": true,
+  "rtop_contract": {
+    "checks": {
+      "allocated_attribution": {
+        "华东": "8837752.83",
+        "华南": "9470749.58"
+      },
+      "balance": {
+        "华东": "6542397.01",
+        "华南": "11766095.40"
+      },
+      "disbursement": {
+        "华东": "23777.00",
+        "华南": "17860.00"
+      },
+      "financial_facts": 220,
+      "invalid_current_balance_grain": 0,
+      "manifest_rows": 590,
+      "request_timeout_seconds": 30,
+      "validity_overlap": 0
+    },
+    "command": "./scripts/test-delivery-compat.sh",
+    "fixture": "tests/compat/postgres-fibo/fixtures/{application-ontology.ttl,generated/{mapping.obda,query.sparql,disbursement-query.sparql,allocated-attribution-query.sparql},scale/generated/{facts.sql,manifest.json}}",
+    "postgres_image": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+    "result": "passed"
+  }
+}

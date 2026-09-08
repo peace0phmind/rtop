@@ -3,6 +3,7 @@ set -eu
 
 # 仅规范化两个独立进程已经产生的外部结果。该脚本不导入 rtop 代码，且其
 # 内容哈希是 passed 差分证据的一部分；case 路由或运行编排的变化不会改变它。
+root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 comparison=${1:?需要 comparison}
 case_name=${2:?需要 case_name}
 artifacts=${3:?需要 artifacts 目录}
@@ -151,14 +152,74 @@ if [ "$comparison" = materialize ] || [ "$comparison" = bootstrap-materialize ] 
     sed '/^[[:space:]]*$/d' "$artifacts/ontop.raw" | LC_ALL=C sort > "$artifacts/ontop.normalized.nq"
     sed '/^[[:space:]]*$/d' "$artifacts/rtop.raw" | LC_ALL=C sort > "$artifacts/rtop.normalized.nq"
   fi
-  jq -Rsc 'split("\\n") | map(select(length > 0)) | {format:"nquads", ordered:false, triples:.}' \
+  jq -Rsc 'split("\n") | map(select(length > 0)) | {format:"nquads", ordered:false, triples:.}' \
     < "$artifacts/ontop.normalized.nq" > "$artifacts/normalized.json"
   cmp -s "$artifacts/ontop.normalized.nq" "$artifacts/rtop.normalized.nq"
+elif [ "$comparison" = http-result-formats ]; then
+  formats_match=true
+  for side in ontop rtop; do
+    if ! jq -e '
+      .json.status == "200"
+      and (.json.body | fromjson | .head.vars == ["person", "name"])
+      and (.json.body | fromjson | .results.bindings | length == 1)
+      and (.json.body | fromjson | .results.bindings[0].person.value == "https://example.test/person/1")
+      and (.json.body | fromjson | .results.bindings[0].name.value == "Ada")
+      and .xml.status == "200"
+      and (.xml.body | test("<sparql"; "i") and test("https://example.test/person/1") and test(">Ada<"))
+      and .csv.status == "200"
+      and (.csv.body | test("person,name") and test("https://example.test/person/1") and test("Ada"))
+      and .tsv.status == "200"
+      and (.tsv.body | test("\\?person\\t\\?name") and test("<https://example.test/person/1>") and test("\\\"Ada\\\""))
+      and .ntriples.status == "200"
+      and (.ntriples.body | test("<https://example.test/person/1> <https://example.test/name>") and test("Ada"))
+      and .unsupported.status == "406"
+    ' "$artifacts/$side.raw" >/dev/null; then
+      formats_match=false
+    fi
+  done
+  jq -n '{format:"http-result-formats",select_formats:["application/sparql-results+json","application/sparql-results+xml","text/csv","text/tab-separated-values"],construct_format:"application/n-triples",unsupported_accept_status:406,person:"https://example.test/person/1",name:"Ada"}' > "$artifacts/normalized.json"
+  [ "$formats_match" = true ]
+elif [ "$comparison" = http-concurrency-isolation ]; then
+  isolation_match=true
+  for side in ontop rtop; do
+    if ! jq -e '.delayed.status == "200" and (.delayed.body | fromjson | .boolean == false) and .ask.status == "200" and (.ask.body | fromjson | .boolean == true) and .disconnect.curl_exit == 28 and .disconnect.active_delays == "0" and .reuse.status == "200" and (.reuse.body | fromjson | .boolean == true)' "$artifacts/$side.raw" >/dev/null; then
+      isolation_match=false
+    fi
+  done
+  jq -n '{format:"http-concurrency-isolation-and-disconnect",delayed:"pg_sleep(5) ASK false",concurrent_ask:true,disconnect_curl_exit:28,active_delays:0,reuse_ask:true}' > "$artifacts/normalized.json"
+  [ "$isolation_match" = true ]
+elif [ "$comparison" = http-json ] && [ "$case_name" = httpnativetermsnull ]; then
+  terms_null_match=true
+  for side in ontop rtop; do
+    if ! jq -e '
+      .head.vars == ["person", "label"]
+      and (.results.bindings | length == 2)
+      and ([.results.bindings[] | select(.person.value == "https://example.test/person/1") | .label] == [{"type":"literal","value":"Ada","xml:lang":"en"}])
+      and ([.results.bindings[] | select(.person.value == "https://example.test/nullable/1") | .label] == [{"type":"literal","value":"visible"}])
+      and ([.results.bindings[] | select(.person.value == "https://example.test/person/2")] | length == 0)
+    ' "$artifacts/$side.raw" >/dev/null; then
+      terms_null_match=false
+    fi
+  done
+  jq -n '{format:"http-native-obda-terms-null",language_literal:{value:"Ada",language:"en"},string_literal:"visible",null_person_omitted:true}' > "$artifacts/normalized.json"
+  [ "$terms_null_match" = true ]
 elif [ "$comparison" = http-json ]; then
   # SPARQL Results JSON 是双方 HTTP 进程的公开协议；键、变量和无序 binding
-  # 均由 jq 排序，保留 IRI、literal、datatype 与 graph binding。
-  jq -S '.head.vars |= sort | .results.bindings |= sort_by(tojson)' "$artifacts/ontop.raw" > "$artifacts/ontop.normalized.json"
-  jq -S '.head.vars |= sort | .results.bindings |= sort_by(tojson)' "$artifacts/rtop.raw" > "$artifacts/rtop.normalized.json"
+  # 均由 jq 排序，保留 IRI、literal、datatype 与 graph binding。不能直接以
+  # tojson 作为排序键：它会保留对象的插入顺序，导致字段顺序不同的同一 binding
+  # 排出不同次序。先递归 canonical，再生成排序键。
+  canonical_results='
+    def canonical:
+      if type == "object" then
+        to_entries | sort_by(.key) | map({key:.key, value:(.value | canonical)}) | from_entries
+      elif type == "array" then map(canonical)
+      else . end;
+    .head.vars |= sort
+    | .results.bindings |= (map(canonical) | sort_by(tojson))
+    | canonical
+  '
+  jq -S "$canonical_results" "$artifacts/ontop.raw" > "$artifacts/ontop.normalized.json"
+  jq -S "$canonical_results" "$artifacts/rtop.raw" > "$artifacts/rtop.normalized.json"
   cp "$artifacts/ontop.normalized.json" "$artifacts/normalized.json"
   cmp -s "$artifacts/ontop.normalized.json" "$artifacts/rtop.normalized.json"
 elif [ "$comparison" = http-ask ]; then
@@ -313,14 +374,106 @@ elif [ "$comparison" = http-ontology-content ]; then
   jq -n --arg get_status "$(cat "$artifacts/ontop.normalized.txt")" --arg post_status "$(cat "$artifacts/ontop.post.status")" \
     '{format:"ontology-document",get_status:$get_status,post_status:$post_status,required_iri:"http://it.unibz.inf/obda/test/simple#A"}' > "$artifacts/normalized.json"
   cmp -s "$artifacts/ontop.normalized.txt" "$artifacts/rtop.normalized.txt"
-else
+elif [ "$comparison" = replacement-contract ]; then
+  # 这些交付/驱动/外部 fixture 原子在固定 Ontop 源码树中没有同构宿主 API。
+  # 不能伪装成两端 JSON 相等；保留 Ontop 的明确非同构声明，并把 rtop 实测
+  # PostgreSQL contract 原样纳入规范化证据，仍可从不可变 raw 独立复核。
+  jq -e '
+    .baseline == "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd"
+    and (.result | type == "string")
+    and (.result | test("没有|no Rust-equivalent|no isomorphic|cannot falsely compare"; "i"))
+  ' "$artifacts/ontop.raw" >/dev/null
+  jq -e '.result == "passed" and (.postgres_image | startswith("postgres:17@sha256:"))' \
+    "$artifacts/rtop.raw" >/dev/null
+  jq -n -S --arg case_name "$case_name" --slurpfile rtop "$artifacts/rtop.raw" \
+    '{format:"replacement-contract",case_name:$case_name,
+      ontop_has_no_isomorphic_artifact:true,rtop_contract:$rtop[0]}' \
+    > "$artifacts/normalized.json"
+elif [ "$comparison" = replacement-facts-rejection ]; then
+  # Facts 文件缺失/畸形在两端都必须在 endpoint health 前拒绝；Java/Rust 的
+  # 异常类型不同，故比较稳定拒绝阶段与类别而非堆栈文本。
+  grep -qi 'FactsException' "$artifacts/ontop.raw"
+  grep -qi 'invalid-facts:' "$artifacts/rtop.raw"
+  jq -n '{format:"facts-endpoint-startup-rejection",cases:["missing","malformed"],ontop_category:"FactsException",rtop_category:"invalid-facts",both_rejected_before_health:true}' \
+    > "$artifacts/normalized.json"
+elif [ "$comparison" = artifact-aggregation ]; then
+  # 父 artifact 的 raw 是子 artifact 原始输出的不可变索引。逐 side 校验每个
+  # case_id/hash 可在本仓库中找到，并且确实等于保存的子 raw。
+  jq -e '.components | type == "array" and length > 0' "$artifacts/ontop.raw" >/dev/null
+  jq -e '.components | type == "array" and length > 0' "$artifacts/rtop.raw" >/dev/null
+  ontop_ids=$(jq -c '[.components[] | if type == "object" then .case_id else . end]' "$artifacts/ontop.raw")
+  rtop_ids=$(jq -c '[.components[] | if type == "object" then .case_id else . end]' "$artifacts/rtop.raw")
+  [ "$ontop_ids" = "$rtop_ids" ]
+  for side in ontop rtop; do
+    jq -r '.components[] | select(type == "object") | [.case_id, .sha256] | @tsv' "$artifacts/$side.raw" |
+      while IFS="$(printf '\t')" read -r component_id expected_hash; do
+        component_provenance=$(rg -l --glob provenance.json -F "\"case_id\": \"$component_id\"" "$root/docs/research/differential-artifacts" | sed -n '1p')
+        [ -n "$component_provenance" ]
+        component_dir=$(dirname "$component_provenance")
+        [ "$(sha256sum "$component_dir/$side.raw" | awk '{print $1}')" = "$expected_hash" ]
+      done
+  done
+  jq -n --argjson components "$ontop_ids" \
+    '{format:"differential-artifact-aggregation",all_components_passed:true,components:$components}' > "$artifacts/normalized.json"
+elif [ "$comparison" = suite-provenance ]; then
+  # suite 父 raw 是子输出拼接，语义清单来自子 provenance。逐个复核子 raw
+  # hash 与 passed 状态，再从子 provenance 重建父级 cases。
+  child_provenances=
+  # suite runner 在原始输出中以 ### case_name 保留执行顺序；该顺序是部分
+  # 聚合结果的可观察 bag/order 证据。没有该标记的旧 suite 才采用稳定目录序。
+  for child_name in $(rg -o '### [[:alnum:]_-]+' "$artifacts/ontop.raw" | sed 's/^### //'); do
+    child_provenance=$(find "$artifacts" -mindepth 1 -type d -name "$child_name" -exec sh -c '[ -f "$1/provenance.json" ] && printf "%s\n" "$1/provenance.json"' sh {} \; | sed -n '1p')
+    [ -n "$child_provenance" ]
+    child_provenances="${child_provenances}${child_provenance}
+"
+  done
+  if [ -z "$child_provenances" ]; then
+    child_provenances=$(find "$artifacts" -mindepth 2 -name provenance.json | LC_ALL=C sort)
+  fi
+  [ -n "$child_provenances" ]
+  for child in $child_provenances; do
+    jq -e '.status == "passed"' "$child" >/dev/null
+    child_dir=$(dirname "$child")
+    for side in ontop rtop; do
+      if [ "$side" = ontop ]; then expected_hash=$(jq -r '.sha256.ontop_raw' "$child"); else expected_hash=$(jq -r '.sha256.rtop_raw' "$child"); fi
+      [ "$(sha256sum "$child_dir/$side.raw" | awk '{print $1}')" = "$expected_hash" ]
+    done
+  done
+  cases=$(printf '%s\n' "$child_provenances" | xargs jq -s 'map({case_id,status,mapping_behavior})')
+  [ "$student_kind" = all_passed ] || [ "$student_kind" = all_rejected ]
+  jq -n --arg format "$case_name" --argjson cases "$cases" --arg result_key "$student_kind" \
+    '{format:$format,cases:$cases} + {($result_key):true}' > "$artifacts/normalized.json"
+elif [ "$comparison" = rejection ] || [ "$comparison" = native-reader-rejection ] || [ "$comparison" = native-source-relation-error ] || [ "$comparison" = conversion-rejection ] || [ "$comparison" = v1-to-v3-rejection ]; then
+  # artifact 保存的是 stderr，而 shell exit code 属于 harness 的瞬时状态且未
+  # 写入原始证据。仅以可复核的双方稳定错误类别证明拒绝，绝不从旧 normalized
+  # 文件回填或猜测退出码。
+  grep -Eqi 'Exception|FAILED TO PARSE|Invalid language tag|Error occurred during v1-to-v3' "$artifacts/ontop.raw"
+  grep -Eqi 'invalid-mapping:|datasource-failure: db error' "$artifacts/rtop.raw"
+  if [ "$comparison" = native-reader-rejection ]; then
+    grep -qi 'Invalid target' "$artifacts/ontop.raw"
+    normalized_format=native-mapping-reader-rejection
+  elif [ "$comparison" = native-source-relation-error ]; then
+    grep -qi 'Cannot find relation.*person' "$artifacts/ontop.raw"
+    normalized_format=native-source-relation-runtime-error
+  elif [ "$comparison" = conversion-rejection ]; then
+    normalized_format=conversion-rejection
+  elif [ "$comparison" = v1-to-v3-rejection ]; then
+    normalized_format=v1-to-v3-rejection
+  else
+    normalized_format=mapping-rejection
+  fi
+  jq -n --arg format "$normalized_format" '{format:$format,both_rejected:true}' > "$artifacts/normalized.json"
+elif [ "$comparison" = query ]; then
+  # Ontop CLI 的 CSV 查询结果与 rtop 的 RDF-term 行格式不同。此固定的
+  # student/name fixture 精确比较 literal 与 IRI；blank node 仅比较存在性，
+  # 再以稳定标签 b0 表示两端实现各自分配的标识符。
   ontop_name=$(awk -F, '$0 == "student,name" { header = 1; next } header && NF == 2 { print $2; exit }' "$artifacts/ontop.raw")
   ontop_student=$(awk -F, '$0 == "student,name" { header = 1; next } header && NF == 2 { print $1; exit }' "$artifacts/ontop.raw")
-  rtop_name=$(sed -n 's/.*?name="\\([^"]*\\)".*/\\1/p' "$artifacts/rtop.raw" | head -n 1)
+  rtop_name=$(sed -n 's/.*?name="\([^"]*\)".*/\1/p' "$artifacts/rtop.raw" | head -n 1)
   if [ "$student_kind" = iri ]; then
-    rtop_student=$(sed -n 's/.*?student=<\\([^>]*\\)>.*/\\1/p' "$artifacts/rtop.raw" | head -n 1)
+    rtop_student=$(sed -n 's/.*?student=<\([^>]*\)>.*/\1/p' "$artifacts/rtop.raw" | head -n 1)
   else
-    rtop_student=$(sed -n 's/.*?student=_:\\([^ ]*\\).*/\\1/p' "$artifacts/rtop.raw" | head -n 1)
+    rtop_student=$(sed -n 's/.*?student=_:\([^ ]*\).*/\1/p' "$artifacts/rtop.raw" | head -n 1)
   fi
   [ "$ontop_name" = "$rtop_name" ]
   if [ "$student_kind" = iri ]; then
@@ -334,4 +487,7 @@ else
   jq -n --arg name "$ontop_name" --arg student "$normalized_student" --arg kind "$student_kind" \
     '{vars:["name","student"], ordered:false, rows:[{name:{kind:"literal",value:$name},student:{kind:$kind,value:$student}}]}' \
     > "$artifacts/normalized.json"
+else
+  printf '%s\n' "unsupported differential comparison: $comparison" >&2
+  exit 64
 fi

@@ -5,6 +5,19 @@ root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 ledger="$root/docs/research/postgres-only-coverage-ledger.json"
 report="$root/compatibility-report.json"
 
+require_replay_field() {
+  field=$1
+  expected=$2
+  predicate=$3
+  invalid_assets=$(jq -r "$predicate" "$ledger")
+  if [ -n "$invalid_assets" ]; then
+    printf '%s\n' "$invalid_assets" | while IFS= read -r asset_id; do
+      printf 'coverage ledger: invalid replay: asset_id=%s field=%s expected=%s\n' "$asset_id" "$field" "$expected" >&2
+    done
+    exit 1
+  fi
+}
+
 jq -e '
   .schema_version == 1
   and (.ontop_baseline | type == "string" and length > 0)
@@ -35,6 +48,25 @@ jq -e '
     and (.reviewed_on | test("^[0-9]{4}-[0-9]{2}-[0-9]{2}$"))
   )
 ' "$ledger" >/dev/null
+
+# shell command 是人工审计记录；凡由 Ontop-vs-rtop 差分 runner 产生的证据，都
+# 必须以不含运行时路径的结构化 replay 描述其稳定身份。
+require_replay_field 'replay' 'runner、非空 cases 和 parameters 对象' '
+  .entries[]
+  | select(.command | contains("./scripts/test-ontop-rtop-differential.sh"))
+  | select((.replay | type) != "object"
+      or (.replay.runner != "./scripts/test-ontop-rtop-differential.sh")
+      or ((.replay.cases | type) != "array")
+      or ((.replay.cases | length) == 0)
+      or any(.replay.cases[]; (type != "string") or length == 0)
+      or ((.replay.parameters | type) != "object"))
+  | .asset_id
+'
+require_replay_field 'replay' '不得包含 /tmp 运行时路径' '
+  .entries[]
+  | select(.replay? and (.replay | tostring | contains("/tmp/")))
+  | .asset_id
+'
 
 # #54 建立替换内核账本入口。它必须固定 Ontop endpoint controller 源码、真实
 # PostgreSQL endpoint case 与三种 HTTP 请求形状的可观察结果；不得把 Rust
@@ -278,7 +310,7 @@ jq -e '
       and .scope == "replacement-kernel/http/request-lifecycle"
       and .assertion_strength == "boolean"
       and .rtop_case_id == "postgres-http-request-isolation-cancellation-and-disconnect"
-      and .command == "./scripts/test-delivery-compat.sh"
+      and (.command | endswith("./scripts/test-delivery-compat.sh"))
     )
 ' "$ledger" >/dev/null
 
@@ -320,30 +352,48 @@ jq -e '.entries as $e | any($e[]; .asset_id == "postgres-native-obda-template-nu
 # #67 将固定 EPNet native OBDA 的动态 class IRI 放到真实 PostgreSQL HTTP
 # endpoint 中验收；metadata 仍是 CLI schema catalog 契约，不能凭空扩展 endpoint
 # route。成功结果必须保留完整 URI term，而非仅比较基线的 countResults(1)。
-jq -e '.entries as $e | any($e[]; .asset_id == "postgres-epnet-dynamic-meta-mapping-endpoint" and .issue == 67 and .status == "passed" and .assertion_strength == "full-term" and .rtop_case_id == "postgres-epnet-dynamic-meta-mapping-endpoint" and .command == "ONTOP_HOME=/tmp/rtop-ontop-runtime.U4Ae3D DIFFERENTIAL_CASE=httpepnet ./scripts/test-ontop-rtop-differential.sh")' "$ledger" >/dev/null
+if ! jq -e '.entries as $e | any($e[]; .asset_id == "postgres-epnet-dynamic-meta-mapping-endpoint" and .issue == 67 and .status == "passed" and .assertion_strength == "full-term" and .rtop_case_id == "postgres-epnet-dynamic-meta-mapping-endpoint" and .replay.runner == "./scripts/test-ontop-rtop-differential.sh" and .replay.cases == ["httpepnet"] and .replay.parameters == {})' "$ledger" >/dev/null; then
+  printf '%s\n' 'coverage ledger: invalid replay: asset_id=postgres-epnet-dynamic-meta-mapping-endpoint field=replay expected=runner=./scripts/test-ontop-rtop-differential.sh,cases=[httpepnet],parameters={}' >&2
+  exit 1
+fi
 
 # #71 不能把 R2RML CLI 图对照冒充 endpoint 证据：原始 D014b 与 D008a
 # 必须分别经 PostgreSQL HTTP 返回 join/blank node/typed literal 和 GRAPH
 # template binding，同时 D007h 的 literal graphMap 必须保留 invalid-mapping 分类。
-jq -e '.entries as $e | any($e[]; .asset_id == "postgres-r2rml-term-map-join-graph-endpoint" and .issue == 71 and .status == "passed" and .assertion_strength == "full-term" and .rtop_case_id == "postgres-r2rml-term-map-join-graph-endpoint" and .command == "./scripts/test-delivery-compat.sh && ./scripts/test-postgres-compat.sh")' "$ledger" >/dev/null
+if ! jq -e '.entries as $e | any($e[]; .asset_id == "postgres-r2rml-term-map-join-graph-endpoint" and .issue == 71 and .status == "passed" and .assertion_strength == "full-term" and .rtop_case_id == "postgres-r2rml-term-map-join-graph-endpoint" and .replay.runner == "./scripts/test-ontop-rtop-differential.sh" and .replay.cases == ["d014b", "d008a", "d007h"] and .replay.parameters == {})' "$ledger" >/dev/null; then
+  printf '%s\n' 'coverage ledger: invalid replay: asset_id=postgres-r2rml-term-map-join-graph-endpoint field=replay expected=runner=./scripts/test-ontop-rtop-differential.sh,cases=[d014b,d008a,d007h],parameters={}' >&2
+  exit 1
+fi
 
 jq -e '.entries as $e | any($e[]; .asset_id == "postgres-direct-mapping-pk-fk-null-encoding-endpoint" and .issue == 74 and .status == "passed" and .assertion_strength == "full-term" and .rtop_case_id == "postgres-direct-mapping-pk-fk-null-encoding-endpoint")' "$ledger" >/dev/null
 
 # #77 的 PostgreSQL 类型、cast、regex 和标识符必须在真实 endpoint 返回 RDF
 # terms；metadata 是 Ontop CLI JSON 的可观察边界，不能被误报为虚构 HTTP route。
-jq -e '.entries as $e | any($e[]; .asset_id == "postgres-type-cast-identifier-regex-metadata-endpoint" and .issue == 77 and .status == "passed" and .assertion_strength == "full-term" and .rtop_case_id == "postgres-type-cast-identifier-regex-metadata-endpoint" and .command == "./scripts/test-delivery-compat.sh && ./scripts/test-postgres-compat.sh")' "$ledger" >/dev/null
+if ! jq -e '.entries as $e | any($e[]; .asset_id == "postgres-type-cast-identifier-regex-metadata-endpoint" and .issue == 77 and .status == "passed" and .assertion_strength == "full-term" and .rtop_case_id == "postgres-type-cast-identifier-regex-metadata-endpoint" and .replay.runner == "./scripts/test-ontop-rtop-differential.sh" and .replay.cases == ["httpcastmappeddate", "httpcast", "httpregex", "httpidentifierfolding", "httpquotedalias", "cliextractmetadata"] and .replay.parameters == {})' "$ledger" >/dev/null; then
+  printf '%s\n' 'coverage ledger: invalid replay: asset_id=postgres-type-cast-identifier-regex-metadata-endpoint field=replay expected=runner=./scripts/test-ontop-rtop-differential.sh,cases=[httpcastmappeddate,httpcast,httpregex,httpidentifierfolding,httpquotedalias,cliextractmetadata],parameters={}' >&2
+  exit 1
+fi
 
 # #79 的 JSON、JSONB、array 和 PostGIS 均必须由真实 PostgreSQL endpoint 的
 # RDF term/空结果验收；不能退回 source SQL、CLI 行数或模拟 PostGIS 函数。
-jq -e '.entries as $e | any($e[]; .asset_id == "postgres-nested-json-jsonb-array-postgis-endpoint" and .issue == 79 and .status == "passed" and .assertion_strength == "full-term" and .rtop_case_id == "postgres-nested-json-jsonb-array-postgis-endpoint" and .command == "./scripts/test-delivery-compat.sh && ./scripts/test-postgres-compat.sh")' "$ledger" >/dev/null
+if ! jq -e '.entries as $e | any($e[]; .asset_id == "postgres-nested-json-jsonb-array-postgis-endpoint" and .issue == 79 and .status == "passed" and .assertion_strength == "full-term" and .rtop_case_id == "postgres-nested-json-jsonb-array-postgis-endpoint" and .replay.runner == "./scripts/test-ontop-rtop-differential.sh" and .replay.cases == ["httpnestedaggregate", "httppostgisintersection"] and .replay.parameters == {})' "$ledger" >/dev/null; then
+  printf '%s\n' 'coverage ledger: invalid replay: asset_id=postgres-nested-json-jsonb-array-postgis-endpoint field=replay expected=runner=./scripts/test-ontop-rtop-differential.sh,cases=[httpnestedaggregate,httppostgisintersection],parameters={}' >&2
+  exit 1
+fi
 
 # #81 只把 PostgreSQL 约束保持的结果和请求可完成性视为 endpoint 契约；不得用
 # Ontop 内部 SQL 计划文字替代 NULL、FK join bag 与 aggregate RDF term 证据。
-jq -e '.entries as $e | any($e[]; .asset_id == "postgres-constraint-left-join-aggregate-endpoint" and .issue == 81 and .status == "passed" and .assertion_strength == "full-term" and .rtop_case_id == "postgres-constraint-left-join-aggregate-endpoint" and .command == "./scripts/test-delivery-compat.sh && ./scripts/test-postgres-compat.sh")' "$ledger" >/dev/null
+if ! jq -e '.entries as $e | any($e[]; .asset_id == "postgres-constraint-left-join-aggregate-endpoint" and .issue == 81 and .status == "passed" and .assertion_strength == "full-term" and .rtop_case_id == "postgres-constraint-left-join-aggregate-endpoint" and .replay.runner == "./scripts/test-ontop-rtop-differential.sh" and .replay.cases == ["httpprofoptional", "httpproffkjoin", "httpprofaggregate"] and .replay.parameters == {})' "$ledger" >/dev/null; then
+  printf '%s\n' 'coverage ledger: invalid replay: asset_id=postgres-constraint-left-join-aggregate-endpoint field=replay expected=runner=./scripts/test-ontop-rtop-differential.sh,cases=[httpprofoptional,httpproffkjoin,httpprofaggregate],parameters={}' >&2
+  exit 1
+fi
 
 # #82 需要真实 PostgreSQL endpoint 的协议格式与 Accept 协商证据；JSON 的单一
 # happy path 不能替代 XML/CSV/TSV、N-Triples、dataset/config 与 406 边界。
-jq -e '.entries as $e | any($e[]; .asset_id == "postgres-http-result-formats-dataset-config-endpoint" and .issue == 82 and .status == "passed" and .assertion_strength == "full-term" and .rtop_case_id == "postgres-http-result-formats-dataset-config-endpoint" and .command == "./scripts/test-delivery-compat.sh && ./scripts/test-postgres-compat.sh")' "$ledger" >/dev/null
+if ! jq -e '.entries as $e | any($e[]; .asset_id == "postgres-http-result-formats-dataset-config-endpoint" and .issue == 82 and .status == "passed" and .assertion_strength == "full-term" and .rtop_case_id == "postgres-http-result-formats-dataset-config-endpoint" and .replay.runner == "./scripts/test-ontop-rtop-differential.sh" and .replay.cases == ["httpformats"] and .replay.parameters == {})' "$ledger" >/dev/null; then
+  printf '%s\n' 'coverage ledger: invalid replay: asset_id=postgres-http-result-formats-dataset-config-endpoint field=replay expected=runner=./scripts/test-ontop-rtop-differential.sh,cases=[httpformats],parameters={}' >&2
+  exit 1
+fi
 
 jq -e '.entries as $e | any($e[]; .asset_id == "postgres-oci-no-jvm-default-endpoint-cli-secret-healthcheck" and .issue == 49 and .status == "passed")' "$ledger" >/dev/null
 

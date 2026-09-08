@@ -1,1 +1,1 @@
-{"format":"nquads","ordered":false,"triples":["<http://example.com/base/person/1> <https://example.test/base/kind> <https://example.test/base/Person> .\n"]}
+{"format":"nquads","ordered":false,"triples":["<http://example.com/base/person/1> <https://example.test/base/kind> <https://example.test/base/Person> ."]}

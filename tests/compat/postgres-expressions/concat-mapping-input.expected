@@ -1,4 +1,4 @@
-?value="Crime and Punishment | good"^^<http://www.w3.org/2001/XMLSchema#string>
-?value="SPARQL Tutorial | good"^^<http://www.w3.org/2001/XMLSchema#string>
-?value="The Logic Book: Introduction, Second Edition | good"^^<http://www.w3.org/2001/XMLSchema#string>
-?value="The Semantic Web | bad"^^<http://www.w3.org/2001/XMLSchema#string>
+?value="Crime and Punishment | good"
+?value="SPARQL Tutorial | good"
+?value="The Logic Book: Introduction, Second Edition | good"
+?value="The Semantic Web | bad"

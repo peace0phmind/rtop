@@ -25,6 +25,7 @@ const OWL_THING: &str = "http://www.w3.org/2002/07/owl#Thing";
 const RDF_FIRST: &str = "http://www.w3.org/1999/02/22-rdf-syntax-ns#first";
 const RDF_REST: &str = "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest";
 const RDF_NIL: &str = "http://www.w3.org/1999/02/22-rdf-syntax-ns#nil";
+const RDF_TYPE: &str = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
 
 /// 已归一化的 OWL 2 QL 最小 TBox：仅保留查询改写需要的 subclass 边。
 #[derive(Default)]
@@ -118,11 +119,16 @@ impl Ontology {
     /// 返回某个 property assertion 因 RDFS domain/range 产生的直接类型。
     pub fn inferred_types(&self, predicate: &str, subject: bool) -> BTreeSet<String> {
         let assertions = if subject { &self.domain } else { &self.range };
-        std::iter::once(predicate)
-            .chain(self.superproperty.keys().filter_map(|parent| {
-                self.is_subproperty_of(predicate, parent)
-                    .then_some(parent.as_str())
-            }))
+        // `superproperty` 以 child 为 key；若 parent 自己没有子属性，它只会出现在
+        // values 中。枚举两侧才能让 `child subPropertyOf parent` 继承 parent 的
+        // domain/range，而不依赖另一个 relation 恰好也以 parent 为 child。
+        let properties = std::iter::once(predicate)
+            .chain(self.superproperty.keys().map(String::as_str))
+            .chain(self.superproperty.values().flatten().map(String::as_str))
+            .filter(|parent| self.is_subproperty_of(predicate, parent))
+            .collect::<BTreeSet<_>>();
+        properties
+            .into_iter()
             .flat_map(|property| assertions.get(property).into_iter().flatten().cloned())
             .collect()
     }
@@ -157,11 +163,40 @@ impl Ontology {
         &self.facts
     }
 
-    /// 固定 Ontop endpoint 会接受与 `owl:disjointWith` 冲突的 ABox facts，仍让
-    /// 它们参与查询回答；因此这里不能把冲突升级为初始化错误。disjoint 公理仍被
-    /// 读取，以保留 TBox 输入的完整性和将来需要的改写信息。
+    /// 固定 Ontop PostgreSQL endpoint 会在装载阶段拒绝与 `owl:disjointWith`
+    /// 冲突的显式 ABox type assertion；子类也继承该冲突。
     pub fn validate_facts(&self, facts: &[RdfFact]) -> Result<(), RuntimeError> {
-        let _ = facts;
+        let mut types = BTreeMap::<String, BTreeSet<String>>::new();
+        for fact in facts.iter().chain(&self.facts) {
+            if fact.predicate != RDF_TYPE {
+                continue;
+            }
+            let (RdfTerm::Iri(subject), RdfTerm::Iri(class)) = (&fact.subject, &fact.object)
+            else {
+                continue;
+            };
+            let known_classes = self
+                .superclass
+                .keys()
+                .chain(self.superclass.values().flatten())
+                .chain(self.disjoint.keys())
+                .chain(self.disjoint.values().flatten())
+                .filter(|candidate| self.is_subclass_of(class, candidate))
+                .cloned()
+                .chain(std::iter::once(class.clone()));
+            types.entry(subject.clone()).or_default().extend(known_classes);
+        }
+        for (subject, asserted) in types {
+            for class in &asserted {
+                if let Some(disjoint) = self.disjoint.get(class) {
+                    if let Some(other) = disjoint.iter().find(|other| asserted.contains(*other)) {
+                        return Err(RuntimeError::Ontology(format!(
+                            "ontology inconsistent: {subject} 同时属于互斥类 {class} 与 {other}"
+                        )));
+                    }
+                }
+            }
+        }
         Ok(())
     }
 
@@ -516,7 +551,7 @@ fn term(term: Term<'_>) -> RdfTerm {
 
 #[cfg(test)]
 mod tests {
-    use super::Ontology;
+    use super::{resolve_input, Ontology};
 
     #[test]
     fn normalizes_named_equivalent_classes_to_bidirectional_subclasses() {
@@ -524,7 +559,12 @@ mod tests {
         let path = directory.path().join("equivalent.ttl");
         std::fs::write(
             &path,
-            "@prefix owl: <http://www.w3.org/2002/07/owl#> .\n<https://example.test/Dealer> owl:equivalentClass <https://example.test/Trader> .",
+            "@prefix owl: <http://www.w3.org/2002/07/owl#> .\n\
+             @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n\
+             @prefix ex: <https://example.test/> .\n\
+             <https://example.test/Dealer> owl:equivalentClass <https://example.test/Trader> .\n\
+             _:restriction owl:onProperty ex:worksFor ; owl:someValuesFrom owl:Thing .\n\
+             _:restriction rdfs:subClassOf ex:Employee .",
         )
         .expect("write ontology");
         let ontology = Ontology::load(&path).expect("load named equivalent classes");
@@ -535,6 +575,9 @@ mod tests {
         assert!(
             ontology.is_subclass_of("https://example.test/Trader", "https://example.test/Dealer")
         );
+        assert!(ontology
+            .inferred_types("https://example.test/worksFor", true)
+            .contains("https://example.test/Employee"));
     }
 
     #[test]
@@ -590,13 +633,41 @@ mod tests {
         .expect("write imported ontology");
         std::fs::write(
             &catalog,
-            "<catalog xmlns=\"urn:oasis:names:tc:entity:xmlns:xml:catalog\"><uri name=\"https://example.test/imported\" uri=\"imported.ttl\"/></catalog>",
+            "<catalog xmlns=\"urn:oasis:names:tc:entity:xmlns:xml:catalog\"><uri uri=\"imported.ttl\" name=\"https://example.test/imported\"/></catalog>",
         )
         .expect("write catalog");
 
         let ontology = Ontology::load_with_catalog(&root, Some(&catalog)).expect("load closure");
         assert!(
             ontology.is_subclass_of("https://example.test/Child", "https://example.test/Parent")
+        );
+        assert_eq!(
+            resolve_input(directory.path(), "relative.ttl", None).unwrap(),
+            directory.path().join("relative.ttl")
+        );
+        assert_eq!(
+            resolve_input(
+                directory.path(),
+                &format!("file://{}", root.display()),
+                None
+            )
+            .unwrap(),
+            root
+        );
+        assert!(
+            resolve_input(directory.path(), "https://example.test/imported", None)
+                .unwrap_err()
+                .to_string()
+                .contains("xml_catalog")
+        );
+        assert_eq!(
+            resolve_input(
+                directory.path(),
+                "https://example.test/imported",
+                Some(&catalog)
+            )
+            .unwrap(),
+            imported.canonicalize().unwrap()
         );
     }
 
@@ -614,5 +685,119 @@ mod tests {
             Err(error) => error,
         };
         assert!(error.to_string().contains("未映射的远程 ontology import"));
+    }
+
+    #[test]
+    fn reports_parse_and_catalog_resolution_errors_without_network_access() {
+        let directory = tempfile::tempdir().expect("temporary ontology directory");
+        let invalid_turtle = directory.path().join("invalid.ttl");
+        let invalid_rdfxml = directory.path().join("invalid.owl");
+        let valid_root = directory.path().join("root.ttl");
+        let catalog = directory.path().join("catalog.xml");
+        std::fs::write(
+            &invalid_turtle,
+            "@prefix ex: <https://example.test/> . ex:s ex:p",
+        )
+        .expect("write invalid Turtle");
+        std::fs::write(&invalid_rdfxml, "<rdf:RDF>").expect("write invalid RDF/XML");
+        std::fs::write(
+            &valid_root,
+            "@prefix owl: <http://www.w3.org/2002/07/owl#> . <https://example.test/root> owl:imports <https://example.test/missing> .",
+        )
+        .expect("write root ontology");
+        std::fs::write(
+            &catalog,
+            "<catalog><uri name=\"https://example.test/missing\" uri=\"missing.ttl\"/></catalog>",
+        )
+        .expect("write catalog");
+
+        assert!(matches!(
+            Ontology::load(&invalid_turtle),
+            Err(error) if error.to_string().contains("Turtle")
+        ));
+        assert!(matches!(
+            Ontology::load(&invalid_rdfxml),
+            Err(error) if error.to_string().contains("RDF/XML")
+        ));
+        assert!(matches!(
+            Ontology::load_with_catalog(&valid_root, Some(&catalog)),
+            Err(error) if error.to_string().contains("XML Catalog 映射")
+        ));
+        assert!(matches!(
+            Ontology::load_with_catalog(&valid_root, Some(&directory.path().join("missing.xml"))),
+            Err(error) if error.to_string().contains("XML Catalog")
+        ));
+    }
+
+    #[test]
+    fn retains_language_and_typed_abox_literals() {
+        let directory = tempfile::tempdir().expect("temporary ontology directory");
+        let path = directory.path().join("literals.ttl");
+        std::fs::write(
+            &path,
+            "@prefix ex: <https://example.test/> .\n\
+             ex:subject ex:label \"bonjour\"@fr ;\n\
+                        ex:count \"7\"^^<http://www.w3.org/2001/XMLSchema#integer> .",
+        )
+        .expect("write literal ontology");
+
+        let ontology = Ontology::load(&path).expect("load literal ontology");
+        assert!(ontology.facts().iter().any(|fact| matches!(
+            &fact.object,
+            crate::RdfTerm::Literal { value, datatype: None, language: Some(language) }
+                if value == "bonjour" && language == "fr"
+        )));
+        assert!(ontology.facts().iter().any(|fact| matches!(
+            &fact.object,
+            crate::RdfTerm::Literal { value, datatype: Some(datatype), language: None }
+                if value == "7" && datatype == "http://www.w3.org/2001/XMLSchema#integer"
+        )));
+    }
+
+    #[test]
+    fn exposes_subproperty_domain_range_inverse_and_abox_contracts() {
+        let directory = tempfile::tempdir().expect("temporary ontology directory");
+        let path = directory.path().join("property-closure.ttl");
+        std::fs::write(
+            &path,
+            "@prefix owl: <http://www.w3.org/2002/07/owl#> .\n\
+             @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n\
+             @prefix ex: <https://example.test/> .\n\
+             ex:child rdfs:subPropertyOf ex:parent .\n\
+             ex:parent rdfs:domain ex:Domain ; rdfs:range ex:Range ; owl:inverseOf ex:inverse .\n\
+             ex:instance ex:child ex:object .",
+        )
+        .expect("write property closure ontology");
+        let ontology = Ontology::load(&path).expect("load property closure ontology");
+
+        assert!(
+            ontology.is_subproperty_of("https://example.test/child", "https://example.test/parent")
+        );
+        assert_eq!(
+            ontology.subproperties_of("https://example.test/parent"),
+            [
+                "https://example.test/child".to_owned(),
+                "https://example.test/parent".to_owned(),
+            ]
+            .into_iter()
+            .collect()
+        );
+        assert!(ontology
+            .inferred_types("https://example.test/child", true)
+            .contains("https://example.test/Domain"));
+        assert!(ontology
+            .inferred_types("https://example.test/child", false)
+            .contains("https://example.test/Range"));
+        assert!(ontology
+            .properties_asserting_type("https://example.test/Domain", true)
+            .contains("https://example.test/child"));
+        assert_eq!(
+            ontology
+                .inverse_properties("https://example.test/parent")
+                .collect::<Vec<_>>(),
+            vec!["https://example.test/inverse"]
+        );
+        assert!(!ontology.facts().is_empty());
+        assert!(ontology.validate_facts(&[]).is_ok());
     }
 }

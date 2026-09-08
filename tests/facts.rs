@@ -35,6 +35,30 @@ fn preserves_the_named_graph_from_nquads_facts() {
 }
 
 #[test]
+fn preserves_a_blank_node_graph_from_nquads_facts() {
+    let facts =
+        parse_nquads(b"_:subject <https://example.test/p> \"plain literal\" _:graph .").unwrap();
+    assert_eq!(facts[0].subject, RdfTerm::BlankNode("subject".into()));
+    assert_eq!(
+        facts[0].object,
+        RdfTerm::Literal {
+            value: "plain literal".into(),
+            datatype: None,
+            language: None,
+        }
+    );
+    assert_eq!(facts[0].graph, Some(RdfTerm::BlankNode("graph".into())));
+}
+
+#[test]
+fn classifies_malformed_nquads_facts() {
+    assert!(matches!(
+        parse_nquads(b"<https://example.test/s> <https://example.test/p> \"unterminated ."),
+        Err(rtop::RuntimeError::Facts(_))
+    ));
+}
+
+#[test]
 fn classifies_malformed_turtle_facts() {
     assert!(
         format!("{}", parse_turtle(b"@prefix : <bad", None).unwrap_err())
@@ -87,4 +111,12 @@ fn resolves_rdfxml_relative_iris_against_the_explicit_facts_base_iri() {
         RdfTerm::Iri("https://data.example.test/base/person/7".into())
     );
     assert_eq!(facts[0].predicate, "https://example.test/name");
+}
+
+#[test]
+fn classifies_malformed_rdfxml_facts() {
+    assert!(matches!(
+        parse_rdf_xml(b"<rdf:RDF>", None),
+        Err(rtop::RuntimeError::Facts(_))
+    ));
 }

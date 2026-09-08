@@ -1,5 +1,5 @@
-?v="Bob: 17666.666666666667"^^<http://www.w3.org/2001/XMLSchema#string>
-?v="Carl: 15000.0000000000000000"^^<http://www.w3.org/2001/XMLSchema#string>
-?v="Cynthia: 13000.0000000000000000"^^<http://www.w3.org/2001/XMLSchema#string>
-?v="Jim: 15666.666666666667"^^<http://www.w3.org/2001/XMLSchema#string>
-?v="Sam: 10000.0000000000000000"^^<http://www.w3.org/2001/XMLSchema#string>
+?v="Bob: 17666.666666666667"
+?v="Carl: 15000.0000000000000000"
+?v="Cynthia: 13000.0000000000000000"
+?v="Jim: 15666.666666666667"
+?v="Sam: 10000.0000000000000000"

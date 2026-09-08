@@ -1,15 +1,1 @@
-{
-  "schema_version": 1,
-  "case_id": "differential-intent-engine-npd-postgres-endpoint",
-  "mapping_behavior": "The fixed public NPD PostgreSQL dataset, OBDA mapping, and OWL ontology serve BGP, VALUES/OPTIONAL, and subclass-entailment requests as complete RDF terms matching independent SQL oracles",
-  "status": "passed",
-  "status_reason": "固定 PostgreSQL 17 digest 下 test-delivery-compat gate 实际从公开固定 NPD commit 下载并 git-blob 校验所有输入，Rust HTTP endpoint 结果逐项匹配 SQL oracle。固定 Ontop 源码无 intent-engine NPD service artifact，ontop.raw 明确记录不可比较边界。",
-  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
-  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
-  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
-  "fixture": "tests/compat/postgres-npd-fixture.json；https://github.com/ontop/npd-benchmark.git@5b1eeb39c36c0dd5c69c835fd93d204d19be30dd",
-  "query": "NPD BGP, VALUES/OPTIONAL, and ProductionLicence subclass HTTP SPARQL Results JSON with SQL oracles",
-  "postgres_extensions": "none",
-  "independent_processes": {"ontop": "不适用：固定 Ontop 源码无 intent-engine NPD service artifact", "rtop": "Rust HTTP endpoint and PostgreSQL SQL oracle"},
-  "sha256": {"ontop_raw": "18d32da15991c0d5f5c0c01f6fb97ffb9071261a324e9d881b0a5a12fd1addb2", "rtop_raw": "0a9036beffbec43310f86084a5efc99f32e2608244389a2027ca678c4d7de316", "normalized": "5e9d08c02d8b9b1f407f8db953c9f290114237f40c5ec0d1c9764ce24db923e4"}
-}
+{"schema_version":1,"case_id":"differential-intent-engine-npd-postgres-endpoint","mapping_behavior":"The fixed public NPD PostgreSQL dataset, OBDA mapping, and OWL ontology serve BGP, VALUES/OPTIONAL, and subclass-entailment requests as complete RDF terms matching independent SQL oracles","status":"passed","status_reason":"固定 PostgreSQL 17 digest 下 test-delivery-compat gate 实际从公开固定 NPD commit 下载并 git-blob 校验所有输入，Rust HTTP endpoint 结果逐项匹配 SQL oracle。固定 Ontop 源码无 intent-engine NPD service artifact，ontop.raw 明确记录不可比较边界。","ontop_commit":"5ec07573b18513f33dfcd59ac45fe26a81f9cdbd","postgres_image_digest":"sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e","required_postgres_image_digest":"sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e","fixture":"tests/compat/postgres-npd-fixture.json；https://github.com/ontop/npd-benchmark.git@5b1eeb39c36c0dd5c69c835fd93d204d19be30dd","query":"NPD BGP, VALUES/OPTIONAL, and ProductionLicence subclass HTTP SPARQL Results JSON with SQL oracles","postgres_extensions":"none","independent_processes":{"ontop":"不适用：固定 Ontop 源码无 intent-engine NPD service artifact","rtop":"Rust HTTP endpoint and PostgreSQL SQL oracle"},"sha256":{"ontop_raw":"18d32da15991c0d5f5c0c01f6fb97ffb9071261a324e9d881b0a5a12fd1addb2","rtop_raw":"0a9036beffbec43310f86084a5efc99f32e2608244389a2027ca678c4d7de316","normalized":"520bc97bf3f27b9aa349842dceb05bea64c28711bea0f58a2c74cec234c7ab85"}}

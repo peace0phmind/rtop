@@ -1,1 +1,21 @@
-{"format":"postgres-oci-delivery-gate","baseline_has_no_isomorphic_oci_artifact":true,"rtop_gate_passed":true,"no_jvm":true,"secret_file":true,"endpoint_ask":true,"cli_ask":true,"healthcheck":true,"invalid_config_diagnostic":true,"unreachable_postgres_diagnostic":true}
+{
+  "case_name": "oci",
+  "format": "replacement-contract",
+  "ontop_has_no_isomorphic_artifact": true,
+  "rtop_contract": {
+    "checks": [
+      "docker build --pull=false",
+      "final image has no java command or Java/JRE/JDK environment",
+      "secret-file endpoint ASK",
+      "in-image CLI ASK",
+      "healthz",
+      "invalid-config diagnostic",
+      "unreachable PostgreSQL datasource-failure diagnostic"
+    ],
+    "command": "./scripts/test-oci-compat.sh",
+    "dockerfile_sha256": "243fda440308d281ab280aaff530efd48417d1ee2893a07d8f969997a25b2e67",
+    "gate_sha256": "1921943012b2bb20d4fc3cba63b0969a5c09b26f93da6cea7fefef501b1e1d95",
+    "postgres_image": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+    "result": "passed"
+  }
+}

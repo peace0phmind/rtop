@@ -16,6 +16,14 @@ jq -e '
   and .ontop_baseline == "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd"
   and (.generated_by == "scripts/generate-three-layer-closure-matrix.sh")
   and (.ledger_sha256 | test("^[0-9a-f]{64}$"))
+  and (.coverage_evidence.line_and_function.status == "separate-gate-required")
+  and (.coverage_evidence.line_and_function.provenance == "target/llvm-cov/minimal/provenance.json")
+  and (.coverage_evidence.line_and_function.gate == "scripts/validate-module-coverage.sh")
+  and (.coverage_evidence.branch.status == "external-tool-blocked")
+  and (.coverage_evidence.branch.provenance == "target/llvm-cov/minimal/provenance.json")
+  and (.coverage_evidence.branch.probe == "target/llvm-cov/minimal/branch-coverage-probe.json")
+  and (.coverage_evidence.branch.scope == ["src/ontology.rs", "src/mapping.rs", "src/sparql.rs", "src/lib.rs"])
+  and (.coverage_evidence.branch.required_gate_when_measurable == "ADR-0005: at least 80%")
   and (.atoms | type == "array" and length > 0)
   and (([.atoms[].id] | length) == ([.atoms[].id] | unique | length))
   and all(.atoms[];

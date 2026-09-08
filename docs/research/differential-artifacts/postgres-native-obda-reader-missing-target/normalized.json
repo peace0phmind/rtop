@@ -1,6 +1,4 @@
 {
   "format": "native-mapping-reader-rejection",
-  "ontop_exit": 1,
-  "rtop_exit": 2,
   "both_rejected": true
 }

@@ -1,15 +1,1 @@
-{
-  "schema_version": 1,
-  "case_id": "differential-intent-engine-fibo-main-postgres-endpoint",
-  "mapping_behavior": "The version-controlled FIBO compatibility profile serves temporal balances, disbursements, borrower attribution, decimal rounding counterexamples, and a currency ASK counterexample through a PostgreSQL HTTP endpoint verified against SQL oracles",
-  "status": "passed",
-  "status_reason": "固定 PostgreSQL 17 digest 下 test-delivery-compat gate 实际通过。固定 Ontop 源码不含 intent-engine-ontop FIBO 服务夹具，故 ontop.raw 明确记录不可同构比较边界；结果由 Rust endpoint 与独立 PostgreSQL SQL oracle 验证。",
-  "ontop_commit": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
-  "postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
-  "required_postgres_image_digest": "sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
-  "fixture": "tests/compat/postgres-fibo/fixtures/{application-ontology.ttl,generated/{mapping.obda,schema.sql,query.sparql,disbursement-query.sparql,primary-attribution-query.sparql,allocated-attribution-query.sparql,boundary-rounding-query.sparql,per-fact-rounding-query.sparql}}",
-  "query": "FIBO form POST Results JSON and independent PostgreSQL SQL oracles",
-  "postgres_extensions": "none",
-  "independent_processes": {"ontop": "不适用：固定 Ontop 源码无 intent-engine FIBO service fixture", "rtop": "Rust HTTP endpoint and PostgreSQL SQL oracle"},
-  "sha256": {"ontop_raw": "25d4bc1aa2a718294061ef21b27d3bf4d6b60e03cb911e747becf2f860c8e1e9", "rtop_raw": "db9e91338a2679a2abf26a82d4fbb47d227710fc31732b90c258c6bbe060acc4", "normalized": "6df656608f66aa63612e79af544a055a861a584460c6936ac4ea87e84293a296"}
-}
+{"schema_version":1,"case_id":"differential-intent-engine-fibo-main-postgres-endpoint","mapping_behavior":"The version-controlled FIBO compatibility profile serves temporal balances, disbursements, borrower attribution, decimal rounding counterexamples, and a currency ASK counterexample through a PostgreSQL HTTP endpoint verified against SQL oracles","status":"passed","status_reason":"固定 PostgreSQL 17 digest 下 test-delivery-compat gate 实际通过。固定 Ontop 源码不含 intent-engine-ontop FIBO 服务夹具，故 ontop.raw 明确记录不可同构比较边界；结果由 Rust endpoint 与独立 PostgreSQL SQL oracle 验证。","ontop_commit":"5ec07573b18513f33dfcd59ac45fe26a81f9cdbd","postgres_image_digest":"sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e","required_postgres_image_digest":"sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e","fixture":"tests/compat/postgres-fibo/fixtures/{application-ontology.ttl,generated/{mapping.obda,schema.sql,query.sparql,disbursement-query.sparql,primary-attribution-query.sparql,allocated-attribution-query.sparql,boundary-rounding-query.sparql,per-fact-rounding-query.sparql}}","query":"FIBO form POST Results JSON and independent PostgreSQL SQL oracles","postgres_extensions":"none","independent_processes":{"ontop":"不适用：固定 Ontop 源码无 intent-engine FIBO service fixture","rtop":"Rust HTTP endpoint and PostgreSQL SQL oracle"},"sha256":{"ontop_raw":"25d4bc1aa2a718294061ef21b27d3bf4d6b60e03cb911e747becf2f860c8e1e9","rtop_raw":"db9e91338a2679a2abf26a82d4fbb47d227710fc31732b90c258c6bbe060acc4","normalized":"91da95b0ce58cf9f52f27df5527797390ebcfe590403b488a062f9cf205f8c81"}}

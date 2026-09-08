@@ -5,6 +5,9 @@ edition = "2021"
 description = "A native Rust virtual knowledge graph runtime"
 license = "Apache-2.0"
 
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(coverage)'] }
+
 [lib]
 name = "rtop"
 path = "src/lib.rs"

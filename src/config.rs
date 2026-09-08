@@ -152,11 +152,6 @@ pub fn load_configuration(path: impl AsRef<Path>) -> Result<LoadedConfiguration,
         }
         let _iri = oxiri::Iri::parse(direct.base_iri.clone())
             .map_err(|e| RuntimeError::Config(format!("无效 direct_mapping.base_iri：{e}")))?;
-        if !direct.base_iri.contains(':') {
-            return Err(RuntimeError::Config(
-                "direct_mapping.base_iri 必须是绝对 IRI".into(),
-            ));
-        }
     }
     let xml_catalog_file = config.xml_catalog.map(|file| base.join(file));
     let ontology_file = config

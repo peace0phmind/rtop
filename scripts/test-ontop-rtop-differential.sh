@@ -10,11 +10,13 @@ set -eu
 root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 baseline="$root/../ontop"
 commit=5ec07573b18513f33dfcd59ac45fe26a81f9cdbd
-: "${ONTOP_HOME:?请设置 ONTOP_HOME 为固定 Ontop 基线构建出的 CLI 目录}"
-[ -x "$ONTOP_HOME/ontop" ]
-[ -d "$ONTOP_HOME/jdbc" ]
-find "$ONTOP_HOME/jdbc" -type f -name 'postgresql-*.jar' | grep -q .
-[ "$(git -C "$baseline" rev-parse HEAD)" = "$commit" ]
+if [ "${DIFFERENTIAL_DESCRIBE_ONLY:-false}" != true ]; then
+  : "${ONTOP_HOME:?请设置 ONTOP_HOME 为固定 Ontop 基线构建出的 CLI 目录}"
+  [ -x "$ONTOP_HOME/ontop" ]
+  [ -d "$ONTOP_HOME/jdbc" ]
+  find "$ONTOP_HOME/jdbc" -type f -name 'postgresql-*.jar' | grep -q .
+  [ "$(git -C "$baseline" rev-parse HEAD)" = "$commit" ]
+fi
 postgres_image=${POSTGRES_IMAGE:-postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e}
 postgis_image=${POSTGIS_IMAGE:-docker.m.daocloud.io/postgis/postgis:17-3.5@sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6}
 case_name=${DIFFERENTIAL_CASE:-d001}
@@ -708,7 +710,7 @@ esac
     init_file=create.sql
     init_sql="$baseline/test/rdb2rdf-compliance/src/test/resources/D006/create.sql"
     query="$root/tests/compat/postgres-d006/differential-a.rq"
-    comparison=http-error
+    comparison=http-json
     postgres_extensions=none
     ;;
   d007b)
@@ -2839,6 +2841,17 @@ esac
 direct_mapping=${direct_mapping:-false}
 direct_mapping_relations=${direct_mapping_relations:-}
 direct_mapping_relations_toml=${direct_mapping_relations_toml:-"[\"$direct_mapping_relations\"]"}
+
+# 证据保鲜工具只需 case 路由（comparison、专用 normalizer case 与 artifact
+# 身份），不应为了读取这项纯声明信息启动 PostgreSQL、Java 或 Rust 进程。
+if [ "${DIFFERENTIAL_DESCRIBE_ONLY:-false}" = true ]; then
+  jq -n \
+    --arg case_name "$case_name" --arg variant "$variant" \
+    --arg artifact_case_id "$artifact_case_id" --arg comparison "$comparison" \
+    --arg student_kind "${student_kind:-}" \
+    '{case_name:$case_name,variant:$variant,artifact_case_id:$artifact_case_id,comparison:$comparison,student_kind:$student_kind}'
+  exit 0
+fi
 
 work=$(mktemp -d)
 artifacts=${DIFFERENTIAL_ARTIFACT_DIR:-$work/artifacts}

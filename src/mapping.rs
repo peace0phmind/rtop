@@ -5,7 +5,7 @@ use rio_api::{
 };
 use rio_turtle::TurtleParser;
 use sqlparser::{ast::Statement, dialect::PostgreSqlDialect, parser::Parser};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::io::{Cursor, Read};
 use std::path::Path;
 
@@ -134,7 +134,14 @@ fn r2rml_term_map(value: &str, term: &BindingTerm, subject: bool) -> String {
             language,
             infer_datatype,
         } if !infer_datatype && !subject => {
-            let mut fields = vec![format!("rr:constant {}", turtle_literal(value))];
+            // R2RML direct literal 会在内部保留为完整 RDF token（例如
+            // `"bonjour"@fr`）；rr:constant 只接受 lexical form，语言或 datatype
+            // 由独立字段表达。否则 native → R2RML → reload 会多出一层引号。
+            let lexical = value
+                .strip_prefix('"')
+                .and_then(|_| closing_quote(value).map(|end| &value[1..end]))
+                .unwrap_or(value);
+            let mut fields = vec![format!("rr:constant {}", turtle_literal(lexical))];
             if let Some(language) = language {
                 fields.push(format!("rr:language {}", turtle_literal(language)));
             } else if let Some(datatype) = datatype {
@@ -273,11 +280,7 @@ impl Mapping {
             .collect::<BTreeMap<_, _>>();
         let mut rules = Vec::new();
         for (table, relation) in relations {
-            if relation.columns.is_empty() {
-                return Err(RuntimeError::Mapping(format!(
-                    "Direct Mapping relation `{table}` 不存在或没有 column"
-                )));
-            }
+            validate_direct_relation_metadata(table, relation, &metadata)?;
             let source = direct_source(table, relation, preserve_physical_rows);
             let (subject_template, subject_term) = direct_subject(base_iri, table, relation);
             rules.push(MappingRule {
@@ -815,6 +818,24 @@ impl Mapping {
                         }) =
                             literal_node_for(&triples, object_map, &format!("{RR}constant"))
                         {
+                            // rr:constant 的 literal 既可能自带 RDF datatype/language，
+                            // 也可能像 native→R2RML serializer 一样，以 simple literal
+                            // 加 rr:datatype/rr:language 表示。两种写法都必须在 reload
+                            // 后保留相同 RDF term。
+                            let map_datatype =
+                                iri_for(&triples, object_map, &format!("{RR}datatype"));
+                            let map_language =
+                                literal_for(&triples, object_map, &format!("{RR}language"));
+                            if (datatype.is_some() || map_datatype.is_some())
+                                && (language.is_some() || map_language.is_some())
+                            {
+                                return Err(RuntimeError::Mapping(
+                                    "R2RML 结构错误：ObjectMap 不能同时声明 rr:datatype 与 rr:language"
+                                        .into(),
+                                ));
+                            }
+                            let datatype = datatype.or(map_datatype);
+                            let language = language.or(map_language);
                             let suffix = language
                                 .as_ref()
                                 .map(|language| format!("@{language}"))
@@ -822,7 +843,18 @@ impl Mapping {
                                     datatype.as_ref().map(|datatype| format!("^^<{datatype}>"))
                                 })
                                 .unwrap_or_default();
-                            (format!("\"{value}\"{suffix}"), BindingTerm::Literal { datatype, language, infer_datatype: true }, source.clone())
+                            // rr:constant 的 RDF literal 已在 mapping 中给出精确 lexical
+                            // form 和可选 datatype/language；把它当作 PostgreSQL 列值再做
+                            // 推断会在 native → R2RML → reload 时丢失 xsd:boolean 等类型。
+                            (
+                                format!("\"{value}\"{suffix}"),
+                                BindingTerm::Literal {
+                                    datatype,
+                                    language,
+                                    infer_datatype: false,
+                                },
+                                source.clone(),
+                            )
                         } else if let Some(template) =
                             literal_for(&triples, object_map, &format!("{RR}template"))
                         {
@@ -1335,6 +1367,74 @@ impl MappingRule {
     }
 }
 
+/// Direct Mapping 的 catalog 元数据来自 PostgreSQL，但 `Mapping` 也是公开的
+/// 规划 seam。这里显式拒绝不完整的调用方元数据，避免 `zip` 等内部实现细节把坏的
+/// 外键静默缩短成另一条语义不同的 join。
+fn validate_direct_relation_metadata(
+    table: &str,
+    relation: &RelationMetadata,
+    all_relations: &BTreeMap<&String, &RelationMetadata>,
+) -> Result<(), RuntimeError> {
+    if relation.columns.is_empty() {
+        return Err(RuntimeError::Mapping(format!(
+            "Direct Mapping relation `{table}` 不存在或没有 column"
+        )));
+    }
+    let columns = relation
+        .columns
+        .iter()
+        .map(|column| column.name.as_str())
+        .collect::<BTreeSet<_>>();
+    for key_column in &relation.primary_key {
+        if !columns.contains(key_column.as_str()) {
+            return Err(RuntimeError::Mapping(format!(
+                "Direct Mapping relation `{table}` 的 primary key column `{key_column}` 未提供"
+            )));
+        }
+    }
+    for foreign_key in &relation.foreign_keys {
+        if foreign_key.columns.is_empty()
+            || foreign_key.referenced_columns.is_empty()
+            || foreign_key.columns.len() != foreign_key.referenced_columns.len()
+        {
+            return Err(RuntimeError::Mapping(format!(
+                "Direct Mapping 外键 `{}` 的 column 对必须非空且等长",
+                foreign_key.name
+            )));
+        }
+        for column in &foreign_key.columns {
+            if !columns.contains(column.as_str()) {
+                return Err(RuntimeError::Mapping(format!(
+                    "Direct Mapping 外键 `{}` 的 child column `{column}` 未提供",
+                    foreign_key.name
+                )));
+            }
+        }
+        let parent = all_relations
+            .get(&foreign_key.referenced_table)
+            .ok_or_else(|| {
+                RuntimeError::Mapping(format!(
+                    "Direct Mapping 外键 `{}` 的 parent relation `{}` 未提供",
+                    foreign_key.name, foreign_key.referenced_table
+                ))
+            })?;
+        let parent_columns = parent
+            .columns
+            .iter()
+            .map(|column| column.name.as_str())
+            .collect::<BTreeSet<_>>();
+        for column in &foreign_key.referenced_columns {
+            if !parent_columns.contains(column.as_str()) {
+                return Err(RuntimeError::Mapping(format!(
+                    "Direct Mapping 外键 `{}` 的 parent column `{column}` 未提供",
+                    foreign_key.name
+                )));
+            }
+        }
+    }
+    Ok(())
+}
+
 fn direct_source(table: &str, relation: &RelationMetadata, preserve_physical_rows: bool) -> String {
     let columns = relation
         .columns
@@ -1555,12 +1655,173 @@ fn query_literal_value(token: &str) -> Result<String, RuntimeError> {
 
 #[cfg(test)]
 mod tests {
-    use super::{query_literal_value, query_object_value, Mapping};
+    use super::{
+        direct_foreign_key_source, expand, native_serialized_term, parse_native_target,
+        parse_native_triples, query_literal_value, query_object_value, quoted_alias_template,
+        r2rml_graph_map, r2rml_term_map, BindingTerm, GraphMap, Mapping,
+    };
     use crate::{
         sparql::{parse, GraphPattern, Query, TriplePattern},
-        RelationColumn, RelationMetadata,
+        RelationColumn, RelationForeignKey, RelationMetadata,
     };
-    use std::io::Cursor;
+    use std::collections::BTreeMap;
+
+    #[test]
+    fn parses_native_target_helpers_with_prefixes_and_quoted_aliases() {
+        let prefixes =
+            BTreeMap::from([(String::from("ex:"), String::from("https://example.test/"))]);
+        assert_eq!(
+            expand("ex:person", &prefixes).unwrap(),
+            "<https://example.test/person>"
+        );
+        let triples = parse_native_triples(
+            &[
+                "ex:s".into(),
+                "a".into(),
+                "ex:Person".into(),
+                ";".into(),
+                "ex:name".into(),
+                "\"Ada\"@en".into(),
+            ],
+            &prefixes,
+        )
+        .unwrap();
+        assert_eq!(triples.len(), 2);
+        let graph_triples =
+            parse_native_target("GRAPH ex:g { ex:s ex:p ex:o . }", &prefixes).unwrap();
+        assert_eq!(graph_triples.len(), 1);
+        assert_eq!(
+            quoted_alias_template("<{Name}>", "SELECT id AS \"Name\" FROM people"),
+            "<{\"Name\"}>"
+        );
+        assert_eq!(
+            native_serialized_term(
+                "person/{id}",
+                &BindingTerm::Iri,
+                Some("https://example.test/"),
+                false
+            ),
+            "<https://example.test/person/{id}>"
+        );
+        assert_eq!(
+            native_serialized_term(
+                "42",
+                &BindingTerm::Literal {
+                    datatype: Some("http://www.w3.org/2001/XMLSchema#integer".into()),
+                    language: None,
+                    infer_datatype: false,
+                },
+                None,
+                false,
+            ),
+            "42^^<http://www.w3.org/2001/XMLSchema#integer>"
+        );
+        assert!(r2rml_term_map("{name}", &BindingTerm::BlankNode, true).contains("rr:BlankNode"));
+        assert!(r2rml_term_map(
+            "\"Ada\"@en",
+            &BindingTerm::Literal {
+                datatype: None,
+                language: Some("en".into()),
+                infer_datatype: false
+            },
+            false,
+        )
+        .contains("rr:language \"en\""));
+        assert_eq!(
+            r2rml_graph_map(&GraphMap::Constant("https://example.test/g".into())),
+            "[ rr:constant <https://example.test/g> ]"
+        );
+        let source = direct_foreign_key_source(
+            "child",
+            &RelationMetadata {
+                columns: vec![RelationColumn {
+                    name: "parent_id".into(),
+                    nullable: false,
+                }],
+                primary_key: vec!["id".into()],
+                foreign_keys: vec![],
+            },
+            &RelationForeignKey {
+                name: "child_parent".into(),
+                columns: vec!["parent_id".into()],
+                referenced_table: "parent".into(),
+                referenced_columns: vec!["id".into()],
+            },
+            &["id".into()],
+        );
+        assert!(source.contains("child.\"parent_id\" = parent.\"id\""));
+
+        let mapping = Mapping::parse(
+            "[MappingDeclaration] @collection [[\n\
+             mappingId people\n\
+             target <https://example.test/person/{id}> <https://example.test/name> {name}\n\
+             source SELECT id, name FROM people\n\
+             ]]",
+        )
+        .unwrap();
+        let predicate = "<https://example.test/name>".to_owned();
+        assert_eq!(
+            mapping
+                .reformulate(
+                    &TriplePattern {
+                        subject: "?person".into(),
+                        predicate: predicate.clone(),
+                        object: "?name".into(),
+                        graph: None
+                    },
+                    &["person".into(), "name".into()],
+                )
+                .unwrap()
+                .len(),
+            1
+        );
+        assert_eq!(
+            mapping
+                .reformulate(
+                    &TriplePattern {
+                        subject: "<https://example.test/person/1>".into(),
+                        predicate: predicate.clone(),
+                        object: "?name".into(),
+                        graph: None
+                    },
+                    &["name".into()],
+                )
+                .unwrap()
+                .len(),
+            1
+        );
+        assert_eq!(
+            mapping
+                .reformulate(
+                    &TriplePattern {
+                        subject: "<https://example.test/person/1>".into(),
+                        predicate: predicate.clone(),
+                        object: "\"Ada\"".into(),
+                        graph: None
+                    },
+                    &[],
+                )
+                .unwrap()
+                .len(),
+            1
+        );
+        assert_eq!(
+            mapping
+                .reformulate_predicate_variable(
+                    &TriplePattern {
+                        subject: "?person".into(),
+                        predicate: "?predicate".into(),
+                        object: "?name".into(),
+                        graph: None
+                    },
+                    &["person".into(), "name".into()],
+                )
+                .unwrap()
+                .len(),
+            1
+        );
+    }
+    use std::io::{Cursor, Read};
 
     #[test]
     fn normalizes_postgres_timetz_offset_for_text_parameter() {
@@ -1572,9 +1833,126 @@ mod tests {
     }
 
     #[test]
+    fn preserves_and_rejects_dynamic_mapping_literal_query_terms() {
+        assert_eq!(
+            query_literal_value("\"Ada \\\"Lovelace\\\"\"@en").unwrap(),
+            "Ada \"Lovelace\""
+        );
+        assert!(matches!(
+            query_literal_value("\"unterminated"),
+            Err(crate::RuntimeError::MalformedSparql(message)) if message == "literal 缺少结束引号"
+        ));
+        assert!(matches!(
+            query_object_value("bare-token"),
+            Err(crate::RuntimeError::NotFullyTranslatable(message))
+                if message == "mapping 动态 object 的常量查询仅支持 RDF literal"
+        ));
+    }
+
+    #[test]
     fn accepts_a_bare_numeric_sparql_object_for_dynamic_mapping_filter() {
         assert_eq!(query_object_value("-12.6").unwrap(), "-12.6");
         assert_eq!(query_object_value("+3").unwrap(), "+3");
+    }
+
+    #[test]
+    fn expands_native_graph_targets_with_multiple_objects_and_blank_node_templates() {
+        let mapping = Mapping::parse(
+            r#"
+[PrefixDeclaration]
+: http://example.test/
+
+[MappingDeclaration] @collection [[
+mappingId multi-target
+target GRAPH <http://example.test/graph> { <http://example.test/person/{id}> <http://example.test/label> "{name}"@en, BNODE({id}) ; <http://example.test/code> {code}^^xsd:string . }
+source SELECT id, name, code FROM people
+]]
+"#,
+        )
+        .unwrap();
+
+        assert_eq!(mapping.rules.len(), 3);
+        assert!(mapping.rules.iter().all(|rule| matches!(
+            rule.graph,
+            Some(GraphMap::Constant(ref graph)) if graph == "http://example.test/graph"
+        )));
+        assert!(mapping.rules.iter().any(|rule| matches!(
+            rule.object_term,
+            BindingTerm::Literal { language: Some(ref language), .. } if language == "en"
+        )));
+        assert!(mapping
+            .rules
+            .iter()
+            .any(|rule| matches!(rule.object_term, BindingTerm::BlankNode)));
+        assert!(mapping.rules.iter().any(|rule| matches!(
+            rule.object_term,
+            BindingTerm::Literal { datatype: Some(ref datatype), language: None, .. }
+                if datatype == "http://www.w3.org/2001/XMLSchema#string"
+        )));
+    }
+
+    #[test]
+    fn plans_describe_constant_facts_and_variable_predicates_from_native_mapping() {
+        let mapping = Mapping::parse(
+            r#"
+[PrefixDeclaration]
+: https://example.test/
+
+[MappingDeclaration] @collection [[
+mappingId person
+target <https://example.test/person/{id}> a <https://example.test/Person> .
+source SELECT id FROM people
+]]
+"#,
+        )
+        .expect("native mapping 应可解析");
+
+        let describe = mapping
+            .describe()
+            .expect("常量 object mapping 应可 describe");
+        assert_eq!(describe.len(), 1);
+        assert_eq!(describe[0].variables, ["resource"]);
+        let facts = mapping.mapped_facts("https://example.test/person/1".into());
+        assert_eq!(facts.len(), 1);
+        assert_eq!(
+            facts[0].predicate,
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+        );
+
+        let predicate_variable = mapping
+            .reformulate_predicate_variable(
+                &TriplePattern {
+                    subject: "?subject".into(),
+                    predicate: "?predicate".into(),
+                    object: "?object".into(),
+                    graph: None,
+                },
+                &["subject".into(), "object".into()],
+            )
+            .expect("predicate variable 应枚举 mapping predicate");
+        assert_eq!(predicate_variable.len(), 1);
+        assert_eq!(
+            predicate_variable[0].1,
+            "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>"
+        );
+    }
+
+    #[test]
+    fn accepts_postgres_lateral_with_ordinality_source_like_ontop_nested_lens() {
+        let mapping = Mapping::parse(
+            r#"
+[PrefixDeclaration]
+: https://example.test/
+
+[MappingDeclaration] @collection [[
+mappingId nested
+target <https://example.test/item/{id}> <https://example.test/value> {value} .
+source SELECT item.id, nested.value FROM item CROSS JOIN LATERAL unnest(item.values) WITH ORDINALITY AS nested(value, ordinal)
+]]
+"#,
+        )
+        .expect("PostgreSQL LATERAL WITH ORDINALITY source 应保留到执行期");
+        assert!(mapping.rules[0].source.contains("WITH ORDINALITY"));
     }
 
     #[test]
@@ -1590,6 +1968,248 @@ mod tests {
             Mapping::parse_r2rml_reader(Cursor::new(mapping), "http://example.test/mapping.ttl")
                 .unwrap();
         assert_eq!(parsed.rules.len(), 1);
+    }
+
+    #[test]
+    fn accepts_and_rejects_ontop_r2rml_mistake_assets_at_the_parser_boundary() {
+        let root = std::path::Path::new("../ontop/mapping/sql/all/src/test/resources/mistake");
+        let correct = std::fs::read_to_string(root.join("correct-r2rml.ttl"))
+            .expect("read fixed Ontop R2RML asset");
+        let invalid = std::fs::read_to_string(root.join("invalid-predicate-object1-r2rml.ttl"))
+            .expect("read malformed Ontop R2RML asset");
+
+        assert!(Mapping::parse_r2rml_reader(
+            Cursor::new(correct),
+            "http://example.org/mapping.ttl"
+        )
+        .is_ok());
+        assert!(matches!(
+            Mapping::parse_r2rml_reader(Cursor::new(invalid), "http://example.org/mapping.ttl"),
+            Err(crate::RuntimeError::Mapping(message)) if message.contains("ObjectMap 缺少")
+        ));
+    }
+
+    #[test]
+    fn classifies_mapping_reader_and_native_structure_failures_at_public_boundaries() {
+        // 文件、Reader 与 native/R2RML 结构是三个不同的输入 adapter；它们必须
+        // 在进入 PostgreSQL 改写前给出稳定 Mapping 诊断。
+        let temporary = tempfile::tempdir().expect("temporary mapping input directory");
+        let missing = temporary.path().join("missing.obda");
+        assert!(matches!(
+            Mapping::parse_file(&missing),
+            Err(crate::RuntimeError::Mapping(message)) if message.contains("无法读取 mapping")
+        ));
+        assert!(matches!(
+            Mapping::parse_file_relaxed_source_sql(&missing),
+            Err(crate::RuntimeError::Mapping(message)) if message.contains("无法读取 mapping")
+        ));
+        assert!(matches!(
+            Mapping::parse("[MappingDeclaration]\nsource SELECT id FROM people"),
+            Err(crate::RuntimeError::Mapping(message)) if message == "mapping 必须包含 target"
+        ));
+        assert!(matches!(
+            Mapping::parse("[MappingDeclaration]\ntarget <https://example.test/s> <https://example.test/p> <https://example.test/o> ."),
+            Err(crate::RuntimeError::Mapping(message)) if message == "mapping 必须包含 source"
+        ));
+        assert!(matches!(
+            Mapping::parse_r2rml_reader(Cursor::new(""), "not an iri"),
+            Err(crate::RuntimeError::Mapping(message)) if message.contains("无效 R2RML base IRI")
+        ));
+
+        struct FailingReader;
+        impl Read for FailingReader {
+            fn read(&mut self, _: &mut [u8]) -> std::io::Result<usize> {
+                Err(std::io::Error::other("fixed reader failure"))
+            }
+        }
+        assert!(matches!(
+            Mapping::parse_r2rml_reader(FailingReader, "https://example.test/mapping.ttl"),
+            Err(crate::RuntimeError::Mapping(message)) if message.contains("无法读取 R2RML reader")
+        ));
+    }
+
+    #[test]
+    fn rejects_incomplete_r2rml_triples_map_shapes_before_query_planning() {
+        let parse = |body: &str| {
+            Mapping::parse_r2rml(
+                body,
+                oxiri::Iri::parse("https://example.test/mapping.ttl".to_owned()).unwrap(),
+            )
+        };
+        let prefix = "@prefix rr: <http://www.w3.org/ns/r2rml#> .\n";
+        assert!(matches!(
+            parse(&format!("{prefix}[] a rr:TriplesMap .")),
+            Err(crate::RuntimeError::Mapping(message)) if message.contains("缺少 rr:logicalTable")
+        ));
+        assert!(matches!(
+            parse(&format!("{prefix}[] a rr:TriplesMap; rr:logicalTable [] .")),
+            Err(crate::RuntimeError::Mapping(message)) if message.contains("缺少 rr:sqlQuery 或 rr:tableName")
+        ));
+        assert!(matches!(
+            parse(&format!("{prefix}[] a rr:TriplesMap; rr:logicalTable [ rr:tableName \"people\" ] .")),
+            Err(crate::RuntimeError::Mapping(message)) if message.contains("缺少 rr:subjectMap")
+        ));
+        assert!(matches!(
+            parse(&format!("{prefix}[] a rr:TriplesMap; rr:logicalTable [ rr:tableName \"people\" ]; rr:subjectMap [ rr:template \"https://example.test/person/{{id}}\" ] .")),
+            Err(crate::RuntimeError::Mapping(message)) if message.contains("缺少 rr:predicateObjectMap")
+        ));
+    }
+
+    #[test]
+    fn round_trips_native_iri_literal_blank_node_and_graph_term_maps() {
+        let native = r#"
+[PrefixDeclaration]
+ex: https://example.test/
+
+[MappingDeclaration] @collection [[
+mappingId terms
+target ex:person/{id} ex:knows ex:person/{friend} .
+source SELECT id, friend, label FROM people
+
+mappingId language
+target ex:person/{id} ex:label {label}@en .
+source SELECT id, friend, label FROM people
+
+mappingId blank
+target GRAPH ex:graph/{id} { _:row-{id} ex:related _:friend-{friend} . }
+source SELECT id, friend, label FROM people
+]]
+"#;
+        let mapping = Mapping::parse(native).expect("native term maps 应可解析");
+        let r2rml = mapping.to_r2rml();
+        assert!(r2rml.contains("rr:termType rr:BlankNode"));
+        assert!(r2rml.contains("rr:language \"en\""));
+        assert!(r2rml.contains("rr:graphMap [ rr:template \"https://example.test/graph/{id}\" ]"));
+
+        let reloaded =
+            Mapping::parse_r2rml_reader(Cursor::new(r2rml), "https://example.test/round-trip.ttl")
+                .expect("R2RML serializer 输出应可重载");
+        assert!(reloaded
+            .rules
+            .iter()
+            .any(|rule| matches!(rule.subject_term, BindingTerm::BlankNode)));
+        let native_again = reloaded.to_native_obda();
+        assert!(native_again.contains("{label}@en"));
+        assert!(native_again.contains("GRAPH <https://example.test/graph/{id}>"));
+    }
+
+    #[test]
+    fn preserves_ontop_d026_referencing_object_map_join_chain() {
+        let asset =
+            include_str!("../../ontop/test/rdb2rdf-compliance/src/test/resources/D026/r2rmla.ttl");
+        let mapping =
+            Mapping::parse_r2rml_reader(Cursor::new(asset), "http://example.test/D026/r2rmla.ttl")
+                .expect("固定 Ontop D026 引用对象映射资产应可解析");
+
+        assert_eq!(mapping.rules.len(), 5);
+        let joins = mapping
+            .rules
+            .iter()
+            .filter(|rule| rule.source.contains(" JOIN "))
+            .collect::<Vec<_>>();
+        assert_eq!(joins.len(), 2, "每个 parentTriplesMap 应保留一条 join rule");
+        assert!(joins.iter().any(|rule| {
+            rule.source.contains("child.\"Sport\" = parent.\"ID2\"")
+                && rule.object == "<http://example.com/resource/sport_{__rtop_parent_subject}>"
+        }));
+        assert!(joins.iter().any(|rule| {
+            rule.source.contains("child.\"SType\" = parent.\"ID1\"")
+                && rule.object == "<http://example.com/resource/sporttype_{__rtop_parent_subject}>"
+        }));
+    }
+
+    #[test]
+    fn preserves_ontop_d014_ref_object_map_and_named_graph_assets() {
+        let asset =
+            include_str!("../../ontop/test/rdb2rdf-compliance/src/test/resources/D014/r2rmlb.ttl");
+        let mapping =
+            Mapping::parse_r2rml_reader(Cursor::new(asset), "http://example.test/D014/r2rmlb.ttl")
+                .expect("固定 Ontop D014 referencing object map 资产应可解析");
+
+        assert!(mapping.rules.iter().any(|rule| {
+            rule.source.contains(" JOIN ")
+                && rule.source.contains("child.\"deptno\" = parent.\"deptno\"")
+                && rule.object.contains("__rtop_parent_subject")
+        }));
+        assert!(mapping.rules.iter().any(|rule| {
+            rule.predicate == "<http://example.com/dept#name>"
+                && matches!(rule.object_term, BindingTerm::Literal { .. })
+        }));
+    }
+
+    #[test]
+    fn preserves_ontop_native_language_column_template_through_r2rml() {
+        let path = std::path::Path::new("tests/compat/postgres-http/mapping-algebra-bag.obda");
+        let mapping = Mapping::parse_file(path).expect("parse native PostgreSQL mapping asset");
+        let r2rml = mapping.to_r2rml();
+        assert!(r2rml.contains("rr:column \"name\""));
+        assert!(r2rml.contains("rr:language \"en\""));
+
+        let reloaded = Mapping::parse_r2rml_reader(
+            Cursor::new(r2rml),
+            "https://example.test/generated-from-native.ttl",
+        )
+        .expect("reload converted R2RML");
+        assert!(reloaded.rules.iter().any(|rule| {
+            rule.predicate == "<https://example.test/label>"
+                && rule.object == "{name}"
+                && matches!(
+                    &rule.object_term,
+                    super::BindingTerm::Literal {
+                        language: Some(language),
+                        datatype: None,
+                        ..
+                    } if language == "en"
+                )
+        }));
+    }
+
+    #[test]
+    fn preserves_constant_language_literals_across_r2rml_and_native_conversion() {
+        let mapping = r#"
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix ex: <https://example.test/> .
+[] a rr:TriplesMap;
+   rr:logicalTable [ rr:tableName "books" ];
+   rr:subjectMap [ rr:template "book/{id}"; rr:graph ex:subject-graph ];
+   rr:predicateObjectMap [
+       rr:predicate ex:label, ex:alternate-label;
+       rr:graph ex:predicate-graph;
+       rr:object "bonjour"@fr
+   ] .
+"#;
+        let parsed =
+            Mapping::parse_r2rml_reader(Cursor::new(mapping), "https://example.test/mapping.ttl")
+                .expect("parse constant language literal R2RML");
+
+        assert_eq!(parsed.rules.len(), 4);
+        assert!(parsed.rules.iter().all(|rule| matches!(
+            &rule.object_term,
+            super::BindingTerm::Literal { language: Some(language), datatype: None, infer_datatype: false }
+                if language == "fr"
+        )));
+        let native = parsed.to_native_obda();
+        assert!(native.contains("\"bonjour\"@fr"));
+        assert!(native.contains("GRAPH <https://example.test/subject-graph>"));
+        assert!(native.contains("GRAPH <https://example.test/predicate-graph>"));
+
+        let r2rml = parsed.to_r2rml();
+        assert!(r2rml.contains("rr:language \"fr\""));
+        let reloaded =
+            Mapping::parse_r2rml_reader(Cursor::new(r2rml), "https://example.test/generated.ttl")
+                .expect("reload converted R2RML");
+        assert_eq!(reloaded.rules.len(), 4);
+        assert!(reloaded.rules.iter().all(|rule| {
+            rule.object == "\"bonjour\"@fr"
+                && matches!(
+                    &rule.object_term,
+                    super::BindingTerm::Literal {
+                        language: Some(language),
+                        datatype: None,
+                        infer_datatype: false,
+                    } if language == "fr"
+                )
+        }));
     }
 
     #[test]
@@ -1633,6 +2253,364 @@ mod tests {
         assert!(mapping
             .reformulate(&patterns[0], &["component".into(), "dish".into()])
             .is_ok());
+    }
+
+    #[test]
+    fn preserves_postgres_physical_row_identity_for_keyless_direct_mapping_relations() {
+        // RDB2RDF Direct Mapping 对没有主键的 relation 以物理 row identity 区分
+        // blank node。PostgreSQL catalog 路径显式请求 preserve_physical_rows 时，
+        // 不能回退为按列值拼接的稳定但会折叠重复行的 identity。
+        let mapping = Mapping::from_direct_mapping(
+            "https://example.test/base/",
+            &[(
+                "odd table".into(),
+                RelationMetadata {
+                    columns: vec![RelationColumn {
+                        name: "a\"b".into(),
+                        nullable: true,
+                    }],
+                    primary_key: vec![],
+                    foreign_keys: vec![],
+                },
+            )],
+            true,
+        )
+        .unwrap();
+
+        assert!(matches!(
+            mapping.rules[0].subject_term,
+            BindingTerm::BlankNode
+        ));
+        assert!(mapping.rules.iter().all(|rule| {
+            rule.source
+                .contains("ctid::text AS \"__rtop_direct_row_id\"")
+                && rule.source.contains("FROM \"odd table\"")
+                && rule.source.contains("\"a\"\"b\" AS \"a\"\"b\"")
+        }));
+        assert!(mapping.rules[1].predicate.contains("odd%20table#a%22b"));
+    }
+
+    #[test]
+    fn rejects_invalid_direct_mapping_base_and_foreign_key_metadata() {
+        let relation = RelationMetadata {
+            columns: vec![RelationColumn {
+                name: "parent_id".into(),
+                nullable: false,
+            }],
+            primary_key: vec![],
+            foreign_keys: vec![RelationForeignKey {
+                name: "child_parent".into(),
+                columns: vec!["parent_id".into()],
+                referenced_table: "missing_parent".into(),
+                referenced_columns: vec!["id".into()],
+            }],
+        };
+        assert!(matches!(
+            Mapping::from_direct_mapping("relative-base", &[("child".into(), relation.clone())], false),
+            Err(crate::RuntimeError::Mapping(message)) if message.contains("无效 Direct Mapping base IRI")
+        ));
+        assert!(matches!(
+            Mapping::from_direct_mapping("https://example.test/base/", &[("child".into(), relation)], false),
+            Err(crate::RuntimeError::Mapping(message)) if message.contains("parent relation `missing_parent` 未提供")
+        ));
+
+        let valid_parent = RelationMetadata {
+            columns: vec![RelationColumn {
+                name: "id".into(),
+                nullable: false,
+            }],
+            primary_key: vec!["id".into()],
+            foreign_keys: vec![],
+        };
+        let invalid_primary_key = RelationMetadata {
+            columns: valid_parent.columns.clone(),
+            primary_key: vec!["missing_id".into()],
+            foreign_keys: vec![],
+        };
+        assert!(matches!(
+            Mapping::from_direct_mapping("https://example.test/base/", &[("parent".into(), invalid_primary_key)], false),
+            Err(crate::RuntimeError::Mapping(message)) if message.contains("primary key column `missing_id`")
+        ));
+
+        let invalid_pairs = RelationMetadata {
+            columns: vec![RelationColumn {
+                name: "parent_id".into(),
+                nullable: false,
+            }],
+            primary_key: vec![],
+            foreign_keys: vec![RelationForeignKey {
+                name: "bad_pairs".into(),
+                columns: vec![],
+                referenced_table: "parent".into(),
+                referenced_columns: vec!["id".into()],
+            }],
+        };
+        assert!(matches!(
+            Mapping::from_direct_mapping("https://example.test/base/", &[("parent".into(), valid_parent.clone()), ("child".into(), invalid_pairs)], false),
+            Err(crate::RuntimeError::Mapping(message)) if message.contains("column 对必须非空且等长")
+        ));
+
+        let missing_child_column = RelationMetadata {
+            columns: vec![RelationColumn {
+                name: "parent_id".into(),
+                nullable: false,
+            }],
+            primary_key: vec![],
+            foreign_keys: vec![RelationForeignKey {
+                name: "missing_child".into(),
+                columns: vec!["unknown".into()],
+                referenced_table: "parent".into(),
+                referenced_columns: vec!["id".into()],
+            }],
+        };
+        assert!(matches!(
+            Mapping::from_direct_mapping("https://example.test/base/", &[("parent".into(), valid_parent.clone()), ("child".into(), missing_child_column)], false),
+            Err(crate::RuntimeError::Mapping(message)) if message.contains("child column `unknown`")
+        ));
+
+        let missing_parent_column = RelationMetadata {
+            columns: vec![RelationColumn {
+                name: "parent_id".into(),
+                nullable: false,
+            }],
+            primary_key: vec![],
+            foreign_keys: vec![RelationForeignKey {
+                name: "missing_parent".into(),
+                columns: vec!["parent_id".into()],
+                referenced_table: "parent".into(),
+                referenced_columns: vec!["unknown".into()],
+            }],
+        };
+        assert!(matches!(
+            Mapping::from_direct_mapping("https://example.test/base/", &[("parent".into(), valid_parent), ("child".into(), missing_parent_column)], false),
+            Err(crate::RuntimeError::Mapping(message)) if message.contains("parent column `unknown`")
+        ));
+    }
+
+    #[test]
+    fn plans_direct_mapping_foreign_keys_without_fabricating_parent_identity() {
+        let columns = |names: &[&str]| {
+            names
+                .iter()
+                .map(|name| RelationColumn {
+                    name: (*name).into(),
+                    nullable: false,
+                })
+                .collect::<Vec<_>>()
+        };
+        let mapping = Mapping::from_direct_mapping(
+            "https://example.test/base/",
+            &[
+                (
+                    "parent_pk".into(),
+                    RelationMetadata {
+                        columns: columns(&["id", "alternate"]),
+                        primary_key: vec!["id".into()],
+                        foreign_keys: vec![],
+                    },
+                ),
+                (
+                    "parent_no_pk".into(),
+                    RelationMetadata {
+                        columns: columns(&["code"]),
+                        primary_key: vec![],
+                        foreign_keys: vec![],
+                    },
+                ),
+                (
+                    "parent_unique".into(),
+                    RelationMetadata {
+                        columns: columns(&["id", "code"]),
+                        primary_key: vec!["id".into()],
+                        foreign_keys: vec![],
+                    },
+                ),
+                (
+                    "parent_composite".into(),
+                    RelationMetadata {
+                        columns: columns(&["id", "alternate"]),
+                        primary_key: vec!["id".into(), "alternate".into()],
+                        foreign_keys: vec![],
+                    },
+                ),
+                (
+                    "child".into(),
+                    RelationMetadata {
+                        columns: columns(&[
+                            "id",
+                            "parent_id",
+                            "parent_code",
+                            "parent_unique_code",
+                            "left_key",
+                            "right_key",
+                        ]),
+                        primary_key: vec!["id".into()],
+                        foreign_keys: vec![
+                            RelationForeignKey {
+                                name: "child_parent_id".into(),
+                                columns: vec!["parent_id".into()],
+                                referenced_table: "parent_pk".into(),
+                                referenced_columns: vec!["id".into()],
+                            },
+                            RelationForeignKey {
+                                name: "child_parent_code".into(),
+                                columns: vec!["parent_code".into()],
+                                referenced_table: "parent_no_pk".into(),
+                                referenced_columns: vec!["code".into()],
+                            },
+                            RelationForeignKey {
+                                name: "child_parent_unique_code".into(),
+                                columns: vec!["parent_unique_code".into()],
+                                referenced_table: "parent_unique".into(),
+                                referenced_columns: vec!["code".into()],
+                            },
+                            RelationForeignKey {
+                                name: "child_parent_composite".into(),
+                                columns: vec!["left_key".into(), "right_key".into()],
+                                referenced_table: "parent_composite".into(),
+                                referenced_columns: vec!["id".into(), "alternate".into()],
+                            },
+                        ],
+                    },
+                ),
+            ],
+            false,
+        )
+        .unwrap();
+        let direct_iri_fk = mapping
+            .rules
+            .iter()
+            .find(|rule| rule.predicate.contains("ref-parent_id"))
+            .unwrap();
+        assert!(matches!(direct_iri_fk.object_term, super::BindingTerm::Iri));
+        assert!(direct_iri_fk.object.contains("parent_pk/id={parent_id}"));
+        assert!(direct_iri_fk.source.contains("FROM \"child\""));
+        assert!(!direct_iri_fk.source.contains(" AS child JOIN "));
+
+        let bnode_fk = mapping
+            .rules
+            .iter()
+            .find(|rule| rule.predicate.contains("ref-parent_code"))
+            .unwrap();
+        assert!(matches!(
+            bnode_fk.object_term,
+            super::BindingTerm::BlankNode
+        ));
+        assert!(bnode_fk
+            .source
+            .contains("FROM \"child\" AS child JOIN \"parent_no_pk\" AS parent"));
+        assert!(bnode_fk
+            .source
+            .contains("child.\"parent_code\" = parent.\"code\""));
+
+        let non_primary_fk = mapping
+            .rules
+            .iter()
+            .find(|rule| rule.predicate.contains("ref-parent_unique_code"))
+            .unwrap();
+        assert!(matches!(
+            non_primary_fk.object_term,
+            super::BindingTerm::Iri
+        ));
+        assert!(non_primary_fk
+            .object
+            .contains("parent_unique/id={__rtop_direct_parent_pk_0}"));
+        assert!(non_primary_fk
+            .source
+            .contains("FROM \"child\" AS child JOIN \"parent_unique\" AS parent"));
+        assert!(non_primary_fk
+            .source
+            .contains("parent.\"id\" AS \"__rtop_direct_parent_pk_0\""));
+
+        let composite_fk = mapping
+            .rules
+            .iter()
+            .find(|rule| rule.predicate.contains("ref-left_key;right_key"))
+            .unwrap();
+        assert!(composite_fk
+            .object
+            .contains("parent_composite/id={left_key};alternate={right_key}"));
+        assert!(!composite_fk.source.contains(" AS child JOIN "));
+    }
+
+    #[test]
+    fn rejects_incomplete_direct_mapping_metadata_before_execution() {
+        let empty_columns = Mapping::from_direct_mapping(
+            "https://example.test/base/",
+            &[(
+                "empty".into(),
+                RelationMetadata {
+                    columns: vec![],
+                    primary_key: vec![],
+                    foreign_keys: vec![],
+                },
+            )],
+            true,
+        );
+        assert!(
+            matches!(empty_columns, Err(crate::RuntimeError::Mapping(message)) if message.contains("不存在或没有 column"))
+        );
+
+        let missing_parent = Mapping::from_direct_mapping(
+            "https://example.test/base/",
+            &[(
+                "child".into(),
+                RelationMetadata {
+                    columns: vec![RelationColumn {
+                        name: "parent_id".into(),
+                        nullable: false,
+                    }],
+                    primary_key: vec![],
+                    foreign_keys: vec![RelationForeignKey {
+                        name: "missing-parent".into(),
+                        columns: vec!["parent_id".into()],
+                        referenced_table: "parent".into(),
+                        referenced_columns: vec!["id".into()],
+                    }],
+                },
+            )],
+            true,
+        );
+        assert!(
+            matches!(missing_parent, Err(crate::RuntimeError::Mapping(message)) if message.contains("parent relation `parent` 未提供"))
+        );
+
+        let mismatched_foreign_key = Mapping::from_direct_mapping(
+            "https://example.test/base/",
+            &[
+                (
+                    "parent".into(),
+                    RelationMetadata {
+                        columns: vec![RelationColumn {
+                            name: "id".into(),
+                            nullable: false,
+                        }],
+                        primary_key: vec!["id".into()],
+                        foreign_keys: vec![],
+                    },
+                ),
+                (
+                    "child".into(),
+                    RelationMetadata {
+                        columns: vec![RelationColumn {
+                            name: "parent_id".into(),
+                            nullable: false,
+                        }],
+                        primary_key: vec![],
+                        foreign_keys: vec![RelationForeignKey {
+                            name: "mismatched".into(),
+                            columns: vec!["parent_id".into()],
+                            referenced_table: "parent".into(),
+                            referenced_columns: vec!["id".into(), "other".into()],
+                        }],
+                    },
+                ),
+            ],
+            true,
+        );
+        assert!(
+            matches!(mismatched_foreign_key, Err(crate::RuntimeError::Mapping(message)) if message.contains("column 对必须非空且等长"))
+        );
     }
 }
 

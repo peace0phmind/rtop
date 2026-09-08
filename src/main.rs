@@ -11,6 +11,7 @@ use sqlparser::{
     parser::Parser,
 };
 use std::io::Read;
+use std::path::Path;
 
 struct ValidationSource;
 impl rtop::DataSource for ValidationSource {
@@ -62,7 +63,7 @@ fn main() {
         std::process::exit(64);
     }
     if command == "validate" || command == "compile" {
-        match load_configuration(&config).and_then(|loaded| {
+        match load_configuration(Path::new(&config)).and_then(|loaded| {
             if loaded.direct_mapping.is_some() {
                 Ok(())
             } else {
@@ -146,7 +147,7 @@ fn main() {
     };
     let outcome = (|| {
         let query = query?;
-        let loaded = load_configuration(config)?;
+        let loaded = load_configuration(Path::new(&config))?;
         let source = PostgresDataSource::connect(&loaded.postgres)?;
         let mut runtime = match loaded.direct_mapping {
             Some(direct) => VkgRuntime::new_with_direct_mapping(
@@ -194,7 +195,7 @@ fn main() {
 
 /// 将当前 PostgreSQL VKG 的默认图以可重新加载的 RDF 文件交付。
 fn materialize(config: &str, output: &str, format: &str) -> Result<(), rtop::RuntimeError> {
-    let loaded = load_configuration(config)?;
+    let loaded = load_configuration(Path::new(config))?;
     let source = PostgresDataSource::connect(&loaded.postgres)?;
     let mut runtime = match loaded.direct_mapping {
         Some(direct) => VkgRuntime::new_with_direct_mapping(
@@ -280,7 +281,7 @@ fn facts_from_bindings(rows: Vec<Binding>) -> Result<Vec<RdfFact>, RuntimeError>
 }
 
 fn extract_db_metadata(config: &str, output: &str) -> Result<(), rtop::RuntimeError> {
-    let loaded = load_configuration(config)?;
+    let loaded = load_configuration(Path::new(config))?;
     let mut source = PostgresDataSource::connect(&loaded.postgres)?;
     let metadata = source.database_metadata()?;
     let payload = serde_json::to_string_pretty(&metadata)
@@ -306,9 +307,22 @@ fn bootstrap(
             "bootstrap base-iri 必须为不含 # 的绝对 IRI".into(),
         ));
     }
-    let loaded = load_configuration(config)?;
+    let loaded = load_configuration(Path::new(config))?;
     let mut source = PostgresDataSource::connect(&loaded.postgres)?;
     let metadata = source.database_metadata()?;
+    let (mapping, ontology) = bootstrap_documents(base_iri, metadata);
+    std::fs::write(mapping_output, mapping).map_err(|error| {
+        rtop::RuntimeError::Config(format!("无法写入 bootstrap mapping：{error}"))
+    })?;
+    std::fs::write(ontology_output, ontology).map_err(|error| {
+        rtop::RuntimeError::Config(format!("无法写入 bootstrap ontology：{error}"))
+    })?;
+    Ok(())
+}
+
+/// 将 PostgreSQL catalog 快照渲染为 bootstrap 的 native mapping 与最小 ontology。
+/// 连接、读取和写入保留在 CLI adapter；该纯函数使 catalog 形状可独立复核。
+fn bootstrap_documents(base_iri: &str, metadata: rtop::DatabaseMetadata) -> (String, String) {
     let base = base_iri.trim_end_matches('/');
     let mut mapping = String::from("[MappingDeclaration] @collection [[\n");
     let mut ontology = String::from("@prefix owl: <http://www.w3.org/2002/07/owl#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n\n");
@@ -359,13 +373,7 @@ fn bootstrap(
         }
     }
     mapping.push_str("]]\n");
-    std::fs::write(mapping_output, mapping).map_err(|error| {
-        rtop::RuntimeError::Config(format!("无法写入 bootstrap mapping：{error}"))
-    })?;
-    std::fs::write(ontology_output, ontology).map_err(|error| {
-        rtop::RuntimeError::Config(format!("无法写入 bootstrap ontology：{error}"))
-    })?;
-    Ok(())
+    (mapping, ontology)
 }
 
 fn unquote_identifier(value: &str) -> String {
@@ -680,8 +688,25 @@ fn nquad(fact: &RdfFact) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::facts_from_bindings;
-    use rtop::{Binding, RdfTerm};
+    use super::{
+        bootstrap, bootstrap_documents, extract_db_metadata, facts_from_bindings,
+        has_duplicate_native_mapping_id, materialize, migrate_v1_mapping, migrate_v1_native_text,
+        migrate_v1_rule, nquad, obda_to_r2rml, prettify_r2rml, r2rml_to_obda,
+        simplify_v1_projection, turtle, unquote_identifier, ValidationSource,
+    };
+    use rtop::{
+        Binding, DataSource, DatabaseMetadata, DatabaseMetadataColumn, DatabaseMetadataRelation,
+        DatabaseUniqueConstraint, RdfFact, RdfTerm, RuntimeError,
+    };
+
+    #[test]
+    fn validation_source_rejects_accidental_query_execution() {
+        let error = ValidationSource.execute("SELECT 1", &[]).unwrap_err();
+        assert_eq!(
+            error,
+            RuntimeError::DataSource("validate 不执行查询".into())
+        );
+    }
 
     #[test]
     fn materialize_bindings_preserve_a_named_graph() {
@@ -711,5 +736,400 @@ mod tests {
             facts[0].graph,
             Some(RdfTerm::Iri("http://example.com/graph/students".into()))
         );
+    }
+
+    #[test]
+    fn validates_materialize_binding_shape_before_serialization() {
+        let mut missing_subject = Binding::new();
+        missing_subject.insert("p".into(), RdfTerm::Iri("https://example.test/p".into()));
+        missing_subject.insert("o".into(), RdfTerm::Iri("https://example.test/o".into()));
+        assert_eq!(
+            facts_from_bindings(vec![missing_subject]),
+            Err(RuntimeError::UnsupportedSparql(
+                "materialize 缺少 subject 绑定".into()
+            ))
+        );
+
+        let mut literal_predicate = Binding::new();
+        literal_predicate.insert("s".into(), RdfTerm::Iri("https://example.test/s".into()));
+        literal_predicate.insert(
+            "p".into(),
+            RdfTerm::Literal {
+                value: "not an IRI".into(),
+                datatype: None,
+                language: None,
+            },
+        );
+        literal_predicate.insert("o".into(), RdfTerm::Iri("https://example.test/o".into()));
+        assert_eq!(
+            facts_from_bindings(vec![literal_predicate]),
+            Err(RuntimeError::UnsupportedSparql(
+                "materialize predicate 必须是 IRI".into()
+            ))
+        );
+
+        let mut missing_object = Binding::new();
+        missing_object.insert("s".into(), RdfTerm::Iri("https://example.test/s".into()));
+        missing_object.insert("p".into(), RdfTerm::Iri("https://example.test/p".into()));
+        assert_eq!(
+            facts_from_bindings(vec![missing_object]),
+            Err(RuntimeError::UnsupportedSparql(
+                "materialize 缺少 object 绑定".into()
+            ))
+        );
+    }
+
+    #[test]
+    fn rewrites_legacy_mapping_qualified_columns_and_datasource_properties() {
+        let (mapping, properties) = migrate_v1_native_text(
+            "[SourceDeclaration]\nconnectionUrl jdbc:postgresql://db\nusername ada\npassword secret\n\n[MappingDeclaration] @collection [[\nmappingId people\ntarget <https://example.test/person/{person.id}> a <https://example.test/Person> .\nsource SELECT person.id FROM person\n]]",
+            false,
+        )
+        .expect("legacy mapping is rewritten");
+        assert!(mapping.contains("<https://example.test/person/{id}>"));
+        assert!(mapping.contains("SELECT person.id AS id FROM person"));
+        assert_eq!(
+            properties,
+            vec![
+                "jdbc.url=jdbc:postgresql://db",
+                "jdbc.user=ada",
+                "jdbc.password=secret",
+            ]
+        );
+    }
+
+    #[test]
+    fn simplifies_only_safe_legacy_postgres_projections() {
+        assert_eq!(
+            simplify_v1_projection("SELECT id FROM people WHERE id > 0"),
+            "SELECT * FROM people WHERE id > 0"
+        );
+        assert_eq!(
+            simplify_v1_projection("SELECT left.id FROM left JOIN right ON left.id = right.id"),
+            "SELECT left.id FROM left JOIN right ON left.id = right.id"
+        );
+    }
+
+    #[test]
+    fn detects_duplicate_mapping_ids_and_unquotes_postgres_identifiers() {
+        assert!(has_duplicate_native_mapping_id(
+            "mappingId same\nmappingId same"
+        ));
+        assert!(!has_duplicate_native_mapping_id(
+            "mappingId one\nmappingId two"
+        ));
+        assert_eq!(unquote_identifier("\"book\""), "book");
+        assert_eq!(unquote_identifier("\"a\"\"b\""), "a\"b");
+    }
+
+    #[test]
+    fn rejects_incomplete_or_unsupported_legacy_source_declarations() {
+        assert!(matches!(
+            migrate_v1_native_text("[SourceDeclaration]\nsourceUri legacy\n\n", false),
+            Err(RuntimeError::Mapping(message)) if message == "Unknown parameter name \"sourceUri\""
+        ));
+        assert!(matches!(
+            migrate_v1_native_text("[SourceDeclaration]\nusername ada", false),
+            Err(RuntimeError::Mapping(message)) if message == "旧版 [SourceDeclaration] 缺少结尾空行"
+        ));
+        assert!(matches!(
+            migrate_v1_native_text("[SourceDeclaration]\nunsupported x\n\n", false),
+            Err(RuntimeError::Mapping(message)) if message == "不支持的旧 datasource 字段：unsupported"
+        ));
+        assert!(matches!(
+            migrate_v1_rule(
+                "target <https://example.test/person/{person.id}> a <https://example.test/Person> .",
+                "source DELETE FROM person",
+                false,
+            ),
+            Err(RuntimeError::Mapping(message)) if message == "v1-to-v3 仅支持含 SELECT ... FROM 的 source"
+        ));
+    }
+
+    #[test]
+    fn preserves_or_simplifies_legacy_rules_without_qualified_placeholders() {
+        assert_eq!(
+            migrate_v1_rule(
+                "target <https://example.test/person/{id}> a <https://example.test/Person> .",
+                "source SELECT id FROM people",
+                false,
+            )
+            .expect("unqualified target is preserved"),
+            (
+                "target <https://example.test/person/{id}> a <https://example.test/Person> ."
+                    .into(),
+                "source SELECT id FROM people".into(),
+            )
+        );
+        assert_eq!(
+            migrate_v1_rule(
+                "target <https://example.test/person/{id}> a <https://example.test/Person> .",
+                "source SELECT id FROM people",
+                true,
+            )
+            .expect("safe unqualified projection simplifies"),
+            (
+                "target <https://example.test/person/{id}> a <https://example.test/Person> ."
+                    .into(),
+                "source\t\tSELECT * FROM people".into(),
+            )
+        );
+    }
+
+    #[test]
+    fn formats_default_and_named_graph_facts_for_cli_delivery() {
+        let default_fact = RdfFact {
+            subject: RdfTerm::Iri("https://example.test/s".into()),
+            predicate: "https://example.test/p".into(),
+            object: RdfTerm::Literal {
+                value: "v".into(),
+                datatype: None,
+                language: None,
+            },
+            graph: None,
+        };
+        assert_eq!(
+            turtle(&default_fact),
+            "<https://example.test/s> <https://example.test/p> \"v\" ."
+        );
+        assert_eq!(
+            nquad(&default_fact),
+            "<https://example.test/s> <https://example.test/p> \"v\" ."
+        );
+        let named_fact = RdfFact {
+            graph: Some(RdfTerm::Iri("https://example.test/g".into())),
+            ..default_fact
+        };
+        assert_eq!(
+            nquad(&named_fact),
+            "<https://example.test/s> <https://example.test/p> \"v\" <https://example.test/g> ."
+        );
+    }
+
+    #[test]
+    fn conversion_helpers_report_missing_input_before_creating_output() {
+        let missing = "/tmp/rtop-coverage-missing-r2rml.ttl";
+        let output = "/tmp/rtop-coverage-unused-output.obda";
+        assert!(matches!(
+            prettify_r2rml(missing, output),
+            Err(RuntimeError::Config(message)) if message.starts_with("无法读取 R2RML：")
+        ));
+        assert!(matches!(
+            r2rml_to_obda(missing, output),
+            Err(RuntimeError::Config(message)) if message.starts_with("无法读取 R2RML：")
+        ));
+    }
+
+    #[test]
+    fn converts_fixed_ontop_mapping_assets_in_the_binary_compilation_unit() {
+        let temporary = tempfile::tempdir().expect("temporary CLI conversion directory");
+        let r2rml_input = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../ontop/test/rdb2rdf-compliance/src/test/resources/D001/r2rmla.ttl");
+        let pretty = temporary.path().join("pretty.ttl");
+        let native = temporary.path().join("mapping.obda");
+        let reloaded = temporary.path().join("reloaded.ttl");
+        prettify_r2rml(r2rml_input.to_str().unwrap(), pretty.to_str().unwrap())
+            .expect("Ontop D001 R2RML 应可 prettify");
+        r2rml_to_obda(r2rml_input.to_str().unwrap(), native.to_str().unwrap())
+            .expect("Ontop D001 R2RML 应可转换为 native OBDA");
+        obda_to_r2rml(native.to_str().unwrap(), reloaded.to_str().unwrap())
+            .expect("native OBDA 应可转换回 R2RML");
+        assert!(std::fs::read_to_string(&pretty)
+            .expect("pretty output")
+            .contains("http://www.w3.org/ns/r2rml#TriplesMap"));
+        assert!(std::fs::read_to_string(&reloaded)
+            .expect("reloaded output")
+            .contains("rr:TriplesMap"));
+
+        let invalid = temporary.path().join("invalid.ttl");
+        std::fs::write(&invalid, "this is not Turtle").expect("invalid R2RML input");
+        assert!(matches!(
+            prettify_r2rml(invalid.to_str().unwrap(), pretty.to_str().unwrap()),
+            Err(RuntimeError::Mapping(_))
+        ));
+
+        let legacy = temporary.path().join("legacy.obda");
+        std::fs::write(
+            &legacy,
+            "[SourceDeclaration]\nconnectionUrl jdbc:postgresql://db\nusername ada\npassword secret\n\n[MappingDeclaration] @collection [[\nmappingId people\ntarget <https://example.test/person/{person.id}> a <https://example.test/Person> .\nsource SELECT person.id FROM person\n]]\n",
+        )
+        .expect("legacy input");
+        let migrated = temporary.path().join("migrated.obda");
+        migrate_v1_mapping(legacy.to_str().unwrap(), migrated.to_str().unwrap(), false)
+            .expect("legacy native mapping 应可迁移");
+        assert_eq!(
+            std::fs::read_to_string(migrated.with_extension("properties")).expect("properties"),
+            "jdbc.url=jdbc:postgresql://db\njdbc.user=ada\njdbc.password=secret\n"
+        );
+    }
+
+    #[test]
+    fn rejects_duplicate_mapping_ids_and_migrates_legacy_r2rml_file() {
+        let temporary = tempfile::tempdir().expect("temporary conversion directory");
+        let duplicate = temporary.path().join("duplicate.obda");
+        let output = temporary.path().join("ignored.ttl");
+        std::fs::write(
+            &duplicate,
+            "[MappingDeclaration] @collection [[\nmappingId duplicate\ntarget <https://example.test/a> a <https://example.test/A> .\nsource SELECT 1\nmappingId duplicate\ntarget <https://example.test/b> a <https://example.test/B> .\nsource SELECT 1\n]]\n",
+        )
+        .expect("duplicate native mapping input");
+        assert!(matches!(
+            obda_to_r2rml(duplicate.to_str().unwrap(), output.to_str().unwrap()),
+            Err(RuntimeError::Mapping(message)) if message.contains("Duplicate mapping IDs")
+        ));
+
+        let d001 = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../ontop/test/rdb2rdf-compliance/src/test/resources/D001/r2rmla.ttl");
+        let migrated = temporary.path().join("migrated.ttl");
+        migrate_v1_mapping(d001.to_str().unwrap(), migrated.to_str().unwrap(), true)
+            .expect("固定 Ontop D001 R2RML 应经过 v1-to-v3 file path 迁移");
+        assert!(std::fs::read_to_string(migrated)
+            .expect("migrated R2RML")
+            .contains("TriplesMap"));
+
+        // 四个 mapping 转换入口都把输入读取失败归类为稳定的 CLI Config
+        // diagnostics；不能让不同格式的路径错误落入 parser 或 PostgreSQL 层。
+        let missing_ttl = temporary.path().join("missing.ttl");
+        let missing_obda = temporary.path().join("missing.obda");
+        assert!(matches!(
+            prettify_r2rml(missing_ttl.to_str().unwrap(), output.to_str().unwrap()),
+            Err(RuntimeError::Config(message)) if message.contains("无法读取 R2RML")
+        ));
+        assert!(matches!(
+            r2rml_to_obda(missing_ttl.to_str().unwrap(), output.to_str().unwrap()),
+            Err(RuntimeError::Config(message)) if message.contains("无法读取 R2RML")
+        ));
+        assert!(matches!(
+            obda_to_r2rml(missing_obda.to_str().unwrap(), output.to_str().unwrap()),
+            Err(RuntimeError::Config(message)) if message.contains("无法读取 native OBDA")
+        ));
+        assert!(matches!(
+            migrate_v1_mapping(missing_ttl.to_str().unwrap(), output.to_str().unwrap(), false),
+            Err(RuntimeError::Config(message)) if message.contains("无法读取旧版 R2RML")
+        ));
+        assert!(matches!(
+            migrate_v1_mapping(missing_obda.to_str().unwrap(), output.to_str().unwrap(), false),
+            Err(RuntimeError::Config(message)) if message.contains("无法读取旧版 mapping")
+        ));
+    }
+
+    #[test]
+    fn delivery_helpers_reject_invalid_input_before_postgres_connection() {
+        let temporary = tempfile::tempdir().expect("temporary delivery directory");
+        let missing_config = temporary.path().join("missing.toml");
+        let output = temporary.path().join("output.ttl");
+
+        assert!(matches!(
+            materialize(
+                missing_config.to_str().unwrap(),
+                output.to_str().unwrap(),
+                "turtle",
+            ),
+            Err(RuntimeError::Config(message)) if message.contains("无法读取配置")
+        ));
+        assert!(matches!(
+            extract_db_metadata(missing_config.to_str().unwrap(), output.to_str().unwrap()),
+            Err(RuntimeError::Config(message)) if message.contains("无法读取配置")
+        ));
+        assert!(matches!(
+            bootstrap(
+                missing_config.to_str().unwrap(),
+                "not-an-iri",
+                output.to_str().unwrap(),
+                temporary.path().join("ontology.ttl").to_str().unwrap(),
+            ),
+            Err(RuntimeError::Config(message)) if message.contains("bootstrap base-iri")
+        ));
+        assert!(matches!(
+            bootstrap(
+                missing_config.to_str().unwrap(),
+                "https://example.test/base",
+                output.to_str().unwrap(),
+                temporary.path().join("ontology.ttl").to_str().unwrap(),
+            ),
+            Err(RuntimeError::Config(message)) if message.contains("无法读取配置")
+        ));
+    }
+
+    #[test]
+    fn renders_bootstrap_documents_from_postgres_catalog_metadata() {
+        let relation =
+            |name: &str, columns: Vec<DatabaseMetadataColumn>, primary_key: Vec<&str>| {
+                DatabaseMetadataRelation {
+                    unique_constraints: primary_key
+                        .into_iter()
+                        .map(|column| DatabaseUniqueConstraint {
+                            name: format!("pk_{name}"),
+                            determinants: vec![format!("\"{column}\"")],
+                            is_primary_key: true,
+                        })
+                        .collect(),
+                    foreign_keys: vec![],
+                    columns,
+                    name: vec![format!("\"{name}\"")],
+                    other_names: vec![],
+                }
+            };
+        let column = |name: &str| DatabaseMetadataColumn {
+            name: format!("\"{name}\""),
+            is_nullable: false,
+            datatype: "text".into(),
+        };
+        let (mapping, ontology) = bootstrap_documents(
+            "https://bootstrap.example/",
+            DatabaseMetadata {
+                relations: vec![
+                    relation("people", vec![column("id"), column("name")], vec!["id"]),
+                    relation("notes", vec![column("body")], vec![]),
+                    relation("empty", vec![], vec![]),
+                ],
+            },
+        );
+        assert!(mapping.contains(
+            "target <https://bootstrap.example/people/id={id}> a <https://bootstrap.example/people>"
+        ));
+        assert!(mapping.contains("_:bootstrap-notes-{body}"));
+        assert!(!mapping.contains("bootstrap-empty"));
+        assert!(mapping.contains("SELECT \"id\" AS \"id\", \"name\" AS \"name\" FROM \"people\""));
+        assert!(
+            ontology.contains("<https://bootstrap.example/people#name> a owl:DatatypeProperty .")
+        );
+        assert!(ontology.contains("<https://bootstrap.example/notes> a owl:Class ."));
+        assert!(!ontology.contains("bootstrap.example/empty"));
+    }
+
+    #[test]
+    fn mapping_conversion_helpers_classify_unwritable_output_paths() {
+        let temporary = tempfile::tempdir().expect("temporary conversion output directory");
+        let unwritable = temporary.path().join("missing").join("output.ttl");
+        let r2rml = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../ontop/test/rdb2rdf-compliance/src/test/resources/D001/r2rmla.ttl");
+        let native = temporary.path().join("mapping.obda");
+        std::fs::write(
+            &native,
+            "[MappingDeclaration]\ntarget <https://example.test/person/{id}> <https://example.test/name> {name} .\nsource SELECT id, name FROM people\n",
+        )
+        .unwrap();
+
+        assert!(matches!(
+            prettify_r2rml(r2rml.to_str().unwrap(), unwritable.to_str().unwrap()),
+            Err(RuntimeError::Config(message)) if message.contains("无法写入 prettify 输出")
+        ));
+        assert!(matches!(
+            r2rml_to_obda(r2rml.to_str().unwrap(), unwritable.to_str().unwrap()),
+            Err(RuntimeError::Config(message)) if message.contains("无法写入 native OBDA")
+        ));
+        assert!(matches!(
+            obda_to_r2rml(native.to_str().unwrap(), unwritable.to_str().unwrap()),
+            Err(RuntimeError::Config(message)) if message.contains("无法写入 R2RML")
+        ));
+        assert!(matches!(
+            migrate_v1_mapping(native.to_str().unwrap(), unwritable.to_str().unwrap(), false),
+            Err(RuntimeError::Config(message)) if message.contains("无法写入 v1-to-v3 mapping")
+        ));
+        assert!(matches!(
+            migrate_v1_mapping(r2rml.to_str().unwrap(), unwritable.to_str().unwrap(), false),
+            Err(RuntimeError::Config(message)) if message.contains("无法写入 v1-to-v3 R2RML")
+        ));
     }
 }

@@ -2,8 +2,27 @@
   "schema_version": 1,
   "ontop_baseline": "5ec07573b18513f33dfcd59ac45fe26a81f9cdbd",
   "generated_by": "scripts/generate-three-layer-closure-matrix.sh",
-  "ledger_sha256": "29068e375673016bb14a6c23a3fe53d16b415e2f7d3c6b63e0a7b8e6a062ae49",
+  "ledger_sha256": "0a58249195413b2c265d21e93532992829117785c63d4541fcb29b0e070fcca5",
   "purpose": "#104 的唯一三层完成状态源。矩阵从已验证 PostgreSQL 发现集生成，但单边账本 passed 不等同于 Ontop-vs-rtop 差分 passed。",
+  "coverage_evidence": {
+    "line_and_function": {
+      "status": "separate-gate-required",
+      "provenance": "target/llvm-cov/minimal/provenance.json",
+      "gate": "scripts/validate-module-coverage.sh"
+    },
+    "branch": {
+      "status": "external-tool-blocked",
+      "provenance": "target/llvm-cov/minimal/provenance.json",
+      "probe": "target/llvm-cov/minimal/branch-coverage-probe.json",
+      "scope": [
+        "src/ontology.rs",
+        "src/mapping.rs",
+        "src/sparql.rs",
+        "src/lib.rs"
+      ],
+      "required_gate_when_measurable": "ADR-0005: at least 80%"
+    }
+  },
   "atoms": [
     {
       "id": "intent-engine-replacement-http-protocol-anchor",
@@ -20,7 +39,7 @@
       "fixture": "client/endpoint HTTP protocol; simplemapping.obda; GET/form POST/application-sparql-query POST",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线 endpoint fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -46,7 +65,7 @@
       "fixture": "client/endpoint SparqlQueryController; PostgreSQL query_people/query_named_people; mapping-sql-seam.obda; two-triple BGP projection LIMIT",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线 endpoint 源码；仓库 PostgreSQL 差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -73,7 +92,7 @@
       "fixture": "client/endpoint SparqlQueryController; PostgreSQL algebra fixture; VALUES/OPTIONAL/MINUS/UNION ordered bag query",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线 endpoint 源码；仓库 PostgreSQL 差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -101,7 +120,7 @@
       "fixture": "SPARQL 1.1 IN/NOT IN functions; PostgreSQL algebra mapping; expression-in-bind.rq",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop SPARQL compliance 资产；仓库 PostgreSQL 差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -130,7 +149,7 @@
       "fixture": "PostgreSQL algebra numeric mapping; scalar decimal ROUND and aggregate ROUND(SUM)/SUM(ROUND)",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL/SPARQL compliance 资产；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -160,7 +179,7 @@
       "fixture": "PostgreSQL algebra mapping; aggregate subquery, HAVING, and expression ORDER BY",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop SPARQL compliance 资产；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -190,7 +209,7 @@
       "fixture": "PostgreSQL algebra mapping; property path EXISTS success and correlated NOT EXISTS rejection",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop SPARQL compliance 资产；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -220,7 +239,7 @@
       "fixture": "PostgreSQL algebra mapping; FROM named graph, FROM NAMED/GRAPH, and SERVICE HTTP 500 boundary",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop SPARQL compliance 资产；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -246,7 +265,7 @@
       "fixture": "client/cli/src/test/resources/test/simplemapping.obda; tests/compat/postgres-cli-materialize/{init.sql,select-a.rq}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 CLI fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -272,7 +291,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D016/r2rmlc.ttl; tests/compat/postgres-d016/r2rml-init.sql（PostgreSQL BYTEA/DOUBLE PRECISION 适配）",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线 mapping；PostgreSQL 环境适配在本仓库）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -298,7 +317,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D001/{create.sql,r2rmla.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -324,7 +343,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D001/{create.sql,r2rmlb.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -350,7 +369,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D000/{create.sql,r2rml.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -376,7 +395,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D000/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -402,7 +421,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D001/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping; PostgreSQL pgcrypto",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -428,7 +447,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D002/{create.sql,r2rmla.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -454,7 +473,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D002/{create.sql,r2rmlb.ttl}; PostgreSQL pgcrypto",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -480,7 +499,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D006/{create.sql,r2rmla.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -506,7 +525,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D002/{create.sql,r2rmld.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -532,7 +551,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D002/{create.sql,r2rmli.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -558,7 +577,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D002/{create.sql,r2rmlj.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -584,7 +603,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D002/{create.sql,r2rmlc.ttl,r2rmle.ttl,r2rmlf.ttl,r2rmlh.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -610,7 +629,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D002/{create.sql,r2rmlg.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -636,7 +655,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D007/{create.sql,r2rmlb.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -662,7 +681,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D007/{create.sql,r2rmlh.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -688,7 +707,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D007/{create.sql,r2rmla.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -714,7 +733,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D007/{create.sql,r2rmlc.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -740,7 +759,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D007/{create.sql,r2rmld.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -766,7 +785,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D007/{create.sql,r2rmle.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -792,7 +811,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D007/{create.sql,r2rmlf.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -818,7 +837,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D007/{create.sql,r2rmlg.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -844,7 +863,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D003/{create.sql,r2rmlc.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -870,7 +889,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D003/{create.sql,r2rmla.ttl,manifest.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -896,7 +915,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D003/{create.sql,r2rmlb.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -922,7 +941,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D002/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping; each side exposes exactly one blank node",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -948,7 +967,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D003/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping; each side exposes exactly one blank node",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -974,7 +993,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D004/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping; each side exposes exactly one blank node",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1000,7 +1019,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D005/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1026,7 +1045,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D005/{create.sql,directGraph-modified.ttl}; same Ontop bootstrap versus rtop run",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1052,7 +1071,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D005/{create.sql,r2rmlb.ttl}; PostgreSQL pgcrypto",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1078,7 +1097,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D005/{create.sql,r2rmla.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1104,7 +1123,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D008/{create.sql,r2rmla.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1130,7 +1149,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D008/{create.sql,r2rmlb.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1156,7 +1175,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D008/{create.sql,r2rmlc.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1182,7 +1201,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D011/{create.sql,r2rmlb.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1208,7 +1227,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D011/{create.sql,r2rmla.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1234,7 +1253,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D010/{create.sql,r2rmla.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1260,7 +1279,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D010/{create.sql,r2rmlc.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1286,7 +1305,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D010/{create.sql,r2rmlb.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1312,7 +1331,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D009/{create.sql,r2rmlb.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1338,7 +1357,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D009/{create.sql,r2rmla.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1364,7 +1383,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D009/{create.sql,r2rmlc.ttl}; ontop.inferDefaultDatatype=true",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1390,7 +1409,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D009/{create.sql,r2rmld.ttl}; ontop.inferDefaultDatatype=true; rtop mapping_infer_default_datatype=false",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1416,7 +1435,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D006/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1442,7 +1461,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D010/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1468,7 +1487,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D007/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1494,7 +1513,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D008/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1520,7 +1539,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D009/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1546,7 +1565,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D011/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1572,7 +1591,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D013/{create.sql,r2rmla.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1598,7 +1617,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D013/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1624,7 +1643,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D014/{create.sql,r2rmla.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1650,7 +1669,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D014/{create.sql,r2rmld.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1676,7 +1695,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D014/{create.sql,r2rmlb.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1702,7 +1721,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D014/{create.sql,r2rmlc.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1728,7 +1747,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D014/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping; fixture-scoped blank-node graph isomorphism",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1754,7 +1773,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D019/{create.sql,r2rmla.ttl,mappeda.nq}; rtop mapping_require_absolute_iri_values=true",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1780,7 +1799,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D019/{create.sql,r2rmlb.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1806,7 +1825,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D020/{create.sql,r2rmla.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1832,7 +1851,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D020/{create.sql,r2rmlb.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1858,7 +1877,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D016/r2rmla.ttl; tests/compat/postgres-d016/r2rml-init.sql（PostgreSQL BYTEA/DOUBLE PRECISION 适配）",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线 mapping；PostgreSQL 环境适配在本仓库）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1884,7 +1903,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D016/r2rmlb.ttl; tests/compat/postgres-d016/r2rml-init.sql（PostgreSQL BYTEA/DOUBLE PRECISION 适配）",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线 mapping；PostgreSQL 环境适配在本仓库）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1910,7 +1929,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D016/r2rmle.ttl; tests/compat/postgres-d016/r2rml-init.sql（PostgreSQL BYTEA 适配）",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线 mapping；PostgreSQL 环境适配在本仓库）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1936,7 +1955,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D016/r2rmld.ttl; tests/compat/postgres-d016/r2rml-init.sql（PostgreSQL BYTEA/DOUBLE PRECISION 适配）",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线 mapping；PostgreSQL 环境适配在本仓库）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1962,7 +1981,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D026/{create.sql,r2rmla.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -1988,7 +2007,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D018/{create.sql,r2rmla.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2014,7 +2033,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D018/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping; fixture-scoped blank-node graph isomorphism",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2040,7 +2059,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D021/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2066,7 +2085,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D024/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2092,7 +2111,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D025/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping; fixture-scoped blank-node graph isomorphism",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2118,7 +2137,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D022/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping; fixture-scoped blank-node graph isomorphism",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2144,7 +2163,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D023/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2170,7 +2189,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D015/{create.sql,r2rmla.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2196,7 +2215,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D015/{create.sql,r2rmlb.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2222,7 +2241,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D015/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2248,7 +2267,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D016/{create.sql,directGraph.ttl}; PostgreSQL-equivalent tests/compat/postgres-direct-d016/init.sql (VARBINARY→bytea, X literal→decode)",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2274,7 +2293,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D017/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping; each side exposes exactly one blank node",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2300,7 +2319,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D012/{create.sql,r2rmla.ttl}; PostgreSQL pgcrypto",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2326,7 +2345,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D012/{create.sql,r2rmlb.ttl}; PostgreSQL pgcrypto",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2352,7 +2371,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D012/{create.sql,r2rmlc.ttl}; PostgreSQL pgcrypto",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2378,7 +2397,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D012/{create.sql,r2rmld.ttl}; PostgreSQL pgcrypto",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2404,7 +2423,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D012/{create.sql,r2rmle.ttl,mappede.nq}; PostgreSQL pgcrypto",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2430,7 +2449,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D012/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2456,7 +2475,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D004/{create.sql,r2rmla.ttl}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2482,7 +2501,7 @@
       "fixture": "client/endpoint/src/main/java/it/unibz/inf/ontop/endpoint/controllers/OntologyFetcherController.java; client/cli/src/test/resources/test/{simplemapping.obda,simplemapping.owl}; tests/compat/postgres-cli-materialize/init.sql",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 endpoint/CLI fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2508,7 +2527,7 @@
       "fixture": "client/endpoint/src/main/java/it/unibz/inf/ontop/endpoint/controllers/PredefinedQueryController.java; tests/compat/postgres-http/{predefined-person.obda,algebra-init.sql,predefined.json,predefined.toml}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 endpoint fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2534,7 +2553,7 @@
       "fixture": "client/cli/src/test/resources/test/simplemapping.obda; tests/compat/postgres-cli-materialize/init.sql; Ontop CLI materialize + rtop CLI materialize",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 CLI fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2560,7 +2579,7 @@
       "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopExtractDBMetadata.java; tests/compat/postgres-query-kinds/init.sql",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 CLI fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2586,7 +2605,7 @@
       "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopCompile.java; client/cli/src/test/resources/test/simplemapping.obda; rtop valid config",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 CLI fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2612,7 +2631,7 @@
       "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopBootstrap.java; tests/compat/postgres-query-kinds/init.sql; each generated OBDA is reloaded by its own CLI",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 CLI fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2638,7 +2657,7 @@
       "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopR2RMLPrettify.java; test/rdb2rdf-compliance/src/test/resources/D001/{create.sql,r2rmla.ttl}; each formatted mapping is reloaded by its own CLI",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2664,7 +2683,7 @@
       "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopMappingV1ToV3.java; tests/compat/postgres-query-kinds/{init.sql,v1-to-v3.obda}; each CLI executes v1-to-v3 directly",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 CLI fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2690,7 +2709,7 @@
       "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopR2RMLToOBDA.java; test/rdb2rdf-compliance/src/test/resources/D001/{create.sql,r2rmla.ttl}; each converted mapping is reloaded by its own CLI",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2716,7 +2735,7 @@
       "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopOBDAToR2RML.java; client/cli/src/test/resources/test/simplemapping.obda; tests/compat/postgres-cli-materialize/init.sql; each converted mapping is reloaded by its own CLI",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 CLI fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2742,7 +2761,7 @@
       "fixture": "client/cli/src/test/resources/mapping-northwind-named-graph.obda; tests/compat/postgres-query-kinds/{init.sql,named-graph.obda}; each converted mapping is reloaded by its own CLI",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 CLI fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2768,7 +2787,7 @@
       "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopOBDAToR2RML.java; tests/compat/postgres-query-kinds/{init.sql,template-graph.obda}; each converted mapping is reloaded by its own CLI",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 CLI fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2794,7 +2813,7 @@
       "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopMappingV1ToV3.java; tests/compat/postgres-query-kinds/{init.sql,v1-to-v3-duplicate-alias.obda}; each converted mapping is reloaded by its own CLI",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 CLI fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2820,7 +2839,7 @@
       "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopMappingV1ToV3.java; tests/compat/postgres-query-kinds/{init.sql,v1-to-v3-simplify-projection.obda}; each converted mapping is reloaded by its own CLI",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 CLI fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2846,7 +2865,7 @@
       "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopMappingV1ToV3.java; tests/compat/postgres-query-kinds/{init.sql,v1-to-v3-r2rml.ttl}; each converted mapping is reloaded by its own CLI",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 CLI fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2872,7 +2891,7 @@
       "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopOBDAToR2RML.java; tests/compat/postgres-query-kinds/{init.sql,typed-blank-node.obda}; each converted mapping is reloaded by its own CLI",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 CLI fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2898,7 +2917,7 @@
       "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopOBDAToR2RML.java; tests/compat/postgres-query-kinds/{init.sql,v1-to-v3.obda}; each CLI executes to-r2rml --force directly",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 CLI fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2924,7 +2943,7 @@
       "fixture": "test/docker-tests/src/test/resources/issue461/mappingwithduplicates.obda; tests/compat/postgres-query-kinds/{init.sql,duplicate-mapping-id.obda}; each CLI executes to-r2rml --force directly",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 issue461 fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2950,7 +2969,7 @@
       "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopR2RMLToOBDA.java; tests/compat/postgres-query-kinds/{init.sql,relative-r2rml.ttl}; each converted mapping is reloaded by its own CLI",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 CLI fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -2976,7 +2995,7 @@
       "fixture": "client/endpoint/src/main/java/it/unibz/inf/ontop/endpoint/controllers/OntologyFetcherController.java; client/cli/src/test/resources/test/simplemapping.obda; tests/compat/postgres-cli-materialize/init.sql",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 endpoint/CLI fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3002,7 +3021,7 @@
       "fixture": "client/endpoint/src/main/java/it/unibz/inf/ontop/endpoint/controllers/OntologyFetcherController.java; client/cli/src/test/resources/test/simplemapping.obda; tests/compat/postgres-cli-materialize/init.sql",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 endpoint/CLI fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3028,7 +3047,7 @@
       "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopQuery.java; client/cli/src/test/resources/test/simplemapping.obda; tests/compat/postgres-cli-materialize/{init.sql,select-a.rq}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 CLI fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3054,7 +3073,7 @@
       "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopValidate.java; client/cli/src/test/resources/test/{simplemapping.obda,simplemapping.owl}; tests/compat/postgres-cli-materialize/init.sql",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 CLI fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3080,7 +3099,7 @@
       "fixture": "client/cli/src/main/java/it/unibz/inf/ontop/cli/OntopEndpoint.java; client/cli/src/test/resources/test/simplemapping.obda; tests/compat/postgres-cli-materialize/{init.sql,select-a.rq}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 CLI fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3106,7 +3125,7 @@
       "fixture": "PostgreSQL 17 Rust adapter early-stop integration gate",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL Docker asset；rtop adapter integration fixture）",
-        "normalizer_sha256": "f5702f6077e7ac1f4938844663e2914020baea5032545471b56f3d9af78eaab8"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3132,7 +3151,7 @@
       "fixture": "PostgreSQL 17 Rust adapter cancellation integration gate",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL Docker asset；rtop adapter integration fixture）",
-        "normalizer_sha256": "f5702f6077e7ac1f4938844663e2914020baea5032545471b56f3d9af78eaab8"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3158,7 +3177,7 @@
       "fixture": "固定 Ontop lowercase PostgreSQL OBDA 与 datatype manifest 的 tb_books/bk_title 输入",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL Docker fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3184,7 +3203,7 @@
       "fixture": "固定 Ontop identifiers PostgreSQL OBDA；带引号 AS LETTER 投影 alias 与 template 外层引用",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL Docker fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3210,7 +3229,7 @@
       "fixture": "固定 Ontop books PostgreSQL OBDA；float lexical override 与非法 numeric cast BIND",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop lightweight PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3237,7 +3256,7 @@
       "fixture": "固定 Ontop PostgreSQL regex native OBDA；address ~* 与 person !~* source SQL",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL Docker fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3263,7 +3282,7 @@
       "fixture": "固定 NestedData PostgreSQL 原始 nested.obda、JSON/JSONB/array lenses，与 Rust 等价 native source SQL",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3289,7 +3308,7 @@
       "fixture": "固定 EPNet native OBDA 与 Inscription/RelativePosition PostgreSQL 输入",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL Docker fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3315,7 +3334,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D010/{create.sql,directGraph.ttl}; Ontop bootstrap + rtop direct_mapping",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3341,7 +3360,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D016/directGraph.ttl; tests/compat/postgres-direct-d016/init.sql; Ontop bootstrap + rtop direct_mapping",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3367,7 +3386,7 @@
       "fixture": "固定 University TBox 的相对 imports root、原始 university OBDA 和 PostgreSQL 17 数据",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop RDF4J PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3393,7 +3412,7 @@
       "fixture": "固定 University TBox 的相对 imports root、facts.ttl、原始 university OBDA 和 PostgreSQL 17 数据",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop RDF4J PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3419,7 +3438,7 @@
       "fixture": "固定 University TBox 的相对 imports root、givesLab 原生 OBDA 和 PostgreSQL 17 数据",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop RDF4J PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3445,7 +3464,7 @@
       "fixture": "固定 University TBox、冲突 Course/Person facts 与 PostgreSQL University mapping",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop RDF4J PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3471,7 +3490,7 @@
       "fixture": "固定 FactsFileTestTurtle 的 facts.ttl、ontology.ttl、native OBDA 和 PostgreSQL company fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop RDF4J PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3497,7 +3516,7 @@
       "fixture": "固定 FactsFileTestNQuads 的 facts.nq、ontology.ttl、native OBDA 和 PostgreSQL company fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop RDF4J PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3523,7 +3542,7 @@
       "fixture": "固定 FactsFileTestRDF 的 facts.rdf、显式 facts base、ontology.ttl、native OBDA 和 PostgreSQL company fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop RDF4J PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3549,7 +3568,7 @@
       "fixture": "固定 facts mapping、故意缺失的 Turtle 路径与 malformed.ttl、PostgreSQL company fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop RDF4J PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3575,7 +3594,7 @@
       "fixture": "固定 PrefixSourceTest native OBDA 与完整最小 PostgreSQL source relations",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL Docker fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3601,7 +3620,7 @@
       "fixture": "固定 lowerMovie OBDA 与完整最小 PostgreSQL source relations",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3627,7 +3646,7 @@
       "fixture": "固定 invalid-sql1.obda、最小 PostgreSQL PERSON relation 与 mapped-source SELECT",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3653,7 +3672,7 @@
       "fixture": "固定 missing-target-term.obda、最小 PostgreSQL fixture 与 CLI materialize",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3679,7 +3698,7 @@
       "fixture": "固定 correct.obda 与无 PERSON relation 的 PostgreSQL schema",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3705,7 +3724,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D016/r2rmlc.ttl; tests/compat/postgres-d016/r2rml-init.sql（PostgreSQL BYTEA/DOUBLE PRECISION 适配）",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线 mapping；PostgreSQL 环境适配在本仓库）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3731,7 +3750,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D012/{create.sql,directGraph-modified.ttl}; same Ontop bootstrap versus rtop run",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3757,7 +3776,7 @@
       "fixture": "固定 PostgreSQL 17 OCI gate：Dockerfile、secret-file、endpoint/CLI ASK、healthcheck 与错误诊断",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 源码范围说明；rtop OCI 交付夹具）",
-        "normalizer_sha256": "f5702f6077e7ac1f4938844663e2914020baea5032545471b56f3d9af78eaab8"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3783,7 +3802,7 @@
       "fixture": "client/endpoint/src/main/java/it/unibz/inf/ontop/endpoint/controllers/PredefinedQueryController.java; tests/compat/postgres-http/{predefined-person.obda,algebra-init.sql,predefined.json,predefined.toml}",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 endpoint fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3809,7 +3828,7 @@
       "fixture": "ReformulateController、单 triple PostgreSQL mapping 与默认/native-consumption 请求",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop endpoint fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3835,7 +3854,7 @@
       "fixture": "client/endpoint HTTP protocol; simplemapping.obda; GET/form POST/application-sparql-query POST",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线 endpoint fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3861,7 +3880,7 @@
       "fixture": "固定 PostgreSQL mapping conversion fixtures：pretty-r2rml、v1-to-v3、to-obda、to-r2rml",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop CLI fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3887,7 +3906,7 @@
       "fixture": "固定 LUBM query-1、lubm-pgsql.obda、lubm.owl 与 PostgreSQL 最小 fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop LUBM fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3913,7 +3932,7 @@
       "fixture": "固定 LUBM query-2、lubm-pgsql.obda、lubm.owl 与 PostgreSQL 最小 fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop LUBM fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3939,7 +3958,7 @@
       "fixture": "固定 LUBM query-3、lubm-pgsql.obda、lubm.owl 与 PostgreSQL 最小 fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop LUBM fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3965,7 +3984,7 @@
       "fixture": "固定 LUBM query-4、lubm-pgsql.obda、lubm.owl 与 PostgreSQL 最小 fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop LUBM fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -3991,7 +4010,7 @@
       "fixture": "固定 LUBM query-5、lubm-pgsql.obda、lubm.owl 与 PostgreSQL 最小 fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop LUBM fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4017,7 +4036,7 @@
       "fixture": "固定 LUBM query-6、lubm-pgsql.obda、lubm.owl 与 PostgreSQL 最小 fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop LUBM fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4043,7 +4062,7 @@
       "fixture": "固定 LUBM query-7、lubm-pgsql.obda、lubm.owl 与 PostgreSQL 最小 fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop LUBM fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4069,7 +4088,7 @@
       "fixture": "固定 LUBM query-8、lubm-pgsql.obda、lubm.owl 与 PostgreSQL 最小 fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop LUBM fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4095,7 +4114,7 @@
       "fixture": "固定 LUBM query-9、lubm-pgsql.obda、lubm.owl 与 PostgreSQL 最小 fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop LUBM fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4121,7 +4140,7 @@
       "fixture": "固定 LUBM query-10、lubm-pgsql.obda、lubm.owl 与 PostgreSQL 最小 fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop LUBM fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4147,7 +4166,7 @@
       "fixture": "固定 LUBM query-11、lubm-pgsql.obda、lubm.owl 与 PostgreSQL 最小 fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop LUBM fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4173,7 +4192,7 @@
       "fixture": "固定 LUBM query-12、lubm-pgsql.obda、lubm.owl 与 PostgreSQL 最小 fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop LUBM fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4199,7 +4218,7 @@
       "fixture": "固定 LUBM query-13、lubm-pgsql.obda、lubm.owl 与 PostgreSQL 最小 fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop LUBM fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4225,7 +4244,7 @@
       "fixture": "固定 LUBM query-14、lubm-pgsql.obda、lubm.owl 与 PostgreSQL 最小 fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop LUBM fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4251,7 +4270,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange ASK mapping、ontology、query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4277,7 +4296,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、boolean-and query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4303,7 +4322,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、boolean-or query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4329,7 +4348,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、boolean-nested-1 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4355,7 +4374,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、boolean-nested-2 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4381,7 +4400,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、boolean-nested-3 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4407,7 +4426,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、string-eq query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4433,7 +4452,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、string-neq query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4459,7 +4478,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、integer-eq query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4485,7 +4504,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、integer-neq query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4511,7 +4530,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、integer-gt query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4537,7 +4556,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、integer-gte query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4563,7 +4582,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、integer-lt query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4589,7 +4608,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、integer-lte query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4615,7 +4634,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、decimal-eq query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4641,7 +4660,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、decimal-neq query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4667,7 +4686,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、decimal-gt query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4693,7 +4712,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、decimal-gte query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4719,7 +4738,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、decimal-lt query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4745,7 +4764,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、decimal-lte query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4771,7 +4790,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、double-eq query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4797,7 +4816,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、double-neq query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4823,7 +4842,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、double-gt query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4849,7 +4868,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、double-gte query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4875,7 +4894,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、double-lt query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4901,7 +4920,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、double-lte query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4927,7 +4946,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、datetime-eq query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4953,7 +4972,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、datetime-neq query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -4979,7 +4998,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、datetime-gt query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5005,7 +5024,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、datetime-gte query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5031,7 +5050,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、datetime-lt query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5057,7 +5076,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、datetime-lte query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5083,7 +5102,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、boolean-eq query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5109,7 +5128,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、boolean-neq query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5135,7 +5154,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange filters mapping、ontology、literal-langmatch query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5161,7 +5180,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、literal-1 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5187,7 +5206,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、literal-2 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5213,7 +5232,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、string-1 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5239,7 +5258,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、string-2 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5265,7 +5284,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、string-3 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5291,7 +5310,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、integer-1 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5317,7 +5336,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、integer-2 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5343,7 +5362,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、integer-3 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5369,7 +5388,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、pos-integer-1 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5395,7 +5414,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、pos-integer-2 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5421,7 +5440,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、pos-integer-2-bis query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5447,7 +5466,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、pos-integer-3 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5473,7 +5492,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、pos-integer-3-bis query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5499,7 +5518,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、neg-integer-1 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5525,7 +5544,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、neg-integer-2 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5551,7 +5570,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、neg-integer-3 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5577,7 +5596,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、decimal-1 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5603,7 +5622,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、decimal-2 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5629,7 +5648,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、decimal-2-bis query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5655,7 +5674,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、decimal-3 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5681,7 +5700,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、decimal-3-bis query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5707,7 +5726,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、pos-decimal-1 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5733,7 +5752,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、pos-decimal-2 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5759,7 +5778,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、pos-decimal-3 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5785,7 +5804,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、neg-decimal-1 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5811,7 +5830,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、neg-decimal-2 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5837,7 +5856,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、neg-decimal-3 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5863,7 +5882,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、double-1 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5889,7 +5908,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、double-2 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5915,7 +5934,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、double-3 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5941,7 +5960,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、pos-double-1 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5967,7 +5986,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、pos-double-2 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -5993,7 +6012,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、pos-double-3 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6019,7 +6038,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、neg-double-1 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6045,7 +6064,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、neg-double-2 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6071,7 +6090,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、neg-double-3 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6097,7 +6116,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、datetime-1a query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6123,7 +6142,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、datetime-1b query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6149,7 +6168,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、datetime-1c query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6175,7 +6194,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、datetime-2a query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6201,7 +6220,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、datetime-2b query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6227,7 +6246,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、datetime-2c query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6253,7 +6272,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、datetime-3a query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6279,7 +6298,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、datetime-3b query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6305,7 +6324,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、datetime-3c query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6331,7 +6350,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、datetime-3d query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6357,7 +6376,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、datetime-3e query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6383,7 +6402,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、datetime-3f query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6409,7 +6428,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、datetime-3g query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6435,7 +6454,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、datetime-3h query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6461,7 +6480,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、datetime-3i query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6487,7 +6506,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、datetime-3j query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6513,7 +6532,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、boolean-1a query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6539,7 +6558,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、boolean-1b query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6565,7 +6584,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、boolean-1c query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6591,7 +6610,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、boolean-1d query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6617,7 +6636,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、boolean-2a query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6643,7 +6662,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、boolean-2b query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6669,7 +6688,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、boolean-2c query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6695,7 +6714,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、boolean-2d query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6721,7 +6740,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、boolean-3a query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6747,7 +6766,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、boolean-3b query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6773,7 +6792,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、boolean-3c query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6799,7 +6818,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、boolean-3d query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6825,7 +6844,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、boolean-3e query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6851,7 +6870,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange datatypes mapping、ontology、boolean-3f query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6877,7 +6896,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange modifiers mapping、ontology、slice-test query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6903,7 +6922,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange modifiers mapping、ontology、limit-test query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6929,7 +6948,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange modifiers mapping、ontology、offset-test query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6955,7 +6974,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange modifiers mapping、ontology、limit0-offsetn query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -6981,7 +7000,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange modifiers mapping、ontology、limitn-offset0 query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7007,7 +7026,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange modifiers mapping、ontology、orderby-test query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7033,7 +7052,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange modifiers mapping、ontology、orderbydesc-test query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7059,7 +7078,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange modifiers mapping、ontology、orderbycombined-test query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7085,7 +7104,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange modifiers mapping、ontology、slice-orderby query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7111,7 +7130,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange modifiers mapping、ontology、orderbyliteral-test query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7137,7 +7156,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange simplecq mapping、ontology、addresses query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7163,7 +7182,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange simplecq mapping、ontology、addresses-id query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7189,7 +7208,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange simplecq mapping、ontology、person-addresses query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7215,7 +7234,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange simplecq mapping、ontology、stocktraders query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7241,7 +7260,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange simplecq mapping、ontology、brokers-workfor-themselves query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7267,7 +7286,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange simplecq mapping、ontology、brokers-workfor-physical query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7293,7 +7312,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange simplecq mapping、ontology、brokers-workfor-legal query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7319,7 +7338,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange simplecq mapping、ontology、brokers-workfor-legal-physical query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7345,7 +7364,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange simplecq mapping、ontology、transactions-finantialinstrument query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7371,7 +7390,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange simplecq mapping、ontology、transaction-stock-type query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7397,7 +7416,7 @@
       "fixture": "固定 DockerPostgresTestSuite stockexchange simplecq mapping、ontology、transaction-offer-stock query 与 PostgreSQL dump",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7423,7 +7442,7 @@
       "fixture": "固定 PgsqlDatatypeTest boolean 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7449,7 +7468,7 @@
       "fixture": "固定 PgsqlDatatypeTest character char 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7475,7 +7494,7 @@
       "fixture": "固定 PgsqlDatatypeTest character char-graph 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7501,7 +7520,7 @@
       "fixture": "固定 PgsqlDatatypeTest character varchar 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7527,7 +7546,7 @@
       "fixture": "固定 PgsqlDatatypeTest character varchar-graph 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7553,7 +7572,7 @@
       "fixture": "固定 PgsqlDatatypeTest character text 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7579,7 +7598,7 @@
       "fixture": "固定 PgsqlDatatypeTest character text-graph 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7605,7 +7624,7 @@
       "fixture": "固定 PgsqlDatatypeTest character character 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7631,7 +7650,7 @@
       "fixture": "固定 PgsqlDatatypeTest character character-graph 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7657,7 +7676,7 @@
       "fixture": "固定 PgsqlDatatypeTest character name 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7683,7 +7702,7 @@
       "fixture": "固定 PgsqlDatatypeTest character name-graph 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7709,7 +7728,7 @@
       "fixture": "固定 PgsqlDatatypeTest datetime dateLiteral 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7735,7 +7754,7 @@
       "fixture": "固定 PgsqlDatatypeTest datetime date 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7761,7 +7780,7 @@
       "fixture": "固定 PgsqlDatatypeTest datetime date-str 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7787,7 +7806,7 @@
       "fixture": "固定 PgsqlDatatypeTest datetime date-bgp 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7813,7 +7832,7 @@
       "fixture": "固定 PgsqlDatatypeTest datetime timeLiteral 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7839,7 +7858,7 @@
       "fixture": "固定 PgsqlDatatypeTest datetime time 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7865,7 +7884,7 @@
       "fixture": "固定 PgsqlDatatypeTest datetime time-str 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7891,7 +7910,7 @@
       "fixture": "固定 PgsqlDatatypeTest datetime time-bgp 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7917,7 +7936,7 @@
       "fixture": "固定 PgsqlDatatypeTest datetime time_tz_Literal 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7943,7 +7962,7 @@
       "fixture": "固定 PgsqlDatatypeTest datetime time_tz 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7969,7 +7988,7 @@
       "fixture": "固定 PgsqlDatatypeTest datetime time_tz-bgp 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -7995,7 +8014,7 @@
       "fixture": "固定 PgsqlDatatypeTest datetime timestamp 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8021,7 +8040,7 @@
       "fixture": "固定 PgsqlDatatypeTest datetime timestamp-str 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8047,7 +8066,7 @@
       "fixture": "固定 PgsqlDatatypeTest datetime timestamp_tz 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8073,7 +8092,7 @@
       "fixture": "固定 PgsqlDatatypeTest datetime timestamp_tz-str 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8099,7 +8118,7 @@
       "fixture": "固定 PgsqlDatatypeTest numeric integer 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8125,7 +8144,7 @@
       "fixture": "固定 PgsqlDatatypeTest numeric smallint 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8151,7 +8170,7 @@
       "fixture": "固定 PgsqlDatatypeTest numeric bigint 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8177,7 +8196,7 @@
       "fixture": "固定 PgsqlDatatypeTest numeric numeric 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8203,7 +8222,7 @@
       "fixture": "固定 PgsqlDatatypeTest numeric real 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8229,7 +8248,7 @@
       "fixture": "固定 PgsqlDatatypeTest numeric double 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8255,7 +8274,7 @@
       "fixture": "固定 PgsqlDatatypeTest numeric serial 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8281,7 +8300,7 @@
       "fixture": "固定 PgsqlDatatypeTest numeric bigserial 原始 OBDA、query 与 PostgreSQL datatypes fixture",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8311,7 +8330,7 @@
       "fixture": "HTTPS XML Catalog imports root-child cycle 的 PostgreSQL endpoint 差分",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL ontology fixture；仓库差分夹具）",
-        "normalizer_sha256": "9eb0c6b99b55e18c09757caac09611bcad770171acb9c67635da1001754ae773"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8339,7 +8358,7 @@
       "fixture": "四个 OWL 2 QL TBox PostgreSQL endpoint artifact 聚合",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL ontology fixture；仓库差分夹具）",
-        "normalizer_sha256": "9eb0c6b99b55e18c09757caac09611bcad770171acb9c67635da1001754ae773"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8369,7 +8388,7 @@
       "fixture": "test/rdb2rdf-compliance/src/test/resources/D009,D010/{create.sql,directGraph.ttl}; Ontop bootstrap + endpoint; rtop direct_mapping endpoint",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 RDB2RDF Direct Mapping fixture）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8397,7 +8416,7 @@
       "fixture": "D014b RefObjectMap join、D008a template graphMap 与 D007h literal graphMap；三个独立 Ontop-vs-rtop PostgreSQL 差分 artifact 的聚合索引",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 基线及其 R2RML fixture）",
-        "normalizer_sha256": "9eb0c6b99b55e18c09757caac09611bcad770171acb9c67635da1001754ae773"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8426,7 +8445,7 @@
       "fixture": "固定 EPNet native OBDA 与 Inscription/RelativePosition PostgreSQL 输入",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL Docker fixture；仓库差分夹具）",
-        "normalizer_sha256": "68e8e638168ad2721af415ee61b4393fdbd80c29572a726a6de8f8634be5132b"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8455,7 +8474,7 @@
       "fixture": "CastPostgreSQL mapped xsd:date、regex source SQL、quoted/unquoted identifiers 与 extract-db-metadata 的六份独立 PostgreSQL 差分 artifact 聚合索引",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "9eb0c6b99b55e18c09757caac09611bcad770171acb9c67635da1001754ae773"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8489,7 +8508,7 @@
       "fixture": "NestedData JSON/JSONB/array 与 GeoSPARQLPostGISTest geometry/geography 的独立 PostgreSQL 差分 artifact 聚合索引",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL/PostGIS fixture；仓库差分夹具）",
-        "normalizer_sha256": "9eb0c6b99b55e18c09757caac09611bcad770171acb9c67635da1001754ae773"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8519,7 +8538,7 @@
       "fixture": "ConstraintPostgreSQLTest 与 AbstractLeftJoinProfTest 的三份独立 PostgreSQL endpoint 差分 artifact 聚合索引",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "9eb0c6b99b55e18c09757caac09611bcad770171acb9c67635da1001754ae773"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8549,7 +8568,7 @@
       "fixture": "SparqlQueryController 与 PostgreSQL person/name mapping 的 JSON/XML/CSV/TSV、N-Triples 及 unsupported Accept 双边 endpoint 差分",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL endpoint fixture；仓库差分夹具）",
-        "normalizer_sha256": "9eb0c6b99b55e18c09757caac09611bcad770171acb9c67635da1001754ae773"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8576,7 +8595,7 @@
       "fixture": "QuestParallelScenario 与 PostgreSQL pg_sleep mapping 的并发、客户端断开、pg_stat_activity 清理及后续 ASK 双边 endpoint 差分",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL endpoint fixture；仓库差分夹具）",
-        "normalizer_sha256": "9eb0c6b99b55e18c09757caac09611bcad770171acb9c67635da1001754ae773"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8602,7 +8621,7 @@
       "fixture": "版本控制 FIBO compatibility profile、PostgreSQL HTTP endpoint 与独立 SQL oracle",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 范围说明；rtop FIBO compatibility fixture）",
-        "normalizer_sha256": "f5702f6077e7ac1f4938844663e2914020baea5032545471b56f3d9af78eaab8"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8628,7 +8647,7 @@
       "fixture": "版本控制的 FIBO counterexample ontology/mapping variants 与 PostgreSQL HTTP endpoint",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 范围说明；rtop FIBO compatibility fixture）",
-        "normalizer_sha256": "f5702f6077e7ac1f4938844663e2914020baea5032545471b56f3d9af78eaab8"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8654,7 +8673,7 @@
       "fixture": "版本控制 FIBO scale profile、PostgreSQL HTTP endpoint、质量门槛与独立 SQL oracle",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 范围说明；rtop FIBO scale compatibility fixture）",
-        "normalizer_sha256": "f5702f6077e7ac1f4938844663e2914020baea5032545471b56f3d9af78eaab8"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8680,7 +8699,7 @@
       "fixture": "公开固定 NPD commit、git blob 校验、PostgreSQL HTTP endpoint 与独立 SQL oracle",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop 范围说明；公开 NPD benchmark fixture）",
-        "normalizer_sha256": "f5702f6077e7ac1f4938844663e2914020baea5032545471b56f3d9af78eaab8"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,
@@ -8707,7 +8726,7 @@
       "fixture": "五份固定 PostgreSQL native OBDA/dataset endpoint 与 CLI artifact 聚合：term/NULL、named graph、input-reader、invalid SQL 与缺失 relation",
       "provenance": {
         "license": "Apache-2.0（固定 Ontop PostgreSQL fixture；仓库差分夹具）",
-        "normalizer_sha256": "f5702f6077e7ac1f4938844663e2914020baea5032545471b56f3d9af78eaab8"
+        "normalizer_sha256": "6a04f4aa4ca1e565d19db1f82a4106b14a0a283025aa8bdf48e4cd929262bcfa"
       },
       "verdict": "passed",
       "failure_fingerprint": null,

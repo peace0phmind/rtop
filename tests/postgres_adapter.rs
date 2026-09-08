@@ -1,6 +1,7 @@
 use rtop::{
-    DataSource, DataValue, PostgresConnectionConfig, PostgresDataSource, RelationColumn,
-    RelationConstraints, RelationForeignKey, RelationMetadata, RuntimeError, StreamControl,
+    DataSource, DataValue, GeospatialValue, PostgresConnectionConfig, PostgresDataSource,
+    RelationColumn, RelationConstraints, RelationForeignKey, RelationMetadata, RuntimeError,
+    StreamControl,
 };
 use std::time::Duration;
 
@@ -43,6 +44,7 @@ fn postgres_binds_parameters_without_interpolating_sql() {
         return;
     };
     let mut source = PostgresDataSource::connect(&config).expect("connect PostgreSQL");
+    assert!(source.supports_postgres_bgp_pushdown());
     assert_eq!(
         source
             .execute("SELECT $1::text", &["Ada'; SELECT 1; --".into()])
@@ -72,6 +74,67 @@ fn postgres_cancellation_has_stable_diagnostic_and_connection_remains_usable() {
             .execute("SELECT 7", &[])
             .expect("connection is reusable"),
         vec![vec![Some("7".into())]]
+    );
+    source
+        .cancel()
+        .expect("public cancellation port accepts an idle connection");
+}
+
+#[test]
+fn postgres_executes_geosparql_postgis_calls_through_the_public_adapter_port() {
+    let Some(config) = postgres_config() else {
+        return;
+    };
+    let mut source = PostgresDataSource::connect(&config).expect("connect PostgreSQL");
+    source
+        .execute("CREATE EXTENSION IF NOT EXISTS postgis", &[])
+        .expect("enable fixed PostGIS extension");
+    assert_eq!(
+        source
+            .geospatial(
+                "GEOF:SFINTERSECTS",
+                &["POINT(0 0)".into(), "POINT(0 0)".into()],
+            )
+            .expect("evaluate sfIntersects"),
+        Some(GeospatialValue::Boolean(true))
+    );
+    assert_eq!(
+        source
+            .geospatial(
+                "<http://www.opengis.net/def/function/geosparql/intersection>",
+                &["POINT(0 0)".into(), "POINT(0 0)".into()],
+            )
+            .expect("evaluate intersection"),
+        Some(GeospatialValue::Wkt("POINT(0 0)".into()))
+    );
+    assert!(matches!(
+        source
+            .geospatial(
+                "GEOF:BUFFER",
+                &[
+                    "POINT(2 2)".into(),
+                    "20".into(),
+                    "uom:metre".into(),
+                ],
+            )
+            .expect("evaluate metre buffer"),
+        Some(GeospatialValue::Wkt(value)) if value.starts_with("POLYGON(")
+    ));
+    assert!(matches!(
+        source
+            .geospatial_intersection_with_buffer(
+                "POLYGON((2 2,7 2,7 5,2 5,2 2))",
+                "20",
+                "POLYGON((1 1,8 1,8 7,1 7,1 1))",
+            )
+            .expect("evaluate nested buffer intersection"),
+        Some(GeospatialValue::Wkt(value)) if value.starts_with("POLYGON(")
+    ));
+    assert_eq!(
+        source
+            .geospatial("GEOF:BUFFER", &["POINT(0 0)".into()])
+            .expect("unsupported arity is not a datasource failure"),
+        None
     );
 }
 
@@ -111,11 +174,11 @@ fn postgres_exposes_manifest_scalar_datatypes() {
                 datatype: Some("http://www.w3.org/2001/XMLSchema#decimal".into())
             }),
             Some(DataValue {
-                value: "2.5".into(),
+                value: "2.5E0".into(),
                 datatype: Some("http://www.w3.org/2001/XMLSchema#double".into())
             }),
             Some(DataValue {
-                value: "3.5".into(),
+                value: "3.5E0".into(),
                 datatype: Some("http://www.w3.org/2001/XMLSchema#double".into())
             }),
             Some(DataValue {
@@ -147,6 +210,59 @@ fn postgres_exposes_manifest_scalar_datatypes() {
 }
 
 #[test]
+fn postgres_canonicalizes_special_numeric_and_temporal_lexicals() {
+    let Some(config) = postgres_config() else {
+        return;
+    };
+    let mut source = PostgresDataSource::connect(&config).expect("connect PostgreSQL");
+    let rows = source
+        .execute_typed(
+            "SELECT 1::real, 'NaN'::double precision, 'Infinity'::double precision, '-Infinity'::double precision, 'NaN'::numeric, TIMETZ '10:12:10.125+00', INTERVAL '1 mon 1 day -00:01:40.125'",
+            &[],
+        )
+        .expect("special PostgreSQL scalar values must be readable");
+    assert_eq!(
+        rows,
+        vec![vec![
+            Some(DataValue {
+                value: "1.0E0".into(),
+                datatype: Some("http://www.w3.org/2001/XMLSchema#double".into()),
+            }),
+            Some(DataValue {
+                value: "NaN".into(),
+                datatype: Some("http://www.w3.org/2001/XMLSchema#double".into()),
+            }),
+            Some(DataValue {
+                value: "INF".into(),
+                datatype: Some("http://www.w3.org/2001/XMLSchema#double".into()),
+            }),
+            Some(DataValue {
+                value: "-INF".into(),
+                datatype: Some("http://www.w3.org/2001/XMLSchema#double".into()),
+            }),
+            Some(DataValue {
+                value: "NaN".into(),
+                datatype: Some("http://www.w3.org/2001/XMLSchema#decimal".into()),
+            }),
+            Some(DataValue {
+                value: "10:12:10.125Z".into(),
+                datatype: Some("http://www.w3.org/2001/XMLSchema#time".into()),
+            }),
+            Some(DataValue {
+                value: "1 mon 1 day -00:01:40.125".into(),
+                datatype: None,
+            }),
+        ]]
+    );
+    assert_eq!(
+        source
+            .execute("SELECT NULL::text, 'plain text'::text", &[])
+            .expect("untyped null and text values must be readable"),
+        vec![vec![None, Some("plain text".into())]]
+    );
+}
+
+#[test]
 fn postgres_exposes_interval_for_explicit_string_mappings() {
     let Some(config) = postgres_config() else {
         return;
@@ -161,6 +277,30 @@ fn postgres_exposes_interval_for_explicit_string_mappings() {
             datatype: None,
         })]]
     );
+}
+
+#[test]
+fn postgres_applies_or_rejects_timestamp_timezone_configuration() {
+    let Some(mut config) = postgres_config() else {
+        return;
+    };
+    config.timestamp_timezone = Some("Asia/Shanghai".into());
+    let mut source = PostgresDataSource::connect(&config).expect("valid timezone connects");
+    assert_eq!(
+        source
+            .execute_typed("SELECT TIMESTAMP '2013-03-18 10:12:10'", &[])
+            .expect("timestamp query"),
+        vec![vec![Some(DataValue {
+            value: "2013-03-18T18:12:10+08:00".into(),
+            datatype: Some("http://www.w3.org/2001/XMLSchema#dateTime".into()),
+        })]]
+    );
+
+    config.timestamp_timezone = Some("not-a-timezone".into());
+    assert!(matches!(
+        PostgresDataSource::connect(&config),
+        Err(RuntimeError::Config(message)) if message == "无效 datasource.timestamp_timezone"
+    ));
 }
 
 #[test]
@@ -203,6 +343,149 @@ fn postgres_inspects_primary_unique_and_foreign_key_constraints() {
             foreign_key_count: 0,
         }
     );
+}
+
+#[test]
+fn postgres_exports_quoted_catalog_metadata_for_fixture_constraints() {
+    let Some(config) = postgres_config() else {
+        return;
+    };
+    let mut source = PostgresDataSource::connect(&config).expect("connect PostgreSQL");
+    let metadata = source
+        .database_metadata()
+        .expect("export database metadata");
+
+    let book_writer = metadata
+        .relations
+        .iter()
+        .find(|relation| relation.name == ["\"BookWriter\""])
+        .expect("BookWriter fixture relation is present");
+    assert_eq!(
+        book_writer
+            .columns
+            .iter()
+            .map(|column| (
+                column.name.as_str(),
+                column.is_nullable,
+                column.datatype.as_str()
+            ))
+            .collect::<Vec<_>>(),
+        vec![
+            ("\"bk_code\"", true, "INTEGER"),
+            ("\"wr_code\"", true, "INTEGER"),
+        ]
+    );
+    assert!(book_writer.unique_constraints.is_empty());
+    assert_eq!(book_writer.foreign_keys.len(), 2);
+    assert_eq!(
+        book_writer.foreign_keys[0].from.relation,
+        vec!["\"BookWriter\""],
+    );
+    assert_eq!(
+        book_writer.foreign_keys[0].from.columns,
+        vec!["\"bk_code\""],
+    );
+    assert_eq!(book_writer.foreign_keys[0].to.relation, vec!["\"Book\""],);
+    assert_eq!(book_writer.foreign_keys[0].to.columns, vec!["\"bk_code\""],);
+    assert_eq!(
+        book_writer.foreign_keys[1].from.columns,
+        vec!["\"wr_code\""],
+    );
+    assert_eq!(book_writer.foreign_keys[1].to.relation, vec!["\"Writer\""],);
+    assert_eq!(book_writer.foreign_keys[1].to.columns, vec!["\"wr_code\""],);
+
+    let edition = metadata
+        .relations
+        .iter()
+        .find(|relation| relation.name == ["\"Edition\""])
+        .expect("Edition fixture relation is present");
+    assert_eq!(edition.unique_constraints.len(), 1);
+    assert!(edition.unique_constraints[0].is_primary_key);
+    assert_eq!(
+        edition.unique_constraints[0].determinants,
+        vec!["\"ed_code\""]
+    );
+    assert_eq!(edition.other_names.len(), 1);
+    assert_eq!(edition.other_names[0][1], "\"Edition\"");
+}
+
+#[test]
+fn postgres_groups_composite_catalog_constraints_in_metadata_exports() {
+    let Some(config) = postgres_config() else {
+        return;
+    };
+    let mut source = PostgresDataSource::connect(&config).expect("connect PostgreSQL");
+    source
+        .execute(
+            "CREATE TABLE \"rtop_catalog_composite_parent\" (\
+             \"part_a\" integer NOT NULL, \"part_b\" integer NOT NULL, \
+             CONSTRAINT \"rtop_catalog_composite_parent_pkey\" PRIMARY KEY (\"part_a\", \"part_b\"))",
+            &[],
+        )
+        .expect("create composite metadata parent");
+    source
+        .execute(
+            "CREATE TABLE \"rtop_catalog_composite_child\" (\
+             \"child_a\" integer NOT NULL, \"child_b\" integer NOT NULL, \
+             \"alternate_a\" integer NOT NULL, \"alternate_b\" integer NOT NULL, \
+             CONSTRAINT \"rtop_catalog_composite_child_pkey\" PRIMARY KEY (\"child_a\", \"child_b\"), \
+             CONSTRAINT \"rtop_catalog_composite_child_unique\" UNIQUE (\"alternate_a\", \"alternate_b\"), \
+             CONSTRAINT \"rtop_catalog_composite_child_parent_fkey\" FOREIGN KEY (\"child_a\", \"child_b\") \
+                 REFERENCES \"rtop_catalog_composite_parent\" (\"part_a\", \"part_b\"))",
+            &[],
+        )
+        .expect("create composite metadata child");
+
+    let relation = source
+        .relation_metadata("rtop_catalog_composite_child")
+        .expect("inspect composite relation metadata");
+    assert_eq!(relation.primary_key, vec!["child_a", "child_b"]);
+    assert_eq!(relation.foreign_keys.len(), 1);
+    assert_eq!(relation.foreign_keys[0].columns, vec!["child_a", "child_b"]);
+    assert_eq!(
+        relation.foreign_keys[0].referenced_columns,
+        vec!["part_a", "part_b"]
+    );
+
+    let metadata = source
+        .database_metadata()
+        .expect("export composite metadata");
+    let relation = metadata
+        .relations
+        .iter()
+        .find(|relation| relation.name == ["\"rtop_catalog_composite_child\""])
+        .expect("composite child is exported");
+    assert_eq!(relation.unique_constraints.len(), 2);
+    assert_eq!(
+        relation.unique_constraints[0].determinants,
+        vec!["\"child_a\"", "\"child_b\""]
+    );
+    assert!(relation.unique_constraints[0].is_primary_key);
+    assert_eq!(
+        relation.unique_constraints[1].determinants,
+        vec!["\"alternate_a\"", "\"alternate_b\""]
+    );
+    assert!(!relation.unique_constraints[1].is_primary_key);
+    assert_eq!(relation.foreign_keys.len(), 1);
+    assert_eq!(
+        relation.foreign_keys[0].from.columns,
+        vec!["\"child_a\"", "\"child_b\""]
+    );
+    assert_eq!(
+        relation.foreign_keys[0].to.relation,
+        vec!["\"rtop_catalog_composite_parent\""]
+    );
+    assert_eq!(
+        relation.foreign_keys[0].to.columns,
+        vec!["\"part_a\"", "\"part_b\""]
+    );
+
+    source
+        .execute("DROP TABLE \"rtop_catalog_composite_child\"", &[])
+        .expect("clean up composite metadata child");
+    source
+        .execute("DROP TABLE \"rtop_catalog_composite_parent\"", &[])
+        .expect("clean up composite metadata parent");
 }
 
 #[test]

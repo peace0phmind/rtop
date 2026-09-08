@@ -30,6 +30,20 @@ jq -n \
     generated_by: $generated_by,
     ledger_sha256: $ledger_sha256,
     purpose: "#104 的唯一三层完成状态源。矩阵从已验证 PostgreSQL 发现集生成，但单边账本 passed 不等同于 Ontop-vs-rtop 差分 passed。",
+    coverage_evidence: {
+      line_and_function: {
+        status: "separate-gate-required",
+        provenance: "target/llvm-cov/minimal/provenance.json",
+        gate: "scripts/validate-module-coverage.sh"
+      },
+      branch: {
+        status: "external-tool-blocked",
+        provenance: "target/llvm-cov/minimal/provenance.json",
+        probe: "target/llvm-cov/minimal/branch-coverage-probe.json",
+        scope: ["src/ontology.rs", "src/mapping.rs", "src/sparql.rs", "src/lib.rs"],
+        required_gate_when_measurable: "ADR-0005: at least 80%"
+      }
+    },
     atoms: [
       $ledger[0].entries[]
       | . as $entry

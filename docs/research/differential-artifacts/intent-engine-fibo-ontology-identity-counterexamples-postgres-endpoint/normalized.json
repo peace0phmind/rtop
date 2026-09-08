@@ -1,1 +1,22 @@
-{"format":"fibo-ontology-identity-counterexamples-postgres-endpoint","baseline_has_no_isomorphic_fibo_service":true,"rtop_gate_passed":true,"counts":{"subclass":2,"no_subclass":0,"wrong_equivalent_class":3,"no_weak_alignment":2},"unsafe_identity":{"lender":"lender.alpha","label":"同名贷款人","count":2}}
+{
+  "case_name": "fibo-identity",
+  "format": "replacement-contract",
+  "ontop_has_no_isomorphic_artifact": true,
+  "rtop_contract": {
+    "checks": {
+      "no_subclass_count": 0,
+      "no_weak_alignment_count": 2,
+      "subclass_count": 2,
+      "unsafe_identity": {
+        "count": 2,
+        "label": "同名贷款人",
+        "lender": "lender.alpha"
+      },
+      "wrong_equivalent_class_count": 3
+    },
+    "command": "./scripts/test-delivery-compat.sh",
+    "fixture": "tests/compat/postgres-fibo/fixtures/generated/{fibo-loan-count-query.sparql,no-loan-entailment-ontology.ttl,wrong-equivalence-ontology.ttl,no-weak-alignment-ontology.ttl,unsafe-identity-ontology.ttl,unsafe-identity-mapping.obda}",
+    "postgres_image": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+    "result": "passed"
+  }
+}

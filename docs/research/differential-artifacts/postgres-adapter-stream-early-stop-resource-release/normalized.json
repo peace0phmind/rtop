@@ -1,1 +1,16 @@
-{"format":"postgres-driver-stream-lifecycle","baseline_has_no_isomorphic_rust_driver_api":true,"rtop_gate_passed":true,"rows_observed":1,"early_stop":true,"connection_reuse":{"query":"SELECT 42","result":"42"}}
+{
+  "case_name": "stream",
+  "format": "replacement-contract",
+  "ontop_has_no_isomorphic_artifact": true,
+  "rtop_contract": {
+    "command": "./scripts/test-postgres-compat.sh",
+    "first_row_control": "Stop",
+    "postgres_image": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+    "query": "SELECT generate_series(1, 1000000)",
+    "result": "passed",
+    "reuse_query": "SELECT 42",
+    "reuse_result": "42",
+    "rows_observed": 1,
+    "test": "postgres_stream_stops_early_and_connection_remains_usable"
+  }
+}

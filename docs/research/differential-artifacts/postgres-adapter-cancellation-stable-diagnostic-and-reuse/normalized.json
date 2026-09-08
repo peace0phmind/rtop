@@ -1,1 +1,16 @@
-{"format":"postgres-driver-cancellation-lifecycle","baseline_has_no_isomorphic_rust_driver_api":true,"rtop_gate_passed":true,"diagnostic":"query-cancelled","connection_reuse":{"query":"SELECT 7","result":"7"}}
+{
+  "case_name": "cancellation",
+  "format": "replacement-contract",
+  "ontop_has_no_isomorphic_artifact": true,
+  "rtop_contract": {
+    "cancellation_after_ms": 100,
+    "command": "./scripts/test-postgres-compat.sh",
+    "diagnostic": "query-cancelled",
+    "postgres_image": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+    "query": "SELECT pg_sleep(5)",
+    "result": "passed",
+    "reuse_query": "SELECT 7",
+    "reuse_result": "7",
+    "test": "postgres_cancellation_has_stable_diagnostic_and_connection_remains_usable"
+  }
+}

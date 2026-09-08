@@ -1,1 +1,23 @@
-{"format":"fibo-main-postgres-endpoint-sql-oracle","baseline_has_no_isomorphic_fibo_service":true,"rtop_gate_passed":true,"temporal_cny_balance":"130","disbursement_2025":"100","primary_attribution":"150","allocated_attribution":{"华东":"110","华南":"40"},"aggregate_round":"0.01","per_fact_round":"0.02","usd_ask":false}
+{
+  "case_name": "fibo-main",
+  "format": "replacement-contract",
+  "ontop_has_no_isomorphic_artifact": true,
+  "rtop_contract": {
+    "checks": {
+      "aggregate_round": "0.01",
+      "allocated_attribution": [
+        "华东=110",
+        "华南=40"
+      ],
+      "disbursement_2025": "100",
+      "per_fact_round": "0.02",
+      "primary_attribution": "150",
+      "temporal_cny_balance": "130",
+      "usd_ask": false
+    },
+    "command": "./scripts/test-delivery-compat.sh",
+    "fixture": "tests/compat/postgres-fibo/fixtures/{application-ontology.ttl,generated/mapping.obda,generated/schema.sql,generated/*.sparql}",
+    "postgres_image": "postgres:17@sha256:5c855ad7b85e68e48a62f34662853f38b57c1c1d80f3a927ab58034fd6d31c5e",
+    "result": "passed"
+  }
+}

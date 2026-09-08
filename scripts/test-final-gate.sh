@@ -15,6 +15,8 @@ run_gate() {
 
 run_gate fmt cargo fmt --check
 run_gate rust-tests cargo test --all --locked
+run_gate coverage-minimal ./scripts/test-coverage-minimal.sh
+run_gate module-coverage ./scripts/validate-module-coverage.sh
 run_gate baseline-discovery ./scripts/validate-postgres-baseline-discovery.sh
 run_gate method-audits ./scripts/validate-postgres-method-audits.sh
 run_gate coverage-ledger ./scripts/validate-coverage-ledger.sh

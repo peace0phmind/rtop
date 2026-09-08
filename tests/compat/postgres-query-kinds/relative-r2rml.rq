@@ -1,3 +1,3 @@
 ASK {
-  <https://example.test/base/person/1> <https://example.test/base/kind> <https://example.test/base/Person>
+  <http://example.com/base/person/1> <https://example.test/base/kind> <https://example.test/base/Person>
 }

@@ -479,7 +479,8 @@ docker exec -i "$name" psql -U rtop -d rtop_test < "$root/tests/compat/postgres-
 (
   cd "$root"
   RTOP_POSTGRES_HOST=127.0.0.1 RTOP_POSTGRES_PORT="$postgres_port" RTOP_POSTGRES_DATABASE=rtop_test \
-    RTOP_POSTGRES_USER=rtop RTOP_POSTGRES_PASSWORD=rtop cargo test --locked --test postgres_adapter
+    RTOP_POSTGRES_USER=rtop RTOP_POSTGRES_PASSWORD=rtop cargo test --locked --test postgres_adapter -- \
+      --skip postgres_executes_geosparql_postgis_calls_through_the_public_adapter_port
 )
 
 # 固定 UniversityTBoxFactTest 的 PostgreSQL 可观察子集：原始 university.obda
@@ -1209,6 +1210,14 @@ done
 # 窗口，避免初始化 SQL 与服务重启竞争。
 sleep 5
 docker exec -i "$postgis_name" psql -U rtop -d rtop_test < "$root/tests/compat/postgres-geospatial/init.sql"
+# adapter 的 GeoSPARQL 公开端口必须在真实 PostGIS 上验证；普通 PostgreSQL 17
+# 不携带该扩展，因此上方的 adapter 集合明确排除本用例，再在此处执行它。
+(
+  cd "$root"
+  RTOP_POSTGRES_HOST=127.0.0.1 RTOP_POSTGRES_PORT=55433 RTOP_POSTGRES_DATABASE=rtop_test \
+    RTOP_POSTGRES_USER=rtop RTOP_POSTGRES_PASSWORD=rtop cargo test --locked --test postgres_adapter \
+      postgres_executes_geosparql_postgis_calls_through_the_public_adapter_port
+)
 actual=$(cd "$root" && RTOP_POSTGRES_PORT=55433 cargo run --quiet -- query tests/compat/postgres-geospatial/rtop-postgis.toml tests/compat/postgres-geospatial/intersects.rq)
 rows=$(printf '%s\n' "$actual" | sed '/^$/d' | wc -l | tr -d ' ')
 [ "$rows" = "36" ]

@@ -203,22 +203,23 @@ pub struct PostgresConnectionConfig {
     /// 将 PostgreSQL `timestamp without time zone` 视为 UTC instant 后的展示时区。
     pub timestamp_timezone: Option<String>,
 }
-impl PostgresConnectionConfig {
-    fn native_config(&self) -> String {
-        format!(
-            "host={} port={} dbname={} user={} password={}",
-            self.host, self.port, self.database, self.user, self.password
-        )
-    }
-}
-
 pub struct PostgresDataSource {
     client: postgres::Client,
     timestamp_timezone: Option<chrono_tz::Tz>,
 }
 impl PostgresDataSource {
     pub fn connect(config: &PostgresConnectionConfig) -> Result<Self, RuntimeError> {
-        let client = postgres::Client::connect(&config.native_config(), postgres::NoTls)
+        // 使用 driver 的结构化 config，避免将 password、host 等用户输入拼接进 libpq
+        // connection string 而需要自行实现转义规则。
+        let mut native = postgres::Config::new();
+        native
+            .host(&config.host)
+            .port(config.port)
+            .dbname(&config.database)
+            .user(&config.user)
+            .password(&config.password);
+        let client = native
+            .connect(postgres::NoTls)
             .map_err(|e| RuntimeError::DataSource(e.to_string()))?;
         let timestamp_timezone = config
             .timestamp_timezone
@@ -680,7 +681,9 @@ fn ontop_postgis_intersection_lexical(value: String) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::{format_timestamptz, ontop_postgis_intersection_lexical, PostgisCall};
+    use super::{
+        format_floating32, format_timestamptz, ontop_postgis_intersection_lexical, PostgisCall,
+    };
 
     #[test]
     fn accepts_only_the_supported_geosparql_buffer_unit() {
@@ -726,18 +729,67 @@ mod tests {
     }
 
     #[test]
-    fn formats_timestamptz_with_ontop_utc_offset_lexical_form() {
+    fn formats_timestamptz_with_ontop_utc_lexical_form() {
         let value = chrono::DateTime::parse_from_rfc3339("2013-03-19T03:12:10+01:00")
             .expect("fixed RFC 3339 instant")
             .with_timezone(&chrono::Utc);
-        assert_eq!(format_timestamptz(value), "2013-03-19T02:12:10+00:00");
+        assert_eq!(format_timestamptz(value), "2013-03-19T02:12:10.000000Z");
+    }
+
+    #[test]
+    fn formats_postgres_real_without_promoting_its_binary_precision() {
+        assert_eq!(format_floating32(70.22_f32), "7.022E1");
+        assert_eq!(format_floating32(90.31_f32), "9.031E1");
     }
 }
 
 fn format_timestamptz(value: chrono::DateTime<chrono::Utc>) -> String {
-    // Ontop PostgreSQL endpoint 保留零 UTC 偏移为 +00:00，并省略零微秒。
-    // 该词法形式是原始 OBDA 的 xsd:dateTimeStamp binding 可观察结果。
-    value.to_rfc3339_opts(chrono::SecondsFormat::AutoSi, false)
+    // Ontop PostgreSQL datatype manifest 以 UTC `Z` 和六位微秒序列化 timestamp with
+    // time zone；保留该词法而非把等价 instant 改写为 +00:00。
+    value.to_rfc3339_opts(chrono::SecondsFormat::Micros, true)
+}
+
+fn format_floating(value: f64) -> String {
+    if value.is_nan() {
+        return "NaN".into();
+    }
+    if value == f64::INFINITY {
+        return "INF".into();
+    }
+    if value == f64::NEG_INFINITY {
+        return "-INF".into();
+    }
+    format_floating_scientific(format!("{value:e}"))
+}
+
+fn format_floating32(value: f32) -> String {
+    if value.is_nan() {
+        return "NaN".into();
+    }
+    if value == f32::INFINITY {
+        return "INF".into();
+    }
+    if value == f32::NEG_INFINITY {
+        return "-INF".into();
+    }
+    // `REAL` 是 PostgreSQL 的 IEEE-754 binary32。不得先提升为 f64，否则其
+    // binary32 尾差会成为对外 RDF lexical 的伪精度。
+    format_floating_scientific(format!("{value:e}"))
+}
+
+fn format_floating_scientific(scientific: String) -> String {
+    let (mantissa, exponent) = scientific
+        .split_once('e')
+        .expect("Rust scientific float formatting includes an exponent");
+    let mantissa = if mantissa.contains('.') {
+        mantissa
+    } else {
+        return format!(
+            "{mantissa}.0E{}",
+            exponent.parse::<i32>().unwrap_or_default()
+        );
+    };
+    format!("{mantissa}E{}", exponent.parse::<i32>().unwrap_or_default())
 }
 
 fn value(
@@ -770,11 +822,11 @@ fn value(
             .map_err(datasource_error),
         Type::FLOAT4 => row
             .try_get::<_, Option<f32>>(index)
-            .map(|value| value.map(|value| value.to_string()))
+            .map(|value| value.map(format_floating32))
             .map_err(datasource_error),
         Type::FLOAT8 => row
             .try_get::<_, Option<f64>>(index)
-            .map(|value| value.map(|value| value.to_string()))
+            .map(|value| value.map(format_floating))
             .map_err(datasource_error),
         Type::DATE => row
             .try_get::<_, Option<chrono::NaiveDate>>(index)
